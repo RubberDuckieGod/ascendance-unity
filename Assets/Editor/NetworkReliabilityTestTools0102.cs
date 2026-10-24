@@ -62,8 +62,12 @@ namespace Ascendance.EditorTools
                 float deadline = Time.realtimeSinceStartup + 60f;
                 while ((gm.IsResolving || gm.HasPendingReactionWindow || gm.ParticipatingHeroes.Any(h => h.Moving)) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (gm.IsResolving || gm.HasPendingReactionWindow) throw new TimeoutException("Inherited fixture did not settle.");
+                // New Game creates fresh HeroState objects. A campaign-only reset intentionally
+                // retains defeats from prior quests, including inactive Heroes used by other gates.
+                gm.Initialize();
                 gm.SetParty(new[] { "Aldric", "Lyra", "Elara" }, "Aldric");
                 gm.DebugResetCampaignProgress0833();
+                if (gm.ParticipatingHeroes.Any(h => h.IsDefeated)) throw new InvalidOperationException("Fresh network fixture contains a defeated Hero.");
                 deadline = Time.realtimeSinceStartup + 30f;
                 while (!gm.CanStartHeroTurn(gm.Heroes["Aldric"]) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!gm.CanStartHeroTurn(gm.Heroes["Aldric"])) throw new TimeoutException("Q001 start-turn fixture did not become legal.");
@@ -91,9 +95,14 @@ namespace Ascendance.EditorTools
                 Check(endA.Result.Accepted && gm.TurnHeroId == null && gm.Heroes["Aldric"].TurnCompleted, "6. Presence-only revision changes do not reject A's legal END TURN.");
                 deadline = Time.realtimeSinceStartup + 8f;
                 while (b.LatestSnapshot.GameplayRevision < endA.Result.Snapshot.GameplayRevision && Time.realtimeSinceStartup < deadline) yield return null;
-                Check(b.LatestSnapshot.GameplayRevision >= endA.Result.Snapshot.GameplayRevision && b.LatestSnapshot.Transient.TurnHeroId == null, "7. Idle client B polls and sees A's completed turn.");
+                var peerAldric = b.LatestSnapshot.Campaign.Heroes.Single(h => h.Id == "Aldric");
+                Check(b.LatestSnapshot.GameplayRevision >= endA.Result.Snapshot.GameplayRevision
+                    && string.IsNullOrEmpty(b.LatestSnapshot.Transient.TurnHeroId) && peerAldric.TurnCompleted
+                    && peerAldric.Actions == 3 && peerAldric.AttackOnlyActions == 0,
+                    $"7. Idle client B sees A's completed turn and three saved Reaction Actions (revision {b.LatestSnapshot.GameplayRevision}/{endA.Result.Snapshot.GameplayRevision}, turn '{b.LatestSnapshot.Transient.TurnHeroId}', completed {peerAldric.TurnCompleted}, actions {peerAldric.Actions}).");
                 var startB = b.SendAsync(Command(ServerCommandType0100.StartTurn, "Lyra", b.LatestSnapshot)); yield return Await(startB);
-                Check(startB.Result.Accepted && gm.TurnHeroId == "Lyra" && gm.Heroes["Lyra"].Actions == 3, "8. B starts its own actual Hero turn.");
+                Check(startB.Result.Accepted && gm.TurnHeroId == "Lyra" && gm.Heroes["Lyra"].Actions == 3,
+                    $"8. B starts its own actual Hero turn (accepted {startB.Result.Accepted}, code {startB.Result.Code}, turn '{gm.TurnHeroId}', actions {gm.Heroes["Lyra"].Actions}, resolving {gm.IsResolving}, revision {startB.Result.Revision}, gameplay {authority.Room.GameplayRevision}; {string.Join(" / ", gm.Log.TakeLast(3))}).");
                 deadline = Time.realtimeSinceStartup + 8f;
                 while (a.LatestSnapshot.GameplayRevision < startB.Result.Snapshot.GameplayRevision && Time.realtimeSinceStartup < deadline) yield return null;
                 Check(a.LatestSnapshot.Transient.TurnHeroId == "Lyra" && a.LatestSnapshot.GameplayRevision >= startB.Result.Snapshot.GameplayRevision, "9. Idle client A converges to B's state without sending a command.");

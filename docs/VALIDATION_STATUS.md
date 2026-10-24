@@ -10,11 +10,11 @@ This document distinguishes uploaded historical evidence, checks run on this che
 | Verdict and launcher tests | 17 tests passed locally, including five PowerShell process-control tests. | Synthetic verdicts and non-Unity executable fixtures verify missing results, wrong versions, failure exits, stale output refusal and required gates. |
 | Current historical static verifier | `tests/verify_0102c.py`: 26/26 source-string checks passed. | This executes no game code; older milestone verifiers were syntax checked only. |
 | C# / PowerShell / Bash syntax | All 161 C# files parse; the PowerShell wrapper and Bash scripts parse. | Parsing is not Unity compilation or platform build validation. |
-| Unity import/compilation and new builds | BLOCKED / not run here. | Requires Unity 6000.6.5f1, a valid license, and matching platform modules. |
-| Inherited gameplay/network gates | Historical targets only: 54/0, 24/0, 29/0, 27/0. | No new Play Mode pass is claimed. |
-| New Unity reliability/snapshot regressions | 22 real-socket and 20 replica/HUD checks prepared; not run in Unity here. | Additional runtime checks, separate from the inherited target counts. |
+| Unity import/compilation and new builds | PASS on 2026-10-24, licensed Unity 6000.6.5f1. | Complete Linux Dedicated Server and Windows players built locally; no deployment. |
+| Inherited gameplay/network gates | Current runtime PASS: master 54/0, foundation 24/0, routing 29/0, transport 27/0. | [Machine-readable runtime evidence](RUNTIME_RESULTS_20261024.json); zero nested errors. |
+| New Unity reliability/snapshot regressions | Current runtime PASS: reliability 22/0 and snapshot 20/0. | Real sockets run inside one Editor process; snapshot presentation uses synthetic states. This does not certify two independent native clients. |
 | DigitalOcean activation and remote multiplayer | BLOCKED / not performed. | Requires a reviewed build, inspected service/save paths and backups, deployment access, and application-level acceptance. |
-| GitHub publication and hosted Actions | Public repository confirmed; owner approved source publication. | Actual push/PR and Actions results must be verified separately from local checks. |
+| GitHub publication and hosted Actions | Public repository confirmed; owner approved source publication. | Draft [PR #1](https://github.com/RubberDuckieGod/ascendance-unity/pull/1) contains the changes; source-intake Actions passed for the prior revision. Runtime results here are local, not hosted. |
 
 ## Reproduce local helper checks
 
@@ -63,3 +63,11 @@ The uploaded Editor.log records successful Linux dedicated-server and Windows cl
 Before accepting remote multiplayer, verify the expected build/room through protocol HELLO, two-client authoritative gameplay and state reconciliation, idle periods beyond 35 seconds, reconnect with retained Hero ownership, interrupted-command retry without duplicate mutations, and persistence across a controlled restart. TCP port reachability proves only that a listener accepted a connection.
 
 Follow the [DigitalOcean deployment guide](../Deploy/DigitalOcean/README.md) for release-tool boundaries and existing-server migration prerequisites. Helper safety tests, staged artifacts, and rollback mechanisms do not establish that a production campaign was backed up or that a live upgrade succeeded.
+
+## Runtime fixes discovered during licensed validation
+
+The room now compares canonical gameplay state separately from UI selection, timestamps, and logs. UI-only events can advance the room notification revision without advancing gameplay revision or making a successful command appear to be a no-op. The peer reliability test verifies exact replicated Actions and completed-turn state.
+
+The network fixture now initializes the complete test party before resetting the scenario, because the campaign reset intentionally preserves defeated inactive Heroes. An absent wire turn is an empty string, and ending a Hero turn preserves unused general Actions for Reactions; assertions now use those authored semantics. The snapshot fixture reconciles runtime party avatars before checking restored selection.
+
+The successful run used source changes over b57ea94 and the matching Linux host toolchain. Its raw artifacts remain under artifacts/unity-validation/cloud-20261024-restored-presentation; they are not represented as a clean-commit release. DigitalOcean has not been activated: API access is verified, but SSH inspection has not succeeded. Independent native two-client, idle/reconnect and server-restart acceptance remains required before activation.

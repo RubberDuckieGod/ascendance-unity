@@ -19,6 +19,7 @@ namespace Ascendance.Online
         private const int MaxCachedCommands0100 = 512;
         private bool suppressStateEvents;
         private bool disposed;
+        private string committedGameplayFingerprint;
 
         public PersistedServerRoom0100 Room { get; private set; }
         public string ServerInstanceId { get; } = Guid.NewGuid().ToString("N");
@@ -40,6 +41,7 @@ namespace Ascendance.Online
             Room.BuildVersion = AscendanceGameManager.BuildVersion;
             Room.Players ??= new List<ServerPlayerSession0100>();
             foreach (var p in Room.Players) if (p != null) p.Connected = false; // process restart requires reconnect proof.
+            committedGameplayFingerprint = LiveFingerprint();
             gm.StateChanged += OnGameStateChanged;
             PersistIfSafe();
         }
@@ -165,9 +167,10 @@ namespace Ascendance.Online
                 return Cache(commandKey, Reject("RULE_REJECTED", "The authoritative rules engine rejected the command or it produced no legal state change."));
             }
 
-            // Most rules paths raise StateChanged. If a valid transient-only path did not,
-            // advance the room once here so every accepted command has an authoritative revision.
-            if (revisionBefore == Room.Revision) CommitLiveState();
+            // Most rules paths raise StateChanged. Also commit a final mutation after an
+            // earlier notification, so a presentation-only event cannot hide that mutation.
+            if (revisionBefore == Room.Revision || !string.Equals(committedGameplayFingerprint, after, StringComparison.Ordinal))
+                CommitLiveState();
             player.LastSeenUtc = DateTime.UtcNow.ToString("O");
             var result = new ServerCommandResult0100 { Accepted = true, Code = "ACCEPTED", Message = "Command committed by server authority.", Revision = Room.Revision, Snapshot = Snapshot() };
             Cache(commandKey, result);
@@ -292,8 +295,15 @@ namespace Ascendance.Online
 
         private void CommitLiveState()
         {
+            string fingerprint = LiveFingerprint();
             Room.Revision++;
-            Room.GameplayRevision++;
+            // Rejected actions and local selection can still notify presentation listeners.
+            // Publish their room revision/logs without invalidating another player's decision.
+            if (!string.Equals(committedGameplayFingerprint, fingerprint, StringComparison.Ordinal))
+            {
+                Room.GameplayRevision++;
+                committedGameplayFingerprint = fingerprint;
+            }
             Room.BuildVersion = AscendanceGameManager.BuildVersion;
             Room.UpdatedAtUtc = DateTime.UtcNow.ToString("O");
             PersistIfSafe();
@@ -325,8 +335,19 @@ namespace Ascendance.Online
         private string LiveFingerprint()
         {
             var save = AscendanceSaveSystem.CaptureForAuthority0100(gm);
-            if (save != null) save.SavedAtUtc = null;
-            return JsonUtility.ToJson(save) + "|" + JsonUtility.ToJson(BuildTransient());
+            if (save != null)
+            {
+                save.SavedAtUtc = null;
+                save.SelectedHeroId = null;
+                save.SelectedEnemyId = null;
+            }
+            var transient = BuildTransient();
+            transient.SelectedHeroId = null;
+            transient.SelectedEnemyId = null;
+            transient.RecentLog.Clear();
+            // Keep gameplay windows, movement destinations, turn state, and complete campaign
+            // data in the comparison; only timestamps and local presentation are excluded.
+            return JsonUtility.ToJson(save) + "|" + JsonUtility.ToJson(transient);
         }
 
         private ServerTransientState0100 BuildTransient()

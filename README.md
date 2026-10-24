@@ -36,11 +36,11 @@ bash tools/run_unity_validation.sh \
 
 Add `--build-linux-server` to request the Linux server build after validation. Keep the full build output, including its data directory and UnityPlayer library. The wrapper records logs and results under `artifacts/unity-validation/`.
 
-The wrappers create isolated test-save directories and run all six gates: **master 54/0, server foundation 24/0, routing 29/0, transport 27/0, reliability 22/0, snapshot 20/0**. None has been rerun in Unity here. The inherited Play Mode menu is **Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**; it now requires the same explicit isolated-data environment as batch validation. Use the wrapper for the full chain.
+The wrappers create isolated test-save directories and run all six gates: **master 54/0, server foundation 24/0, routing 29/0, transport 27/0, reliability 22/0, snapshot 20/0**. All six gates passed in a licensed cloud Editor run on 2026-10-24, with zero nested errors. See [runtime results](docs/RUNTIME_RESULTS_20261024.json). The inherited Play Mode menu is **Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**; it now requires the same explicit isolated-data environment as batch validation. Use the wrapper for the full chain.
 
 The automatic **Source intake** GitHub Action runs static/helper checks. **Licensed Unity validation** is a separate manual workflow for a Windows self-hosted runner labeled `unity-6000.6.5f1`, with an existing licensed Editor and build modules. Configure a protected `unity-validation` environment and its `UNITY_EDITOR_PATH` variable. Review the selected commit before dispatching it; public pull requests never automatically execute on that machine. This workflow becomes dispatchable after it is present on the default branch. Neither workflow deploys a server.
 
-Windows clients build through **Ascendance → Build → Build Windows Standalone 0.10.2c**. Server builds use **Build Linux Dedicated Server 0.10.2c**. Unity compilation, Play Mode acceptance, and new build artifacts remain blocked until a licensed Editor run supplies results.
+Windows clients build through **Ascendance → Build → Build Windows Standalone 0.10.2c**. Server builds use **Build Linux Dedicated Server 0.10.2c**. The cloud run compiled the project and built complete Linux dedicated-server and Windows players. Independent native-client acceptance and DigitalOcean activation remain outstanding.
 
 ## Multiplayer and DigitalOcean
 

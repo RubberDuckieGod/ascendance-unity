@@ -37,6 +37,9 @@ namespace Ascendance.EditorTools
             gm.StateChanged += Changed;
             try
             {
+                // The preceding isolated network fixture changes the party, then restores its
+                // save. Reconcile that restored party before testing a real avatar callback.
+                gm.GetComponent<StonebrookWorldBuilder>()?.EnsureRuntimeEnemySpawns();
                 string localHero = gm.ParticipatingHeroes.First().Id;
                 string serverHero = gm.ParticipatingHeroes.First(h => h.Id != localHero).Id;
                 gm.SetAuthorityCommandContext0100(localHero);
