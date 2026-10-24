@@ -1,0 +1,1024 @@
+{
+  "statuses": [
+    {
+      "id": "SE001",
+      "name": "Poisoned",
+      "type": "Harmful",
+      "category": "Damage over Time",
+      "effect": "Suffer 1 damage at the start of your activation.",
+      "duration": "Until removed.",
+      "removal": "Antidote, Purifying Herbs, or another effect removes Poisoned.",
+      "keywords": "Poison; Condition"
+    },
+    {
+      "id": "SE002",
+      "name": "Burning",
+      "type": "Harmful",
+      "category": "Damage over Time",
+      "effect": "Suffer 1 damage at the end of your activation.",
+      "duration": "Until removed.",
+      "removal": "Burn Salve, water-related effect, or another effect removes Burning.",
+      "keywords": "Fire; Condition"
+    },
+    {
+      "id": "SE003",
+      "name": "Bleeding",
+      "type": "Harmful",
+      "category": "Damage over Time",
+      "effect": "Suffer 1 damage each time you perform an Attack.",
+      "duration": "Until removed.",
+      "removal": "Rest, Bandage Roll, Herbal Poultice, or another effect removes Bleeding.",
+      "keywords": "Physical; Condition"
+    },
+    {
+      "id": "SE004",
+      "name": "Stunned",
+      "type": "Harmful",
+      "category": "Control",
+      "effect": "Immediately end your activation if currently activating. You cannot perform Actions or activate.",
+      "duration": "Until the end of your next activation.",
+      "removal": "Expires automatically or another effect removes Stunned.",
+      "keywords": "Control; Condition"
+    },
+    {
+      "id": "SE005",
+      "name": "Rooted",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "You cannot voluntarily Move. Other Actions are unaffected.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Rooted.",
+      "keywords": "Movement; Condition"
+    },
+    {
+      "id": "SE006",
+      "name": "Slowed",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "Lose 1 Action during your activation, minimum 1 Action.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Slowed.",
+      "keywords": "Control; Action"
+    },
+    {
+      "id": "SE007",
+      "name": "Weakened",
+      "type": "Harmful",
+      "category": "Attack",
+      "effect": "Your Attack is reduced by 1.",
+      "duration": "Until removed.",
+      "removal": "Restorative Tonic or another effect removes Weakened.",
+      "keywords": "Attack; Condition"
+    },
+    {
+      "id": "SE008",
+      "name": "Vulnerable",
+      "type": "Harmful",
+      "category": "Armor",
+      "effect": "Your Armor is reduced by 1, minimum 0.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Vulnerable.",
+      "keywords": "Armor; Condition"
+    },
+    {
+      "id": "SE009",
+      "name": "Guarded",
+      "type": "Beneficial",
+      "category": "Armor",
+      "effect": "Gain +1 Armor.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Guarded or its source ends.",
+      "keywords": "Armor; Buff"
+    },
+    {
+      "id": "SE010",
+      "name": "Inspired",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "Gain +1 Attack.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Inspired or its source ends.",
+      "keywords": "Attack; Buff"
+    },
+    {
+      "id": "SE011",
+      "name": "Hidden",
+      "type": "Beneficial",
+      "category": "Targeting",
+      "effect": "You cannot be targeted by attacks unless the attacker is in your Location or another rule specifically allows it.",
+      "duration": "Until you Attack or another effect removes Hidden.",
+      "removal": "Attack or another effect removes Hidden.",
+      "keywords": "Stealth; Buff"
+    },
+    {
+      "id": "SE012",
+      "name": "Regenerating",
+      "type": "Beneficial",
+      "category": "Recovery",
+      "effect": "Recover 1 Health at the start of your activation.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Regenerating.",
+      "keywords": "Recovery; Buff"
+    },
+    {
+      "id": "SE013",
+      "name": "Exhausted",
+      "type": "Neutral",
+      "category": "Action Economy",
+      "effect": "You cannot benefit from abilities that grant additional Actions.",
+      "duration": "Until the end of your next activation.",
+      "removal": "Expires automatically.",
+      "keywords": "Action; Condition"
+    },
+    {
+      "id": "SE014",
+      "name": "Flying",
+      "type": "Neutral",
+      "category": "Movement",
+      "effect": "Ignore terrain restrictions and may cross obstacles as allowed by Scenario rules.",
+      "duration": "Permanent unless removed.",
+      "removal": "Only another effect can remove Flying.",
+      "keywords": "Movement; Trait"
+    },
+    {
+      "id": "SE015",
+      "name": "Ethereal",
+      "type": "Neutral",
+      "category": "Movement",
+      "effect": "You may move through units and terrain that would normally block movement, subject to card text.",
+      "duration": "As specified by the granting effect.",
+      "removal": "As specified by the granting effect.",
+      "keywords": "Movement; Arcane"
+    },
+    {
+      "id": "SE016",
+      "name": "Knocked Down",
+      "type": "Harmful",
+      "category": "Control",
+      "effect": "Your first Action on your turn must be spent to Stand. While Knocked Down, you cannot voluntarily Move.",
+      "duration": "Until you Stand.",
+      "removal": "Spend 1 Action to Stand or another effect removes it.",
+      "keywords": "Physical; Control"
+    },
+    {
+      "id": "SE017",
+      "name": "Grappled",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "You cannot voluntarily Move away from the source of Grappled.",
+      "duration": "Until the source leaves, is Defeated, or the effect is removed.",
+      "removal": "Defeat/leave source or another effect removes Grappled.",
+      "keywords": "Physical; Control"
+    },
+    {
+      "id": "SE018",
+      "name": "Restrained",
+      "type": "Harmful",
+      "category": "Control",
+      "effect": "You cannot Move and your Attack is reduced by 1.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Restrained.",
+      "keywords": "Physical; Control"
+    },
+    {
+      "id": "SE019",
+      "name": "Disarmed",
+      "type": "Harmful",
+      "category": "Equipment",
+      "effect": "You cannot use your equipped Weapon's Attack bonus or Weapon abilities.",
+      "duration": "Until the end of your next turn.",
+      "removal": "Expires automatically or another effect restores the Weapon.",
+      "keywords": "Weapon; Control"
+    },
+    {
+      "id": "SE020",
+      "name": "Crippled",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "Your Move Action costs 1 additional Action.",
+      "duration": "Until removed.",
+      "removal": "Healing effect specifically removes Crippled.",
+      "keywords": "Physical; Movement"
+    },
+    {
+      "id": "SE021",
+      "name": "Dazed",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "The next Action you perform costs 1 additional Action.",
+      "duration": "Until triggered or end of turn.",
+      "removal": "Removed after the increased cost is paid or at end of turn.",
+      "keywords": "Control; Action"
+    },
+    {
+      "id": "SE022",
+      "name": "Silenced",
+      "type": "Harmful",
+      "category": "Ability",
+      "effect": "You cannot use abilities with the Arcane, Spell, Prayer, or Chant keyword.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Silenced.",
+      "keywords": "Arcane; Control"
+    },
+    {
+      "id": "SE023",
+      "name": "Blinded",
+      "type": "Harmful",
+      "category": "Targeting",
+      "effect": "You cannot target enemies outside your current Location.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Blinded.",
+      "keywords": "Vision; Control"
+    },
+    {
+      "id": "SE024",
+      "name": "Marked",
+      "type": "Harmful",
+      "category": "Targeting",
+      "effect": "The source of Marked gains +1 Attack when attacking you.",
+      "duration": "Until the source's next turn ends.",
+      "removal": "Expires automatically or source leaves play.",
+      "keywords": "Targeting"
+    },
+    {
+      "id": "SE025",
+      "name": "Taunted",
+      "type": "Harmful",
+      "category": "Targeting",
+      "effect": "If able, your next Attack must target the unit that applied Taunted.",
+      "duration": "Until you make an Attack or source leaves play.",
+      "removal": "Attack the source or another effect removes Taunted.",
+      "keywords": "Targeting; Control"
+    },
+    {
+      "id": "SE026",
+      "name": "Frightened",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "You cannot voluntarily Move closer to the source of Frightened.",
+      "duration": "Until the end of your next turn.",
+      "removal": "Expires automatically or another effect removes Frightened.",
+      "keywords": "Mental; Control"
+    },
+    {
+      "id": "SE027",
+      "name": "Confused",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "At the start of your turn, roll 1d6. On 1-2, lose 1 Action; on 3-6, no effect.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Confused.",
+      "keywords": "Mental; Control"
+    },
+    {
+      "id": "SE028",
+      "name": "Charmed",
+      "type": "Harmful",
+      "category": "Targeting",
+      "effect": "You cannot target the source with Attacks or harmful abilities.",
+      "duration": "Until source is Defeated or effect ends.",
+      "removal": "Defeat source, source leaves play, or another effect removes Charmed.",
+      "keywords": "Mental; Control"
+    },
+    {
+      "id": "SE029",
+      "name": "Panicked",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "Your first voluntary Action must be Move away from the nearest hostile unit if legal.",
+      "duration": "Until the end of your next turn.",
+      "removal": "Expires automatically.",
+      "keywords": "Mental; Movement"
+    },
+    {
+      "id": "SE030",
+      "name": "Shaken",
+      "type": "Harmful",
+      "category": "Attack",
+      "effect": "Your first Attack each round suffers -1 Attack.",
+      "duration": "Until removed.",
+      "removal": "Rest or another effect removes Shaken.",
+      "keywords": "Mental; Attack"
+    },
+    {
+      "id": "SE031",
+      "name": "Pinned",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "You cannot voluntarily Move from your Location while a hostile Ranged enemy with line of effect remains able to attack you.",
+      "duration": "Until that condition is no longer true.",
+      "removal": "Break line of effect, defeat source, or another effect removes Pinned.",
+      "keywords": "Ranged; Control"
+    },
+    {
+      "id": "SE032",
+      "name": "Suppressed",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "You cannot gain free Move or free Attack Actions.",
+      "duration": "Until the end of the round.",
+      "removal": "Expires at end of round.",
+      "keywords": "Ranged; Control"
+    },
+    {
+      "id": "SE033",
+      "name": "Staggered",
+      "type": "Harmful",
+      "category": "Attack",
+      "effect": "Your next Attack suffers -1 Attack.",
+      "duration": "Until your next Attack resolves.",
+      "removal": "Removed after your next Attack.",
+      "keywords": "Physical; Attack"
+    },
+    {
+      "id": "SE034",
+      "name": "Cracked Armor",
+      "type": "Harmful",
+      "category": "Armor",
+      "effect": "Your Armor is reduced by 1.",
+      "duration": "Until repaired or removed.",
+      "removal": "Repair effect or another effect removes Cracked Armor.",
+      "keywords": "Armor; Equipment"
+    },
+    {
+      "id": "SE035",
+      "name": "Corroded",
+      "type": "Harmful",
+      "category": "Armor",
+      "effect": "Your Armor is reduced by 1 and cannot be increased above its printed value.",
+      "duration": "Until removed.",
+      "removal": "Cleaning, repair, or another effect removes Corroded.",
+      "keywords": "Acid; Armor"
+    },
+    {
+      "id": "SE036",
+      "name": "Wet",
+      "type": "Neutral",
+      "category": "Elemental",
+      "effect": "You cannot gain Burning. Lightning effects against you deal +1 damage if their text checks Wet.",
+      "duration": "Until end of round or removed.",
+      "removal": "Expires at end of round or another effect removes Wet.",
+      "keywords": "Water; Elemental"
+    },
+    {
+      "id": "SE037",
+      "name": "Chilled",
+      "type": "Harmful",
+      "category": "Movement",
+      "effect": "Your first Move each turn costs 1 additional Action.",
+      "duration": "Until end of your next turn.",
+      "removal": "Expires automatically or another effect removes Chilled.",
+      "keywords": "Cold; Movement"
+    },
+    {
+      "id": "SE038",
+      "name": "Frozen",
+      "type": "Harmful",
+      "category": "Control",
+      "effect": "You cannot Move or perform free Move effects.",
+      "duration": "Until end of your next activation.",
+      "removal": "Expires automatically or a Fire effect removes Frozen.",
+      "keywords": "Cold; Control"
+    },
+    {
+      "id": "SE039",
+      "name": "Shocked",
+      "type": "Harmful",
+      "category": "Action Economy",
+      "effect": "The next time you would gain an additional Action, do not gain it.",
+      "duration": "Until triggered or end of round.",
+      "removal": "Removed when it prevents an Action gain or at end of round.",
+      "keywords": "Lightning; Action"
+    },
+    {
+      "id": "SE040",
+      "name": "Electrified",
+      "type": "Harmful",
+      "category": "Damage",
+      "effect": "The next time you become Wet or take Lightning damage, suffer 1 additional damage.",
+      "duration": "Until triggered or end of round.",
+      "removal": "Removed when triggered or at end of round.",
+      "keywords": "Lightning; Elemental"
+    },
+    {
+      "id": "SE041",
+      "name": "Scorched",
+      "type": "Harmful",
+      "category": "Recovery",
+      "effect": "You recover 1 less Health from the next recovery effect that affects you, minimum 0.",
+      "duration": "Until triggered.",
+      "removal": "Removed after reducing one recovery effect.",
+      "keywords": "Fire; Recovery"
+    },
+    {
+      "id": "SE042",
+      "name": "Cursed",
+      "type": "Harmful",
+      "category": "Arcane",
+      "effect": "You cannot remove other harmful Conditions unless the removing effect also removes Cursed or says it ignores Cursed.",
+      "duration": "Until removed.",
+      "removal": "Specific curse removal effect.",
+      "keywords": "Arcane; Curse"
+    },
+    {
+      "id": "SE043",
+      "name": "Hexed",
+      "type": "Harmful",
+      "category": "Arcane",
+      "effect": "The first die you roll each turn is rolled twice; use the lower result.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Hexed.",
+      "keywords": "Arcane; Curse"
+    },
+    {
+      "id": "SE044",
+      "name": "Mana Burn",
+      "type": "Harmful",
+      "category": "Arcane",
+      "effect": "When you play a card with an Arcane keyword, suffer 1 damage.",
+      "duration": "Until removed.",
+      "removal": "Rest or another effect removes Mana Burn.",
+      "keywords": "Arcane; Damage"
+    },
+    {
+      "id": "SE045",
+      "name": "Withered",
+      "type": "Harmful",
+      "category": "Recovery",
+      "effect": "You cannot recover more than 1 Health from a single effect.",
+      "duration": "Until removed.",
+      "removal": "Another effect removes Withered.",
+      "keywords": "Necrotic; Recovery"
+    },
+    {
+      "id": "SE046",
+      "name": "Diseased",
+      "type": "Harmful",
+      "category": "Recovery",
+      "effect": "Recovery effects restore 1 less Health, minimum 0.",
+      "duration": "Until removed.",
+      "removal": "Disease-curing effect or Campaign treatment.",
+      "keywords": "Disease; Recovery"
+    },
+    {
+      "id": "SE047",
+      "name": "Infected",
+      "type": "Harmful",
+      "category": "Campaign",
+      "effect": "At the end of each Scenario, if still Infected, suffer the Campaign penalty specified by the source.",
+      "duration": "Campaign persistent until removed.",
+      "removal": "Specific treatment or Campaign effect.",
+      "keywords": "Disease; Campaign"
+    },
+    {
+      "id": "SE048",
+      "name": "Fortified",
+      "type": "Beneficial",
+      "category": "Armor",
+      "effect": "Gain +1 Armor against the first Attack that damages you each round.",
+      "duration": "Until removed.",
+      "removal": "Source ends or another effect removes Fortified.",
+      "keywords": "Armor; Buff"
+    },
+    {
+      "id": "SE049",
+      "name": "Protected",
+      "type": "Beneficial",
+      "category": "Damage Reduction",
+      "effect": "Reduce the next damage you suffer by 1, then remove Protected.",
+      "duration": "Until triggered.",
+      "removal": "Removed after reducing damage.",
+      "keywords": "Protection; Buff"
+    },
+    {
+      "id": "SE050",
+      "name": "Barrier",
+      "type": "Beneficial",
+      "category": "Damage Prevention",
+      "effect": "Prevent the next 2 damage you would suffer, then remove Barrier.",
+      "duration": "Until depleted.",
+      "removal": "Removed after preventing 2 total damage.",
+      "keywords": "Arcane; Protection"
+    },
+    {
+      "id": "SE051",
+      "name": "Ward",
+      "type": "Beneficial",
+      "category": "Condition Protection",
+      "effect": "Ignore the next harmful Condition that would be applied to you, then remove Ward.",
+      "duration": "Until triggered.",
+      "removal": "Removed when it prevents a Condition.",
+      "keywords": "Protection; Buff"
+    },
+    {
+      "id": "SE052",
+      "name": "Blessed",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "Your first Attack each round gains +1 Attack.",
+      "duration": "Until removed.",
+      "removal": "Source ends or another effect removes Blessed.",
+      "keywords": "Sacred; Buff"
+    },
+    {
+      "id": "SE053",
+      "name": "Consecrated",
+      "type": "Beneficial",
+      "category": "Protection",
+      "effect": "You cannot gain Cursed or Hexed.",
+      "duration": "Until removed.",
+      "removal": "Leave source or another effect removes it.",
+      "keywords": "Sacred; Buff"
+    },
+    {
+      "id": "SE054",
+      "name": "Empowered",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "Your next Attack gains +2 Attack.",
+      "duration": "Until next Attack resolves.",
+      "removal": "Removed after next Attack.",
+      "keywords": "Attack; Buff"
+    },
+    {
+      "id": "SE055",
+      "name": "Focused",
+      "type": "Beneficial",
+      "category": "Control",
+      "effect": "Ignore the next -1 Attack penalty applied to you, then remove Focused.",
+      "duration": "Until triggered.",
+      "removal": "Removed after preventing one Attack penalty.",
+      "keywords": "Mental; Buff"
+    },
+    {
+      "id": "SE056",
+      "name": "Hasted",
+      "type": "Beneficial",
+      "category": "Action Economy",
+      "effect": "Gain 1 additional Action at the start of your turn.",
+      "duration": "Until end of your next turn.",
+      "removal": "Expires automatically.",
+      "keywords": "Action; Buff"
+    },
+    {
+      "id": "SE057",
+      "name": "Quickened",
+      "type": "Beneficial",
+      "category": "Action Economy",
+      "effect": "Your next Move Action costs 0 Actions.",
+      "duration": "Until triggered or end of turn.",
+      "removal": "Removed after Move or at end of turn.",
+      "keywords": "Movement; Buff"
+    },
+    {
+      "id": "SE058",
+      "name": "Unstoppable",
+      "type": "Beneficial",
+      "category": "Control Immunity",
+      "effect": "Ignore the next Rooted, Knocked Down, Grappled, or Restrained effect applied to you, then remove Unstoppable.",
+      "duration": "Until triggered.",
+      "removal": "Removed when it prevents one listed Condition.",
+      "keywords": "Physical; Buff"
+    },
+    {
+      "id": "SE059",
+      "name": "Steadfast",
+      "type": "Beneficial",
+      "category": "Mental Protection",
+      "effect": "You cannot gain Frightened, Panicked, or Shaken.",
+      "duration": "Until removed.",
+      "removal": "Source ends or another effect removes Steadfast.",
+      "keywords": "Mental; Buff"
+    },
+    {
+      "id": "SE060",
+      "name": "Resolute",
+      "type": "Beneficial",
+      "category": "Defeat Prevention",
+      "effect": "The first time you would be reduced to 0 Health, remain at 1 Health instead, then remove Resolute.",
+      "duration": "Until triggered.",
+      "removal": "Removed when it prevents defeat.",
+      "keywords": "Heroic; Buff"
+    },
+    {
+      "id": "SE061",
+      "name": "Vigilant",
+      "type": "Beneficial",
+      "category": "Reaction",
+      "effect": "The first enemy that enters your Location each round satisfies enemy-entry Reaction triggers you possess.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Reaction; Buff"
+    },
+    {
+      "id": "SE062",
+      "name": "Prepared",
+      "type": "Beneficial",
+      "category": "Action Economy",
+      "effect": "The next Interact, Explore, or Rest Action you perform costs 0 Actions.",
+      "duration": "Until triggered or end of turn.",
+      "removal": "Removed after use or at end of turn.",
+      "keywords": "Utility; Buff"
+    },
+    {
+      "id": "SE063",
+      "name": "Camouflaged",
+      "type": "Beneficial",
+      "category": "Targeting",
+      "effect": "Ranged enemies outside your Location cannot target you.",
+      "duration": "Until you Attack, enter a Settlement, or effect removes it.",
+      "removal": "Attack, enter Settlement, or another effect removes Camouflaged.",
+      "keywords": "Stealth; Buff"
+    },
+    {
+      "id": "SE064",
+      "name": "Entrenched",
+      "type": "Beneficial",
+      "category": "Armor",
+      "effect": "While you remain in your current Location, gain +1 Armor.",
+      "duration": "Until you voluntarily Move.",
+      "removal": "Removed when you voluntarily Move.",
+      "keywords": "Terrain; Protection"
+    },
+    {
+      "id": "SE065",
+      "name": "Elevated",
+      "type": "Beneficial",
+      "category": "Ranged",
+      "effect": "Your Ranged Attacks gain +1 Range if their normal Range is at least 1 connected Location.",
+      "duration": "While terrain grants it.",
+      "removal": "Leave source of elevation.",
+      "keywords": "Terrain; Ranged"
+    },
+    {
+      "id": "SE066",
+      "name": "Regrouped",
+      "type": "Beneficial",
+      "category": "Recovery",
+      "effect": "The next time you Rest, recover 1 additional Health and draw 1 Hero card.",
+      "duration": "Until triggered.",
+      "removal": "Removed after next Rest.",
+      "keywords": "Recovery; Buff"
+    },
+    {
+      "id": "SE067",
+      "name": "Rallied",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "If an allied Hero shares your Location, gain +1 Attack on your first Attack each turn.",
+      "duration": "Until removed.",
+      "removal": "Source ends or no ally shares your Location.",
+      "keywords": "Teamwork; Buff"
+    },
+    {
+      "id": "SE068",
+      "name": "Linked",
+      "type": "Beneficial",
+      "category": "Teamwork",
+      "effect": "Choose another Hero at your Location. Once per round when either linked Hero gains Guarded or Inspired, the other gains the same Condition.",
+      "duration": "Until end of round.",
+      "removal": "Expires at end of round.",
+      "keywords": "Teamwork; Buff"
+    },
+    {
+      "id": "SE069",
+      "name": "Shielded",
+      "type": "Beneficial",
+      "category": "Armor",
+      "effect": "Gain +2 Armor against the next Attack that targets you, then remove Shielded.",
+      "duration": "Until triggered.",
+      "removal": "Removed after next Attack against you.",
+      "keywords": "Armor; Buff"
+    },
+    {
+      "id": "SE070",
+      "name": "Braced",
+      "type": "Beneficial",
+      "category": "Protection",
+      "effect": "If an enemy Moves into your Location, your next Attack against that enemy this round gains +1 Attack.",
+      "duration": "Until triggered or end of round.",
+      "removal": "Removed after use or at end of round.",
+      "keywords": "Reaction; Buff"
+    },
+    {
+      "id": "SE071",
+      "name": "Berserk",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "Gain +2 Attack, but your Armor is reduced by 1, minimum 0.",
+      "duration": "Until end of turn.",
+      "removal": "Expires at end of turn.",
+      "keywords": "Attack; Risk"
+    },
+    {
+      "id": "SE072",
+      "name": "Frenzied",
+      "type": "Beneficial",
+      "category": "Attack",
+      "effect": "After you Defeat an enemy, your next Attack this turn gains +1 Attack.",
+      "duration": "Until triggered or end of turn.",
+      "removal": "Removed after next Attack or at end of turn.",
+      "keywords": "Attack; Buff"
+    },
+    {
+      "id": "SE073",
+      "name": "Bloodthirsty",
+      "type": "Beneficial",
+      "category": "Recovery",
+      "effect": "The first time each turn you Defeat an enemy, recover 1 Health.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Attack; Recovery"
+    },
+    {
+      "id": "SE074",
+      "name": "Aegis",
+      "type": "Beneficial",
+      "category": "Protection",
+      "effect": "Allied Heroes at your Location gain +1 Armor against the first Attack that damages them each round.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Aura; Armor"
+    },
+    {
+      "id": "SE075",
+      "name": "Radiant",
+      "type": "Beneficial",
+      "category": "Sacred",
+      "effect": "Your Attacks against Corrupted or Undead targets deal +1 damage after Armor.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Sacred; Attack"
+    },
+    {
+      "id": "SE076",
+      "name": "Arcane Shield",
+      "type": "Beneficial",
+      "category": "Protection",
+      "effect": "Reduce the next Arcane, Fire, Cold, or Lightning damage you suffer by 2, then remove Arcane Shield.",
+      "duration": "Until triggered.",
+      "removal": "Removed after reducing damage.",
+      "keywords": "Arcane; Protection"
+    },
+    {
+      "id": "SE077",
+      "name": "Fireproof",
+      "type": "Beneficial",
+      "category": "Elemental Protection",
+      "effect": "You cannot gain Burning and reduce Fire damage you suffer by 1.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Fire; Protection"
+    },
+    {
+      "id": "SE078",
+      "name": "Coldproof",
+      "type": "Beneficial",
+      "category": "Elemental Protection",
+      "effect": "You cannot gain Chilled or Frozen.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Cold; Protection"
+    },
+    {
+      "id": "SE079",
+      "name": "Shockproof",
+      "type": "Beneficial",
+      "category": "Elemental Protection",
+      "effect": "You cannot gain Shocked or Electrified.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Lightning; Protection"
+    },
+    {
+      "id": "SE080",
+      "name": "Venomproof",
+      "type": "Beneficial",
+      "category": "Condition Protection",
+      "effect": "You cannot gain Poisoned.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Poison; Protection"
+    },
+    {
+      "id": "SE081",
+      "name": "True Sight",
+      "type": "Beneficial",
+      "category": "Vision",
+      "effect": "Ignore Hidden and Camouflaged when determining valid targets.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Vision; Buff"
+    },
+    {
+      "id": "SE082",
+      "name": "Surefooted",
+      "type": "Beneficial",
+      "category": "Movement",
+      "effect": "Ignore Difficult Terrain and the first additional Move Action required by a terrain-based movement effect each turn.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Movement; Buff"
+    },
+    {
+      "id": "SE083",
+      "name": "Fleet",
+      "type": "Beneficial",
+      "category": "Movement",
+      "effect": "After your first Move Action each turn, you may Move one additional connected Location if not Engaged.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Movement; Buff"
+    },
+    {
+      "id": "SE084",
+      "name": "Evasive",
+      "type": "Beneficial",
+      "category": "Protection",
+      "effect": "The first Ranged Attack against you each round deals 1 less damage, minimum 0.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Protection; Ranged"
+    },
+    {
+      "id": "SE085",
+      "name": "Countering",
+      "type": "Beneficial",
+      "category": "Reaction",
+      "effect": "The first time each round an enemy damages you with a melee Attack, your next Attack against it gains +1 Attack.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Reaction; Attack"
+    },
+    {
+      "id": "SE086",
+      "name": "Overwatch",
+      "type": "Beneficial",
+      "category": "Reaction",
+      "effect": "You are prepared to use Reaction Attacks against hostile units that Move into valid range when another rule grants such a Reaction.",
+      "duration": "Until end of round.",
+      "removal": "Expires at end of round.",
+      "keywords": "Ranged; Reaction"
+    },
+    {
+      "id": "SE087",
+      "name": "Channeling",
+      "type": "Beneficial",
+      "category": "Arcane",
+      "effect": "Your next Arcane card or ability costs 1 fewer Action, minimum 0.",
+      "duration": "Until triggered or end of turn.",
+      "removal": "Removed after use or at end of turn.",
+      "keywords": "Arcane; Action"
+    },
+    {
+      "id": "SE088",
+      "name": "Sanctified",
+      "type": "Beneficial",
+      "category": "Sacred",
+      "effect": "When you gain a harmful Condition, roll 1d6. On a 6, ignore it.",
+      "duration": "Until removed.",
+      "removal": "Source ends.",
+      "keywords": "Sacred; Protection"
+    },
+    {
+      "id": "SE089",
+      "name": "Alerted",
+      "type": "Neutral",
+      "category": "Enemy State",
+      "effect": "Use aggressive/combat behavior instead of passive or patrol behavior.",
+      "duration": "Until no hostile Hero is revealed or Scenario states otherwise.",
+      "removal": "Scenario or behavior effect removes Alerted.",
+      "keywords": "AI; State"
+    },
+    {
+      "id": "SE090",
+      "name": "Patrolling",
+      "type": "Neutral",
+      "category": "Enemy State",
+      "effect": "Follow patrol route or Scenario movement instead of pursuing Heroes.",
+      "duration": "Until Alerted or Scenario changes state.",
+      "removal": "Become Alerted or Scenario effect.",
+      "keywords": "AI; State"
+    },
+    {
+      "id": "SE091",
+      "name": "Guarding",
+      "type": "Neutral",
+      "category": "Enemy State",
+      "effect": "Remain within Guard Area and prioritize threats to the protected target.",
+      "duration": "Until protected target is gone or behavior changes.",
+      "removal": "Scenario or behavior change.",
+      "keywords": "AI; State"
+    },
+    {
+      "id": "SE092",
+      "name": "Enraged",
+      "type": "Neutral",
+      "category": "Enemy State",
+      "effect": "Gain +1 Attack and prioritize the nearest Hero.",
+      "duration": "Until end of encounter or source says otherwise.",
+      "removal": "Source-specific.",
+      "keywords": "AI; Attack"
+    },
+    {
+      "id": "SE093",
+      "name": "Retreating",
+      "type": "Neutral",
+      "category": "Enemy State",
+      "effect": "Prioritize moving toward the designated safe Location and avoid Attacks unless blocked.",
+      "duration": "Until reaching safety or behavior changes.",
+      "removal": "Scenario or behavior change.",
+      "keywords": "AI; Movement"
+    },
+    {
+      "id": "SE094",
+      "name": "Summoned",
+      "type": "Neutral",
+      "category": "Unit State",
+      "effect": "This unit was created by another effect and follows the source's removal rules.",
+      "duration": "As specified by source.",
+      "removal": "As specified by source.",
+      "keywords": "Summon; State"
+    },
+    {
+      "id": "SE095",
+      "name": "Objective Carrier",
+      "type": "Neutral",
+      "category": "Quest State",
+      "effect": "This unit is carrying a Quest Objective. Effects referencing the Objective Carrier apply to it.",
+      "duration": "Until objective is dropped, delivered, or removed.",
+      "removal": "Quest-specific.",
+      "keywords": "Quest; State"
+    },
+    {
+      "id": "SE096",
+      "name": "Escorting",
+      "type": "Neutral",
+      "category": "Quest State",
+      "effect": "This unit is linked to an Escort objective and follows the Quest or Scenario escort rules.",
+      "duration": "Until escort objective ends.",
+      "removal": "Quest-specific.",
+      "keywords": "Quest; State"
+    },
+    {
+      "id": "SE097",
+      "name": "Tracked",
+      "type": "Neutral",
+      "category": "Quest State",
+      "effect": "Effects that reference Tracked targets may locate or target this unit regardless of normal tracking restrictions.",
+      "duration": "Until removed by source.",
+      "removal": "Source-specific.",
+      "keywords": "Quest; State"
+    },
+    {
+      "id": "SE098",
+      "name": "Favored",
+      "type": "Neutral",
+      "category": "Campaign State",
+      "effect": "A faction considers this Hero or party favored. Campaign effects may unlock benefits tied to Favored.",
+      "duration": "Campaign persistent until changed.",
+      "removal": "Campaign-specific.",
+      "keywords": "Campaign; State"
+    },
+    {
+      "id": "SE099",
+      "name": "Cursed Item",
+      "type": "Neutral",
+      "category": "Equipment State",
+      "effect": "The affected Equipment cannot be voluntarily unequipped unless a rule specifically allows it.",
+      "duration": "Until curse is removed.",
+      "removal": "Curse removal effect.",
+      "keywords": "Equipment; Curse"
+    },
+    {
+      "id": "SE100",
+      "name": "Broken",
+      "type": "Neutral",
+      "category": "Equipment State",
+      "effect": "The affected Equipment provides no abilities or stat bonuses.",
+      "duration": "Until repaired.",
+      "removal": "Repair effect or Campaign repair.",
+      "keywords": "Equipment; State"
+    },
+    {
+      "id": "SE101",
+      "name": "Exposed",
+      "type": "Harmful",
+      "category": "Targeting",
+      "effect": "The next Attack made against you gains +1 Attack. Then remove Exposed.",
+      "duration": "Until triggered or removed.",
+      "removal": "Removed after the next Attack against you resolves or another effect removes Exposed.",
+      "keywords": "Targeting; Condition"
+    },
+    {
+      "id": "SE102",
+      "name": "Stealth",
+      "type": "Beneficial",
+      "category": "Hero State",
+      "effect": "Stealth has no inherent targeting or combat effect by itself. Cards that reference Stealth provide its benefits. Lose Stealth when an effect says to lose or reveal it.",
+      "duration": "Until removed by a card or effect.",
+      "removal": "A card/effect removes Stealth; resolving an Attack removes it only when that card says so.",
+      "keywords": "Stealth; State"
+    }
+  ]
+}

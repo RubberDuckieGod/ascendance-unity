@@ -1,0 +1,9 @@
+PASS — E015 exact runtime template
+PASS — Q008 final defender uses E015
+PASS — WE003 archer exact +1 assertion
+PASS — validator Champion null guard
+PASS — validator no direct nullable dictionary index
+PASS — raw string Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — raw string Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — E015 parsed HP/Attack/Armor
+RESULT: 8/8 checks passed

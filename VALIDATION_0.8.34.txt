@@ -1,0 +1,20 @@
+ASCENDANCE UNITY 0.8.34 — CAMPAIGN HUB & QUEST SELECTION UI
+
+STATIC PACKAGE VALIDATION
+- Built from Ascendance_Unity_Stonebrook_0.8.33_CAMPAIGN_I_WORLD_EVENT_PROGRESSION.zip.
+- 0.8.33 source campaign runtime retained as authoritative.
+- New CampaignHubRuntime0834.cs contains presentation queries only.
+- New CampaignHubUI0834.cs is runtime-created from GameBootstrap; no Unity scene object wiring required.
+- AscendanceHUD now exposes a CAMPAIGN button and retains direct main/optional/advance shortcuts.
+- Quest cards use QuestContent0829 definitions rather than duplicated Quest names/objectives/rewards.
+- Quest buttons route through CanBeginCampaignQuest0833 / BeginCampaignQuest0833.
+- World Event advance routes through CanAdvanceWorldEvent0833 / AdvanceWorldEvent0833.
+- Build version advanced to 0.8.34.
+
+UNITY PLAY MODE TEST REQUIRED
+1. Enter Stonebrook Play Mode.
+2. Open Ascendance > Validation > Test 0.8.34 - Campaign Hub UI (Play Mode).
+3. Expected final line: [ASCENDANCE][0.8.34 TEST] PASS — Campaign Hub UI state routing completed: 18 passed, 0 failed.
+4. Manually click CAMPAIGN and confirm the overlay opens, quest cards fit at 1600x900-equivalent scaling, and BEGIN/RETRY/ADVANCE buttons reflect the active campaign state.
+
+0.8.33 should remain the last runtime-verified baseline until this Play Mode validator passes in Unity.

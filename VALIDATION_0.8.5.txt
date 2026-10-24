@@ -1,0 +1,42 @@
+Ascendance Unity 0.8.5 — static Player-Chosen Hero Turn Order verification
+NOTE: Unity Editor/runtime execution is not available in the packaging environment; local Play Mode remains the compile/runtime authority.
+
+Build marker 0.8.5: PASS
+16 authored Heroes: PASS
+323 Hero-card definitions: PASS
+No runtime ActiveHero property: PASS
+No runtime ActiveHeroId property: PASS
+No IsActiveHeroTurn runtime: PASS
+No ACTIVE hero HUD label: PASS
+TurnHeroId starts null at party setup: PASS
+Initial selection does not claim turn: PASS
+Player-chosen order log: PASS
+First legal action can claim current turn: PASS
+Turn in progress blocks another normal turn: PASS
+End Turn clears turn owner: PASS
+End Turn does not auto-select next Hero: PASS
+World Phase waits for no remaining unfinished Heroes: PASS
+New Round returns to no chosen turn: PASS
+Save stores TurnHeroId: PASS
+Load restores only TurnHeroId: PASS
+Legacy ActiveHeroId retained only in save DTO: PASS
+HUD displays TURN, not ACTIVE: PASS
+HUD supports CHOOSE TURN state: PASS
+Main menu says Initial view: PASS
+Main menu no controlled-Hero wording: PASS
+Reactions remain cross-party: PASS
+AscendanceGameManager.cs brace balance: PASS
+AscendanceHUD.cs brace balance: PASS
+AscendanceSaveData.cs brace balance: PASS
+AscendanceSaveSystem.cs brace balance: PASS
+MainMenuUI.cs brace balance: PASS
+
+Rules target:
+- No preassigned Active Hero.
+- Players choose Hero activation order each Round.
+- Once a Hero begins a turn, that Hero completes it before another Hero begins a normal turn.
+- Ending a turn returns the Hero Phase to player choice; it does not force the next Hero.
+- World Phase begins only after all eligible participating Heroes have completed one turn.
+
+Live regression steps are documented in PLAYER_CHOSEN_TURN_ORDER_0.8.5.md.
+Existing 0.8.3 Hero parity migration boundaries remain documented in HERO_GAMEPLAY_PARITY_AUDIT_0.8.3.md.

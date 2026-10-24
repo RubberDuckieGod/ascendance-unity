@@ -1,0 +1,67 @@
+PASS — BuildVersion 0.8.14
+PASS — 0.8.14 load banner
+PASS — victory logs free exploration
+PASS — HUD no longer says VICTORY LOCKED
+PASS — HUD says free exploration active
+PASS — post-quest defeat does not rewrite victory
+PASS — CanStartHeroTurn is not gated by QuestComplete/QuestFailed
+PASS — CanUseTurnActions is not gated by QuestComplete/QuestFailed
+PASS — Explore is not gated by QuestComplete/QuestFailed
+PASS — runtime test completes quest
+PASS — runtime test explores after completion
+PASS — runtime test starts another turn after completion
+PASS — runtime test proves post-quest death
+PASS — runtime test preserves completed result after death
+PASS — no raw newline in string: Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — no raw newline in string: Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — no raw newline in string: Assets/Editor/ReactionTestTools088.cs
+PASS — no raw newline in string: Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — no raw newline in string: Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — no raw newline in string: Assets/Editor/AscendanceProArtMapper.cs
+PASS — no raw newline in string: Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — no raw newline in string: Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — no raw newline in string: Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — no raw newline in string: Assets/Editor/HeroParityAudit083.cs
+PASS — no raw newline in string: Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — no raw newline in string: Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — no raw newline in string: Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — no raw newline in string: Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — no raw newline in string: Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — no raw newline in string: Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — no raw newline in string: Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — no raw newline in string: Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — no raw newline in string: Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — no raw newline in string: Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — no raw newline in string: Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — no raw newline in string: Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/PauseMenuController.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/MainMenuUI.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/AscendanceSession.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — no raw newline in string: Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — no raw newline in string: Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — no raw newline in string: Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — no raw newline in string: Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — no raw newline in string: Assets/Scripts/Core/GameBootstrap.cs
+PASS — no raw newline in string: Assets/Scripts/Core/AscendanceModels.cs
+PASS — no raw newline in string: Assets/Scripts/Core/HeroDatabase.cs
+PASS — no raw newline in string: Assets/Scripts/Input/CRPGInputController.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/FireFlicker.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — no raw newline in string: Assets/Scripts/Presentation/WorldRing.cs
+PASS — no raw newline in string: Assets/Scripts/UI/AscendanceHUD.cs
+PASS — no raw newline in string: Assets/Scripts/World/HeroAvatar.cs
+PASS — no raw newline in string: Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — no raw newline in string: Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — no raw newline in string: Assets/Scripts/World/EnemyAvatar.cs
+PASS — no raw newline in string: Assets/Scripts/World/LocationMarker.cs
+
+65/65 checks passed.

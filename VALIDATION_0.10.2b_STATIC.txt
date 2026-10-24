@@ -1,0 +1,4 @@
+Ascendance Unity 0.10.2b static verification
+Result: 22/22 focused source checks passed before packaging.
+
+Verified: 0.10.2b build/bundle identity; inherited 54/24 gate counts; router gate promoted to 29 checks; network gate promoted to 25 checks; router World Phase coroutine containment; authoritative reaction resolution through router during validator drain; sustained idle/startable network preconditions; real localhost TCP HELLO and START TURN retained; production TCP server/client/protocol classes retained; no stale 0.10.2a identity remains in current runtime/editor/config surfaces; new hotfix documentation present.

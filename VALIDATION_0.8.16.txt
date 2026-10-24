@@ -1,0 +1,12 @@
+Ascendance Unity 0.8.16 — Core Status Effect Enforcement
+
+Static validation: 238/238 checks passed.
+
+Regression check against 0.8.15 foundation: 251/253 checks passed; the only failures are the expected BuildVersion and startup-banner assertions because the project is now 0.8.16.
+
+Older 0.8.12/0.8.13 verifiers contain literal assertions that the Start Turn code always writes exactly 3 Actions and that reaction gating has the older expression shape. 0.8.16 intentionally makes the grant conditional: normal Heroes still gain 3 Actions, while Slowed Heroes gain 2. The Stunned gate also intentionally extends the reaction payment rule.
+
+Play Mode test:
+Ascendance > Validation > Test 0.8.16 - Core Status Effect Enforcement (Play Mode)
+
+Run at the beginning of a Hero Phase with no turn, movement, resolution, or Reaction window in progress and with at least 2 participating Heroes.

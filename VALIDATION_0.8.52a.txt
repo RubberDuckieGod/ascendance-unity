@@ -1,0 +1,9 @@
+Ascendance Unity 0.8.52a — Static Validation
+
+PASS — Authored Search rows: 100
+PASS — Explicit Search case coverage: 100/100
+PASS — Unity GUIDs scanned: 172
+PASS — Files/directories differing from exact 0.8.51: 13
+
+PASS — Static source/package preflight completed with 0 detected errors.
+PENDING — Unity Play Mode validator must still be run; do not treat 0.8.52a as runtime-verified until it reports 0 failures.

@@ -1,0 +1,24 @@
+ASCENDANCE UNITY 0.8.53 — STATIC VALIDATION
+
+Status: READY FOR UNITY PLAY MODE VALIDATION
+Runtime verification is intentionally not claimed until the Unity validator is run.
+
+Static checks completed:
+- BuildVersion updated to 0.8.53.
+- New CampaignIEncounterRuntime0853.cs added.
+- New TravelEncounterDeckExecutionTestTools0853.cs added.
+- Campaign I live Encounter boundary remains EN001–EN030.
+- Campaign I authored definition count: 30.
+- Campaign I physical Encounter count from authored copy values: 35.
+- EN031–EN105 remain outside Campaign I live-deck filtering.
+- Existing 0.8.52 Search runtime retained.
+- Existing 0.8.29+ Quest runtime retained with one additive cross-Quest carryover hook.
+- Existing Reward Choice pipeline retained with additive Encounter choice routing.
+- Modified/new C# files pass lexical balance checks for {}, (), and [].
+- Regression diff is limited to intended runtime/choice/quest hook files plus new 0.8.53 files/docs.
+
+Unity validation menu:
+Ascendance > Validation > Test 0.8.53 - Full Travel Encounter Deck Execution (Play Mode)
+
+Expected final validator line when runtime verification succeeds:
+[ASCENDANCE][0.8.53 TEST] PASS — Full Travel Encounter Deck Execution completed: <N> passed, 0 failed.

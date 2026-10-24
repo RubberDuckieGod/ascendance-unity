@@ -1,0 +1,21 @@
+Ascendance Unity 0.8.58 — Full Location Runtime Execution
+Static release-gate result: PASS
+
+Baseline: runtime-verified 0.8.57a Full World Event Runtime Execution
+
+Checks completed before packaging:
+- 136 C# files scanned for balanced source delimiters outside strings/comments: 0 failures.
+- 74 validator Check(...) call sites confirmed.
+- BuildVersion confirmed: 0.8.58.
+- Play Mode validator menu confirmed.
+- Full authored Location catalog confirmed: 236 rows, contiguous L000-L235.
+- Merge/conflict markers: none.
+- Unity .meta GUID scan: 182 GUIDs, 0 duplicates.
+- Regression diff limited to intended Location/search/movement/combat/save hooks, new runtime/validator, and release documentation.
+- Location Search chaining hardened so nested Search-card choices resolve before Location post-Search effects.
+
+This is static validation only. Runtime verification requires Unity Play Mode validator:
+Ascendance -> Validation -> Test 0.8.58 - Full Location Runtime Execution (Play Mode)
+
+Expected final result:
+[ASCENDANCE][0.8.58 TEST] PASS — Full Location Runtime Execution completed: 74 passed, 0 failed.

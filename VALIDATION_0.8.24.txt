@@ -1,0 +1,20 @@
+Ascendance Unity 0.8.24 — Encounter Enemy Movement & Initiative Rules
+
+Static verifier: tests/verify_0824.py
+Result: 501/501 checks passed.
+
+Regression suites:
+- 0.8.23: 459/461; only expected BuildVersion/load-banner assertions differ.
+- 0.8.22: 454/456; only expected BuildVersion/load-banner assertions differ.
+- 0.8.21: 417/419; only expected BuildVersion/load-banner assertions differ.
+- 0.8.20: 400/402; only expected BuildVersion/load-banner assertions differ.
+- 0.8.19: 305/307; only expected BuildVersion/load-banner assertions differ.
+
+Compile-safety coverage includes:
+- raw multiline C# string scan
+- balanced (), [], {}
+- every IEnumerator contains yield return/yield break
+- deprecated FindObjectsSortMode guard
+
+Runtime validation still required in Unity:
+Ascendance -> Validation -> Test 0.8.24 - Encounter Enemy Movement & Initiative (Play Mode)

@@ -1,0 +1,31 @@
+Ascendance Unity 0.8.4 — static Active Hero turn-authority verification
+NOTE: Unity Editor/runtime execution is not available in the packaging environment; local Play Mode remains the compile/runtime authority.
+
+Build marker 0.8.4: PASS
+16 authored Heroes: PASS
+323 Hero-card definitions: PASS
+ActiveHeroId runtime authority: PASS
+Selected and active Hero separated: PASS
+Standard actions require active Hero: PASS
+Card play requires active Hero: PASS
+Move entry point requires active Hero: PASS
+Attack entry point requires active Hero: PASS
+Potion entry point requires active Hero: PASS
+End Turn uses ActiveHero: PASS
+Turn advance sets ActiveHeroId: PASS
+New round sets ActiveHeroId: PASS
+Save data stores ActiveHeroId: PASS
+Save capture persists ActiveHeroId: PASS
+Load migration restores/falls back active Hero: PASS
+HUD action controls require active Hero: PASS
+HUD marks ACTIVE Hero: PASS
+Inactive Hero remains inspectable: PASS
+Reactions remain cross-party: PASS
+Totemic Presence remains location-wide: PASS
+AscendanceGameManager.cs brace balance: PASS
+AscendanceHUD.cs brace balance: PASS
+AscendanceSaveData.cs brace balance: PASS
+AscendanceSaveSystem.cs brace balance: PASS
+
+Live regression steps are documented in TURN_ENFORCEMENT_0.8.4.md.
+Existing 0.8.3 Hero parity migration boundaries remain documented in HERO_GAMEPLAY_PARITY_AUDIT_0.8.3.md.

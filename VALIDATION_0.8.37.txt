@@ -1,0 +1,35 @@
+Ascendance Unity 0.8.37 static/package validation
+
+Runtime status: CANDIDATE — requires Unity Play Mode verification.
+Baseline: runtime-verified 0.8.36b.
+
+Validator menu:
+Ascendance/Validation/Test 0.8.37 - Hero-Owned Crafting & Professions (Play Mode)
+
+Expected:
+[ASCENDANCE][0.8.37 TEST] PASS — Hero-Owned Crafting & Profession Progression completed: 28 passed, 0 failed.
+
+Coverage includes:
+- downtime-only crafting availability
+- 20 recipes / 5 per profession
+- explicit per-Hero material isolation
+- no cross-Hero ingredient access or consumption
+- Party Gold unchanged by crafting
+- usable Healing Potion crafting
+- authored consumable and Equipment outputs
+- independent per-Hero/per-profession XP
+- profession level gates
+- Eternal Forge Ember personal unlock
+- Codex of Eternity personal unlock
+- profession/output save-load persistence
+- material ownership remains separate after save/load
+- Stonebrook Crafting UI integration
+- validator save backup/restore
+
+Static checks completed in packaging environment:
+- all 50 LT/EQ IDs referenced by recipes exist in RewardContent0826
+- 20 total recipes, exactly 5 per profession
+- brace/parenthesis/bracket balance on all modified/new C# files
+- no TODO/FIXME/NotImplementedException in new crafting implementation
+- no party-material aggregation remains in Downtime crafting hooks
+- compiler/Unity assemblies unavailable locally; Unity runtime test remains authoritative

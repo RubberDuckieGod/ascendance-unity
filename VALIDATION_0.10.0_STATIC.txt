@@ -1,0 +1,63 @@
+Ascendance Unity 0.10.0 static validation: 61 passed, 0 failed.
+
+PASS — all C# lexical structures balanced
+PASS — 16 heroes
+PASS — 323 hero cards
+PASS — loot count 190
+PASS — equipment count 144
+PASS — searchCards count 100
+PASS — encounters count 105
+PASS — enemies count 125
+PASS — locations count 236
+PASS — craftingRecipes count 200
+PASS — quests count 72
+PASS — worldEvents count 24
+PASS — Aldric deck = 30
+PASS — Lyra deck = 30
+PASS — Elara deck = 30
+PASS — Vaelis deck = 30
+PASS — Rowan deck = 30
+PASS — Seraphine deck = 30
+PASS — Thorne deck = 30
+PASS — Cassian deck = 30
+PASS — Kael deck = 30
+PASS — Mira deck = 30
+PASS — Malachar deck = 30
+PASS — Garruk deck = 30
+PASS — Veyra deck = 30
+PASS — Mordren deck = 30
+PASS — Lucien deck = 30
+PASS — Asha deck = 30
+PASS — enemies unique
+PASS — enemies contiguous
+PASS — quests unique
+PASS — quests contiguous
+PASS — runtime world events unique
+PASS — runtime world events contiguous
+PASS — BuildVersion 0.10.0
+PASS — bundleVersion 0.10.0
+PASS — room authority class
+PASS — no host-player field
+PASS — expected revision enforcement
+PASS — hero ownership enforcement
+PASS — idempotent command cache
+PASS — reconnect token flow
+PASS — snapshot redacts reconnect token
+PASS — transient snapshot separated
+PASS — room persistence class
+PASS — dedicated server mode
+PASS — room command line
+PASS — headless skips presentation
+PASS — dedicated build subtarget
+PASS — server build scene Stonebrook only
+PASS — server batch build script
+PASS — validator targets master 54/0
+PASS — validator checks reconnect
+PASS — validator checks persistence
+PASS — online scripts have meta
+PASS — editor network scripts have meta
+PASS — MasterSaveLoadRegressionTestTools0862.cs expects 0.10.0
+PASS — FullLocationRuntimeTestTools0858.cs expects 0.10.0
+PASS — FullEnemyRuntimeTestTools0859.cs expects 0.10.0
+PASS — FullHeroRuntimeTestTools0860.cs expects 0.10.0
+PASS — FullCampaignIntegrationTestTools0861.cs expects 0.10.0

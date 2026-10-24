@@ -1,0 +1,25 @@
+Ascendance Unity 0.8.31 — Campaign I Quest Batch 2 (Q006–Q008)
+
+STATIC VALIDATION
+- tests/verify_0831.py: 411/411 checks passed.
+- Raw multiline C# string scan: passed.
+- (), {}, [] delimiter balance: passed across Assets/**/*.cs.
+- IEnumerator/yield audit: passed.
+- Validator Debug helper existence audit: passed.
+
+REGRESSION
+- 0.8.30 verifier: 268/270; only old BuildVersion/banner assertions differ.
+- 0.8.29 verifier: 223/225; only old BuildVersion/banner assertions differ.
+- 0.8.28 verifier: expected old version/banner plus its pre-Q003+ exact hidden-location expression.
+- 0.8.27 verifier: expected old version/banner only.
+- 0.8.26/0.8.25: expected old version/banner and known exact-string assumptions around later encounter/quest hooks.
+
+Q008 PLAYTEST RULING
+- Siege Engine: 10 Health, 2 Armor.
+- Siege Engines do not make a separate normal Enemy Attack.
+- Their authored offensive pressure is BOMBARDMENT at end of Enemy Phase.
+- A Hero in the Engine's Location may use the Quest action Attack Engine for 1 Action; damage = effective Hero Attack - 2 Armor, minimum 1 for this objective action.
+
+UNITY RUNTIME VALIDATION REQUIRED
+Ascendance -> Validation -> Test 0.8.31 - Campaign I Q006-Q008 (Play Mode)
+Expected: PASS — Campaign I Q006-Q008 completed: 21 passed, 0 failed.

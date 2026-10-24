@@ -1,0 +1,18 @@
+Ascendance Unity 0.8.23 validation
+
+Static/source validation:
+- tests/verify_0823.py: 454/454 checks passed.
+- raw multiline C# scan passed.
+- balanced (), [], {} scan passed.
+- IEnumerator yield audit passed.
+- deprecated FindObjectsSortMode / FindObjectOfType<T> guards passed.
+
+Regression:
+- 0.8.22 suite: only expected BuildVersion/banner mismatches.
+- 0.8.21 suite: only expected BuildVersion/banner mismatches.
+- 0.8.20 suite: only expected BuildVersion/banner mismatches.
+
+Unity Play Mode validation menu:
+Ascendance -> Validation -> Test 0.8.23 - Campaign I Encounter Consequences (Play Mode)
+
+Runtime verification is pending user execution in Unity.

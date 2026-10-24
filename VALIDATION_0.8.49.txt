@@ -1,0 +1,9 @@
+Ascendance Unity 0.8.49 — Code-First Studio Campaign UI
+
+Runtime validator:
+Ascendance -> Validation -> Test 0.8.49 - Code-First Studio Campaign Hub (Play Mode)
+
+Expected final line:
+[ASCENDANCE][0.8.49 TEST] PASS — Code-First Studio Campaign Hub completed: 50 passed, 0 failed.
+
+This candidate has been statically/package validated only until a Unity runtime log confirms the validator.

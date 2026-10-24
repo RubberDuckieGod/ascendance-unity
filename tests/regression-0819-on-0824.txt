@@ -1,0 +1,309 @@
+FAIL — BuildVersion 0.8.19
+FAIL — 0.8.19 load banner
+PASS — HeroState FreeSearchLocationId
+PASS — HeroState PendingLocationOption
+PASS — HeroState PendingLocationOptionLocationId
+PASS — LocationState SearchRequests
+PASS — LocationState TravelEncounterRequests
+PASS — Search runtime hook
+PASS — Travel runtime hook
+PASS — Ancient Ruins grants free Search
+PASS — free Reveal Search targets revealed Location
+PASS — Search once per Location
+PASS — normal Search costs Action
+PASS — Search hook invoked
+PASS — Dense Woods optional Hide
+PASS — Hide applies Hidden
+PASS — River Fresh Water option
+PASS — Fresh Water heal
+PASS — First Visit travel hook
+PASS — First Visit enemy deferral preserved
+PASS — Dense Woods ranged -1
+PASS — High Ground generic +1
+PASS — Open Sightlines generic +1
+PASS — Cover query
+PASS — Goblin Home Territory armor hook
+PASS — Enemy armor consumes location hook
+PASS — Hero attack consumes location modifier
+PASS — HUD Search button
+PASS — HUD Location Option button
+PASS — Play Mode menu
+PASS — test: optional Hide permission
+PASS — test: Fresh Water can recover exactly 1 Health
+PASS — test: Fresh Water can remove Poisoned
+PASS — test: free one-time Search
+PASS — test: Search deck hook
+PASS — test: Travel Encounter
+PASS — test: Limited Visibility applies -1
+PASS — test: Cover vs ranged
+PASS — test: Stonebrook Location Effect Execution completed
+PASS — no raw newline: Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — balanced (): Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — balanced []: Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — balanced {}: Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — no raw newline: Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — balanced (): Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — balanced []: Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — balanced {}: Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — no raw newline: Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — balanced (): Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — balanced []: Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — balanced {}: Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — no raw newline: Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — balanced (): Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — balanced []: Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — balanced {}: Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — no raw newline: Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — balanced (): Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — balanced []: Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — balanced {}: Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — no raw newline: Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — balanced (): Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — balanced []: Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — balanced {}: Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — no raw newline: Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — balanced (): Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — balanced []: Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — balanced {}: Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — no raw newline: Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — balanced (): Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — balanced []: Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — balanced {}: Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — no raw newline: Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — balanced (): Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — balanced []: Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — balanced {}: Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — no raw newline: Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — balanced (): Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — balanced []: Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — balanced {}: Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — no raw newline: Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — balanced (): Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — balanced []: Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — balanced {}: Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — no raw newline: Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — balanced (): Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — balanced []: Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — balanced {}: Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — no raw newline: Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — balanced (): Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — balanced []: Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — balanced {}: Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — no raw newline: Assets/Scripts/Shell/PauseMenuController.cs
+PASS — balanced (): Assets/Scripts/Shell/PauseMenuController.cs
+PASS — balanced []: Assets/Scripts/Shell/PauseMenuController.cs
+PASS — balanced {}: Assets/Scripts/Shell/PauseMenuController.cs
+PASS — no raw newline: Assets/Scripts/Shell/MainMenuUI.cs
+PASS — balanced (): Assets/Scripts/Shell/MainMenuUI.cs
+PASS — balanced []: Assets/Scripts/Shell/MainMenuUI.cs
+PASS — balanced {}: Assets/Scripts/Shell/MainMenuUI.cs
+PASS — no raw newline: Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — balanced (): Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — balanced []: Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — balanced {}: Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — no raw newline: Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — balanced (): Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — balanced []: Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — balanced {}: Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — no raw newline: Assets/Scripts/Shell/AscendanceSession.cs
+PASS — balanced (): Assets/Scripts/Shell/AscendanceSession.cs
+PASS — balanced []: Assets/Scripts/Shell/AscendanceSession.cs
+PASS — balanced {}: Assets/Scripts/Shell/AscendanceSession.cs
+PASS — no raw newline: Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — balanced (): Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — balanced []: Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — balanced {}: Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — no raw newline: Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — balanced (): Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — balanced []: Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — balanced {}: Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — no raw newline: Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — balanced (): Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — balanced []: Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — balanced {}: Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — no raw newline: Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — balanced (): Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — balanced []: Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — balanced {}: Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — no raw newline: Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — balanced (): Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — balanced []: Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — balanced {}: Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — no raw newline: Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — balanced (): Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — balanced []: Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — balanced {}: Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — no raw newline: Assets/Scripts/Core/GameBootstrap.cs
+PASS — balanced (): Assets/Scripts/Core/GameBootstrap.cs
+PASS — balanced []: Assets/Scripts/Core/GameBootstrap.cs
+PASS — balanced {}: Assets/Scripts/Core/GameBootstrap.cs
+PASS — no raw newline: Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — balanced (): Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — balanced []: Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — balanced {}: Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — no raw newline: Assets/Scripts/Core/AscendanceModels.cs
+PASS — balanced (): Assets/Scripts/Core/AscendanceModels.cs
+PASS — balanced []: Assets/Scripts/Core/AscendanceModels.cs
+PASS — balanced {}: Assets/Scripts/Core/AscendanceModels.cs
+PASS — no raw newline: Assets/Scripts/Core/HeroDatabase.cs
+PASS — balanced (): Assets/Scripts/Core/HeroDatabase.cs
+PASS — balanced []: Assets/Scripts/Core/HeroDatabase.cs
+PASS — balanced {}: Assets/Scripts/Core/HeroDatabase.cs
+PASS — no raw newline: Assets/Scripts/Input/CRPGInputController.cs
+PASS — balanced (): Assets/Scripts/Input/CRPGInputController.cs
+PASS — balanced []: Assets/Scripts/Input/CRPGInputController.cs
+PASS — balanced {}: Assets/Scripts/Input/CRPGInputController.cs
+PASS — no raw newline: Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — balanced (): Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — balanced []: Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — balanced {}: Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — no raw newline: Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — balanced (): Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — balanced []: Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — balanced {}: Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — no raw newline: Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — balanced (): Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — balanced []: Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — balanced {}: Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — no raw newline: Assets/Scripts/Presentation/FireFlicker.cs
+PASS — balanced (): Assets/Scripts/Presentation/FireFlicker.cs
+PASS — balanced []: Assets/Scripts/Presentation/FireFlicker.cs
+PASS — balanced {}: Assets/Scripts/Presentation/FireFlicker.cs
+PASS — no raw newline: Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — balanced (): Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — balanced []: Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — balanced {}: Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — no raw newline: Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — balanced (): Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — balanced []: Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — balanced {}: Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — no raw newline: Assets/Scripts/Presentation/WorldRing.cs
+PASS — balanced (): Assets/Scripts/Presentation/WorldRing.cs
+PASS — balanced []: Assets/Scripts/Presentation/WorldRing.cs
+PASS — balanced {}: Assets/Scripts/Presentation/WorldRing.cs
+PASS — no raw newline: Assets/Scripts/UI/AscendanceHUD.cs
+PASS — balanced (): Assets/Scripts/UI/AscendanceHUD.cs
+PASS — balanced []: Assets/Scripts/UI/AscendanceHUD.cs
+PASS — balanced {}: Assets/Scripts/UI/AscendanceHUD.cs
+PASS — no raw newline: Assets/Scripts/World/HeroAvatar.cs
+PASS — balanced (): Assets/Scripts/World/HeroAvatar.cs
+PASS — balanced []: Assets/Scripts/World/HeroAvatar.cs
+PASS — balanced {}: Assets/Scripts/World/HeroAvatar.cs
+PASS — no raw newline: Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — balanced (): Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — balanced []: Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — balanced {}: Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — no raw newline: Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — balanced (): Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — balanced []: Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — balanced {}: Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — no raw newline: Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — balanced (): Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — balanced []: Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — balanced {}: Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — no raw newline: Assets/Scripts/World/EnemyAvatar.cs
+PASS — balanced (): Assets/Scripts/World/EnemyAvatar.cs
+PASS — balanced []: Assets/Scripts/World/EnemyAvatar.cs
+PASS — balanced {}: Assets/Scripts/World/EnemyAvatar.cs
+PASS — no raw newline: Assets/Scripts/World/LocationMarker.cs
+PASS — balanced (): Assets/Scripts/World/LocationMarker.cs
+PASS — balanced []: Assets/Scripts/World/LocationMarker.cs
+PASS — balanced {}: Assets/Scripts/World/LocationMarker.cs
+PASS — no raw newline: Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — balanced (): Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — balanced []: Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — balanced {}: Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — no raw newline: Assets/Editor/LocationStateTestTools0818.cs
+PASS — balanced (): Assets/Editor/LocationStateTestTools0818.cs
+PASS — balanced []: Assets/Editor/LocationStateTestTools0818.cs
+PASS — balanced {}: Assets/Editor/LocationStateTestTools0818.cs
+PASS — no raw newline: Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — balanced (): Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — balanced []: Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — balanced {}: Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — no raw newline: Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — balanced (): Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — balanced []: Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — balanced {}: Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — no raw newline: Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — balanced (): Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — balanced []: Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — balanced {}: Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — no raw newline: Assets/Editor/ReactionTestTools088.cs
+PASS — balanced (): Assets/Editor/ReactionTestTools088.cs
+PASS — balanced []: Assets/Editor/ReactionTestTools088.cs
+PASS — balanced {}: Assets/Editor/ReactionTestTools088.cs
+PASS — no raw newline: Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — balanced (): Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — balanced []: Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — balanced {}: Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — no raw newline: Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — balanced (): Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — balanced []: Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — balanced {}: Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — no raw newline: Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — balanced (): Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — balanced []: Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — balanced {}: Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — no raw newline: Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — balanced (): Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — balanced []: Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — balanced {}: Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — no raw newline: Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — balanced (): Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — balanced []: Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — balanced {}: Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — no raw newline: Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — balanced (): Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — balanced []: Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — balanced {}: Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — no raw newline: Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — balanced (): Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — balanced []: Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — balanced {}: Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — no raw newline: Assets/Editor/AscendanceProArtMapper.cs
+PASS — balanced (): Assets/Editor/AscendanceProArtMapper.cs
+PASS — balanced []: Assets/Editor/AscendanceProArtMapper.cs
+PASS — balanced {}: Assets/Editor/AscendanceProArtMapper.cs
+PASS — no raw newline: Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — balanced (): Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — balanced []: Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — balanced {}: Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — no raw newline: Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — balanced (): Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — balanced []: Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — balanced {}: Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — no raw newline: Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — balanced (): Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — balanced []: Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — balanced {}: Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — no raw newline: Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — balanced (): Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — balanced []: Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — balanced {}: Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — no raw newline: Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — balanced (): Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — balanced []: Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — balanced {}: Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — no raw newline: Assets/Editor/HeroParityAudit083.cs
+PASS — balanced (): Assets/Editor/HeroParityAudit083.cs
+PASS — balanced []: Assets/Editor/HeroParityAudit083.cs
+PASS — balanced {}: Assets/Editor/HeroParityAudit083.cs
+PASS — IEnumerator has yield: Assets/Scripts/Production/CharacterPresentationController.cs::AttackTimingFallback
+PASS — IEnumerator has yield: Assets/Scripts/Production/CombatTimeEffects.cs::HitStopRoutine
+PASS — IEnumerator has yield: Assets/Scripts/Core/AscendanceGameManager.cs::ResolveSingleEnemyActivation
+PASS — IEnumerator has yield: Assets/Scripts/Core/AscendanceGameManager.cs::ResolvePriorityEncounterActivation
+PASS — IEnumerator has yield: Assets/Scripts/Core/AscendanceGameManager.cs::ResolveRound
+PASS — IEnumerator has yield: Assets/Scripts/Core/AscendanceGameManager.cs::ResolveEndRoundStatuses
+PASS — IEnumerator has yield: Assets/Scripts/Presentation/CharacterVisualRig.cs::AttackMotion
+PASS — IEnumerator has yield: Assets/Scripts/Presentation/CharacterVisualRig.cs::HitMotion
+PASS — IEnumerator has yield: Assets/Scripts/Presentation/CharacterVisualRig.cs::DeathMotion
+PASS — IEnumerator has yield: Assets/Scripts/Presentation/WorldCombatFeedback.cs::FloatText
+PASS — IEnumerator has yield: Assets/Scripts/Presentation/WorldCombatFeedback.cs::Flash
+PASS — IEnumerator has yield: Assets/Scripts/World/HeroAvatar.cs::WaitForAgent
+PASS — IEnumerator has yield: Assets/Scripts/World/HeroAvatar.cs::FallbackWalk
+PASS — IEnumerator has yield: Assets/Scripts/World/StonebrookWorldBuilder.cs::BuildNavigationAndSpawn
+PASS — IEnumerator has yield: Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs::Run
+PASS — IEnumerator has yield: Assets/Editor/RoundTransitionTestTools0812.cs::Run
+
+305/307 checks passed.

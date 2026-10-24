@@ -1,0 +1,14 @@
+Ascendance Unity 0.8.62a — Master Regression Isolation Hotfix
+
+Static validation checklist:
+PASS — BuildVersion updated to 0.8.62a.
+PASS — Master validator uses 0.8.62a identity and save-version assertion.
+PASS — Master validator re-baselines to authoritative Q001 before each inherited suite.
+PASS — Re-baseline closes transient campaign UI surfaces and clears pending content text.
+PASS — Existing DebugResetCampaignProgress0833 -> StartQuest0829 path clears pending reward/deck-control/content state.
+PASS — Inherited Location/Enemy/Hero/Campaign build-identity checks accept 0.8.62a.
+PASS — No gameplay runtime rule code changed other than BuildVersion/log identity.
+PENDING — Unity Play Mode runtime validation.
+
+Target:
+[ASCENDANCE][0.8.62a TEST] PASS — Master Save/Load + Full Regression completed: 53 passed, 0 failed.

@@ -1,0 +1,4 @@
+Ascendance Unity 0.10.2a static verification
+Result: 52/52 passed before packaging.
+
+Verified: version identity, 24-check real-network validator, async-idle guard, real TCP START TURN path retained, inherited 54/24/28 gate counts unchanged, Linux/DigitalOcean deployment retained, changed C# delimiter balance, and hotfix documentation present.

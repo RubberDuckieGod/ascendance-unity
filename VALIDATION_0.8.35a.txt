@@ -1,0 +1,9 @@
+ASCENDANCE UNITY 0.8.35a — FINAL-STATE LOGGING HOTFIX VALIDATION
+
+1. Open the project in Unity and enter Play Mode.
+2. Run: Ascendance > Validation > Test 0.8.35a - Final-State Logging (Play Mode)
+3. The validator checks both Q012 success and Q012 failure, then repeatedly forces campaign sync/getter/UI refresh paths.
+4. Expected final line:
+   [ASCENDANCE][0.8.35a TEST] PASS — Idempotent Campaign final-state logging completed: 6 passed, 0 failed.
+
+After this hotfix passes, keep 0.8.35's 24/24 result-flow validation as the inherited functional baseline.

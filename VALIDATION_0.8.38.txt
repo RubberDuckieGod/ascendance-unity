@@ -1,0 +1,18 @@
+Ascendance Unity 0.8.38 static/package validation
+
+Runtime baseline: 0.8.37 (verified by user: 28 passed, 0 failed)
+Candidate: 0.8.38 Hero-to-Hero Trading & Material Transfer
+
+Static checks performed:
+- New/modified C# delimiter counts balanced.
+- No TODO/FIXME/NotImplementedException in changed gameplay/test files.
+- New Unity .meta GUIDs generated and duplicate-GUID scan clean.
+- Trading mutates existing Hero LootInventory, AcquiredEquipment, and HealingPotions state; no duplicate inventory/save subsystem introduced.
+- Quest Items explicitly excluded from trade.
+- Equipped gear excluded because only AcquiredEquipment is transferable.
+- Party Gold is read-only to trading paths.
+- Full ZIP integrity checked with unzip -t.
+
+Unity runtime verification still required.
+Expected validator result:
+[ASCENDANCE][0.8.38 TEST] PASS — Hero Trading & Material Transfer completed: 29 passed, 0 failed.

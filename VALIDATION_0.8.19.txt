@@ -1,0 +1,11 @@
+Ascendance Unity 0.8.19 — Stonebrook Location Effect Execution
+
+Static validation: 276 / 276 checks passed.
+0.8.18 regression: 281 / 283 checks passed; only expected version/banner checks differ.
+Compile-safety audits passed:
+- no raw multiline C# strings
+- balanced (), [], {} across Assets/Scripts and Assets/Editor
+- every IEnumerator method contains yield return or yield break
+
+Runtime validation remains required in Unity:
+Ascendance > Validation > Test 0.8.19 - Stonebrook Location Effects (Play Mode)

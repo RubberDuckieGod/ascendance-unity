@@ -1,0 +1,27 @@
+Ascendance Unity 0.8.33 — Campaign I World Event & Campaign Progression
+
+STATIC VALIDATION
+547/547 checks passed.
+
+Includes:
+- exact WE001–WE004 Quest/day structure
+- campaign completion/failure/missed history
+- chapter rewards and penalties
+- Q004/Q007 carry-forward setup effects
+- Q005→Q007, Q007→Q008, Q009→Q010 real reward-chain checks
+- campaign save/restore
+- Campaign HUD controls
+- WE001/WE003 Travel severity state
+- WE004 random Travel suppression
+- Q010 two-Ballista source-lock preservation
+- 45 deterministic Play Mode assertions
+- C# raw regular-string newline scan
+- (), [], {} balance checks across all Assets/*.cs
+- IEnumerator/yield audit
+- validator debug-helper existence audit
+
+RUNTIME VALIDATION REQUIRED
+Ascendance → Validation → Test 0.8.33 - Campaign I World Events (Play Mode)
+Expected: PASS — Campaign I World Event progression completed: 45 passed, 0 failed.
+
+Do not mark 0.8.33 runtime-verified until Unity produces that clean summary with no unexpected Console errors.

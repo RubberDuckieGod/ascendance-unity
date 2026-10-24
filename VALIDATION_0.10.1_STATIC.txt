@@ -1,0 +1,79 @@
+Ascendance Unity 0.10.1 static validation: 77 passed, 0 failed.
+
+PASS — BuildVersion is 0.10.1
+PASS — Startup banner identifies Client Command Routing
+PASS — PlayerSettings bundle version is 0.10.1
+PASS — Transport abstraction exists
+PASS — Loopback transport exists
+PASS — Stonebrook bootstrap installs and initializes client router
+PASS — Client router is presentation-only and installed on non-dedicated runtime
+PASS — Command envelope has secondary target and integer payload
+PASS — Command UseLocationRevealOption declared and routed
+PASS — Command InteractEncounterObject declared and routed
+PASS — Command BeginInventoryManagement declared and routed
+PASS — Command BeginEquipmentManagement declared and routed
+PASS — Command OpenQuestBriefing declared and routed
+PASS — Command CancelQuestBriefing declared and routed
+PASS — Command RecoverHero declared and routed
+PASS — Command RecoverParty declared and routed
+PASS — Command WorkDowntime declared and routed
+PASS — Command GatherResources declared and routed
+PASS — Command EquipDowntimeEquipment declared and routed
+PASS — Command UnequipDowntimeEquipment declared and routed
+PASS — Command PurchaseMerchantEquipment declared and routed
+PASS — Command CraftRecipe declared and routed
+PASS — Command TransferHealingPotion declared and routed
+PASS — Command TransferHeroLoot declared and routed
+PASS — Command TransferAllHeroLoot declared and routed
+PASS — Command TransferEquipment declared and routed
+PASS — Command ContinueCampaign declared and routed
+PASS — Core combat/movement/card router methods exist
+PASS — Downtime/crafting/trading router methods exist
+PASS — Quest briefing router methods exist
+PASS — Campaign router methods exist
+PASS — Rejected client commands do not mutate authoritative game log outside authority
+PASS — HUD references command router
+PASS — HUD direct mutation absent: AscendanceGameManager.Instance.AttackSelectedEnemy()
+PASS — HUD direct mutation absent: AscendanceGameManager.Instance.Explore()
+PASS — HUD direct mutation absent: gm.PlayCard(
+PASS — HUD direct mutation absent: gm.UseReaction(
+PASS — HUD direct mutation absent: gm.ChooseRewardChoice(
+PASS — HUD direct mutation absent: gm.ChooseEncounterDeckControl(
+PASS — Input move/attack route through router
+PASS — Downtime direct mutation absent: gm.CraftRecipe0855(
+PASS — Downtime direct mutation absent: gm.TransferEquipment0838(
+PASS — Downtime direct mutation absent: gm.PurchaseMerchantEquipment0836(
+PASS — Downtime direct mutation absent: gm.WorkDowntime0839(
+PASS — Downtime direct mutation absent: gm.GatherResources0839(
+PASS — Quest briefing open routed
+PASS — Quest briefing confirm routed
+PASS — Campaign hub advance routed
+PASS — Campaign continuation routed with no UI rollback mutation
+PASS — 0.10.1 Play Mode validator menu exists
+PASS — 0.10.1 validator final pass line exists
+PASS — Server foundation re-baselined and nested by router validator
+PASS — Master regression re-baselined and required by server foundation
+PASS — FullLocationRuntimeTestTools0858.cs re-baselined to 0.10.1
+PASS — FullEnemyRuntimeTestTools0859.cs re-baselined to 0.10.1
+PASS — FullHeroRuntimeTestTools0860.cs re-baselined to 0.10.1
+PASS — FullCampaignIntegrationTestTools0861.cs re-baselined to 0.10.1
+PASS — Assets/Resources authored resources unchanged from 0.10.0
+PASS — Brace balance: Assets/Editor/FullLocationRuntimeTestTools0858.cs
+PASS — Brace balance: Assets/Editor/FullHeroRuntimeTestTools0860.cs
+PASS — Brace balance: Assets/Editor/MasterSaveLoadRegressionTestTools0862.cs
+PASS — Brace balance: Assets/Editor/FullCampaignIntegrationTestTools0861.cs
+PASS — Brace balance: Assets/Editor/AscendanceDedicatedServerBuilder0100.cs
+PASS — Brace balance: Assets/Editor/ClientCommandRoutingTestTools0101.cs
+PASS — Brace balance: Assets/Editor/DedicatedServerFoundationTestTools0100.cs
+PASS — Brace balance: Assets/Editor/FullEnemyRuntimeTestTools0859.cs
+PASS — Brace balance: Assets/Scripts/Online/AscendanceClientCommandRouter0101.cs
+PASS — Brace balance: Assets/Scripts/Online/AscendanceRoomAuthority0100.cs
+PASS — Brace balance: Assets/Scripts/Online/AscendanceOnlineModels0100.cs
+PASS — Brace balance: Assets/Scripts/Input/CRPGInputController.cs
+PASS — Brace balance: Assets/Scripts/UI/CampaignHubUI0834.cs
+PASS — Brace balance: Assets/Scripts/UI/AscendanceHUD.cs
+PASS — Brace balance: Assets/Scripts/UI/QuestBriefingUI0841.cs
+PASS — Brace balance: Assets/Scripts/UI/CampaignEndUI0844.cs
+PASS — Brace balance: Assets/Scripts/UI/DowntimeUI0836.cs
+PASS — Brace balance: Assets/Scripts/Core/GameBootstrap.cs
+PASS — Brace balance: Assets/Scripts/Core/AscendanceGameManager.cs

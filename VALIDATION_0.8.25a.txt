@@ -1,0 +1,14 @@
+Ascendance Unity 0.8.25a — Validator Compile Hotfix
+
+Fix:
+- EncounterDeckControlTestTools0825.cs no longer calls nonexistent DebugCompleteEnemyActivation.
+- It now calls the existing editor-only DebugAdvanceEnemyActivationStatusClock helper, which delegates to CompleteEnemyActivation.
+- No gameplay/runtime behavior changed.
+
+Static validation:
+- verify_0825.py: 547/547 checks passed.
+- Added guards requiring the existing helper and forbidding the stale helper call.
+- Raw C# newline, delimiter-balance, and IEnumerator-yield audits pass as part of verify_0825.py.
+
+Runtime verification:
+- Pending Unity Play Mode run.

@@ -1,0 +1,12 @@
+Ascendance Unity 0.8.22b — EN007 Validation Terrain Hotfix
+
+Runtime log from 0.8.22a showed the EN007 Burning Cart assertions were invalid because the validator forced EN007 at Forest Path. EN007 is authored Road / Settlement, so the normal terrain-filtered draw correctly skipped it and resolved other eligible Forest encounters.
+
+0.8.22b changes validation only:
+- EN006 and EN012 validation remains at Forest Path.
+- EN007 validation now runs at Stonebrook (Settlement).
+- The test first asserts Stonebrook is eligible for EN007 before testing Fire Tokens.
+- No encounter gameplay logic, deck filtering, reward logic, or object lifecycle code was weakened.
+
+Run in Play Mode:
+Ascendance -> Validation -> Test 0.8.22 - Encounter Hazards & Objects (Play Mode)

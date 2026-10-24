@@ -1,0 +1,22 @@
+ASCENDANCE UNITY 0.8.35 — QUEST RESULTS & RETURN-TO-CAMPAIGN FLOW
+
+STATIC PACKAGE VALIDATION
+- Built from runtime-verified Ascendance Unity 0.8.34.
+- BuildVersion advanced to 0.8.35.
+- New QuestResultsRuntime0835.cs snapshots the outcome of the existing authoritative reward chain; it does not award duplicate rewards.
+- ResolveQuestReward0829 still delegates Q003–Q012 to the existing 0.8.30–0.8.32 reward runtimes and now finalizes one shared result snapshot afterward.
+- New QuestResultsUI0835.cs is runtime-created by GameBootstrap; no scene object wiring required.
+- Return to Campaign opens the existing 0.8.34 Campaign Hub.
+- Quest result state is included in AscendanceSaveData / AscendanceSaveSystem and restored by ApplySaveData.
+- Starting any Quest clears stale result state before scenario reset.
+- Existing CampaignRuntime0833.cs and CampaignHubRuntime0834.cs remain unchanged.
+- Q001–Q012 quest-specific reward implementations remain unchanged; only the shared 0.8.29 reward dispatcher is bracketed for result capture.
+
+UNITY PLAY MODE TEST REQUIRED
+1. Enter Stonebrook Play Mode.
+2. Open Ascendance > Validation > Test 0.8.35 - Quest Results Flow (Play Mode).
+3. Expected final line: [ASCENDANCE][0.8.35 TEST] PASS — Quest Results & Return-to-Campaign flow completed: 24 passed, 0 failed.
+4. The validator checks Q001 actual reward deltas, automatic Quest Complete display, Return to Campaign, Q003 failure/retry/recovery, real save/load persistence, Q012 Campaign Victory, Q012 Campaign Defeat, and restoration of the user's pre-test save file.
+5. Manually complete or debug-complete one Quest and confirm the Results overlay is readable at the target display resolution and the RETURN TO CAMPAIGN button opens the Campaign Hub.
+
+0.8.34 remains the last runtime-verified baseline until this validator passes in Unity.

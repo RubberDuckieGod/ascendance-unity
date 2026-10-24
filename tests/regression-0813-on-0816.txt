@@ -1,0 +1,128 @@
+FAIL — BuildVersion is 0.8.13
+FAIL — 0.8.13 startup marker present
+PASS — 16 authored Heroes
+PASS — 323 Hero-card definitions
+PASS — every personal deck totals exactly 30 cards
+PASS — Hero IsDefeated includes Downed Dead or 0 Health
+PASS — Start Turn still rejects Defeated Heroes
+FAIL — Start Turn still grants exactly 3 Actions
+PASS — Round 1 still keeps five-card opening hand
+PASS — Round 2+ still draws at individual Start Turn
+PASS — End Turn still preserves general Actions
+PASS — World/End round pipeline retained
+PASS — 0.8.11 runtime helper retained
+PASS — 0.8.12 runtime helper retained
+PASS — 0.8.10 EnemyAttack damage source retained
+PASS — 0.8.9 Interpose retarget retained
+PASS — damage ignores already Defeated Hero targets
+PASS — queued/general damage refuses already Defeated targets
+PASS — fatal damage classifies before Hero damage ability activation
+PASS — fatal damage abilities blocked once Hero is Defeated
+PASS — HandleHeroAtZero clamps Health to zero
+PASS — Downed/Dead classification is sticky
+PASS — Downed requires same-Location non-Defeated ally
+PASS — classification sets Downed with ally and Dead without
+PASS — Dead clears general Actions
+PASS — Dead clears attack-only Actions
+PASS — Downed path does not zero Actions
+PASS — defeat classification evaluates party defeat
+PASS — QuestFailed state exists
+FAIL — party failure is blocked after Quest completion
+PASS — party failure requires all participating Heroes Defeated
+PASS — all-Heroes defeat logs Q001 failure
+PASS — victory cannot resolve after Quest failure
+PASS — HUD displays QUEST FAILED
+PASS — normal turn actions still exclude Defeated Heroes
+FAIL — reaction cost gate excludes Defeated Heroes
+PASS — UseReaction hard-rejects Defeated Hero
+PASS — special Shield Wall branch occurs after Defeated guard
+PASS — legal potion target helper exists
+PASS — active TurnHero remains the potion actor while another Hero portrait is selected
+PASS — potion target rejects Dead Heroes
+PASS — potion actor rejects Defeated Heroes
+PASS — potion requires actor general Action
+PASS — potion requires same Location
+PASS — potion target must be injured or Downed
+PASS — normal potion cannot revive Dead target
+PASS — blocked Dead-target potion happens before Action spend
+PASS — revive potion spends exactly one Action
+PASS — Mira Field Engineer preserved
+PASS — non-preserved potion is consumed
+PASS — Common Potion heals exactly 4
+PASS — default potion targeting prioritizes Downed
+PASS — default potion supports injured ally targeting
+FAIL — HUD potion button labels selected-Hero targeting
+PASS — HUD uses TurnHero as potion actor while selected Hero is the target
+PASS — HUD potion enabled only for selected legal target
+PASS — normal healing cannot heal Dead Heroes
+PASS — HealHero remembers prior Downed state
+PASS — healing above 0 clears Downed
+PASS — revival logs no Action grant
+PASS — revival does not alter TurnCompleted
+PASS — revival does not alter Actions
+PASS — revive visual fires after legal recovery
+PASS — QuestFailed is persisted in save DTO
+PASS — QuestFailed is captured
+PASS — load never lets failure override completion
+PASS — load repair forces Dead Health to zero
+PASS — load repair makes Dead not Downed
+PASS — load repair clamps Downed Health to zero
+PASS — legacy zero-Health save is classified
+PASS — load repair marks all-Heroes-defeated Quest failed
+PASS — Hero avatar selection ring hides for any Defeated state
+PASS — Hero avatar hover ring hides for any Defeated state
+PASS — Hero avatar health bar hides for any Defeated state
+PASS — HUD distinguishes DOWNED and DEAD
+PASS — 0.8.13 Play Mode helper present
+PASS — helper requires at least three Heroes
+PASS — helper checks Downed classification
+PASS — helper checks Downed cannot Start Turn
+PASS — helper checks one Downed does not fail Quest
+PASS — helper checks sticky Downed state
+PASS — helper checks Downed self-potion is blocked
+PASS — helper checks blocked potion consumes nothing
+PASS — helper checks revive costs one Action
+PASS — helper checks potion is consumed
+PASS — helper checks 4-Health revive
+PASS — helper checks revival grants no Actions
+PASS — helper checks unstarted revived Hero can later Start Turn
+PASS — helper checks held Actions survive Downed
+PASS — helper checks healing clears Downed
+PASS — helper checks completed turn not reset
+PASS — helper checks no second normal turn
+PASS — helper checks Dead classification
+PASS — helper checks Dead has no reserve
+PASS — helper checks normal healing cannot revive Dead
+PASS — helper checks all-Heroes failure gate
+PASS — AscendanceGameManager.cs brace balance
+PASS — AscendanceGameManager.cs parenthesis balance
+PASS — AscendanceGameManager.cs bracket balance
+PASS — AscendanceModels.cs brace balance
+PASS — AscendanceModels.cs parenthesis balance
+PASS — AscendanceModels.cs bracket balance
+PASS — AscendanceHUD.cs brace balance
+PASS — AscendanceHUD.cs parenthesis balance
+PASS — AscendanceHUD.cs bracket balance
+PASS — HeroAvatar.cs brace balance
+PASS — HeroAvatar.cs parenthesis balance
+PASS — HeroAvatar.cs bracket balance
+PASS — AscendanceSaveData.cs brace balance
+PASS — AscendanceSaveData.cs parenthesis balance
+PASS — AscendanceSaveData.cs bracket balance
+PASS — AscendanceSaveSystem.cs brace balance
+PASS — AscendanceSaveSystem.cs parenthesis balance
+PASS — AscendanceSaveSystem.cs bracket balance
+PASS — HeroRulesRuntime.cs brace balance
+PASS — HeroRulesRuntime.cs parenthesis balance
+PASS — HeroRulesRuntime.cs bracket balance
+PASS — TurnLifecycleTestTools0811.cs brace balance
+PASS — TurnLifecycleTestTools0811.cs parenthesis balance
+PASS — TurnLifecycleTestTools0811.cs bracket balance
+PASS — RoundTransitionTestTools0812.cs brace balance
+PASS — RoundTransitionTestTools0812.cs parenthesis balance
+PASS — RoundTransitionTestTools0812.cs bracket balance
+PASS — DefeatRevivalTestTools0813.cs brace balance
+PASS — DefeatRevivalTestTools0813.cs parenthesis balance
+PASS — DefeatRevivalTestTools0813.cs bracket balance
+
+SUMMARY — 120/126 static checks passed.

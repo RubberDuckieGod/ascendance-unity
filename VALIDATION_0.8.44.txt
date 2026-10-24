@@ -1,0 +1,22 @@
+Ascendance Unity 0.8.44 — Static/Package Validation
+
+Candidate only — Unity runtime verification is still required.
+
+Validated statically:
+- BuildVersion/source label is 0.8.44.
+- CampaignEndRuntime0844 and CampaignEndUI0844 are present.
+- Q012 authoritative reward/progression code was not modified.
+- Quest Results terminal routing points to Campaign End.
+- CAMPAIGN_END is captured, normalized, described, summarized, and applied by Continue.
+- Older terminal saves can infer CAMPAIGN_END from saved Campaign/Q012 state.
+- Stonebrook bootstrap installs CampaignEndUI0844 before resume routing.
+- End screen supports Save Final Campaign, Return to Main Menu, and Start New Campaign setup.
+- New campaign setup preserves the final save until a new campaign is actually saved.
+- CampaignEndStateTestTools0844 is present under the Unity Validation menu.
+- C# lexical delimiter scan passes.
+- Duplicate Unity GUID scan passes.
+- ZIP integrity passes after packaging.
+
+Unity validator:
+Ascendance -> Validation -> Test 0.8.44 - Campaign Completion End-State (Play Mode)
+Expected final line: PASS — Campaign Completion / Victory & Defeat End-State Flow completed: 34 passed, 0 failed.

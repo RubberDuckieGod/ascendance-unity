@@ -1,0 +1,4 @@
+Run in Unity Play Mode:
+Ascendance -> Validation -> Test 0.8.30 - Campaign I Q003-Q005 (Play Mode)
+
+Expected final line: [ASCENDANCE][0.8.30 TEST] PASS — Campaign I Q003-Q005 completed: 27 passed, 0 failed.

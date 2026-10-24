@@ -1,0 +1,1054 @@
+{
+  "heroes": [
+    {
+      "id": "Aldric",
+      "heroCardId": "H001",
+      "displayName": "Sir Aldric Ironwall",
+      "className": "Fighter",
+      "species": "Human",
+      "primaryRole": "Defender",
+      "secondaryRole": "Leader",
+      "traits": "Human; Fighter; Knight",
+      "level": 3,
+      "maxHealth": 12,
+      "baseAttack": 2,
+      "baseArmor": 3,
+      "attack": 4,
+      "armor": 7,
+      "startingEquipmentText": "EQ003 • EQ078 • EQ086 ",
+      "startingEquipment": [
+        {
+          "id": "EQ003",
+          "name": "Iron Longsword",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Parry — once per round when hit by melee attack, reduce damage by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ078",
+          "name": "Iron Shield",
+          "type": "Shield",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Shield Wall — allied Heroes in your Location gain +1 armor against ranged attacks.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ086",
+          "name": "Chain Shirt",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Reliable Mail — no additional effect.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Shield Wall — Once per Round, when an allied Hero in your Location would suffer damage from an Enemy Attack, you may become the target instead. If the Attack remains valid, resolve it against Sir Aldric. Battle Ready — At the start of each Quest, gain Guarded.",
+      "coreMechanic": "Positioning; protection; counterattacks",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Shield Wall",
+          "text": "Once per Round, when an allied Hero in your Location would suffer damage from an Enemy Attack, you may become the target instead. If the Attack remains valid, resolve it against Sir Aldric"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Battle Ready",
+          "text": "At the start of each Quest, gain Guarded"
+        }
+      ]
+    },
+    {
+      "id": "Lyra",
+      "heroCardId": "H002",
+      "displayName": "Lyra Nightshade",
+      "className": "Rogue",
+      "species": "Human",
+      "primaryRole": "Striker",
+      "secondaryRole": "Scout",
+      "traits": "Human; Rogue",
+      "level": 3,
+      "maxHealth": 8,
+      "baseAttack": 4,
+      "baseArmor": 1,
+      "attack": 6,
+      "armor": 2,
+      "startingEquipmentText": "EQ037×2 • EQ082 • EQ098 ",
+      "startingEquipment": [
+        {
+          "id": "EQ037",
+          "name": "Iron Dagger",
+          "type": "Weapon",
+          "attack": 1,
+          "armor": 0,
+          "ability1": "Quick Draw — during first round, first attack gains +2 attack.",
+          "ability2": "",
+          "copies": 2
+        },
+        {
+          "id": "EQ082",
+          "name": "Leather Jerkin",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Flexible Fit — this Armor never increases the Action cost of your Move Actions.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ098",
+          "name": "Traveler's Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Sure Footing — once per Round, ignore the additional Move Action required to leave Difficult Terrain.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Opportunist — Once during your turn, the first time you attack an Enemy that has not activated this Round, draw 2 cards, then discard 1 card.",
+      "coreMechanic": "Precision; deception; mobility; target isolation; scouting; card cycling",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Opportunist",
+          "text": "Once during your turn, the first time you attack an Enemy that has not activated this Round, draw 2 cards, then discard 1 card"
+        }
+      ]
+    },
+    {
+      "id": "Elara",
+      "heroCardId": "H003",
+      "displayName": "Sister Elara Dawnbringer",
+      "className": "Cleric",
+      "species": "Human",
+      "primaryRole": "Support",
+      "secondaryRole": "Protector",
+      "traits": "Human; Cleric; Divine",
+      "level": 3,
+      "maxHealth": 10,
+      "baseAttack": 2,
+      "baseArmor": 2,
+      "attack": 4,
+      "armor": 4,
+      "startingEquipmentText": "EQ021 • EQ086• EQ105 ",
+      "startingEquipment": [
+        {
+          "id": "EQ021",
+          "name": "Iron Mace",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Crushing Blow — ignore 1 Armor when attacking armored enemies.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ086",
+          "name": "Chain Shirt",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Reliable Mail — no additional effect.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ105",
+          "name": "Consecrated Rosary",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Prayer of Shelter — when you create or enter a Consecrated Location, recover 1 Health. Limit once per round.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Divine Grace — The first time each Round you play a Support card, choose one Hero in your Location. That Hero recovers 2 Health. Blessed Presence — Once per Round, after you restore Health to another Hero, that Hero gains Inspired.",
+      "coreMechanic": "Consecrated Locations; Inspired; healing; cleansing",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Divine Grace",
+          "text": "The first time each Round you play a Support card, choose one Hero in your Location. That Hero recovers 2 Health"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Blessed Presence",
+          "text": "Once per Round, after you restore Health to another Hero, that Hero gains Inspired"
+        }
+      ]
+    },
+    {
+      "id": "Vaelis",
+      "heroCardId": "H004",
+      "displayName": "Archmage Vaelis",
+      "className": "Wizard",
+      "species": "Human",
+      "primaryRole": "Controller",
+      "secondaryRole": "Arcane Damage",
+      "traits": "Human; Wizard; Arcane",
+      "level": 3,
+      "maxHealth": 7,
+      "baseAttack": 3,
+      "baseArmor": 1,
+      "attack": 4,
+      "armor": 2,
+      "startingEquipmentText": "EQ061• EQ095 • EQ106 ",
+      "startingEquipment": [
+        {
+          "id": "EQ061",
+          "name": "Apprentice's Staff",
+          "type": "Weapon",
+          "attack": 1,
+          "armor": 0,
+          "ability1": "Arcane Focus — the first Arcane Hero Deck card you play each encounter costs 1 fewer Action (minimum 0).",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ095",
+          "name": "Robes of the Adept",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Focused Mind — the first Arcane Hero card you play each round may ignore one negative modifier affecting its damage or healing.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ106",
+          "name": "Arcane Lens",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Arcane Focus — while in an Arcane Location, your damaging Hero cards gain +1 damage.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Arcane Mastery — The first Spell card you play each Round costs 1 fewer Action (minimum 1). After that Spell resolves, you may draw 1 card, then discard 1 card.",
+      "coreMechanic": "Arcane Locations; spell sequencing; battlefield manipulation",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Arcane Mastery",
+          "text": "The first Spell card you play each Round costs 1 fewer Action (minimum 1). After that Spell resolves, you may draw 1 card, then discard 1 card"
+        }
+      ]
+    },
+    {
+      "id": "Rowan",
+      "heroCardId": "H005",
+      "displayName": "Rowan Greenward",
+      "className": "Ranger",
+      "species": "Human",
+      "primaryRole": "Ranged Striker",
+      "secondaryRole": "Scout",
+      "traits": "Human; Ranger; Hunter",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 3,
+      "baseArmor": 1,
+      "attack": 5,
+      "armor": 2,
+      "startingEquipmentText": "EQ045 • EQ082 • EQ100 ",
+      "startingEquipment": [
+        {
+          "id": "EQ045",
+          "name": "Hunting Bow",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Hunter's Eye — attacks against Beasts gain +1 Damage.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ082",
+          "name": "Leather Jerkin",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Flexible Fit — this Armor never increases the Action cost of your Move Actions.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ100",
+          "name": "Scout's Compass",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Pathfinder — once per round after entering a Location, you may look at the top card of the Encounter Deck and leave it or place it on the bottom.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Trailblazer — Once during your turn, after you Explore or Reveal a Location, look at the top 2 cards of the Exploration Deck. Return one to the top and place the other on the bottom. Pathfinder — Once per Round, ignore the additional Move Action required to leave Difficult Terrain or a similar terrain effect.",
+      "coreMechanic": "Ranged attacks; exploration; tracking; positioning",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Trailblazer",
+          "text": "Once during your turn, after you Explore or Reveal a Location, look at the top 2 cards of the Exploration Deck. Return one to the top and place the other on the bottom"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Pathfinder",
+          "text": "Once per Round, ignore the additional Move Action required to leave Difficult Terrain or a similar terrain effect"
+        }
+      ]
+    },
+    {
+      "id": "Seraphine",
+      "heroCardId": "H006",
+      "displayName": "Seraphine Oathkeeper",
+      "className": "Paladin",
+      "species": "Human",
+      "primaryRole": "Defender",
+      "secondaryRole": "Support",
+      "traits": "Human; Paladin; Divine",
+      "level": 3,
+      "maxHealth": 11,
+      "baseAttack": 3,
+      "baseArmor": 2,
+      "attack": 5,
+      "armor": 6,
+      "startingEquipmentText": "EQ003• EQ078 • EQ086 • EQ105 ",
+      "startingEquipment": [
+        {
+          "id": "EQ003",
+          "name": "Iron Longsword",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Parry — once per round when hit by melee attack, reduce damage by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ078",
+          "name": "Iron Shield",
+          "type": "Shield",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Shield Wall — allied Heroes in your Location gain +1 armor against ranged attacks.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ086",
+          "name": "Chain Shirt",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Reliable Mail — no additional effect.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ105",
+          "name": "Consecrated Rosary",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Prayer of Shelter — when you create or enter a Consecrated Location, recover 1 Health. Limit once per round.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Oathbound — The first time each Round an allied Hero in your Location gains Guarded or recovers Health, Seraphine gains Guarded. If Seraphine is already Guarded, she instead recovers 1 Health. Sacred Duty — Once per Round, after you cause another Hero in your Location to recover Health, that Hero gains Guarded.",
+      "coreMechanic": "Protection; sacred effects; healing support; frontline control",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Oathbound",
+          "text": "The first time each Round an allied Hero in your Location gains Guarded or recovers Health, Seraphine gains Guarded. If Seraphine is already Guarded, she instead recovers 1 Health"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Sacred Duty",
+          "text": "Once per Round, after you cause another Hero in your Location to recover Health, that Hero gains Guarded"
+        }
+      ]
+    },
+    {
+      "id": "Thorne",
+      "heroCardId": "H007",
+      "displayName": "Thorne Wildroot",
+      "className": "Druid",
+      "species": "Elf",
+      "primaryRole": "Controller",
+      "secondaryRole": "Support",
+      "traits": "Elf; Druid; Nature; Arcane",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 2,
+      "baseArmor": 2,
+      "attack": 3,
+      "armor": 3,
+      "startingEquipmentText": "EQ061• EQ095 • EQ098 ",
+      "startingEquipment": [
+        {
+          "id": "EQ061",
+          "name": "Apprentice's Staff",
+          "type": "Weapon",
+          "attack": 1,
+          "armor": 0,
+          "ability1": "Arcane Focus — the first Arcane Hero Deck card you play each encounter costs 1 fewer Action (minimum 0).",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ095",
+          "name": "Robes of the Adept",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Focused Mind — the first Arcane Hero card you play each round may ignore one negative modifier affecting its damage or healing.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ098",
+          "name": "Traveler's Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Sure Footing — once per Round, ignore the additional Move Action required to leave Difficult Terrain.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Wild Growth — Once per Round after a Hero enters Thorne's Location, choose that Hero. They may gain Regenerating until the end of their next turn. The first time that Regenerating restores Health, restore 1 additional Health.",
+      "coreMechanic": "Terrain control; nature magic; recovery; Conditions",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Wild Growth",
+          "text": "Once per Round after a Hero enters Thorne's Location, choose that Hero. They may gain Regenerating until the end of their next turn. The first time that Regenerating restores Health, restore 1 additional Health"
+        }
+      ]
+    },
+    {
+      "id": "Cassian",
+      "heroCardId": "H008",
+      "displayName": "Cassian Vale",
+      "className": "Bard",
+      "species": "Human",
+      "primaryRole": "Support",
+      "secondaryRole": "Controller",
+      "traits": "Human; Bard; Performer",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 2,
+      "baseArmor": 1,
+      "attack": 3,
+      "armor": 2,
+      "startingEquipmentText": "EQ037 • EQ081 • EQ098 ",
+      "startingEquipment": [
+        {
+          "id": "EQ037",
+          "name": "Iron Dagger",
+          "type": "Weapon",
+          "attack": 1,
+          "armor": 0,
+          "ability1": "Quick Draw — during first round, first attack gains +2 attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ081",
+          "name": "Padded Gambeson",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Layered Padding — reduce the first Physical damage you suffer each round by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ098",
+          "name": "Traveler's Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Sure Footing — once per Round, ignore the additional Move Action required to leave Difficult Terrain.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Rousing Verse — Once per Round when Cassian plays a Support card, choose another Hero in his Location. That Hero gains Inspired until the end of their next turn and may draw 2 cards, then discard 1 card.",
+      "coreMechanic": "Inspiration; action support; debuffs; card manipulation",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Rousing Verse",
+          "text": "Once per Round when Cassian plays a Support card, choose another Hero in his Location. That Hero gains Inspired until the end of their next turn and may draw 2 cards, then discard 1 card"
+        }
+      ]
+    },
+    {
+      "id": "Kael",
+      "heroCardId": "H009",
+      "displayName": "Kael Windstep",
+      "className": "Monk",
+      "species": "Human",
+      "primaryRole": "Mobile Striker",
+      "secondaryRole": "Controller",
+      "traits": "Human; Monk; Martial",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 2,
+      "baseArmor": 1,
+      "attack": 4,
+      "armor": 1,
+      "startingEquipmentText": "Unarmed (+2 Weapon Bonus) • No Armor • EQ098",
+      "startingEquipment": [
+        {
+          "id": "UNARMED",
+          "name": "Unarmed",
+          "type": "Weapon",
+          "copies": 1,
+          "attack": 2,
+          "armor": 0,
+          "ability1": "",
+          "ability2": ""
+        },
+        {
+          "id": "EQ098",
+          "name": "Traveler's Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Sure Footing — once per Round, ignore the additional Move Action required to leave Difficult Terrain.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Flowing Step — Once during your turn, after Kael performs an Attack, he may Move to a connected revealed Location without spending an Action if he is not Engaged. The first Attack he makes after this Move gains +1 Attack.",
+      "coreMechanic": "Mobility; chained attacks; control; positioning",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Flowing Step",
+          "text": "Once during your turn, after Kael performs an Attack, he may Move to a connected revealed Location without spending an Action if he is not Engaged. The first Attack he makes after this Move gains +1 Attack"
+        }
+      ]
+    },
+    {
+      "id": "Mira",
+      "heroCardId": "H010",
+      "displayName": "Mira Gearwright",
+      "className": "Artificer",
+      "species": "Human",
+      "primaryRole": "Utility",
+      "secondaryRole": "Ranged Support",
+      "traits": "Human; Artificer; Inventor",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 2,
+      "baseArmor": 2,
+      "attack": 4,
+      "armor": 4,
+      "startingEquipmentText": "EQ053 • EQ083 • EQ100 ",
+      "startingEquipment": [
+        {
+          "id": "EQ053",
+          "name": "Light Crossbow",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Armor Piercer — ignore 1 Armor.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ083",
+          "name": "Studded Leather",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Reinforced — once per round when damage would be exactly 1, reduce it to 0.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ100",
+          "name": "Scout's Compass",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Pathfinder — once per round after entering a Location, you may look at the top card of the Encounter Deck and leave it or place it on the bottom.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Improved Field Engineer — Once per Round when Mira uses a Consumable Item, roll 1d6. On a 4–6, do not discard that Item after resolving it. After Mira uses a Consumable Item, she may draw 1 card, then discard 1 card once per Round.",
+      "coreMechanic": "Items; crafting; gadgets; ranged utility",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Improved Field Engineer",
+          "text": "Once per Round when Mira uses a Consumable Item, roll 1d6. On a 4–6, do not discard that Item after resolving it. After Mira uses a Consumable Item, she may draw 1 card, then discard 1 card once per Round"
+        }
+      ]
+    },
+    {
+      "id": "Malachar",
+      "heroCardId": "H011",
+      "displayName": "Malachar Embervein",
+      "className": "Evoker",
+      "species": "Human",
+      "primaryRole": "Arcane Striker",
+      "secondaryRole": "Area Damage",
+      "traits": "Human; Wizard; Evoker; Arcane",
+      "level": 3,
+      "maxHealth": 7,
+      "baseAttack": 3,
+      "baseArmor": 0,
+      "attack": 5,
+      "armor": 1,
+      "startingEquipmentText": "EQ121 • EQ136 • EQ139 • EQ140",
+      "startingEquipment": [
+        {
+          "id": "EQ121",
+          "name": "Ember Wand",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Kindled Focus — once per Round, the first Fire Hero card you play that deals damage gains +1 damage.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ136",
+          "name": "Channeler's Robes",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Open Channel — once per Round, your first damaging Hero card with Range gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ139",
+          "name": "Apprentice Focus",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Focused Casting — once per Round, your first damaging Arcane Hero card gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ140",
+          "name": "Ember Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Heat Sink — once per Round, when one of your own effects would cause you to suffer damage, reduce that damage by 1.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Arcane Overload — Once per Round, after you play an Attack card that costs 2 or more Actions, you may Overload it. That Attack gains +2 Attack. After it resolves, Malachar suffers 1 damage. Controlled Burn — The first time each Round Malachar suffers damage from one of his own Hero card or Equipment effects, reduce that damage by 1, minimum 0. Elemental Momentum — Once per Round after Malachar defeats an Enemy with a Fire or Lightning Attack, draw 1 card.",
+      "coreMechanic": "Overload; self-damage; Fire and Lightning; burst damage; area attacks",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Arcane Overload",
+          "text": "Once per Round, after you play an Attack card that costs 2 or more Actions, you may Overload it. That Attack gains +2 Attack. After it resolves, Malachar suffers 1 damage"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Controlled Burn",
+          "text": "The first time each Round Malachar suffers damage from one of his own Hero card or Equipment effects, reduce that damage by 1, minimum 0"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Elemental Momentum",
+          "text": "Once per Round after Malachar defeats an Enemy with a Fire or Lightning Attack, draw 1 card"
+        }
+      ]
+    },
+    {
+      "id": "Garruk",
+      "heroCardId": "H012",
+      "displayName": "Garruk Stoneblood",
+      "className": "Barbarian",
+      "species": "Human",
+      "primaryRole": "Melee Striker",
+      "secondaryRole": "Bruiser",
+      "traits": "Human; Barbarian; Martial",
+      "level": 3,
+      "maxHealth": 12,
+      "baseAttack": 3,
+      "baseArmor": 1,
+      "attack": 6,
+      "armor": 3,
+      "startingEquipmentText": "EQ130 • EQ137 • EQ140",
+      "startingEquipment": [
+        {
+          "id": "EQ130",
+          "name": "Raider's Greataxe",
+          "type": "Weapon",
+          "attack": 3,
+          "armor": 0,
+          "ability1": "Desperate Swing — while at half your Maximum Health or less, your first Attack each turn gains +1 Attack.",
+          "ability2": "Heavy Weapon — you cannot equip a Shield while this weapon is equipped.",
+          "copies": 1
+        },
+        {
+          "id": "EQ137",
+          "name": "Hardened Hide",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Weathered — once per Round, reduce damage from an Environmental Hazard or Beast by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ140",
+          "name": "Ember Charm",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Heat Sink — once per Round, when one of your own effects would cause you to suffer damage, reduce that damage by 1.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Bloodrage — Once per Round, after Garruk suffers damage, his next Attack this Round gains +2 Attack. Reckless Momentum — Once per Round after Garruk defeats an Enemy, he may Move to a connected revealed Location without spending an Action. Pain into Power — While Garruk is at half his Maximum Health or less, his first Attack each turn gains +1 Attack.",
+      "coreMechanic": "Rage; self-damage; heavy attacks; finishing wounded enemies",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Bloodrage",
+          "text": "Once per Round, after Garruk suffers damage, his next Attack this Round gains +2 Attack"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Reckless Momentum",
+          "text": "Once per Round after Garruk defeats an Enemy, he may Move to a connected revealed Location without spending an Action"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Pain into Power",
+          "text": "While Garruk is at half his Maximum Health or less, his first Attack each turn gains +1 Attack"
+        }
+      ]
+    },
+    {
+      "id": "Veyra",
+      "heroCardId": "H013",
+      "displayName": "Veyra Duskwhisper",
+      "className": "Warlock",
+      "species": "Human",
+      "primaryRole": "Debuffer",
+      "secondaryRole": "Arcane Striker",
+      "traits": "Human; Warlock; Shadow; Arcane",
+      "level": 3,
+      "maxHealth": 8,
+      "baseAttack": 2,
+      "baseArmor": 1,
+      "attack": 4,
+      "armor": 2,
+      "startingEquipmentText": "EQ123 • EQ135 • EQ141",
+      "startingEquipment": [
+        {
+          "id": "EQ123",
+          "name": "Hexwood Wand",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Hex Focus — once per Round, your first Attack against an Enemy with a negative Status Effect gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ135",
+          "name": "Initiate's Robes",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Spellguard — once per Round, reduce damage you suffer from a Magical or elemental source by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ141",
+          "name": "Carved Totem",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Spirit Mark — once per Round after you apply a Status Effect to an Enemy, gain +1 Attack on your next Attack against that Enemy this Round.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Malefic Hex — Once per Round after Veyra applies a harmful Status Effect to an Enemy, her next Attack against that Enemy this Round gains +2 Attack. Lingering Curse — The first harmful Status Effect Veyra applies each Round lasts until the end of the target's next activation unless its normal duration is longer. Soul Siphon — Once per Round after Veyra defeats an Enemy with a harmful Status Effect, recover 1 Health or draw 1 card.",
+      "coreMechanic": "Hexes; harmful Status Effects; Shadow damage; exploiting afflicted enemies",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Malefic Hex",
+          "text": "Once per Round after Veyra applies a harmful Status Effect to an Enemy, her next Attack against that Enemy this Round gains +2 Attack"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Lingering Curse",
+          "text": "The first harmful Status Effect Veyra applies each Round lasts until the end of the target's next activation unless its normal duration is longer"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Soul Siphon",
+          "text": "Once per Round after Veyra defeats an Enemy with a harmful Status Effect, recover 1 Health or draw 1 card"
+        }
+      ]
+    },
+    {
+      "id": "Mordren",
+      "heroCardId": "H014",
+      "displayName": "Mordren Graveshade",
+      "className": "Necromancer",
+      "species": "Human",
+      "primaryRole": "Summoner",
+      "secondaryRole": "Controller",
+      "traits": "Human; Necromancer; Shadow; Arcane",
+      "level": 3,
+      "maxHealth": 8,
+      "baseAttack": 2,
+      "baseArmor": 1,
+      "attack": 4,
+      "armor": 2,
+      "startingEquipmentText": "EQ123 • EQ135 • EQ139",
+      "startingEquipment": [
+        {
+          "id": "EQ123",
+          "name": "Hexwood Wand",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Hex Focus — once per Round, your first Attack against an Enemy with a negative Status Effect gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ135",
+          "name": "Initiate's Robes",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 1,
+          "ability1": "Spellguard — once per Round, reduce damage you suffer from a Magical or elemental source by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ139",
+          "name": "Apprentice Focus",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Focused Casting — once per Round, your first damaging Arcane Hero card gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Raise Servant — Once per Round after an Enemy in Mordren's Location is defeated, place 1 Bone Servant token in that Location, maximum 1. Grave Command — Mordren may have up to 2 Bone Servants in play. Once per Round after Mordren Attacks, one Bone Servant in his Location may deal 1 damage to the target. Death Harvest — Once per Round when a Bone Servant is removed, Mordren may draw 1 card or recover 1 Health.",
+      "coreMechanic": "Undead minions; sacrifice; death triggers; battlefield control",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Raise Servant",
+          "text": "Once per Round after an Enemy in Mordren's Location is defeated, place 1 Bone Servant token in that Location, maximum 1"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Grave Command",
+          "text": "Mordren may have up to 2 Bone Servants in play. Once per Round after Mordren Attacks, one Bone Servant in his Location may deal 1 damage to the target"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Death Harvest",
+          "text": "Once per Round when a Bone Servant is removed, Mordren may draw 1 card or recover 1 Health"
+        }
+      ]
+    },
+    {
+      "id": "Lucien",
+      "heroCardId": "H015",
+      "displayName": "Lucien Valestrike",
+      "className": "Swashbuckler",
+      "species": "Human",
+      "primaryRole": "Mobile Striker",
+      "secondaryRole": "Duelist",
+      "traits": "Human; Swashbuckler; Duelist; Martial",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 4,
+      "baseArmor": 1,
+      "attack": 6,
+      "armor": 3,
+      "startingEquipmentText": "EQ133 • EQ138 • EQ143",
+      "startingEquipment": [
+        {
+          "id": "EQ133",
+          "name": "Duelist's Foil",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Single Combat — once per Round, if exactly one Enemy is in your Location, your first Attack against it gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ138",
+          "name": "Brigandine Vest",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Close Guard — the first time each encounter an Enemy enters your Location, gain +1 Armor against that Enemy's next Attack this Round.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ143",
+          "name": "Duelist's Token",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Tempo — once per Round after you Move, your next melee Attack that turn gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Duelist's Tempo — Once per Round after Lucien Moves, his next melee Attack that turn gains +1 Attack. Fancy Footwork — Once per Round after Lucien damages an Enemy, he may Move to a connected revealed Location without spending an Action if he is not Engaged by another Enemy. Single Combat — Lucien's first Attack each turn against the only Enemy in his Location gains +2 Attack.",
+      "coreMechanic": "Dueling; movement; isolated targets; attack-and-move chains",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Duelist's Tempo",
+          "text": "Once per Round after Lucien Moves, his next melee Attack that turn gains +1 Attack"
+        },
+        {
+          "level": 2,
+          "slot": 1,
+          "name": "Fancy Footwork",
+          "text": "Once per Round after Lucien damages an Enemy, he may Move to a connected revealed Location without spending an Action if he is not Engaged by another Enemy"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Single Combat",
+          "text": "Lucien's first Attack each turn against the only Enemy in his Location gains +2 Attack"
+        }
+      ]
+    },
+    {
+      "id": "Asha",
+      "heroCardId": "H016",
+      "displayName": "Asha Spiritwalker",
+      "className": "Shaman",
+      "species": "Human",
+      "primaryRole": "Support",
+      "secondaryRole": "Controller",
+      "traits": "Human; Shaman; Spirit; Nature",
+      "level": 3,
+      "maxHealth": 9,
+      "baseAttack": 2,
+      "baseArmor": 1,
+      "attack": 4,
+      "armor": 3,
+      "startingEquipmentText": "EQ124 • EQ137 • EQ141",
+      "startingEquipment": [
+        {
+          "id": "EQ124",
+          "name": "Oak Quarterstaff",
+          "type": "Weapon",
+          "attack": 2,
+          "armor": 0,
+          "ability1": "Rooted Stance — if you did not Move this turn, your first melee Attack gains +1 Attack.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ137",
+          "name": "Hardened Hide",
+          "type": "Armor",
+          "attack": 0,
+          "armor": 2,
+          "ability1": "Weathered — once per Round, reduce damage from an Environmental Hazard or Beast by 1.",
+          "ability2": "",
+          "copies": 1
+        },
+        {
+          "id": "EQ141",
+          "name": "Carved Totem",
+          "type": "Accessory",
+          "attack": 0,
+          "armor": 0,
+          "ability1": "Spirit Mark — once per Round after you apply a Status Effect to an Enemy, gain +1 Attack on your next Attack against that Enemy this Round.",
+          "ability2": "",
+          "copies": 1
+        }
+      ],
+      "innateAbility": "Spirit Guide — Once per Round after Asha applies a Status Effect to a Hero or Enemy in her Location, choose one Hero there. That Hero may draw 1 card, then discard 1 card. Totemic Presence — Asha may have 1 Spirit Totem in play. Heroes in its Location gain +1 Attack on the first Attack they make each Round. Ancestral Aid — Once per Round when a Hero in Asha's Location gains a beneficial Status Effect, that Hero may recover 1 Health.",
+      "coreMechanic": "Spirit Totems; Status Effects; healing; battlefield support",
+      "abilities": [
+        {
+          "level": 1,
+          "slot": 0,
+          "name": "Spirit Guide",
+          "text": "Once per Round after Asha applies a Status Effect to a Hero or Enemy in her Location, choose one Hero there. That Hero may draw 1 card, then discard 1 card"
+        },
+        {
+          "level": 1,
+          "slot": 1,
+          "name": "Totemic Presence",
+          "text": "Asha may have 1 Spirit Totem in play. Heroes in its Location gain +1 Attack on the first Attack they make each Round"
+        },
+        {
+          "level": 3,
+          "slot": 2,
+          "name": "Ancestral Aid",
+          "text": "Once per Round when a Hero in Asha's Location gains a beneficial Status Effect, that Hero may recover 1 Health"
+        }
+      ]
+    }
+  ]
+}

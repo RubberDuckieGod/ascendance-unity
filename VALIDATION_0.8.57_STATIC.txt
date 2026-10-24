@@ -1,0 +1,20 @@
+Ascendance Unity 0.8.57 — Full World Event Runtime Execution
+Static release-gate result: PASS
+
+Baseline: runtime-verified 0.8.56a Full Quest Runtime Execution
+
+Checks completed before packaging:
+- 134 C# files scanned for balanced source delimiters outside strings/comments: 0 failures.
+- 58 validator Check(...) call sites confirmed.
+- BuildVersion confirmed: 0.8.57.
+- Play Mode validator menu confirmed.
+- Merge/conflict markers: none.
+- Unity .meta GUID scan: 179 GUIDs, 0 duplicates.
+- Regression diff limited to intended World Event/campaign/quest/save/UI hooks, new runtime/validator, and release documentation.
+- ZIP integrity and SHA256 recorded at packaging time.
+
+This is static validation only. Runtime verification requires Unity Play Mode validator:
+Ascendance -> Validation -> Test 0.8.57 - Full World Event Runtime Execution (Play Mode)
+
+Expected final result:
+[ASCENDANCE][0.8.57 TEST] PASS — Full World Event Runtime Execution completed: 58 passed, 0 failed.

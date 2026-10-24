@@ -1,0 +1,11 @@
+Ascendance Unity 0.8.31a hotfix validation
+
+- Original 0.8.31 static suite: 411/411 passed.
+- Hotfix-specific suite: 8/8 passed.
+- 0.8.30 regression: 268/270; expected old version/banner checks only.
+- 0.8.29 regression: 223/225; expected old version/banner checks only.
+- E015 runtime template matches authoritative workbook: 14 Health / 4 Attack / 2 Armor.
+- Validator WE003 Archer assertion checks exact +1 over stored base Attack.
+- Validator Champion completion path is null-safe.
+
+Runtime verification still required in Unity Play Mode.

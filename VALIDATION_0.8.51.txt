@@ -1,0 +1,15 @@
+Ascendance Unity 0.8.51 — Effect-Granted Search & Explore Exceptions
+
+Runtime validation menu:
+Ascendance -> Validation -> Test 0.8.51 - Effect-Granted Search + Explore Exceptions (Play Mode)
+
+Expected final result:
+[ASCENDANCE][0.8.51 TEST] PASS — Effect-Granted Search + Explore Exceptions completed: 50 passed, 0 failed.
+
+Key new checks:
+- Normal Search is blocked while Engaged.
+- Effect-granted Search remains legal while Engaged.
+- Effect-granted Search costs 0 Actions and logs EFFECT SEARCH.
+- Effect-granted Explore remains legal while Engaged when a legal hidden Location exists.
+- Effect-granted Explore costs 0 Actions, reveals exactly one legal Location, and logs EFFECT EXPLORE.
+- Full 0.8.50 authored-content/Q001 regression suite remains included.

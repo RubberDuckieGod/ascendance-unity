@@ -1,0 +1,19 @@
+Ascendance Unity 0.8.47 — Interactive High-Fantasy Campaign Hub
+STATIC/PACKAGE VALIDATION ONLY — Unity runtime verification still required.
+
+PASS — Built from runtime-verified 0.8.45a baseline.
+PASS — 117 C# files pass delimiter/lexer balance scan.
+PASS — No duplicate Unity GUIDs.
+PASS — Painted poster/hotspot presentation removed from Campaign II hub.
+PASS — Decorative header art contains no authoritative game state or controls.
+PASS — 12 Quest entries are live Unity Buttons.
+PASS — Quest grouping is sequential: Q013–015 / Q016–018 / Q019–021 / Q022–024.
+PASS — Quest role labels do not reorder Quest IDs.
+PASS — Selected Quest detail panel is live and changes from quest-row selection.
+PASS — Begin Selected Quest is driven by CanBeginCampaignQuest0833.
+PASS — Q013 runtime remains intentionally launch-guarded in this milestone.
+PASS — Save / Continue surface / Campaign I archive logic unchanged from verified 0.8.45a.
+
+Runtime validator:
+Ascendance -> Validation -> Test 0.8.47 - Interactive High-Fantasy Campaign Hub (Play Mode)
+Expected final result: 42 passed, 0 failed.

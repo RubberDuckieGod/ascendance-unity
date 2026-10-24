@@ -1,0 +1,11 @@
+Ascendance Unity 0.8.40 static/package validation
+
+- Baseline: runtime-verified 0.8.39.
+- New runtime: Assets/Scripts/Core/DowntimeLoadoutRuntime0840.cs
+- UI: Assets/Scripts/UI/DowntimeUI0836.cs adds LOADOUT tab and PREPARE LOADOUT route.
+- Validator: Assets/Editor/DowntimeLoadoutTestTools0840.cs
+- Build label updated to 0.8.40.
+- Save schema unchanged; existing EquippedEquipmentIds / AcquiredEquipmentIds persist loadout state.
+- Crude delimiter balance passed on all modified/new C# files.
+- No C# compiler is installed in this working container; Unity compilation/runtime validation is still required.
+- Expected Play Mode validator final: 38 passed, 0 failed.

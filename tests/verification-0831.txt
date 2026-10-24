@@ -1,0 +1,412 @@
+PASS — version
+PASS — banner
+PASS — definition Q006
+PASS — definition Q007
+PASS — definition Q008
+PASS — location Goblin Fortress Gate
+PASS — location Prison Pens
+PASS — location Ritual Circle
+PASS — q006 pool
+PASS — q007 pool
+PASS — q008 pool
+PASS — next quests
+PASS — delegation location
+PASS — delegation end phase
+PASS — delegation outcome
+PASS — delegation reward
+PASS — movement prisoner hook
+PASS — q006 prisoners
+PASS — q006 alarm scaling
+PASS — q006 third prisoner reinforcement
+PASS — q006 execution
+PASS — q006 reward
+PASS — q007 3 wagons
+PASS — q007 two sabotage
+PASS — q007 moving route
+PASS — q007 escape fail
+PASS — q007 reinforcements
+PASS — q007 wolf priority
+PASS — q005 carryover q007
+PASS — q007 reward q008
+PASS — q008 stats
+PASS — q008 wall 6
+PASS — q008 placement
+PASS — q008 basic attack
+PASS — q008 bombardment
+PASS — q008 wall thresholds
+PASS — q008 champion
+PASS — q008 reward
+PASS — we003 archer modifier
+PASS — object persistence fields
+PASS — save campaign carryover
+PASS — save field PrisonersFreed
+PASS — save field PrisonersRescued
+PASS — save field PrisonersExecuted
+PASS — save field SupplyWagonsDestroyed
+PASS — save field SupplyWagonsEscaped
+PASS — save field WallTrack
+PASS — save field SiegeEnginesPlaced
+PASS — save field SiegeEnginesDestroyed
+PASS — save field ChampionDefeated
+PASS — object save health
+PASS — object visuals
+PASS — validator menu
+PASS — validator Prison Pens reveal places 6 Prisoners
+PASS — validator third freed Prisoner triggers
+PASS — validator fails when 4 Prisoners are executed
+PASS — validator places 3 Supply Wagons
+PASS — validator two Sabotage Actions destroy a Wagon
+PASS — validator fails immediately when any 2 Supply Wagons escape
+PASS — validator Wall Track at 6
+PASS — validator 10 Health / 2 Armor
+PASS — validator Bombardment removes 1 Wall
+PASS — validator spawns the Goblin Champion
+PASS — validator Epic Equipment
+PASS — validator save state persists Q006-Q008
+PASS — debug helper DebugForcePrisonExecution0831
+PASS — debug helper DebugPrisonersExecuted0831
+PASS — debug helper DebugPrisonersFreed0831
+PASS — debug helper DebugPrisonersRescued0831
+PASS — debug helper DebugQuestEnemyAttack0831
+PASS — debug helper DebugSetActiveSiegeEngineHealth0831
+PASS — debug helper DebugSetRemoveEliteFromQ007Setup0831
+PASS — debug helper DebugSetSupplyWagonLocation0831
+PASS — debug helper DebugSiegeEnginesDestroyed0831
+PASS — debug helper DebugSiegeEnginesPlaced0831
+PASS — debug helper DebugSupplyWagonsDestroyed0831
+PASS — debug helper DebugSupplyWagonsEscaped0831
+PASS — debug helper DebugSyncPrisoners0831
+PASS — debug helper DebugWallTrack0831
+PASS — delimiter QuestBatchQ003Q005TestTools0830.cs()
+PASS — delimiter QuestBatchQ003Q005TestTools0830.cs{}
+PASS — delimiter QuestBatchQ003Q005TestTools0830.cs[]
+PASS — raw string QuestBatchQ003Q005TestTools0830.cs
+PASS — delimiter QuestBatchQ006Q008TestTools0831.cs()
+PASS — delimiter QuestBatchQ006Q008TestTools0831.cs{}
+PASS — delimiter QuestBatchQ006Q008TestTools0831.cs[]
+PASS — raw string QuestBatchQ006Q008TestTools0831.cs
+PASS — delimiter SearchEquipmentManagementTestTools0827.cs()
+PASS — delimiter SearchEquipmentManagementTestTools0827.cs{}
+PASS — delimiter SearchEquipmentManagementTestTools0827.cs[]
+PASS — raw string SearchEquipmentManagementTestTools0827.cs
+PASS — delimiter EncounterConsequencesTestTools0823.cs()
+PASS — delimiter EncounterConsequencesTestTools0823.cs{}
+PASS — delimiter EncounterConsequencesTestTools0823.cs[]
+PASS — raw string EncounterConsequencesTestTools0823.cs
+PASS — delimiter LocationStateTestTools0818.cs()
+PASS — delimiter LocationStateTestTools0818.cs{}
+PASS — delimiter LocationStateTestTools0818.cs[]
+PASS — raw string LocationStateTestTools0818.cs
+PASS — delimiter SearchEncounterRuntimeTestTools0820.cs()
+PASS — delimiter SearchEncounterRuntimeTestTools0820.cs{}
+PASS — delimiter SearchEncounterRuntimeTestTools0820.cs[]
+PASS — raw string SearchEncounterRuntimeTestTools0820.cs
+PASS — delimiter QuestFrameworkTestTools0829.cs()
+PASS — delimiter QuestFrameworkTestTools0829.cs{}
+PASS — delimiter QuestFrameworkTestTools0829.cs[]
+PASS — raw string QuestFrameworkTestTools0829.cs
+PASS — delimiter AscendanceStandaloneBuilder.cs()
+PASS — delimiter AscendanceStandaloneBuilder.cs{}
+PASS — delimiter AscendanceStandaloneBuilder.cs[]
+PASS — raw string AscendanceStandaloneBuilder.cs
+PASS — delimiter ReactionTimingTestTools0810.cs()
+PASS — delimiter ReactionTimingTestTools0810.cs{}
+PASS — delimiter ReactionTimingTestTools0810.cs[]
+PASS — raw string ReactionTimingTestTools0810.cs
+PASS — delimiter ReactionTestTools088.cs()
+PASS — delimiter ReactionTestTools088.cs{}
+PASS — delimiter ReactionTestTools088.cs[]
+PASS — raw string ReactionTestTools088.cs
+PASS — delimiter LocationEffectExecutionTestTools0819.cs()
+PASS — delimiter LocationEffectExecutionTestTools0819.cs{}
+PASS — delimiter LocationEffectExecutionTestTools0819.cs[]
+PASS — raw string LocationEffectExecutionTestTools0819.cs
+PASS — delimiter DefeatRevivalTestTools0813.cs()
+PASS — delimiter DefeatRevivalTestTools0813.cs{}
+PASS — delimiter DefeatRevivalTestTools0813.cs[]
+PASS — raw string DefeatRevivalTestTools0813.cs
+PASS — delimiter StatusDurationLifecycleTestTools0815.cs()
+PASS — delimiter StatusDurationLifecycleTestTools0815.cs{}
+PASS — delimiter StatusDurationLifecycleTestTools0815.cs[]
+PASS — raw string StatusDurationLifecycleTestTools0815.cs
+PASS — delimiter EncounterLifecycleTestTools0821.cs()
+PASS — delimiter EncounterLifecycleTestTools0821.cs{}
+PASS — delimiter EncounterLifecycleTestTools0821.cs[]
+PASS — raw string EncounterLifecycleTestTools0821.cs
+PASS — delimiter EncounterEnemyMovementInitiativeTestTools0824.cs()
+PASS — delimiter EncounterEnemyMovementInitiativeTestTools0824.cs{}
+PASS — delimiter EncounterEnemyMovementInitiativeTestTools0824.cs[]
+PASS — raw string EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — delimiter LootEquipmentReputationTestTools0826.cs()
+PASS — delimiter LootEquipmentReputationTestTools0826.cs{}
+PASS — delimiter LootEquipmentReputationTestTools0826.cs[]
+PASS — raw string LootEquipmentReputationTestTools0826.cs
+PASS — delimiter TurnLifecycleTestTools0811.cs()
+PASS — delimiter TurnLifecycleTestTools0811.cs{}
+PASS — delimiter TurnLifecycleTestTools0811.cs[]
+PASS — raw string TurnLifecycleTestTools0811.cs
+PASS — delimiter StatusEffectEnforcementTestTools0816.cs()
+PASS — delimiter StatusEffectEnforcementTestTools0816.cs{}
+PASS — delimiter StatusEffectEnforcementTestTools0816.cs[]
+PASS — raw string StatusEffectEnforcementTestTools0816.cs
+PASS — delimiter AscendanceProArtMapper.cs()
+PASS — delimiter AscendanceProArtMapper.cs{}
+PASS — delimiter AscendanceProArtMapper.cs[]
+PASS — raw string AscendanceProArtMapper.cs
+PASS — delimiter RoundTransitionTestTools0812.cs()
+PASS — delimiter RoundTransitionTestTools0812.cs{}
+PASS — delimiter RoundTransitionTestTools0812.cs[]
+PASS — raw string RoundTransitionTestTools0812.cs
+PASS — delimiter PostQuestFreeExplorationTestTools0814.cs()
+PASS — delimiter PostQuestFreeExplorationTestTools0814.cs{}
+PASS — delimiter PostQuestFreeExplorationTestTools0814.cs[]
+PASS — raw string PostQuestFreeExplorationTestTools0814.cs
+PASS — delimiter ExplorationDeckSearchTestTools0828.cs()
+PASS — delimiter ExplorationDeckSearchTestTools0828.cs{}
+PASS — delimiter ExplorationDeckSearchTestTools0828.cs[]
+PASS — raw string ExplorationDeckSearchTestTools0828.cs
+PASS — delimiter EncounterHazardObjectTestTools0822.cs()
+PASS — delimiter EncounterHazardObjectTestTools0822.cs{}
+PASS — delimiter EncounterHazardObjectTestTools0822.cs[]
+PASS — raw string EncounterHazardObjectTestTools0822.cs
+PASS — delimiter SpecializedStatusParityTestTools0817.cs()
+PASS — delimiter SpecializedStatusParityTestTools0817.cs{}
+PASS — delimiter SpecializedStatusParityTestTools0817.cs[]
+PASS — raw string SpecializedStatusParityTestTools0817.cs
+PASS — delimiter AscendanceProductionArtAudit.cs()
+PASS — delimiter AscendanceProductionArtAudit.cs{}
+PASS — delimiter AscendanceProductionArtAudit.cs[]
+PASS — raw string AscendanceProductionArtAudit.cs
+PASS — delimiter HeroParityAudit083.cs()
+PASS — delimiter HeroParityAudit083.cs{}
+PASS — delimiter HeroParityAudit083.cs[]
+PASS — raw string HeroParityAudit083.cs
+PASS — delimiter EncounterDeckControlTestTools0825.cs()
+PASS — delimiter EncounterDeckControlTestTools0825.cs{}
+PASS — delimiter EncounterDeckControlTestTools0825.cs[]
+PASS — raw string EncounterDeckControlTestTools0825.cs
+PASS — delimiter CharacterPresentationController.cs()
+PASS — delimiter CharacterPresentationController.cs{}
+PASS — delimiter CharacterPresentationController.cs[]
+PASS — raw string CharacterPresentationController.cs
+PASS — delimiter AnimationImpactRelay.cs()
+PASS — delimiter AnimationImpactRelay.cs{}
+PASS — delimiter AnimationImpactRelay.cs[]
+PASS — raw string AnimationImpactRelay.cs
+PASS — delimiter ProductionAssetResolver.cs()
+PASS — delimiter ProductionAssetResolver.cs{}
+PASS — delimiter ProductionAssetResolver.cs[]
+PASS — raw string ProductionAssetResolver.cs
+PASS — delimiter StonebrookSurfaceMaterials.cs()
+PASS — delimiter StonebrookSurfaceMaterials.cs{}
+PASS — delimiter StonebrookSurfaceMaterials.cs[]
+PASS — raw string StonebrookSurfaceMaterials.cs
+PASS — delimiter AnimatorParameterDriver.cs()
+PASS — delimiter AnimatorParameterDriver.cs{}
+PASS — delimiter AnimatorParameterDriver.cs[]
+PASS — raw string AnimatorParameterDriver.cs
+PASS — delimiter ProductionEnvironmentStyler.cs()
+PASS — delimiter ProductionEnvironmentStyler.cs{}
+PASS — delimiter ProductionEnvironmentStyler.cs[]
+PASS — raw string ProductionEnvironmentStyler.cs
+PASS — delimiter ProductionVFXResolver.cs()
+PASS — delimiter ProductionVFXResolver.cs{}
+PASS — delimiter ProductionVFXResolver.cs[]
+PASS — raw string ProductionVFXResolver.cs
+PASS — delimiter CharacterAnimationProfile.cs()
+PASS — delimiter CharacterAnimationProfile.cs{}
+PASS — delimiter CharacterAnimationProfile.cs[]
+PASS — raw string CharacterAnimationProfile.cs
+PASS — delimiter CombatTimeEffects.cs()
+PASS — delimiter CombatTimeEffects.cs{}
+PASS — delimiter CombatTimeEffects.cs[]
+PASS — raw string CombatTimeEffects.cs
+PASS — delimiter EquipmentSocketRig.cs()
+PASS — delimiter EquipmentSocketRig.cs{}
+PASS — delimiter EquipmentSocketRig.cs[]
+PASS — raw string EquipmentSocketRig.cs
+PASS — delimiter RuntimeNavMeshBaker.cs()
+PASS — delimiter RuntimeNavMeshBaker.cs{}
+PASS — delimiter RuntimeNavMeshBaker.cs[]
+PASS — raw string RuntimeNavMeshBaker.cs
+PASS — delimiter MovementPathPreview.cs()
+PASS — delimiter MovementPathPreview.cs{}
+PASS — delimiter MovementPathPreview.cs[]
+PASS — raw string MovementPathPreview.cs
+PASS — delimiter ShellCameraBootstrap.cs()
+PASS — delimiter ShellCameraBootstrap.cs{}
+PASS — delimiter ShellCameraBootstrap.cs[]
+PASS — raw string ShellCameraBootstrap.cs
+PASS — delimiter PauseMenuController.cs()
+PASS — delimiter PauseMenuController.cs{}
+PASS — delimiter PauseMenuController.cs[]
+PASS — raw string PauseMenuController.cs
+PASS — delimiter MainMenuUI.cs()
+PASS — delimiter MainMenuUI.cs{}
+PASS — delimiter MainMenuUI.cs[]
+PASS — raw string MainMenuUI.cs
+PASS — delimiter ShellUIFactory.cs()
+PASS — delimiter ShellUIFactory.cs{}
+PASS — delimiter ShellUIFactory.cs[]
+PASS — raw string ShellUIFactory.cs
+PASS — delimiter SettingsPanelUI.cs()
+PASS — delimiter SettingsPanelUI.cs{}
+PASS — delimiter SettingsPanelUI.cs[]
+PASS — raw string SettingsPanelUI.cs
+PASS — delimiter AscendanceSession.cs()
+PASS — delimiter AscendanceSession.cs{}
+PASS — delimiter AscendanceSession.cs[]
+PASS — raw string AscendanceSession.cs
+PASS — delimiter AscendanceSaveSystem.cs()
+PASS — delimiter AscendanceSaveSystem.cs{}
+PASS — delimiter AscendanceSaveSystem.cs[]
+PASS — raw string AscendanceSaveSystem.cs
+PASS — delimiter AscendanceSaveData.cs()
+PASS — delimiter AscendanceSaveData.cs{}
+PASS — delimiter AscendanceSaveData.cs[]
+PASS — raw string AscendanceSaveData.cs
+PASS — delimiter AscendanceSettings.cs()
+PASS — delimiter AscendanceSettings.cs{}
+PASS — delimiter AscendanceSettings.cs[]
+PASS — raw string AscendanceSettings.cs
+PASS — delimiter IsometricCameraController.cs()
+PASS — delimiter IsometricCameraController.cs{}
+PASS — delimiter IsometricCameraController.cs[]
+PASS — raw string IsometricCameraController.cs
+PASS — delimiter HeroRulesRuntime.cs()
+PASS — delimiter HeroRulesRuntime.cs{}
+PASS — delimiter HeroRulesRuntime.cs[]
+PASS — raw string HeroRulesRuntime.cs
+PASS — delimiter AscendanceGameManager.cs()
+PASS — delimiter AscendanceGameManager.cs{}
+PASS — delimiter AscendanceGameManager.cs[]
+PASS — raw string AscendanceGameManager.cs
+PASS — delimiter GameBootstrap.cs()
+PASS — delimiter GameBootstrap.cs{}
+PASS — delimiter GameBootstrap.cs[]
+PASS — raw string GameBootstrap.cs
+PASS — delimiter QuestRuntime0830.cs()
+PASS — delimiter QuestRuntime0830.cs{}
+PASS — delimiter QuestRuntime0830.cs[]
+PASS — raw string QuestRuntime0830.cs
+PASS — delimiter SearchEquipmentRuntime0827.cs()
+PASS — delimiter SearchEquipmentRuntime0827.cs{}
+PASS — delimiter SearchEquipmentRuntime0827.cs[]
+PASS — raw string SearchEquipmentRuntime0827.cs
+PASS — delimiter ExplorationRuntime0828.cs()
+PASS — delimiter ExplorationRuntime0828.cs{}
+PASS — delimiter ExplorationRuntime0828.cs[]
+PASS — raw string ExplorationRuntime0828.cs
+PASS — delimiter QuestRuntime0829.cs()
+PASS — delimiter QuestRuntime0829.cs{}
+PASS — delimiter QuestRuntime0829.cs[]
+PASS — raw string QuestRuntime0829.cs
+PASS — delimiter SearchEncounterRuntime.cs()
+PASS — delimiter SearchEncounterRuntime.cs{}
+PASS — delimiter SearchEncounterRuntime.cs[]
+PASS — raw string SearchEncounterRuntime.cs
+PASS — delimiter AscendanceModels.cs()
+PASS — delimiter AscendanceModels.cs{}
+PASS — delimiter AscendanceModels.cs[]
+PASS — raw string AscendanceModels.cs
+PASS — delimiter HeroDatabase.cs()
+PASS — delimiter HeroDatabase.cs{}
+PASS — delimiter HeroDatabase.cs[]
+PASS — raw string HeroDatabase.cs
+PASS — delimiter QuestRuntime0831.cs()
+PASS — delimiter QuestRuntime0831.cs{}
+PASS — delimiter QuestRuntime0831.cs[]
+PASS — raw string QuestRuntime0831.cs
+PASS — delimiter RewardContent0826.cs()
+PASS — delimiter RewardContent0826.cs{}
+PASS — delimiter RewardContent0826.cs[]
+PASS — raw string RewardContent0826.cs
+PASS — delimiter CRPGInputController.cs()
+PASS — delimiter CRPGInputController.cs{}
+PASS — delimiter CRPGInputController.cs[]
+PASS — raw string CRPGInputController.cs
+PASS — delimiter StonebrookAmbientFX.cs()
+PASS — delimiter StonebrookAmbientFX.cs{}
+PASS — delimiter StonebrookAmbientFX.cs[]
+PASS — raw string StonebrookAmbientFX.cs
+PASS — delimiter WorldHealthBar.cs()
+PASS — delimiter WorldHealthBar.cs{}
+PASS — delimiter WorldHealthBar.cs[]
+PASS — raw string WorldHealthBar.cs
+PASS — delimiter WorldBillboardLabel.cs()
+PASS — delimiter WorldBillboardLabel.cs{}
+PASS — delimiter WorldBillboardLabel.cs[]
+PASS — raw string WorldBillboardLabel.cs
+PASS — delimiter FireFlicker.cs()
+PASS — delimiter FireFlicker.cs{}
+PASS — delimiter FireFlicker.cs[]
+PASS — raw string FireFlicker.cs
+PASS — delimiter CharacterVisualRig.cs()
+PASS — delimiter CharacterVisualRig.cs{}
+PASS — delimiter CharacterVisualRig.cs[]
+PASS — raw string CharacterVisualRig.cs
+PASS — delimiter WorldCombatFeedback.cs()
+PASS — delimiter WorldCombatFeedback.cs{}
+PASS — delimiter WorldCombatFeedback.cs[]
+PASS — raw string WorldCombatFeedback.cs
+PASS — delimiter WorldRing.cs()
+PASS — delimiter WorldRing.cs{}
+PASS — delimiter WorldRing.cs[]
+PASS — raw string WorldRing.cs
+PASS — delimiter AscendanceHUD.cs()
+PASS — delimiter AscendanceHUD.cs{}
+PASS — delimiter AscendanceHUD.cs[]
+PASS — raw string AscendanceHUD.cs
+PASS — delimiter HeroAvatar.cs()
+PASS — delimiter HeroAvatar.cs{}
+PASS — delimiter HeroAvatar.cs[]
+PASS — raw string HeroAvatar.cs
+PASS — delimiter StonebrookWorldBuilder.cs()
+PASS — delimiter StonebrookWorldBuilder.cs{}
+PASS — delimiter StonebrookWorldBuilder.cs[]
+PASS — raw string StonebrookWorldBuilder.cs
+PASS — delimiter EncounterObjectAvatar.cs()
+PASS — delimiter EncounterObjectAvatar.cs{}
+PASS — delimiter EncounterObjectAvatar.cs[]
+PASS — raw string EncounterObjectAvatar.cs
+PASS — delimiter HeroPieceAvatar.cs()
+PASS — delimiter HeroPieceAvatar.cs{}
+PASS — delimiter HeroPieceAvatar.cs[]
+PASS — raw string HeroPieceAvatar.cs
+PASS — delimiter EnemyAvatar.cs()
+PASS — delimiter EnemyAvatar.cs{}
+PASS — delimiter EnemyAvatar.cs[]
+PASS — raw string EnemyAvatar.cs
+PASS — delimiter LocationMarker.cs()
+PASS — delimiter LocationMarker.cs{}
+PASS — delimiter LocationMarker.cs[]
+PASS — raw string LocationMarker.cs
+PASS — delimiter QuestObjectAvatar0829.cs()
+PASS — delimiter QuestObjectAvatar0829.cs{}
+PASS — delimiter QuestObjectAvatar0829.cs[]
+PASS — raw string QuestObjectAvatar0829.cs
+PASS — yield QuestBatchQ003Q005TestTools0830.cs:IEnumerator Run
+PASS — yield QuestBatchQ006Q008TestTools0831.cs:IEnumerator Run
+PASS — yield SearchEquipmentManagementTestTools0827.cs:IEnumerator Run
+PASS — yield QuestFrameworkTestTools0829.cs:IEnumerator Run
+PASS — yield EncounterEnemyMovementInitiativeTestTools0824.cs:IEnumerator Run
+PASS — yield LootEquipmentReputationTestTools0826.cs:IEnumerator Run
+PASS — yield RoundTransitionTestTools0812.cs:IEnumerator Run
+PASS — yield ExplorationDeckSearchTestTools0828.cs:IEnumerator Run
+PASS — yield EncounterDeckControlTestTools0825.cs:IEnumerator Run
+PASS — yield CharacterPresentationController.cs:IEnumerator AttackTimingFallback
+PASS — yield CombatTimeEffects.cs:IEnumerator HitStopRoutine
+PASS — yield AscendanceGameManager.cs:IEnumerator ResolveSingleEnemyActivation
+PASS — yield AscendanceGameManager.cs:IEnumerator WaitForEncounterDeckControlIfNeeded
+PASS — yield AscendanceGameManager.cs:IEnumerator ResolvePriorityEncounterActivation
+PASS — yield AscendanceGameManager.cs:IEnumerator ResolveRound
+PASS — yield AscendanceGameManager.cs:IEnumerator ResolveEndRoundStatuses
+PASS — yield CharacterVisualRig.cs:IEnumerator AttackMotion
+PASS — yield CharacterVisualRig.cs:IEnumerator HitMotion
+PASS — yield CharacterVisualRig.cs:IEnumerator DeathMotion
+PASS — yield WorldCombatFeedback.cs:IEnumerator FloatText
+PASS — yield WorldCombatFeedback.cs:IEnumerator Flash
+PASS — yield HeroAvatar.cs:IEnumerator WaitForAgent
+PASS — yield HeroAvatar.cs:IEnumerator FallbackWalk
+PASS — yield StonebrookWorldBuilder.cs:IEnumerator BuildNavigationAndSpawn
+RESULT: 411/411 checks passed

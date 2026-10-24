@@ -1,0 +1,9 @@
+PASS — BuildVersion is 0.8.9.
+PASS — 16 authored Heroes.
+PASS — 323 Hero-card definitions.
+PASS — every personal deck totals exactly 30 cards.
+PASS — Interpose H001-009 remains 2 copies with printed `another Hero` trigger.
+PASS — retarget parser accepts `become the target ... instead` rather than requiring one exact contiguous phrase.
+PASS — 0.8.8 relationship validation remains present.
+PASS — deterministic Garruk Ignore the Pain + Feed the Rage Play Mode helper is present.
+PASS — C# brace-count sanity check.

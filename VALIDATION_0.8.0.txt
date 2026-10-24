@@ -1,0 +1,15 @@
+Ascendance Unity 0.8.0 — Static Migration Validation
+
+PASS — 16 authored Heroes loaded in hero_roster.json
+PASS — 323 unique authored Hero-card definitions loaded
+PASS — 480 physical cards after Copies expansion
+PASS — Every Hero has exactly 30 physical cards
+PASS — Source delimiter/string structural scan across 41 C# files
+PASS — No Garruk-only PlayCard restriction remains
+PASS — No Unity Input System package/runtime references reintroduced
+PASS — BuildVersion is 0.8.0
+PASS — com.unity.modules.animation and com.unity.modules.jsonserialize remain in manifest
+PASS — Q001 spawn validation uses selected PartySize rather than all 16 Heroes
+PASS — Save schema includes deck, hand, discard, statuses, potion, kill count, hero-created pieces, and transient attack/movement modifiers
+
+Runtime note: Unity Editor is not installed in this execution environment, so compilation and Play Mode remain the final local verification step in Unity 6000.6.5f1.

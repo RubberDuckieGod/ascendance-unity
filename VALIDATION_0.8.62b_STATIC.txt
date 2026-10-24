@@ -1,0 +1,16 @@
+Ascendance Unity 0.8.62b — Static Validation
+
+PASS — BuildVersion is 0.8.62b
+PASS — Stale EnemyAvatar pruning exists
+PASS — Master checks stale EnemyAvatar cleanup
+PASS — Master menu is 0.8.62b
+PASS — No C# source still names 0.8.62a
+PASS — AscendanceGameManager.cs structural brace balance
+PASS — StonebrookWorldBuilder.cs structural brace balance
+PASS — MasterSaveLoadRegressionTestTools0862.cs structural brace balance
+PASS — FullLocationRuntimeTestTools0858.cs structural brace balance
+PASS — FullEnemyRuntimeTestTools0859.cs structural brace balance
+PASS — FullHeroRuntimeTestTools0860.cs structural brace balance
+PASS — FullCampaignIntegrationTestTools0861.cs structural brace balance
+
+TOTAL — 12 passed, 0 failed.

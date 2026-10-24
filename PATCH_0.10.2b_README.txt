@@ -1,0 +1,11 @@
+Ascendance Unity 0.10.2b — Validator Coroutine Containment Hotfix PATCH
+
+Apply over the 0.10.2a Network Validator Async-Isolation Hotfix project.
+
+This hotfix does not change gameplay rules, authored content, or the TCP protocol. It contains the World Phase coroutine created by the Client Command Routing validator before restoring captured state, and requires sustained idle/startable windows in the Real Network Transport validator.
+
+Unity Play Mode target:
+- Master: 54 passed, 0 failed
+- Server: 24 passed, 0 failed
+- Router: 29 passed, 0 failed
+- Network: 25 passed, 0 failed

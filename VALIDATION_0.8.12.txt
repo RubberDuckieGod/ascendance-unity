@@ -1,0 +1,81 @@
+FAIL — BuildVersion is 0.8.12
+FAIL — 0.8.12 startup marker present
+PASS — 16 authored Heroes
+PASS — 323 Hero-card definitions
+PASS — every personal deck totals exactly 30 cards
+PASS — HeroState defaults to 0 Actions
+FAIL — Start Turn grants 3 Actions
+PASS — Round 1 opening hand still avoids duplicate draw
+PASS — Round 2+ draw still occurs at Start Turn
+PASS — End Turn preserves general Actions
+PASS — End Turn strips attack-only Actions
+PASS — Reaction-specific payment gate exists
+PASS — Reaction-specific gate excludes defeated/nonparticipating Heroes
+PASS — pre-Attack Reaction population uses reaction reserve gate
+PASS — damage Reaction population uses reaction reserve gate
+PASS — post-Attack Reaction population uses reaction reserve gate
+PASS — post-kill Reaction population uses reaction reserve gate
+PASS — UseReaction revalidates held reserve before spending
+PASS — UseReaction logs held Action transaction
+PASS — Reaction cost is spent exactly once in UseReaction
+PASS — End-Phase reserve reset is explicit
+PASS — End-Phase reset occurs after status resolution
+PASS — held Actions survive into End-Phase statuses
+PASS — remaining held general Actions are explicitly logged on expiry
+PASS — End Phase zeros general Actions
+PASS — End Phase zeros attack-only Actions
+PASS — End Phase resets TurnCompleted
+PASS — End Phase resets round runtime after reserve expiry
+PASS — all Hero reserves expire through one canonical method
+PASS — next Hero Phase increments Round exactly in canonical method
+PASS — next Hero Phase has no TurnHero
+PASS — next Hero Phase enforces 0 Actions
+PASS — next Hero Phase repairs stale TurnCompleted
+PASS — new Round log states all Heroes await Start Turn at 0 Actions
+PASS — ResolveRound no longer draws cards party-wide
+PASS — ResolveRound calls next Hero Phase only after End Phase reserve expiry
+PASS — 0.8.10 Enemy Attack damage pipeline preserved
+PASS — 0.8.9 Interpose retarget preserved
+PASS — save/load TurnHero preservation remains present
+PASS — load still zeroes unfinished non-turn Heroes
+PASS — HUD still has Start Turn and End Turn
+PASS — 0.8.11 lifecycle helper retained
+PASS — 0.8.12 Play Mode test helper present
+PASS — 0.8.12 helper requires beginning-of-Hero-Phase state
+PASS — 0.8.12 helper stages Captain-only World Phase
+PASS — 0.8.12 helper gives Ignore the Pain
+PASS — 0.8.12 helper verifies saved Actions survive into World Phase
+PASS — 0.8.12 helper spends a legal held Action
+PASS — 0.8.12 helper verifies End Phase clears all Actions
+PASS — 0.8.12 helper verifies no round-wide draw
+PASS — 0.8.12 helper verifies Round 2+ draw at individual Start Turn
+PASS — 0.8.12 helper verifies second Hero also draws at own Start Turn
+PASS — HeroRulesRuntime keeps ResetTurn and ResetRound separate
+PASS — Save DTO retains TurnHeroId
+PASS — Save capture retains TurnHeroId
+PASS — AscendanceGameManager.cs brace balance
+PASS — AscendanceGameManager.cs parenthesis balance
+PASS — AscendanceGameManager.cs bracket balance
+PASS — AscendanceModels.cs brace balance
+PASS — AscendanceModels.cs parenthesis balance
+PASS — AscendanceModels.cs bracket balance
+PASS — AscendanceHUD.cs brace balance
+PASS — AscendanceHUD.cs parenthesis balance
+PASS — AscendanceHUD.cs bracket balance
+PASS — AscendanceSaveData.cs brace balance
+PASS — AscendanceSaveData.cs parenthesis balance
+PASS — AscendanceSaveData.cs bracket balance
+PASS — AscendanceSaveSystem.cs brace balance
+PASS — AscendanceSaveSystem.cs parenthesis balance
+PASS — AscendanceSaveSystem.cs bracket balance
+PASS — TurnLifecycleTestTools0811.cs brace balance
+PASS — TurnLifecycleTestTools0811.cs parenthesis balance
+PASS — TurnLifecycleTestTools0811.cs bracket balance
+PASS — RoundTransitionTestTools0812.cs brace balance
+PASS — RoundTransitionTestTools0812.cs parenthesis balance
+PASS — RoundTransitionTestTools0812.cs bracket balance
+PASS — HeroRulesRuntime.cs brace balance
+PASS — HeroRulesRuntime.cs parenthesis balance
+PASS — HeroRulesRuntime.cs bracket balance
+
+SUMMARY — 76/79 static checks passed.

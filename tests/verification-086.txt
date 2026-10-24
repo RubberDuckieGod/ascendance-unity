@@ -1,0 +1,35 @@
+Ascendance Unity 0.8.6 — static Generalized Hero Damage Reactions verification
+NOTE: Unity Editor/runtime execution is not available in the packaging environment; local Play Mode remains the compile/runtime authority.
+
+Build marker 0.8.6: PASS
+16 authored Heroes: PASS
+323 Hero-card definitions: PASS
+30-card deck every Hero: PASS
+0.8.5 player-chosen turn authority preserved: PASS
+No runtime ActiveHero property: PASS
+BeforeHeroDamage reaction kind: PASS
+Generalized damage transaction exists: PASS
+Damage reactions use printed would-suffer trigger: PASS
+Bone Shield servant validation: PASS
+Dead Interpose servant validation: PASS
+Guardian Blessing zero-damage Inspired: PASS
+Mana Burn routed through damage transaction: PASS
+Reckless Swing migrated: PASS
+Feed the Rage migrated: PASS
+Dark Bargain migrated: PASS
+Post-Attack self damage migrated: PASS
+Burning waits on damage transaction: PASS
+Reaction UI generalized: PASS
+General damage reaction repair set present: PASS
+No stray direct Hero damage mutations: PASS
+AscendanceGameManager.cs brace balance: PASS
+AscendanceGameManager.cs parenthesis balance: PASS
+AscendanceHUD.cs brace balance: PASS
+AscendanceHUD.cs parenthesis balance: PASS
+
+Hero Health subtraction sites (expected only canonical Hero damage + Enemy Attack):
+- L996: target.Health = Mathf.Max(floor, target.Health - amount);
+- L1189: int damage=Mathf.Max(0,die+effectiveEnemyAttack-(effectiveHeroArmor+armorBonus));damage=Mathf.Max(0,damage-reduction);int before=target.Health;int floor=(target.CannotDropBelowOne||target.AvatarFloorActive||preventDefeat)?1:0;target.Health=Mathf.Max(floor,target.Health-damage);int dealt=before-target.Health;
+
+Live regression steps are documented in DAMAGE_REACTION_PIPELINE_0.8.6.md.
+0.8.5 Player-Chosen Hero Turn Order remains the stable turn-order baseline.

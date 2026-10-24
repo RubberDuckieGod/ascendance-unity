@@ -1,0 +1,15 @@
+Ascendance Unity 0.8.8 — Static Validation
+
+PASS — BuildVersion = 0.8.8.
+PASS — 16 authored Heroes loaded from hero_roster.json.
+PASS — 323 Hero-card definitions loaded from hero_cards.json.
+PASS — all 16 Hero physical decks total exactly 30 cards by Copies.
+PASS — Interpose H001-009 remains 2 copies and retains its printed "another Hero" trigger.
+PASS — Ignore the Pain H012-013 remains 2 copies and retains its printed self-damage Reaction text.
+PASS — pre-Attack revalidation uses current target, current Armor bonus, current damage reduction, cancellation state, remaining Actions, current Hand, and card/piece usage state.
+PASS — "another Hero" / Adjacent Hero relationship validation prevents Interpose from targeting Aldric himself after a retarget.
+PASS — retargeting clears protection attached to the prior target before applying protection from the retargeting Reaction itself.
+PASS — generalized Hero-damage Reaction options are rebuilt after each damage Reaction.
+PASS — C# brace-count structural check passed for AscendanceGameManager.cs.
+
+NOTE — This environment does not contain the Unity Editor. These are static/data/package checks, not a Unity Play Mode runtime pass.

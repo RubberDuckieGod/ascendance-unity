@@ -1,0 +1,16 @@
+Ascendance Unity 0.8.27 — Search Rewards & Equipment Management
+
+Static verification:
+- 364/364 checks passed.
+- C# raw-newline scanner passed.
+- Delimiter balance passed across Assets/Scripts and Assets/Editor.
+- IEnumerator yield audit passed.
+
+Regression:
+- 0.8.26 verifier: 626/628; only expected BuildVersion/banner assertions differ.
+- 0.8.25 verifier: 563/565; only expected BuildVersion/banner assertions differ.
+- 0.8.22/0.8.21/0.8.20/0.8.19: only expected BuildVersion/banner assertions differ.
+- 0.8.24/0.8.23 legacy verifier scripts still use obsolete pre-0.8.25 exact-string assumptions for guarded/fixed-severity travel control; newer suites cover the live implementation.
+
+Runtime verification required:
+Ascendance -> Validation -> Test 0.8.27 - Search Rewards & Equipment Management (Play Mode)

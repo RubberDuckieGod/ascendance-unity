@@ -1,0 +1,384 @@
+380/383 checks passed.
+FAIL — BuildVersion 0.8.28
+FAIL — 0.8.28 banner
+PASS — exploration partial exists
+PASS — initializes exploration deck
+FAIL — deck uses hidden graph locations
+PASS — Explore uses legal deck draw
+PASS — Explore no longer FirstOrDefault hidden direct
+PASS — illegal cards set aside
+PASS — illegal cards returned shuffled
+PASS — SD005 real implementation
+PASS — SD005 deferred reveal field
+PASS — deferred reveal resolves on entry
+PASS — SD006 real implementation
+PASS — SD006 leave option
+PASS — SD006 reveal option
+PASS — SD006 scalable choose inspect
+PASS — SD010 real implementation
+PASS — SD010 both orders
+PASS — SD010 edits live deck
+PASS — Rowan authored ability text
+PASS — Rowan real Trailblazer
+PASS — Rowan top and bottom choices
+PASS — Scout Ahead uses exploration deck
+PASS — Search 0827 delegates exploration
+PASS — reward UI options delegates exploration
+PASS — reward resolution delegates exploration
+PASS — exploration deck save field
+PASS — exploration deck captured
+PASS — exploration deck restored after locations
+PASS — deferred reveal save field
+PASS — deferred reveal captured
+PASS — deferred reveal restored compatibly
+PASS — choice state already persists IDs
+PASS — HUD exploration modal title
+PASS — HUD deck remaining
+PASS — authored SD005
+PASS — authored SD006
+PASS — authored SD010
+PASS — Play Mode menu
+PASS — validator Exploration deck can hold the real hidden graph Location cards
+PASS — validator SD010 exposes the actual top two Exploration cards
+PASS — validator SD010 reorders the live Exploration deck
+PASS — validator SD005 skips the illegal top card
+PASS — validator Entering an SD005-revealed Location resolves
+PASS — validator SD006 inspects a connected unrevealed Location
+PASS — validator SD006 Leave keeps the Location unrevealed
+PASS — validator SD006 Reveal resolves the Location
+PASS — validator Rowan Improved Trailblazer now opens
+PASS — validator Improved Trailblazer keeps the chosen card
+PASS — validator Exploration Deck Preview, Reorder & Search Integration completed
+PASS — deprecated FindObjectsSortMode absent
+PASS — delimiter () Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — delimiter [] Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — delimiter {} Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — no raw newline Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — delimiter () Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — delimiter [] Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — delimiter {} Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — no raw newline Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — delimiter () Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — delimiter [] Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — delimiter {} Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — no raw newline Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — delimiter () Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — delimiter [] Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — delimiter {} Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — no raw newline Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — delimiter () Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — delimiter [] Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — delimiter {} Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — no raw newline Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — delimiter () Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — delimiter [] Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — delimiter {} Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — no raw newline Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — delimiter () Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — delimiter [] Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — delimiter {} Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — no raw newline Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — delimiter () Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — delimiter [] Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — delimiter {} Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — no raw newline Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — delimiter () Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — delimiter [] Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — delimiter {} Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — no raw newline Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — delimiter () Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — delimiter [] Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — delimiter {} Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — no raw newline Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — delimiter () Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — delimiter [] Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — delimiter {} Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — no raw newline Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — delimiter () Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — delimiter [] Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — delimiter {} Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — no raw newline Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — delimiter () Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — delimiter [] Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — delimiter {} Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — no raw newline Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — delimiter () Assets/Scripts/Shell/PauseMenuController.cs
+PASS — delimiter [] Assets/Scripts/Shell/PauseMenuController.cs
+PASS — delimiter {} Assets/Scripts/Shell/PauseMenuController.cs
+PASS — no raw newline Assets/Scripts/Shell/PauseMenuController.cs
+PASS — delimiter () Assets/Scripts/Shell/MainMenuUI.cs
+PASS — delimiter [] Assets/Scripts/Shell/MainMenuUI.cs
+PASS — delimiter {} Assets/Scripts/Shell/MainMenuUI.cs
+PASS — no raw newline Assets/Scripts/Shell/MainMenuUI.cs
+PASS — delimiter () Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — delimiter [] Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — delimiter {} Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — no raw newline Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — delimiter () Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — delimiter [] Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — delimiter {} Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — no raw newline Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — delimiter () Assets/Scripts/Shell/AscendanceSession.cs
+PASS — delimiter [] Assets/Scripts/Shell/AscendanceSession.cs
+PASS — delimiter {} Assets/Scripts/Shell/AscendanceSession.cs
+PASS — no raw newline Assets/Scripts/Shell/AscendanceSession.cs
+PASS — delimiter () Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — delimiter [] Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — delimiter {} Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — no raw newline Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — delimiter () Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — delimiter [] Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — delimiter {} Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — no raw newline Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — delimiter () Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — delimiter [] Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — delimiter {} Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — no raw newline Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — delimiter () Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — delimiter [] Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — delimiter {} Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — no raw newline Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — delimiter () Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — delimiter [] Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — delimiter {} Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — no raw newline Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — delimiter () Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — delimiter [] Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — delimiter {} Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — no raw newline Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — delimiter () Assets/Scripts/Core/GameBootstrap.cs
+PASS — delimiter [] Assets/Scripts/Core/GameBootstrap.cs
+PASS — delimiter {} Assets/Scripts/Core/GameBootstrap.cs
+PASS — no raw newline Assets/Scripts/Core/GameBootstrap.cs
+PASS — delimiter () Assets/Scripts/Core/QuestRuntime0830.cs
+PASS — delimiter [] Assets/Scripts/Core/QuestRuntime0830.cs
+PASS — delimiter {} Assets/Scripts/Core/QuestRuntime0830.cs
+PASS — no raw newline Assets/Scripts/Core/QuestRuntime0830.cs
+PASS — delimiter () Assets/Scripts/Core/SearchEquipmentRuntime0827.cs
+PASS — delimiter [] Assets/Scripts/Core/SearchEquipmentRuntime0827.cs
+PASS — delimiter {} Assets/Scripts/Core/SearchEquipmentRuntime0827.cs
+PASS — no raw newline Assets/Scripts/Core/SearchEquipmentRuntime0827.cs
+PASS — delimiter () Assets/Scripts/Core/ExplorationRuntime0828.cs
+PASS — delimiter [] Assets/Scripts/Core/ExplorationRuntime0828.cs
+PASS — delimiter {} Assets/Scripts/Core/ExplorationRuntime0828.cs
+PASS — no raw newline Assets/Scripts/Core/ExplorationRuntime0828.cs
+PASS — delimiter () Assets/Scripts/Core/QuestRuntime0829.cs
+PASS — delimiter [] Assets/Scripts/Core/QuestRuntime0829.cs
+PASS — delimiter {} Assets/Scripts/Core/QuestRuntime0829.cs
+PASS — no raw newline Assets/Scripts/Core/QuestRuntime0829.cs
+PASS — delimiter () Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — delimiter [] Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — delimiter {} Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — no raw newline Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — delimiter () Assets/Scripts/Core/AscendanceModels.cs
+PASS — delimiter [] Assets/Scripts/Core/AscendanceModels.cs
+PASS — delimiter {} Assets/Scripts/Core/AscendanceModels.cs
+PASS — no raw newline Assets/Scripts/Core/AscendanceModels.cs
+PASS — delimiter () Assets/Scripts/Core/HeroDatabase.cs
+PASS — delimiter [] Assets/Scripts/Core/HeroDatabase.cs
+PASS — delimiter {} Assets/Scripts/Core/HeroDatabase.cs
+PASS — no raw newline Assets/Scripts/Core/HeroDatabase.cs
+PASS — delimiter () Assets/Scripts/Core/QuestRuntime0831.cs
+PASS — delimiter [] Assets/Scripts/Core/QuestRuntime0831.cs
+PASS — delimiter {} Assets/Scripts/Core/QuestRuntime0831.cs
+PASS — no raw newline Assets/Scripts/Core/QuestRuntime0831.cs
+PASS — delimiter () Assets/Scripts/Core/RewardContent0826.cs
+PASS — delimiter [] Assets/Scripts/Core/RewardContent0826.cs
+PASS — delimiter {} Assets/Scripts/Core/RewardContent0826.cs
+PASS — no raw newline Assets/Scripts/Core/RewardContent0826.cs
+PASS — delimiter () Assets/Scripts/Input/CRPGInputController.cs
+PASS — delimiter [] Assets/Scripts/Input/CRPGInputController.cs
+PASS — delimiter {} Assets/Scripts/Input/CRPGInputController.cs
+PASS — no raw newline Assets/Scripts/Input/CRPGInputController.cs
+PASS — delimiter () Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — delimiter [] Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — delimiter {} Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — no raw newline Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — delimiter () Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — delimiter [] Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — delimiter {} Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — no raw newline Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — delimiter () Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — delimiter [] Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — delimiter {} Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — no raw newline Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — delimiter () Assets/Scripts/Presentation/FireFlicker.cs
+PASS — delimiter [] Assets/Scripts/Presentation/FireFlicker.cs
+PASS — delimiter {} Assets/Scripts/Presentation/FireFlicker.cs
+PASS — no raw newline Assets/Scripts/Presentation/FireFlicker.cs
+PASS — delimiter () Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — delimiter [] Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — delimiter {} Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — no raw newline Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — delimiter () Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — delimiter [] Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — delimiter {} Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — no raw newline Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — delimiter () Assets/Scripts/Presentation/WorldRing.cs
+PASS — delimiter [] Assets/Scripts/Presentation/WorldRing.cs
+PASS — delimiter {} Assets/Scripts/Presentation/WorldRing.cs
+PASS — no raw newline Assets/Scripts/Presentation/WorldRing.cs
+PASS — delimiter () Assets/Scripts/UI/AscendanceHUD.cs
+PASS — delimiter [] Assets/Scripts/UI/AscendanceHUD.cs
+PASS — delimiter {} Assets/Scripts/UI/AscendanceHUD.cs
+PASS — no raw newline Assets/Scripts/UI/AscendanceHUD.cs
+PASS — delimiter () Assets/Scripts/World/HeroAvatar.cs
+PASS — delimiter [] Assets/Scripts/World/HeroAvatar.cs
+PASS — delimiter {} Assets/Scripts/World/HeroAvatar.cs
+PASS — no raw newline Assets/Scripts/World/HeroAvatar.cs
+PASS — delimiter () Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — delimiter [] Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — delimiter {} Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — no raw newline Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — delimiter () Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — delimiter [] Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — delimiter {} Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — no raw newline Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — delimiter () Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — delimiter [] Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — delimiter {} Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — no raw newline Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — delimiter () Assets/Scripts/World/EnemyAvatar.cs
+PASS — delimiter [] Assets/Scripts/World/EnemyAvatar.cs
+PASS — delimiter {} Assets/Scripts/World/EnemyAvatar.cs
+PASS — no raw newline Assets/Scripts/World/EnemyAvatar.cs
+PASS — delimiter () Assets/Scripts/World/LocationMarker.cs
+PASS — delimiter [] Assets/Scripts/World/LocationMarker.cs
+PASS — delimiter {} Assets/Scripts/World/LocationMarker.cs
+PASS — no raw newline Assets/Scripts/World/LocationMarker.cs
+PASS — delimiter () Assets/Scripts/World/QuestObjectAvatar0829.cs
+PASS — delimiter [] Assets/Scripts/World/QuestObjectAvatar0829.cs
+PASS — delimiter {} Assets/Scripts/World/QuestObjectAvatar0829.cs
+PASS — no raw newline Assets/Scripts/World/QuestObjectAvatar0829.cs
+PASS — delimiter () Assets/Editor/QuestBatchQ003Q005TestTools0830.cs
+PASS — delimiter [] Assets/Editor/QuestBatchQ003Q005TestTools0830.cs
+PASS — delimiter {} Assets/Editor/QuestBatchQ003Q005TestTools0830.cs
+PASS — no raw newline Assets/Editor/QuestBatchQ003Q005TestTools0830.cs
+PASS — delimiter () Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — delimiter [] Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — delimiter {} Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — no raw newline Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — delimiter () Assets/Editor/SearchEquipmentManagementTestTools0827.cs
+PASS — delimiter [] Assets/Editor/SearchEquipmentManagementTestTools0827.cs
+PASS — delimiter {} Assets/Editor/SearchEquipmentManagementTestTools0827.cs
+PASS — no raw newline Assets/Editor/SearchEquipmentManagementTestTools0827.cs
+PASS — delimiter () Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — delimiter [] Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — delimiter {} Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — no raw newline Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — delimiter () Assets/Editor/LocationStateTestTools0818.cs
+PASS — delimiter [] Assets/Editor/LocationStateTestTools0818.cs
+PASS — delimiter {} Assets/Editor/LocationStateTestTools0818.cs
+PASS — no raw newline Assets/Editor/LocationStateTestTools0818.cs
+PASS — delimiter () Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — delimiter [] Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — delimiter {} Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — no raw newline Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — delimiter () Assets/Editor/QuestFrameworkTestTools0829.cs
+PASS — delimiter [] Assets/Editor/QuestFrameworkTestTools0829.cs
+PASS — delimiter {} Assets/Editor/QuestFrameworkTestTools0829.cs
+PASS — no raw newline Assets/Editor/QuestFrameworkTestTools0829.cs
+PASS — delimiter () Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — delimiter [] Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — delimiter {} Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — no raw newline Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — delimiter () Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — delimiter [] Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — delimiter {} Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — no raw newline Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — delimiter () Assets/Editor/ReactionTestTools088.cs
+PASS — delimiter [] Assets/Editor/ReactionTestTools088.cs
+PASS — delimiter {} Assets/Editor/ReactionTestTools088.cs
+PASS — no raw newline Assets/Editor/ReactionTestTools088.cs
+PASS — delimiter () Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — delimiter [] Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — delimiter {} Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — no raw newline Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — delimiter () Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — delimiter [] Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — delimiter {} Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — no raw newline Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — delimiter () Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — delimiter [] Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — delimiter {} Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — no raw newline Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — delimiter () Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — delimiter [] Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — delimiter {} Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — no raw newline Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — delimiter () Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — delimiter [] Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — delimiter {} Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — no raw newline Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — delimiter () Assets/Editor/LootEquipmentReputationTestTools0826.cs
+PASS — delimiter [] Assets/Editor/LootEquipmentReputationTestTools0826.cs
+PASS — delimiter {} Assets/Editor/LootEquipmentReputationTestTools0826.cs
+PASS — no raw newline Assets/Editor/LootEquipmentReputationTestTools0826.cs
+PASS — delimiter () Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — delimiter [] Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — delimiter {} Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — no raw newline Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — delimiter () Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — delimiter [] Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — delimiter {} Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — no raw newline Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — delimiter () Assets/Editor/AscendanceProArtMapper.cs
+PASS — delimiter [] Assets/Editor/AscendanceProArtMapper.cs
+PASS — delimiter {} Assets/Editor/AscendanceProArtMapper.cs
+PASS — no raw newline Assets/Editor/AscendanceProArtMapper.cs
+PASS — delimiter () Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — delimiter [] Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — delimiter {} Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — no raw newline Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — delimiter () Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — delimiter [] Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — delimiter {} Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — no raw newline Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — delimiter () Assets/Editor/ExplorationDeckSearchTestTools0828.cs
+PASS — delimiter [] Assets/Editor/ExplorationDeckSearchTestTools0828.cs
+PASS — delimiter {} Assets/Editor/ExplorationDeckSearchTestTools0828.cs
+PASS — no raw newline Assets/Editor/ExplorationDeckSearchTestTools0828.cs
+PASS — delimiter () Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — delimiter [] Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — delimiter {} Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — no raw newline Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — delimiter () Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — delimiter [] Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — delimiter {} Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — no raw newline Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — delimiter () Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — delimiter [] Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — delimiter {} Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — no raw newline Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — delimiter () Assets/Editor/HeroParityAudit083.cs
+PASS — delimiter [] Assets/Editor/HeroParityAudit083.cs
+PASS — delimiter {} Assets/Editor/HeroParityAudit083.cs
+PASS — no raw newline Assets/Editor/HeroParityAudit083.cs
+PASS — delimiter () Assets/Editor/EncounterDeckControlTestTools0825.cs
+PASS — delimiter [] Assets/Editor/EncounterDeckControlTestTools0825.cs
+PASS — delimiter {} Assets/Editor/EncounterDeckControlTestTools0825.cs
+PASS — no raw newline Assets/Editor/EncounterDeckControlTestTools0825.cs
+PASS — IEnumerator yield Assets/Scripts/Production/CharacterPresentationController.cs:IEnumerator AttackTimingFallback
+PASS — IEnumerator yield Assets/Scripts/Production/CombatTimeEffects.cs:IEnumerator HitStopRoutine
+PASS — IEnumerator yield Assets/Scripts/Core/AscendanceGameManager.cs:IEnumerator ResolveSingleEnemyActivation
+PASS — IEnumerator yield Assets/Scripts/Core/AscendanceGameManager.cs:IEnumerator WaitForEncounterDeckControlIfNeeded
+PASS — IEnumerator yield Assets/Scripts/Core/AscendanceGameManager.cs:IEnumerator ResolvePriorityEncounterActivation
+PASS — IEnumerator yield Assets/Scripts/Core/AscendanceGameManager.cs:IEnumerator ResolveRound
+PASS — IEnumerator yield Assets/Scripts/Core/AscendanceGameManager.cs:IEnumerator ResolveEndRoundStatuses
+PASS — IEnumerator yield Assets/Scripts/Presentation/CharacterVisualRig.cs:IEnumerator AttackMotion
+PASS — IEnumerator yield Assets/Scripts/Presentation/CharacterVisualRig.cs:IEnumerator HitMotion
+PASS — IEnumerator yield Assets/Scripts/Presentation/CharacterVisualRig.cs:IEnumerator DeathMotion
+PASS — IEnumerator yield Assets/Scripts/Presentation/WorldCombatFeedback.cs:IEnumerator FloatText
+PASS — IEnumerator yield Assets/Scripts/Presentation/WorldCombatFeedback.cs:IEnumerator Flash
+PASS — IEnumerator yield Assets/Scripts/World/HeroAvatar.cs:IEnumerator WaitForAgent
+PASS — IEnumerator yield Assets/Scripts/World/HeroAvatar.cs:IEnumerator FallbackWalk
+PASS — IEnumerator yield Assets/Scripts/World/StonebrookWorldBuilder.cs:IEnumerator BuildNavigationAndSpawn
+PASS — IEnumerator yield Assets/Editor/QuestBatchQ003Q005TestTools0830.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/QuestBatchQ006Q008TestTools0831.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/SearchEquipmentManagementTestTools0827.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/QuestFrameworkTestTools0829.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/LootEquipmentReputationTestTools0826.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/RoundTransitionTestTools0812.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/ExplorationDeckSearchTestTools0828.cs:IEnumerator Run
+PASS — IEnumerator yield Assets/Editor/EncounterDeckControlTestTools0825.cs:IEnumerator Run

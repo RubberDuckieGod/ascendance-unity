@@ -1,0 +1,54 @@
+ASCENDANCE UNITY 0.8.29 — GENERALIZED QUEST FRAMEWORK & CAMPAIGN I QUEST RUNTIME
+
+BASELINE
+- Built from runtime-verified 0.8.28a.
+- Q001 fixed Unity vertical-slice enemy stats preserved.
+- Q001 current Fire>=5 warning behavior preserved.
+
+0.8.29 IMPLEMENTATION
+- Generalized Quest identity/runtime definitions for Q001 and Q002.
+- Current Quest identity persists through save/load.
+- Quest-owned enemies are distinct from Travel Encounter-owned enemies.
+- Quest-owned persistent objects added; Q002 uses visible Wagon pieces.
+- Active Quest location-pool filtering added to the Exploration deck.
+- Q001 excludes Merchant Caravan; Q002 includes Merchant Caravan.
+- Player-facing Q001 -> Q002 transition via BEGIN Q002.
+- Q002 Merchant Caravan reveal creates 2 Wagons at 4 Supply each (designer-locked rule).
+- Q002 two-Hero reveal spawn: 2 E001 + 1 E004; authored party-size pressure scaling retained.
+- Goblin activation-start unattended-Wagon Supply loss implemented before movement/attack.
+- Hero-presence suppression of Wagon Supply loss implemented.
+- 1-Action player-choice Wagon escort movement implemented.
+- Stonebrook delivery records rescued Wagon Supply.
+- Q002 reinforcements implemented through three waves; stop when Captain enters play.
+- First Merchant Caravan Search grants LT123 Caravan Manifest instead of normal Search reward.
+- Q002 Goblin Captain defeat grants LT119 Merchant Strongbox Key.
+- Strongbox consumes LT119 and draws source-matched non-Quest Merchant/Caravan Loot.
+- Q002 failure: both Wagons destroyed or all Heroes Defeated.
+- Q002 victory: both Wagons rescued + at least 4 total Supply delivered.
+- Q002 reward: 125 XP each, 100 Gold, 1 Equipment, +1 Supply banked for next Quest.
+- LT123 returns to Loot Deck when Q002 ends.
+- Q001 generalized one-time reward: 100 XP each, 75 Gold, 1 Equipment, +1 General Reputation; +15 Gold if 4 Villagers rescued.
+- Quest runtime, Quest objects, Quest-owned enemy identity, and next-Quest Supply persist through save/load.
+
+STATIC VALIDATION
+- tests/verify_0829.py: 213/213 checks passed.
+- Raw ordinary C# string newline scan passed.
+- Delimiter balance passed.
+- IEnumerator yield audit passed.
+- Deprecated FindObjectsSortMode not introduced.
+
+REGRESSION
+- 0.8.28 suite: 362 pass / 3 expected textual differences:
+  * old BuildVersion
+  * old banner
+  * old exact unfiltered hidden-Location expression; 0.8.29 intentionally adds current-Quest eligibility filtering
+- 0.8.27 suite: 384 pass / 2 expected version/banner differences.
+- 0.8.26 suite: 646 pass / 4 expected textual differences:
+  * old version/banner
+  * two exact combat substrings now contain the new Quest-defeat hook between encounter completion and victory evaluation; encounter completion still executes first
+- 0.8.25 suite: 583 pass / 4 expected textual differences for the same reason.
+
+RUNTIME STATUS
+- NOT YET RUNTIME-VERIFIED.
+- Run in Unity Play Mode:
+  Ascendance -> Validation -> Test 0.8.29 - Generalized Quest Framework & Q002 (Play Mode)

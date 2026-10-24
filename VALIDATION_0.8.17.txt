@@ -1,0 +1,21 @@
+Ascendance Unity 0.8.17 — Live Specialized Condition Parity
+
+Static verifier: 249/249 checks passed.
+- Build/version/banner assertions
+- Authored status-rule assertions
+- Live condition runtime hooks
+- Card-driven Play Mode test coverage
+- Raw-newline-in-string scan across all C# scripts
+- Balanced (), [], {} scan across all C# scripts
+
+Regression on 0.8.16: 239/242 checks passed.
+Expected/intentional mismatches:
+1. old 0.8.16 BuildVersion assertion
+2. old 0.8.16 startup-banner assertion
+3. old literal Rooted-only movement-block expression; 0.8.17 intentionally extends the same gate to Knocked Down
+
+Regression on 0.8.15: 255/257 checks passed.
+Only expected old BuildVersion/startup-banner assertions fail.
+
+Runtime validation still required in Unity:
+Ascendance > Validation > Test 0.8.17 - Live Specialized Conditions (Play Mode)

@@ -1,0 +1,31 @@
+PASS — BuildVersion is 0.8.10
+PASS — 16 authored Heroes (found 16)
+PASS — 323 Hero-card definitions (found 323)
+PASS — every personal deck totals exactly 30 cards (all 16 pass)
+PASS — HeroDamageSourceKind has a distinct EnemyAttack source
+PASS — World Phase declares target before any Enemy d6 roll
+PASS — Enemy Attack order is pre-window close/cancel -> d6 roll -> BeginHeroDamage
+PASS — Enemy Attack damage enters generalized Hero-damage transaction as EnemyAttack
+PASS — old direct Enemy Attack HP mutation path removed
+PASS — pre-Attack classifier excludes would-suffer-damage triggers
+PASS — pre-Attack classifier excludes lethal/defeat triggers
+PASS — damage classifier recognizes Enemy Attack source
+PASS — Lyra-style post-hit damage reduction is admitted only in post-roll Enemy Attack damage window
+PASS — HeroRulesRuntime receives actual Enemy source ID for Enemy Attack damage
+PASS — queued damage preserves pre-existing defeat floor
+PASS — 0.8.9 Interpose retarget matcher preserved
+PASS — Improved Shield Wall retarget preserved
+PASS — deterministic 0.8.10 Play Mode timing helper added
+PASS — Editor helper can open a forced-d6 Enemy Attack damage window
+PASS — H012-013 Ignore the Pain remains authored
+PASS — H012-014 Too Angry to Fall remains authored
+PASS — H001-009 Interpose remains authored
+PASS — H003-008 Guardian's Blessing remains authored
+PASS — H002-011 Acrobatic Escape remains authored
+PASS — C# brace balance sanity check
+PASS — C# parenthesis balance sanity check
+PASS — C# bracket balance sanity check
+PASS — data audit identified damage/defeat reaction set (15 cards)
+PASS — ResolvePendingEnemyAttack does not mutate Hero Health directly
+
+SUMMARY — 29/29 static checks passed.

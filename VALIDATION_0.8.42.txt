@@ -1,0 +1,19 @@
+Ascendance Unity 0.8.42 — Persistent Campaign Resume & Continue Flow
+Candidate package: statically validated; Unity Play Mode runtime verification required.
+
+Play Mode menu:
+Ascendance > Validation > Test 0.8.42 - Persistent Campaign Resume & Continue (Play Mode)
+
+Expected final line:
+[ASCENDANCE][0.8.42 TEST] PASS — Persistent Campaign Resume & Continue Flow completed: 45 passed, 0 failed.
+
+Static checks performed before packaging:
+- Built from runtime-verified 0.8.41 ZIP.
+- C# delimiter balance scan across all project .cs files.
+- No TODO / FIXME / NotImplementedException in new 0.8.42 code.
+- No duplicate Unity .meta GUIDs.
+- Diff reviewed against 0.8.41; gameplay/campaign rules untouched.
+- Resume schema is one additive string field only.
+- Continue validation rejects missing/corrupt/incomplete save JSON.
+- Legacy 0.8.41-and-earlier resume fallback retained.
+- Archive integrity checked after packaging.

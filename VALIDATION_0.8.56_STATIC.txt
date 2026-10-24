@@ -1,0 +1,24 @@
+Ascendance Unity 0.8.56 static validation
+========================================
+
+PASS catalog equipment=144
+PASS catalog loot=190
+PASS catalog searchCards=100
+PASS catalog encounters=105
+PASS catalog enemies=125
+PASS catalog locations=236
+PASS catalog craftingRecipes=200
+PASS catalog quests=72
+PASS catalog worldEvents=24
+PASS all Q001-Q072 authored references resolve to live Location/Enemy/Loot rows
+PASS structural delimiter scan on 16 changed/new C# files
+PASS BuildVersion/startup marker = 0.8.56 Full Quest Runtime Execution
+PASS generalized Quest runtime/reveal-spawn/reward/save hooks present
+PASS validator defines 43 deterministic checks
+PASS new Unity C# assets include .meta files
+PASS six campaign definitions and WE001-WE024 runtime registry present
+PASS named Quest Item mapping includes longest-name collision guard
+PASS prior Search/Travel/Loot-Equipment/Crafting runtime source layers retained
+
+ERRORS:
+NONE

@@ -1,0 +1,25 @@
+ASCENDANCE UNITY 0.8.41 — STATIC/PACKAGE VALIDATION
+====================================================
+Candidate: Quest Briefing & Ready-Up Flow
+Baseline: runtime-verified 0.8.40
+
+Static checks completed:
+- BuildVersion/startup label updated to 0.8.41.
+- QuestBriefingRuntime0841 added with transient selected-Quest + per-Hero ready state.
+- QuestBriefingUI0841 added to Stonebrook bootstrap.
+- Campaign Hub available/retry buttons route to briefing, not direct launch.
+- Existing BeginCampaignQuest0833 remains the authoritative Campaign Day / Quest start path.
+- Successful authoritative launch clears transient briefing state.
+- Save system/schema unchanged from 0.8.40.
+- No duplicate Unity .meta GUIDs.
+- New .meta GUIDs are valid 32-character hexadecimal values.
+- New C# source braces/parentheses balanced.
+- Archive source diff limited to expected 0.8.41 files/labels/routing.
+
+Runtime validation menu:
+Ascendance -> Validation -> Test 0.8.41 - Quest Briefing & Ready-Up (Play Mode)
+
+Expected final validator line:
+[ASCENDANCE][0.8.41 TEST] PASS — Quest Briefing & Ready-Up Flow completed: 42 passed, 0 failed.
+
+IMPORTANT: This package is STATICALLY/PACKAGE VALIDATED only until the Unity Play Mode validator passes.

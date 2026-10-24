@@ -1,0 +1,10 @@
+Ascendance Unity 0.8.15 — Status Duration Lifecycle
+
+Static verification: 249/249 checks passed.
+
+Regression check against 0.8.14 foundation: 64/66 checks passed; the only failures are the expected BuildVersion and startup-banner assertions because the project is now 0.8.15.
+
+0.8.13 verifier also reports older-contract mismatches that were intentionally superseded by 0.8.14 (post-Quest free exploration / UI wording), plus the expected version marker mismatch. No new 0.8.15 regression is indicated by those results.
+
+Runtime verification still required in Unity:
+Ascendance > Validation > Test 0.8.15 - Status Duration Lifecycle (Play Mode)

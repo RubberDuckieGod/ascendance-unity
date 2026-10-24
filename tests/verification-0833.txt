@@ -1,0 +1,548 @@
+PASS — version 0.8.33
+PASS — banner
+PASS — required Assets/Scripts/Core/CampaignRuntime0833.cs
+PASS — required Assets/Scripts/Core/CampaignRuntime0833.cs.meta
+PASS — required Assets/Editor/CampaignProgressionTestTools0833.cs
+PASS — required Assets/Editor/CampaignProgressionTestTools0833.cs.meta
+PASS — event WE001
+PASS — WE001 Name="Goblin Raids"
+PASS — WE001 Main1="Q001"
+PASS — WE001 Main2="Q002"
+PASS — WE001 Optional="Q003"
+PASS — WE001 DayLimit=5
+PASS — WE001 next
+PASS — event WE002
+PASS — WE002 Name="Goblin Warbands"
+PASS — WE002 Main1="Q004"
+PASS — WE002 Main2="Q005"
+PASS — WE002 Optional="Q006"
+PASS — WE002 DayLimit=6
+PASS — WE002 next
+PASS — event WE003
+PASS — WE003 Name="Siege of Stonebrook"
+PASS — WE003 Main1="Q007"
+PASS — WE003 Main2="Q008"
+PASS — WE003 Optional="Q009"
+PASS — WE003 DayLimit=6
+PASS — WE003 next
+PASS — event WE004
+PASS — WE004 Name="The Goblin King"
+PASS — WE004 Main1="Q010"
+PASS — WE004 Main2="Q011"
+PASS — WE004 Optional="Q012"
+PASS — WE004 DayLimit=0
+PASS — WE004 next
+PASS — runtime campaign field CurrentWorldEventId
+PASS — save campaign field CurrentWorldEventId
+PASS — capture campaign field CurrentWorldEventId
+PASS — restore campaign field CurrentWorldEventId
+PASS — runtime campaign field WorldEventDay
+PASS — save campaign field WorldEventDay
+PASS — capture campaign field WorldEventDay
+PASS — restore campaign field WorldEventDay
+PASS — runtime campaign field TotalCampaignDay
+PASS — save campaign field TotalCampaignDay
+PASS — capture campaign field TotalCampaignDay
+PASS — restore campaign field TotalCampaignDay
+PASS — runtime campaign field CampaignCompleted
+PASS — save campaign field CampaignCompleted
+PASS — capture campaign field CampaignCompleted
+PASS — restore campaign field CampaignCompleted
+PASS — runtime campaign field CampaignDefeated
+PASS — save campaign field CampaignDefeated
+PASS — capture campaign field CampaignDefeated
+PASS — restore campaign field CampaignDefeated
+PASS — runtime campaign field CompletedQuestIds
+PASS — save campaign field CompletedQuestIds
+PASS — capture campaign field CompletedQuestIds
+PASS — restore campaign field CompletedQuestIds
+PASS — runtime campaign field FailedQuestIds
+PASS — save campaign field FailedQuestIds
+PASS — capture campaign field FailedQuestIds
+PASS — restore campaign field FailedQuestIds
+PASS — runtime campaign field MissedQuestIds
+PASS — save campaign field MissedQuestIds
+PASS — capture campaign field MissedQuestIds
+PASS — restore campaign field MissedQuestIds
+PASS — runtime campaign field CompletedWorldEventIds
+PASS — save campaign field CompletedWorldEventIds
+PASS — capture campaign field CompletedWorldEventIds
+PASS — restore campaign field CompletedWorldEventIds
+PASS — runtime campaign field RemoveScoutFromQ004Setup
+PASS — save campaign field RemoveScoutFromQ004Setup
+PASS — capture campaign field RemoveScoutFromQ004Setup
+PASS — restore campaign field RemoveScoutFromQ004Setup
+PASS — runtime campaign field AddRaiderToQ004FirstEncounter
+PASS — save campaign field AddRaiderToQ004FirstEncounter
+PASS — capture campaign field AddRaiderToQ004FirstEncounter
+PASS — restore campaign field AddRaiderToQ004FirstEncounter
+PASS — runtime campaign field AddEliteToQ007Setup
+PASS — save campaign field AddEliteToQ007Setup
+PASS — capture campaign field AddEliteToQ007Setup
+PASS — restore campaign field AddEliteToQ007Setup
+PASS — runtime campaign field WE003TravelSeverityPenalty
+PASS — save campaign field WE003TravelSeverityPenalty
+PASS — capture campaign field WE003TravelSeverityPenalty
+PASS — restore campaign field WE003TravelSeverityPenalty
+PASS — runtime campaign field DamagedBuildings
+PASS — save campaign field DamagedBuildings
+PASS — capture campaign field DamagedBuildings
+PASS — restore campaign field DamagedBuildings
+PASS — runtime campaign field Q010SiegePressureModifier
+PASS — save campaign field Q010SiegePressureModifier
+PASS — capture campaign field Q010SiegePressureModifier
+PASS — restore campaign field Q010SiegePressureModifier
+PASS — runtime campaign field Q010WoundPenalty
+PASS — save campaign field Q010WoundPenalty
+PASS — capture campaign field Q010WoundPenalty
+PASS — restore campaign field Q010WoundPenalty
+PASS — runtime campaign field StonebrookEquipmentPurchaseLocked
+PASS — save campaign field StonebrookEquipmentPurchaseLocked
+PASS — capture campaign field StonebrookEquipmentPurchaseLocked
+PASS — restore campaign field StonebrookEquipmentPurchaseLocked
+PASS — save sync before capture
+PASS — save payload present
+PASS — load restore hook
+PASS — init hook
+PASS — real quest reward records campaign completion
+PASS — debug start aligns WE
+PASS — campaign begin uses real StartQuest
+PASS — campaign begin advances chapter day
+PASS — unresolved blocks quest begin
+PASS — available quest list
+PASS — main campaign begin
+PASS — optional campaign begin
+PASS — world event advance condition
+PASS — advance marks missed
+PASS — advance records WE
+PASS — WE004 no next
+PASS — q012 campaign completed
+PASS — q012 campaign defeated
+PASS — chapter text +50 XP each • +1 Party Morale • remove 1 Goblin Scout from Q004
+PASS — chapter text +1 Raider in Q004 first patrol • -1 General Reputation
+PASS — chapter text +75 XP each • 1 Rare Equipment • remove 1 Elite from Q007 • +1 Reputation
+PASS — chapter text +1 Elite in Q007 • WE003 Travel Encounter rolls +1 • -1 Reputation
+PASS — chapter text +100 XP each • 1 Epic Equipment • +2 Reputation • Q010 Siege Pressure -1
+PASS — chapter text WE004 begins with 1 Damaged Building
+PASS — chapter text Q010 Siege Pressure +1 banked • each Hero begins Q010 with 1 Wound Token • -2 Reputation
+PASS — WE1 reward mechanics
+PASS — WE1 penalty mechanics
+PASS — WE2 reward mechanics
+PASS — WE2 penalty mechanics
+PASS — WE3 reward mechanics
+PASS — WE3 required-only building
+PASS — WE3 penalty mechanics
+PASS — wound token exact one per hero
+PASS — siege conflict preserves two Ballistas
+PASS — Q004 scout reduction runtime
+PASS — Q004 penalty raider runtime
+PASS — Q007 WE2 bonus runtime
+PASS — Q007 penalty elite runtime
+PASS — WE1 travel dynamic
+PASS — WE3 penalty travel dynamic
+PASS — WE4 random travel suppression
+PASS — WE1 rarity exposed
+PASS — WE2 price exposed
+PASS — HUD questOptionalButton
+PASS — HUD worldEventAdvanceButton
+PASS — HUD BeginRecommendedCampaignQuest0833()
+PASS — HUD BeginOptionalCampaignQuest0833()
+PASS — HUD AdvanceWorldEvent0833()
+PASS — HUD CampaignSummary0833
+PASS — HUD main label
+PASS — HUD optional label
+PASS — HUD advance gate
+PASS — validator menu
+PASS — validator no DebugStart
+PASS — validator starts campaign reset
+PASS — validator uses main router
+PASS — validator uses optional router
+PASS — validator uses WE advance
+PASS — validator real reward chain comment
+PASS — validator phrase Campaign I starts in WE001 on Campaign Day 1 with Q001 active
+PASS — validator phrase WE001 all-quests reward grants +50 XP each
+PASS — validator phrase mechanically removes one Scout from Q004
+PASS — validator phrase Q005's real Quest reward banks
+PASS — validator phrase WE002 all-quests reward grants +75 XP
+PASS — validator phrase Q009's real Quest reward banks Captain Roland
+PASS — validator phrase mechanically removes the initial Q007 Wolf Rider/Elite
+PASS — validator phrase Q007's real Quest reward banks
+PASS — validator phrase WE003 all-quests reward grants +100 XP
+PASS — validator phrase Captain Roland's Q009 assistance flag survives
+PASS — validator phrase print-locked two Ballistas
+PASS — validator phrase Q012 completion records Campaign I Victory
+PASS — validator phrase persist through the real save system
+PASS — validator phrase authored 5-Day threshold
+PASS — validator phrase authored 6-Day threshold
+PASS — validator phrase each Hero exactly one persistent Wound Token
+PASS — validator assertion count 45
+PASS — validator expected dynamic summary
+PASS — fresh route reset RemoveEliteFromQ007Setup0830=false
+PASS — fresh route reset RemoveSiegeEngineFromQ008Setup0831=false
+PASS — fresh route reset CaptainRolandAssistsQ0100832=false
+PASS — fresh route reset PartyMorale0831=0
+PASS — debug success calls real reward
+PASS — validator no direct completion list mutation
+PASS — validator no direct WE state mutation
+PASS — runtime no editor Check
+PASS — campaign no direct Q010 Ballista count rewrite
+PASS — delimiter Assets/Editor/LocationEffectExecutionTestTools0819.cs ()
+PASS — delimiter Assets/Editor/LocationEffectExecutionTestTools0819.cs {}
+PASS — delimiter Assets/Editor/LocationEffectExecutionTestTools0819.cs []
+PASS — raw string Assets/Editor/LocationEffectExecutionTestTools0819.cs
+PASS — delimiter Assets/Editor/ReactionTestTools088.cs ()
+PASS — delimiter Assets/Editor/ReactionTestTools088.cs {}
+PASS — delimiter Assets/Editor/ReactionTestTools088.cs []
+PASS — raw string Assets/Editor/ReactionTestTools088.cs
+PASS — delimiter Assets/Editor/SpecializedStatusParityTestTools0817.cs ()
+PASS — delimiter Assets/Editor/SpecializedStatusParityTestTools0817.cs {}
+PASS — delimiter Assets/Editor/SpecializedStatusParityTestTools0817.cs []
+PASS — raw string Assets/Editor/SpecializedStatusParityTestTools0817.cs
+PASS — delimiter Assets/Editor/PostQuestFreeExplorationTestTools0814.cs ()
+PASS — delimiter Assets/Editor/PostQuestFreeExplorationTestTools0814.cs {}
+PASS — delimiter Assets/Editor/PostQuestFreeExplorationTestTools0814.cs []
+PASS — raw string Assets/Editor/PostQuestFreeExplorationTestTools0814.cs
+PASS — delimiter Assets/Editor/DefeatRevivalTestTools0813.cs ()
+PASS — delimiter Assets/Editor/DefeatRevivalTestTools0813.cs {}
+PASS — delimiter Assets/Editor/DefeatRevivalTestTools0813.cs []
+PASS — raw string Assets/Editor/DefeatRevivalTestTools0813.cs
+PASS — delimiter Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs ()
+PASS — delimiter Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs {}
+PASS — delimiter Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs []
+PASS — raw string Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs
+PASS — yield Assets/Editor/EncounterEnemyMovementInitiativeTestTools0824.cs:Run
+PASS — delimiter Assets/Editor/TurnLifecycleTestTools0811.cs ()
+PASS — delimiter Assets/Editor/TurnLifecycleTestTools0811.cs {}
+PASS — delimiter Assets/Editor/TurnLifecycleTestTools0811.cs []
+PASS — raw string Assets/Editor/TurnLifecycleTestTools0811.cs
+PASS — delimiter Assets/Editor/EncounterConsequencesTestTools0823.cs ()
+PASS — delimiter Assets/Editor/EncounterConsequencesTestTools0823.cs {}
+PASS — delimiter Assets/Editor/EncounterConsequencesTestTools0823.cs []
+PASS — raw string Assets/Editor/EncounterConsequencesTestTools0823.cs
+PASS — delimiter Assets/Editor/RoundTransitionTestTools0812.cs ()
+PASS — delimiter Assets/Editor/RoundTransitionTestTools0812.cs {}
+PASS — delimiter Assets/Editor/RoundTransitionTestTools0812.cs []
+PASS — raw string Assets/Editor/RoundTransitionTestTools0812.cs
+PASS — yield Assets/Editor/RoundTransitionTestTools0812.cs:Run
+PASS — delimiter Assets/Editor/QuestBatchQ003Q005TestTools0830.cs ()
+PASS — delimiter Assets/Editor/QuestBatchQ003Q005TestTools0830.cs {}
+PASS — delimiter Assets/Editor/QuestBatchQ003Q005TestTools0830.cs []
+PASS — raw string Assets/Editor/QuestBatchQ003Q005TestTools0830.cs
+PASS — yield Assets/Editor/QuestBatchQ003Q005TestTools0830.cs:Run
+PASS — delimiter Assets/Editor/StatusDurationLifecycleTestTools0815.cs ()
+PASS — delimiter Assets/Editor/StatusDurationLifecycleTestTools0815.cs {}
+PASS — delimiter Assets/Editor/StatusDurationLifecycleTestTools0815.cs []
+PASS — raw string Assets/Editor/StatusDurationLifecycleTestTools0815.cs
+PASS — delimiter Assets/Editor/QuestFrameworkTestTools0829.cs ()
+PASS — delimiter Assets/Editor/QuestFrameworkTestTools0829.cs {}
+PASS — delimiter Assets/Editor/QuestFrameworkTestTools0829.cs []
+PASS — raw string Assets/Editor/QuestFrameworkTestTools0829.cs
+PASS — yield Assets/Editor/QuestFrameworkTestTools0829.cs:Run
+PASS — delimiter Assets/Editor/EncounterHazardObjectTestTools0822.cs ()
+PASS — delimiter Assets/Editor/EncounterHazardObjectTestTools0822.cs {}
+PASS — delimiter Assets/Editor/EncounterHazardObjectTestTools0822.cs []
+PASS — raw string Assets/Editor/EncounterHazardObjectTestTools0822.cs
+PASS — delimiter Assets/Editor/QuestBatchQ006Q008TestTools0831.cs ()
+PASS — delimiter Assets/Editor/QuestBatchQ006Q008TestTools0831.cs {}
+PASS — delimiter Assets/Editor/QuestBatchQ006Q008TestTools0831.cs []
+PASS — raw string Assets/Editor/QuestBatchQ006Q008TestTools0831.cs
+PASS — yield Assets/Editor/QuestBatchQ006Q008TestTools0831.cs:Run
+PASS — delimiter Assets/Editor/AscendanceStandaloneBuilder.cs ()
+PASS — delimiter Assets/Editor/AscendanceStandaloneBuilder.cs {}
+PASS — delimiter Assets/Editor/AscendanceStandaloneBuilder.cs []
+PASS — raw string Assets/Editor/AscendanceStandaloneBuilder.cs
+PASS — delimiter Assets/Editor/ExplorationDeckSearchTestTools0828.cs ()
+PASS — delimiter Assets/Editor/ExplorationDeckSearchTestTools0828.cs {}
+PASS — delimiter Assets/Editor/ExplorationDeckSearchTestTools0828.cs []
+PASS — raw string Assets/Editor/ExplorationDeckSearchTestTools0828.cs
+PASS — yield Assets/Editor/ExplorationDeckSearchTestTools0828.cs:Run
+PASS — delimiter Assets/Editor/AscendanceProArtMapper.cs ()
+PASS — delimiter Assets/Editor/AscendanceProArtMapper.cs {}
+PASS — delimiter Assets/Editor/AscendanceProArtMapper.cs []
+PASS — raw string Assets/Editor/AscendanceProArtMapper.cs
+PASS — delimiter Assets/Editor/CampaignProgressionTestTools0833.cs ()
+PASS — delimiter Assets/Editor/CampaignProgressionTestTools0833.cs {}
+PASS — delimiter Assets/Editor/CampaignProgressionTestTools0833.cs []
+PASS — raw string Assets/Editor/CampaignProgressionTestTools0833.cs
+PASS — yield Assets/Editor/CampaignProgressionTestTools0833.cs:Run
+PASS — delimiter Assets/Editor/LocationStateTestTools0818.cs ()
+PASS — delimiter Assets/Editor/LocationStateTestTools0818.cs {}
+PASS — delimiter Assets/Editor/LocationStateTestTools0818.cs []
+PASS — raw string Assets/Editor/LocationStateTestTools0818.cs
+PASS — delimiter Assets/Editor/EncounterDeckControlTestTools0825.cs ()
+PASS — delimiter Assets/Editor/EncounterDeckControlTestTools0825.cs {}
+PASS — delimiter Assets/Editor/EncounterDeckControlTestTools0825.cs []
+PASS — raw string Assets/Editor/EncounterDeckControlTestTools0825.cs
+PASS — yield Assets/Editor/EncounterDeckControlTestTools0825.cs:Run
+PASS — delimiter Assets/Editor/EncounterLifecycleTestTools0821.cs ()
+PASS — delimiter Assets/Editor/EncounterLifecycleTestTools0821.cs {}
+PASS — delimiter Assets/Editor/EncounterLifecycleTestTools0821.cs []
+PASS — raw string Assets/Editor/EncounterLifecycleTestTools0821.cs
+PASS — delimiter Assets/Editor/SearchEncounterRuntimeTestTools0820.cs ()
+PASS — delimiter Assets/Editor/SearchEncounterRuntimeTestTools0820.cs {}
+PASS — delimiter Assets/Editor/SearchEncounterRuntimeTestTools0820.cs []
+PASS — raw string Assets/Editor/SearchEncounterRuntimeTestTools0820.cs
+PASS — delimiter Assets/Editor/SearchEquipmentManagementTestTools0827.cs ()
+PASS — delimiter Assets/Editor/SearchEquipmentManagementTestTools0827.cs {}
+PASS — delimiter Assets/Editor/SearchEquipmentManagementTestTools0827.cs []
+PASS — raw string Assets/Editor/SearchEquipmentManagementTestTools0827.cs
+PASS — yield Assets/Editor/SearchEquipmentManagementTestTools0827.cs:Run
+PASS — delimiter Assets/Editor/AscendanceProductionArtAudit.cs ()
+PASS — delimiter Assets/Editor/AscendanceProductionArtAudit.cs {}
+PASS — delimiter Assets/Editor/AscendanceProductionArtAudit.cs []
+PASS — raw string Assets/Editor/AscendanceProductionArtAudit.cs
+PASS — delimiter Assets/Editor/LootEquipmentReputationTestTools0826.cs ()
+PASS — delimiter Assets/Editor/LootEquipmentReputationTestTools0826.cs {}
+PASS — delimiter Assets/Editor/LootEquipmentReputationTestTools0826.cs []
+PASS — raw string Assets/Editor/LootEquipmentReputationTestTools0826.cs
+PASS — yield Assets/Editor/LootEquipmentReputationTestTools0826.cs:Run
+PASS — delimiter Assets/Editor/ReactionTimingTestTools0810.cs ()
+PASS — delimiter Assets/Editor/ReactionTimingTestTools0810.cs {}
+PASS — delimiter Assets/Editor/ReactionTimingTestTools0810.cs []
+PASS — raw string Assets/Editor/ReactionTimingTestTools0810.cs
+PASS — delimiter Assets/Editor/HeroParityAudit083.cs ()
+PASS — delimiter Assets/Editor/HeroParityAudit083.cs {}
+PASS — delimiter Assets/Editor/HeroParityAudit083.cs []
+PASS — raw string Assets/Editor/HeroParityAudit083.cs
+PASS — delimiter Assets/Editor/StatusEffectEnforcementTestTools0816.cs ()
+PASS — delimiter Assets/Editor/StatusEffectEnforcementTestTools0816.cs {}
+PASS — delimiter Assets/Editor/StatusEffectEnforcementTestTools0816.cs []
+PASS — raw string Assets/Editor/StatusEffectEnforcementTestTools0816.cs
+PASS — delimiter Assets/Editor/QuestBatchQ009Q012TestTools0832.cs ()
+PASS — delimiter Assets/Editor/QuestBatchQ009Q012TestTools0832.cs {}
+PASS — delimiter Assets/Editor/QuestBatchQ009Q012TestTools0832.cs []
+PASS — raw string Assets/Editor/QuestBatchQ009Q012TestTools0832.cs
+PASS — yield Assets/Editor/QuestBatchQ009Q012TestTools0832.cs:Run
+PASS — delimiter Assets/Scripts/Presentation/FireFlicker.cs ()
+PASS — delimiter Assets/Scripts/Presentation/FireFlicker.cs {}
+PASS — delimiter Assets/Scripts/Presentation/FireFlicker.cs []
+PASS — raw string Assets/Scripts/Presentation/FireFlicker.cs
+PASS — delimiter Assets/Scripts/Presentation/WorldHealthBar.cs ()
+PASS — delimiter Assets/Scripts/Presentation/WorldHealthBar.cs {}
+PASS — delimiter Assets/Scripts/Presentation/WorldHealthBar.cs []
+PASS — raw string Assets/Scripts/Presentation/WorldHealthBar.cs
+PASS — delimiter Assets/Scripts/Presentation/CharacterVisualRig.cs ()
+PASS — delimiter Assets/Scripts/Presentation/CharacterVisualRig.cs {}
+PASS — delimiter Assets/Scripts/Presentation/CharacterVisualRig.cs []
+PASS — raw string Assets/Scripts/Presentation/CharacterVisualRig.cs
+PASS — yield Assets/Scripts/Presentation/CharacterVisualRig.cs:AttackMotion
+PASS — yield Assets/Scripts/Presentation/CharacterVisualRig.cs:HitMotion
+PASS — yield Assets/Scripts/Presentation/CharacterVisualRig.cs:DeathMotion
+PASS — delimiter Assets/Scripts/Presentation/StonebrookAmbientFX.cs ()
+PASS — delimiter Assets/Scripts/Presentation/StonebrookAmbientFX.cs {}
+PASS — delimiter Assets/Scripts/Presentation/StonebrookAmbientFX.cs []
+PASS — raw string Assets/Scripts/Presentation/StonebrookAmbientFX.cs
+PASS — delimiter Assets/Scripts/Presentation/WorldBillboardLabel.cs ()
+PASS — delimiter Assets/Scripts/Presentation/WorldBillboardLabel.cs {}
+PASS — delimiter Assets/Scripts/Presentation/WorldBillboardLabel.cs []
+PASS — raw string Assets/Scripts/Presentation/WorldBillboardLabel.cs
+PASS — delimiter Assets/Scripts/Presentation/WorldCombatFeedback.cs ()
+PASS — delimiter Assets/Scripts/Presentation/WorldCombatFeedback.cs {}
+PASS — delimiter Assets/Scripts/Presentation/WorldCombatFeedback.cs []
+PASS — raw string Assets/Scripts/Presentation/WorldCombatFeedback.cs
+PASS — yield Assets/Scripts/Presentation/WorldCombatFeedback.cs:FloatText
+PASS — yield Assets/Scripts/Presentation/WorldCombatFeedback.cs:Flash
+PASS — delimiter Assets/Scripts/Presentation/WorldRing.cs ()
+PASS — delimiter Assets/Scripts/Presentation/WorldRing.cs {}
+PASS — delimiter Assets/Scripts/Presentation/WorldRing.cs []
+PASS — raw string Assets/Scripts/Presentation/WorldRing.cs
+PASS — delimiter Assets/Scripts/UI/AscendanceHUD.cs ()
+PASS — delimiter Assets/Scripts/UI/AscendanceHUD.cs {}
+PASS — delimiter Assets/Scripts/UI/AscendanceHUD.cs []
+PASS — raw string Assets/Scripts/UI/AscendanceHUD.cs
+PASS — delimiter Assets/Scripts/Navigation/MovementPathPreview.cs ()
+PASS — delimiter Assets/Scripts/Navigation/MovementPathPreview.cs {}
+PASS — delimiter Assets/Scripts/Navigation/MovementPathPreview.cs []
+PASS — raw string Assets/Scripts/Navigation/MovementPathPreview.cs
+PASS — delimiter Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs ()
+PASS — delimiter Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs {}
+PASS — delimiter Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs []
+PASS — raw string Assets/Scripts/Navigation/RuntimeNavMeshBaker.cs
+PASS — delimiter Assets/Scripts/World/QuestObjectAvatar0829.cs ()
+PASS — delimiter Assets/Scripts/World/QuestObjectAvatar0829.cs {}
+PASS — delimiter Assets/Scripts/World/QuestObjectAvatar0829.cs []
+PASS — raw string Assets/Scripts/World/QuestObjectAvatar0829.cs
+PASS — delimiter Assets/Scripts/World/StonebrookWorldBuilder.cs ()
+PASS — delimiter Assets/Scripts/World/StonebrookWorldBuilder.cs {}
+PASS — delimiter Assets/Scripts/World/StonebrookWorldBuilder.cs []
+PASS — raw string Assets/Scripts/World/StonebrookWorldBuilder.cs
+PASS — yield Assets/Scripts/World/StonebrookWorldBuilder.cs:BuildNavigationAndSpawn
+PASS — delimiter Assets/Scripts/World/HeroAvatar.cs ()
+PASS — delimiter Assets/Scripts/World/HeroAvatar.cs {}
+PASS — delimiter Assets/Scripts/World/HeroAvatar.cs []
+PASS — raw string Assets/Scripts/World/HeroAvatar.cs
+PASS — yield Assets/Scripts/World/HeroAvatar.cs:WaitForAgent
+PASS — yield Assets/Scripts/World/HeroAvatar.cs:FallbackWalk
+PASS — delimiter Assets/Scripts/World/EncounterObjectAvatar.cs ()
+PASS — delimiter Assets/Scripts/World/EncounterObjectAvatar.cs {}
+PASS — delimiter Assets/Scripts/World/EncounterObjectAvatar.cs []
+PASS — raw string Assets/Scripts/World/EncounterObjectAvatar.cs
+PASS — delimiter Assets/Scripts/World/HeroPieceAvatar.cs ()
+PASS — delimiter Assets/Scripts/World/HeroPieceAvatar.cs {}
+PASS — delimiter Assets/Scripts/World/HeroPieceAvatar.cs []
+PASS — raw string Assets/Scripts/World/HeroPieceAvatar.cs
+PASS — delimiter Assets/Scripts/World/EnemyAvatar.cs ()
+PASS — delimiter Assets/Scripts/World/EnemyAvatar.cs {}
+PASS — delimiter Assets/Scripts/World/EnemyAvatar.cs []
+PASS — raw string Assets/Scripts/World/EnemyAvatar.cs
+PASS — delimiter Assets/Scripts/World/LocationMarker.cs ()
+PASS — delimiter Assets/Scripts/World/LocationMarker.cs {}
+PASS — delimiter Assets/Scripts/World/LocationMarker.cs []
+PASS — raw string Assets/Scripts/World/LocationMarker.cs
+PASS — delimiter Assets/Scripts/Production/ProductionAssetResolver.cs ()
+PASS — delimiter Assets/Scripts/Production/ProductionAssetResolver.cs {}
+PASS — delimiter Assets/Scripts/Production/ProductionAssetResolver.cs []
+PASS — raw string Assets/Scripts/Production/ProductionAssetResolver.cs
+PASS — delimiter Assets/Scripts/Production/CombatTimeEffects.cs ()
+PASS — delimiter Assets/Scripts/Production/CombatTimeEffects.cs {}
+PASS — delimiter Assets/Scripts/Production/CombatTimeEffects.cs []
+PASS — raw string Assets/Scripts/Production/CombatTimeEffects.cs
+PASS — yield Assets/Scripts/Production/CombatTimeEffects.cs:HitStopRoutine
+PASS — delimiter Assets/Scripts/Production/EquipmentSocketRig.cs ()
+PASS — delimiter Assets/Scripts/Production/EquipmentSocketRig.cs {}
+PASS — delimiter Assets/Scripts/Production/EquipmentSocketRig.cs []
+PASS — raw string Assets/Scripts/Production/EquipmentSocketRig.cs
+PASS — delimiter Assets/Scripts/Production/CharacterPresentationController.cs ()
+PASS — delimiter Assets/Scripts/Production/CharacterPresentationController.cs {}
+PASS — delimiter Assets/Scripts/Production/CharacterPresentationController.cs []
+PASS — raw string Assets/Scripts/Production/CharacterPresentationController.cs
+PASS — yield Assets/Scripts/Production/CharacterPresentationController.cs:AttackTimingFallback
+PASS — delimiter Assets/Scripts/Production/ProductionEnvironmentStyler.cs ()
+PASS — delimiter Assets/Scripts/Production/ProductionEnvironmentStyler.cs {}
+PASS — delimiter Assets/Scripts/Production/ProductionEnvironmentStyler.cs []
+PASS — raw string Assets/Scripts/Production/ProductionEnvironmentStyler.cs
+PASS — delimiter Assets/Scripts/Production/ProductionVFXResolver.cs ()
+PASS — delimiter Assets/Scripts/Production/ProductionVFXResolver.cs {}
+PASS — delimiter Assets/Scripts/Production/ProductionVFXResolver.cs []
+PASS — raw string Assets/Scripts/Production/ProductionVFXResolver.cs
+PASS — delimiter Assets/Scripts/Production/AnimatorParameterDriver.cs ()
+PASS — delimiter Assets/Scripts/Production/AnimatorParameterDriver.cs {}
+PASS — delimiter Assets/Scripts/Production/AnimatorParameterDriver.cs []
+PASS — raw string Assets/Scripts/Production/AnimatorParameterDriver.cs
+PASS — delimiter Assets/Scripts/Production/CharacterAnimationProfile.cs ()
+PASS — delimiter Assets/Scripts/Production/CharacterAnimationProfile.cs {}
+PASS — delimiter Assets/Scripts/Production/CharacterAnimationProfile.cs []
+PASS — raw string Assets/Scripts/Production/CharacterAnimationProfile.cs
+PASS — delimiter Assets/Scripts/Production/StonebrookSurfaceMaterials.cs ()
+PASS — delimiter Assets/Scripts/Production/StonebrookSurfaceMaterials.cs {}
+PASS — delimiter Assets/Scripts/Production/StonebrookSurfaceMaterials.cs []
+PASS — raw string Assets/Scripts/Production/StonebrookSurfaceMaterials.cs
+PASS — delimiter Assets/Scripts/Production/AnimationImpactRelay.cs ()
+PASS — delimiter Assets/Scripts/Production/AnimationImpactRelay.cs {}
+PASS — delimiter Assets/Scripts/Production/AnimationImpactRelay.cs []
+PASS — raw string Assets/Scripts/Production/AnimationImpactRelay.cs
+PASS — delimiter Assets/Scripts/Input/CRPGInputController.cs ()
+PASS — delimiter Assets/Scripts/Input/CRPGInputController.cs {}
+PASS — delimiter Assets/Scripts/Input/CRPGInputController.cs []
+PASS — raw string Assets/Scripts/Input/CRPGInputController.cs
+PASS — delimiter Assets/Scripts/Core/AscendanceModels.cs ()
+PASS — delimiter Assets/Scripts/Core/AscendanceModels.cs {}
+PASS — delimiter Assets/Scripts/Core/AscendanceModels.cs []
+PASS — raw string Assets/Scripts/Core/AscendanceModels.cs
+PASS — delimiter Assets/Scripts/Core/SearchEncounterRuntime.cs ()
+PASS — delimiter Assets/Scripts/Core/SearchEncounterRuntime.cs {}
+PASS — delimiter Assets/Scripts/Core/SearchEncounterRuntime.cs []
+PASS — raw string Assets/Scripts/Core/SearchEncounterRuntime.cs
+PASS — delimiter Assets/Scripts/Core/RewardContent0826.cs ()
+PASS — delimiter Assets/Scripts/Core/RewardContent0826.cs {}
+PASS — delimiter Assets/Scripts/Core/RewardContent0826.cs []
+PASS — raw string Assets/Scripts/Core/RewardContent0826.cs
+PASS — delimiter Assets/Scripts/Core/HeroRulesRuntime.cs ()
+PASS — delimiter Assets/Scripts/Core/HeroRulesRuntime.cs {}
+PASS — delimiter Assets/Scripts/Core/HeroRulesRuntime.cs []
+PASS — raw string Assets/Scripts/Core/HeroRulesRuntime.cs
+PASS — delimiter Assets/Scripts/Core/SearchEquipmentRuntime0827.cs ()
+PASS — delimiter Assets/Scripts/Core/SearchEquipmentRuntime0827.cs {}
+PASS — delimiter Assets/Scripts/Core/SearchEquipmentRuntime0827.cs []
+PASS — raw string Assets/Scripts/Core/SearchEquipmentRuntime0827.cs
+PASS — delimiter Assets/Scripts/Core/GameBootstrap.cs ()
+PASS — delimiter Assets/Scripts/Core/GameBootstrap.cs {}
+PASS — delimiter Assets/Scripts/Core/GameBootstrap.cs []
+PASS — raw string Assets/Scripts/Core/GameBootstrap.cs
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0830.cs ()
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0830.cs {}
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0830.cs []
+PASS — raw string Assets/Scripts/Core/QuestRuntime0830.cs
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0832.cs ()
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0832.cs {}
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0832.cs []
+PASS — raw string Assets/Scripts/Core/QuestRuntime0832.cs
+PASS — yield Assets/Scripts/Core/QuestRuntime0832.cs:ResolveGoblinKingImmediateActivation0832
+PASS — yield Assets/Scripts/Core/QuestRuntime0832.cs:ResolveQuestExtraWorldPhaseActivations0832
+PASS — delimiter Assets/Scripts/Core/AscendanceGameManager.cs ()
+PASS — delimiter Assets/Scripts/Core/AscendanceGameManager.cs {}
+PASS — delimiter Assets/Scripts/Core/AscendanceGameManager.cs []
+PASS — raw string Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — yield Assets/Scripts/Core/AscendanceGameManager.cs:ResolveSingleEnemyActivation
+PASS — yield Assets/Scripts/Core/AscendanceGameManager.cs:WaitForEncounterDeckControlIfNeeded
+PASS — yield Assets/Scripts/Core/AscendanceGameManager.cs:ResolvePriorityEncounterActivation
+PASS — yield Assets/Scripts/Core/AscendanceGameManager.cs:ResolveRound
+PASS — yield Assets/Scripts/Core/AscendanceGameManager.cs:ResolveEndRoundStatuses
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0831.cs ()
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0831.cs {}
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0831.cs []
+PASS — raw string Assets/Scripts/Core/QuestRuntime0831.cs
+PASS — delimiter Assets/Scripts/Core/ExplorationRuntime0828.cs ()
+PASS — delimiter Assets/Scripts/Core/ExplorationRuntime0828.cs {}
+PASS — delimiter Assets/Scripts/Core/ExplorationRuntime0828.cs []
+PASS — raw string Assets/Scripts/Core/ExplorationRuntime0828.cs
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0829.cs ()
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0829.cs {}
+PASS — delimiter Assets/Scripts/Core/QuestRuntime0829.cs []
+PASS — raw string Assets/Scripts/Core/QuestRuntime0829.cs
+PASS — delimiter Assets/Scripts/Core/HeroDatabase.cs ()
+PASS — delimiter Assets/Scripts/Core/HeroDatabase.cs {}
+PASS — delimiter Assets/Scripts/Core/HeroDatabase.cs []
+PASS — raw string Assets/Scripts/Core/HeroDatabase.cs
+PASS — delimiter Assets/Scripts/Core/CampaignRuntime0833.cs ()
+PASS — delimiter Assets/Scripts/Core/CampaignRuntime0833.cs {}
+PASS — delimiter Assets/Scripts/Core/CampaignRuntime0833.cs []
+PASS — raw string Assets/Scripts/Core/CampaignRuntime0833.cs
+PASS — delimiter Assets/Scripts/Shell/MainMenuUI.cs ()
+PASS — delimiter Assets/Scripts/Shell/MainMenuUI.cs {}
+PASS — delimiter Assets/Scripts/Shell/MainMenuUI.cs []
+PASS — raw string Assets/Scripts/Shell/MainMenuUI.cs
+PASS — delimiter Assets/Scripts/Shell/ShellUIFactory.cs ()
+PASS — delimiter Assets/Scripts/Shell/ShellUIFactory.cs {}
+PASS — delimiter Assets/Scripts/Shell/ShellUIFactory.cs []
+PASS — raw string Assets/Scripts/Shell/ShellUIFactory.cs
+PASS — delimiter Assets/Scripts/Shell/AscendanceSession.cs ()
+PASS — delimiter Assets/Scripts/Shell/AscendanceSession.cs {}
+PASS — delimiter Assets/Scripts/Shell/AscendanceSession.cs []
+PASS — raw string Assets/Scripts/Shell/AscendanceSession.cs
+PASS — delimiter Assets/Scripts/Shell/SettingsPanelUI.cs ()
+PASS — delimiter Assets/Scripts/Shell/SettingsPanelUI.cs {}
+PASS — delimiter Assets/Scripts/Shell/SettingsPanelUI.cs []
+PASS — raw string Assets/Scripts/Shell/SettingsPanelUI.cs
+PASS — delimiter Assets/Scripts/Shell/ShellCameraBootstrap.cs ()
+PASS — delimiter Assets/Scripts/Shell/ShellCameraBootstrap.cs {}
+PASS — delimiter Assets/Scripts/Shell/ShellCameraBootstrap.cs []
+PASS — raw string Assets/Scripts/Shell/ShellCameraBootstrap.cs
+PASS — delimiter Assets/Scripts/Shell/AscendanceSettings.cs ()
+PASS — delimiter Assets/Scripts/Shell/AscendanceSettings.cs {}
+PASS — delimiter Assets/Scripts/Shell/AscendanceSettings.cs []
+PASS — raw string Assets/Scripts/Shell/AscendanceSettings.cs
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveData.cs ()
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveData.cs {}
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveData.cs []
+PASS — raw string Assets/Scripts/Shell/AscendanceSaveData.cs
+PASS — delimiter Assets/Scripts/Shell/PauseMenuController.cs ()
+PASS — delimiter Assets/Scripts/Shell/PauseMenuController.cs {}
+PASS — delimiter Assets/Scripts/Shell/PauseMenuController.cs []
+PASS — raw string Assets/Scripts/Shell/PauseMenuController.cs
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveSystem.cs ()
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveSystem.cs {}
+PASS — delimiter Assets/Scripts/Shell/AscendanceSaveSystem.cs []
+PASS — raw string Assets/Scripts/Shell/AscendanceSaveSystem.cs
+PASS — delimiter Assets/Scripts/Camera/IsometricCameraController.cs ()
+PASS — delimiter Assets/Scripts/Camera/IsometricCameraController.cs {}
+PASS — delimiter Assets/Scripts/Camera/IsometricCameraController.cs []
+PASS — raw string Assets/Scripts/Camera/IsometricCameraController.cs
+PASS — debug helper DebugAdvanceCampaignDay0833
+PASS — debug helper DebugCampaignCompletedQuest0833
+PASS — debug helper DebugCampaignMissedQuest0833
+PASS — debug helper DebugDefenderUnlocked0832
+PASS — debug helper DebugResetCampaignProgress0833
+PASS — debug helper DebugResolveCampaignQuest0833
+PASS — debug helper DebugRevealQuestLocation0829
+RESULT: 547/547 checks passed

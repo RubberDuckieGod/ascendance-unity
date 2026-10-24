@@ -1,0 +1,13 @@
+Ascendance Unity 0.8.28 — Exploration Deck Preview, Reorder & Search Integration
+
+Static verifier: 352/352 checks passed.
+0.8.27 regression: 371/373 (expected prior BuildVersion/banner only).
+0.8.26 regression: 635/637 (expected prior BuildVersion/banner only).
+0.8.25 regression: 572/574 (expected prior BuildVersion/banner only).
+Raw C# normal-string newline scan: passed via verify_0828.py.
+Delimiter balance scan: passed via verify_0828.py.
+IEnumerator yield audit: passed via verify_0828.py.
+
+Runtime validation still required:
+Ascendance -> Validation -> Test 0.8.28 - Exploration Deck Preview Reorder & Search (Play Mode)
+Expected final line: PASS — Exploration Deck Preview, Reorder & Search Integration completed: 17 passed, 0 failed.

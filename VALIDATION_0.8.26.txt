@@ -1,0 +1,27 @@
+Ascendance Unity 0.8.26 — Loot, Equipment & Reputation Integration
+
+STATIC VALIDATION
+- tests/verify_0826.py: 619/619 checks passed.
+- C# raw-newline scanner passed for all C# sources.
+- (), [], {} balance scanner passed for all C# sources.
+- IEnumerator/yield audit passed.
+- 0.8.25 regression: 554/556; only expected BuildVersion/load-banner assertions differ.
+- 0.8.24 compatibility regression: 514/516; only expected BuildVersion/load-banner assertions differ after applying the same fixed-severity verifier compatibility normalization already required by 0.8.25.
+- 0.8.23 compatibility regression: 474/476; only expected BuildVersion/load-banner assertions differ after the same normalization.
+- 0.8.22 regression: 469/471; version/banner only.
+- 0.8.21 regression: 432/434; version/banner only.
+- 0.8.20 regression: 415/417; version/banner only.
+- 0.8.19 regression: 320/322; version/banner only.
+
+0.8.26a VALIDATOR HOTFIX
+- EN024 validator now places the test Hero at the Fire Token Location before using the real Location-gated extinguish path, then restores the prior Hero Location.
+- No gameplay/runtime rule code changed.
+
+RUNTIME VALIDATION REQUIRED
+Unity menu:
+Ascendance -> Validation -> Test 0.8.26 - Loot Equipment & Reputation (Play Mode)
+
+Expected final line:
+[ASCENDANCE][0.8.26 TEST] PASS — Loot, Equipment & Reputation Integration completed: 18 passed, 0 failed.
+
+Do not mark 0.8.26 runtime-verified until this Play Mode test passes in Unity.

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/mnt/data/ascendance_0825/Ascendance_Unity_Stonebrook_Prototype_0.8.25/tests/verify_0823.py", line 61, in <module>
+    check('skip without draw','TRAVEL ENCOUNTER SKIPPED' in gm and gm.index('if(SkipNextTravelEncounter)') < gm.index('var card=DrawEligibleEncounterCard(location)'))
+                                                                   ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: substring not found

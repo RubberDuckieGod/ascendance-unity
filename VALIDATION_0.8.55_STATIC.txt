@@ -1,0 +1,24 @@
+Ascendance Unity 0.8.55 — Static Validation
+
+STATUS: READY FOR UNITY PLAY MODE VALIDATION (not runtime-verified yet)
+
+Static checks completed:
+- BuildVersion updated to 0.8.55.
+- v10.52 full_content_0850.json contains 200 Crafting Recipes.
+- Runtime adapter targets contiguous CR001–CR200.
+- All 200 authored requiredMaterials strings parse into LT### / EQ### IDs with positive counts.
+- Every parsed ingredient ID exists in the live 190 Loot / 144 Equipment catalogs.
+- Every EQ### and LT### recipe result ID exists in the corresponding live catalog.
+- All 14 authored specialty labels map to the four locked progression tracks.
+- UI track distribution: Blacksmithing 99, Alchemy 25, Enchanting 60, Artificing 16 (200 total).
+- All 22 authored required-tool labels have a runtime availability path.
+- Special Quest/Campaign/Upgrade/Consumable/Legendary Treasure outputs have persistent result-state routing.
+- Save schema and capture/restore paths include 0.8.55 special results, unlock flags, and defeated-enemy prerequisites.
+- New/modified C# files pass gross brace/parenthesis/bracket balance checks.
+- Regression diff from verified 0.8.54a is limited to intended 0.8.55 files/hooks.
+
+Unity validation menu:
+Ascendance > Validation > Test 0.8.55 - Full Crafting Recipe Runtime Execution (Play Mode)
+
+Expected final line:
+[ASCENDANCE][0.8.55 TEST] PASS — Full Crafting Recipe Runtime Execution completed: 30 passed, 0 failed.

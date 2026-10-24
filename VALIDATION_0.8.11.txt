@@ -1,0 +1,56 @@
+FAIL — BuildVersion is 0.8.11
+PASS — 16 authored Heroes
+PASS — 323 Hero-card definitions
+PASS — every personal deck totals exactly 30 cards
+PASS — HeroState defaults to 0 Actions
+PASS — BuildHeroes creates Heroes with 0 Actions
+PASS — SetParty clears Actions for the whole roster
+PASS — SetParty begins with no turn owner
+PASS — explicit CanStartHeroTurn authority exists
+PASS — normal turn actions require current TurnHero
+PASS — normal actions no longer implicitly claim an empty turn
+PASS — Start Turn assigns TurnHero before resources
+PASS — Start Turn resets per-turn runtime at actual start
+PASS — Round 1 opening hand is not drawn again
+PASS — Round 2+ draw uses Hero DrawValue at Start Turn
+PASS — Start Turn grants exactly 3 Actions after Draw Step
+PASS — End Turn preserves unused general Actions
+PASS — End Turn strips attack-only temporary Actions
+PASS — End Turn marks Hero complete and releases turn owner
+PASS — World Phase starts only when no eligible unfinished Heroes remain
+PASS — ResolveRound no longer performs party-wide Hero draws
+FAIL — End Phase clears held Actions
+FAIL — End Phase resets TurnCompleted for next Hero Phase
+FAIL — new Round returns to no turn owner
+PASS — Save DTO stores TurnHeroId and Hero Actions/TurnCompleted
+PASS — Save capture persists TurnHeroId
+PASS — Load restores valid in-progress TurnHeroId
+PASS — Load normalizes unfinished non-turn Heroes to 0 Actions
+PASS — HUD exposes Start Turn / End Turn control
+PASS — HUD shows explicit choose/start state
+PASS — 0.8.10 EnemyAttack damage source preserved
+PASS — 0.8.9 Interpose retarget parser preserved
+PASS — 0.8.11 Play Mode lifecycle helper present
+PASS — helper checks Round 1 no duplicate draw
+PASS — helper checks second Hero cannot steal turn
+PASS — HeroRulesRuntime ResetTurn remains separate from ResetRound
+PASS — AscendanceGameManager.cs brace balance
+PASS — AscendanceGameManager.cs parenthesis balance
+PASS — AscendanceGameManager.cs bracket balance
+PASS — AscendanceModels.cs brace balance
+PASS — AscendanceModels.cs parenthesis balance
+PASS — AscendanceModels.cs bracket balance
+PASS — AscendanceHUD.cs brace balance
+PASS — AscendanceHUD.cs parenthesis balance
+PASS — AscendanceHUD.cs bracket balance
+PASS — AscendanceSaveData.cs brace balance
+PASS — AscendanceSaveData.cs parenthesis balance
+PASS — AscendanceSaveData.cs bracket balance
+PASS — AscendanceSaveSystem.cs brace balance
+PASS — AscendanceSaveSystem.cs parenthesis balance
+PASS — AscendanceSaveSystem.cs bracket balance
+PASS — TurnLifecycleTestTools0811.cs brace balance
+PASS — TurnLifecycleTestTools0811.cs parenthesis balance
+PASS — TurnLifecycleTestTools0811.cs bracket balance
+
+SUMMARY — 50/54 static checks passed.

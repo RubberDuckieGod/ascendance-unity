@@ -1,0 +1,43 @@
+PASS — BuildVersion 0.9.0
+PASS — Core Game Complete startup banner
+PASS — production company
+PASS — production product
+PASS — bundle version 0.9.0
+PASS — MainMenu first build scene
+PASS — exactly two enabled build scenes
+PASS — 16 heroes
+PASS — 323 card definitions
+PASS — every hero physical deck is 30
+PASS — locked authored content counts
+PASS — enemies IDs unique
+PASS — locations IDs unique
+PASS — craftingRecipes IDs unique
+PASS — quests IDs unique
+PASS — Q001-Q072 complete
+PASS — master validator promoted
+PASS — release gate installed
+PASS — release gate enforces zero nested errors
+PASS — release gate runs master regression
+PASS — 0.9.0 changelog exists
+PASS — Assets/Scripts/Core/AscendanceGameManager.cs brace balance
+PASS — Assets/Scripts/Core/AscendanceGameManager.cs paren balance
+PASS — Assets/Scripts/Core/AscendanceGameManager.cs bracket balance
+PASS — Assets/Editor/MasterSaveLoadRegressionTestTools0862.cs brace balance
+PASS — Assets/Editor/MasterSaveLoadRegressionTestTools0862.cs paren balance
+PASS — Assets/Editor/MasterSaveLoadRegressionTestTools0862.cs bracket balance
+PASS — Assets/Editor/CoreGameCompleteTestTools0900.cs brace balance
+PASS — Assets/Editor/CoreGameCompleteTestTools0900.cs paren balance
+PASS — Assets/Editor/CoreGameCompleteTestTools0900.cs bracket balance
+PASS — Assets/Editor/FullLocationRuntimeTestTools0858.cs brace balance
+PASS — Assets/Editor/FullLocationRuntimeTestTools0858.cs paren balance
+PASS — Assets/Editor/FullLocationRuntimeTestTools0858.cs bracket balance
+PASS — Assets/Editor/FullEnemyRuntimeTestTools0859.cs brace balance
+PASS — Assets/Editor/FullEnemyRuntimeTestTools0859.cs paren balance
+PASS — Assets/Editor/FullEnemyRuntimeTestTools0859.cs bracket balance
+PASS — Assets/Editor/FullHeroRuntimeTestTools0860.cs brace balance
+PASS — Assets/Editor/FullHeroRuntimeTestTools0860.cs paren balance
+PASS — Assets/Editor/FullHeroRuntimeTestTools0860.cs bracket balance
+PASS — Assets/Editor/FullCampaignIntegrationTestTools0861.cs brace balance
+PASS — Assets/Editor/FullCampaignIntegrationTestTools0861.cs paren balance
+PASS — Assets/Editor/FullCampaignIntegrationTestTools0861.cs bracket balance
+RESULT: 42/42 checks passed

@@ -1,0 +1,14 @@
+Ascendance Unity 0.8.36a — Downtime Save/Load Quest Routing Hotfix
+
+PLAY MODE VALIDATION
+Ascendance > Validation > Test 0.8.36a - Downtime Save/Load Quest Routing (Play Mode)
+
+Expected:
+[ASCENDANCE][0.8.36a TEST] PASS — Stonebrook Downtime Hub completed: 22 passed, 0 failed.
+
+Key regression target:
+- A stale in-memory Reaction window is primed before ApplySaveData.
+- ApplySaveData must clear it because Reaction windows are not serialized.
+- Reloaded completed Q001 must expose Q002 as legal.
+- BeginRecommendedCampaignQuest0833 must start Q002.
+- Downtime UI must close once Q002 is active.

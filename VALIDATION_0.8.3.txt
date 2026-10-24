@@ -1,0 +1,34 @@
+Ascendance Unity 0.8.3 — static Hero parity verification
+NOTE: Unity Editor/runtime execution is not available in the packaging environment; local Play Mode remains the compile/runtime authority.
+
+Hero roster: 16/16 PASS
+Hero-card definitions: 323/323 PASS
+Deck Aldric: 30/30 PASS
+Deck Asha: 30/30 PASS
+Deck Cassian: 30/30 PASS
+Deck Elara: 30/30 PASS
+Deck Garruk: 30/30 PASS
+Deck Kael: 30/30 PASS
+Deck Lucien: 30/30 PASS
+Deck Lyra: 30/30 PASS
+Deck Malachar: 30/30 PASS
+Deck Mira: 30/30 PASS
+Deck Mordren: 30/30 PASS
+Deck Rowan: 30/30 PASS
+Deck Seraphine: 30/30 PASS
+Deck Thorne: 30/30 PASS
+Deck Vaelis: 30/30 PASS
+Deck Veyra: 30/30 PASS
+3.36.11 explicit repair IDs: 56/56 PASS
+Limit 1 per Quest/campaign records detected: 9/9 PASS
+  H004-020, H004-021, H011-020, H012-014, H012-020, H013-020, H014-020, H015-020, H016-020
+Build marker 0.8.3: PASS
+Quest/campaign use persistence: PASS
+Per-Hero turn completion: PASS
+Attack-card-only Action tracking: PASS
+Target-locked modifiers: PASS
+Move-then-Attack migration: PASS
+Reaction window kinds: PASS
+Bone reaction prerequisite: PASS
+
+Known audit boundaries are documented in HERO_GAMEPLAY_PARITY_AUDIT_0.8.3.md.

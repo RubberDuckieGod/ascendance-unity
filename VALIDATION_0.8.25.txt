@@ -1,0 +1,30 @@
+Ascendance Unity 0.8.25 — Encounter Deck Control & Remaining Campaign I Rules
+
+STATIC VALIDATION
+- tests/verify_0825.py: 545/545 checks passed.
+- Raw multiline C# string scan: passed.
+- Parenthesis / bracket / brace balance scan: passed.
+- IEnumerator yield audit: passed.
+- Deprecated FindObjectsSortMode guard: passed.
+
+REGRESSION
+- 0.8.24 compatibility-aware suite: 505/507; only expected BuildVersion/banner mismatches.
+- 0.8.23 compatibility-aware suite: 465/467; only expected BuildVersion/banner mismatches.
+- 0.8.22 suite: 460/462; only expected BuildVersion/banner mismatches.
+- 0.8.21 suite: 423/425; only expected BuildVersion/banner mismatches.
+- 0.8.20 suite: 406/408; only expected BuildVersion/banner mismatches.
+- 0.8.19 suite: 311/313; only expected BuildVersion/banner mismatches.
+
+PLAY MODE VALIDATION
+Not yet runtime-verified. In Unity run:
+Ascendance > Validation > Test 0.8.25 - Encounter Deck Control & Remaining Rules (Play Mode)
+
+Expected validator coverage:
+- EN028 Severity 3–4 top-two / bottom-one deck control.
+- EN028 Severity 5–6 full top-three reorder (six permutations).
+- EN003 Scout Patrol reward: 10 Gold + may-bottom-top-card control.
+- EN022 Watchtower Patrol reward: 25 Gold + reorder top two.
+- EN009 Severity 7 Saboteur +1 Attack for first activation only.
+- EN027 Severity 7 mandatory follow-up resolved in the fixed Severity 3–4 band.
+- Fixed-severity follow-up preserves queued modifiers for the next normal Severity roll.
+- All validation deck-control choices resolve cleanly.

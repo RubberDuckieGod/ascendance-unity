@@ -1,0 +1,8 @@
+version_082: True
+initialize_no_default_setparty: True
+setparty_hook_flag: True
+save_party_no_hooks: True
+legacy_save_party_no_hooks: True
+conditional_quest_start: True
+cs_files: 41
+brace_balance: True

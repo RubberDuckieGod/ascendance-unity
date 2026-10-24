@@ -1,0 +1,20 @@
+ASCENDANCE UNITY 0.10.0 — DEDICATED SERVER AUTHORITY FOUNDATION
+
+PATCH BASELINE REQUIRED:
+  Ascendance Unity 0.9.0 — Core Game Complete
+
+Apply this patch over the exact locked 0.9.0 project root.
+
+Then open Unity, enter Play Mode, and run:
+  Ascendance > Validation > Test 0.10.0 - Dedicated Server Authority Foundation (Play Mode)
+
+The 0.10.0 gate first reruns the inherited 54-check Core Game Complete master regression, then validates the server-room authority foundation.
+
+Dedicated server build:
+  Ascendance > Build > Build Windows Dedicated Server 0.10.0
+or run BuildAscendanceWindowsServer.bat with UNITY_PATH configured.
+
+Runtime example:
+  AscendanceServer.exe -batchmode -nographics -ascendance-server -room MY-ROOM
+
+0.10.0 does not add a network transport yet. It creates the transport-agnostic authority boundary, room persistence, reconnect identity, and headless server runtime that a transport will use next.

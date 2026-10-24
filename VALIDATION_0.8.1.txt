@@ -1,0 +1,6 @@
+Ascendance Unity 0.8.1 static cleanup validation
+- Deprecated FindObjectsSortMode references in Assets/Scripts: 0
+- GameBootstrap unused installed field: removed
+- Input System package: intentionally not reintroduced
+- Legacy Input Manager deprecation warning: expected/non-blocking
+- Gameplay baseline: 0.8.0 Full Hero System Migration

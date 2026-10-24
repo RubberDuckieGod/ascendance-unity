@@ -1,0 +1,20 @@
+ASCENDANCE UNITY 0.9.0 — CORE GAME COMPLETE
+
+PATCH BASELINE
+- Apply this patch only over Ascendance Unity 0.8.62b — Enemy Presentation Lifecycle Hotfix.
+
+WHAT THIS PROMOTION CHANGES
+- BuildVersion -> 0.9.0
+- Startup identity -> Core Game Complete
+- PlayerSettings -> Ascendance / Ascendance / 0.9.0
+- Existing full regression suites re-targeted to the 0.9.0 baseline
+- New Core Game Complete Play Mode release gate
+- No gameplay mechanics, authored combat rules, Quest logic, or save schema changed
+
+FINAL UNITY TEST
+Enter Play Mode and run:
+Ascendance > Validation > Test 0.9.0 - Core Game Complete Gate (Play Mode)
+
+Required final lines:
+[ASCENDANCE][0.9.0 TEST] PASS — Master Save/Load + Full Regression completed: 54 passed, 0 failed.
+[ASCENDANCE][0.9.0 RELEASE] PASS — Core Game Complete Gate completed: 16 passed, 0 failed.

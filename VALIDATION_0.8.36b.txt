@@ -1,0 +1,15 @@
+Ascendance Unity 0.8.36b — Resolved-Downtime Load Normalization Hotfix
+
+Unity Play Mode validation:
+Ascendance > Validation > Test 0.8.36b - Resolved Downtime Load Routing (Play Mode)
+
+Expected final line:
+[ASCENDANCE][0.8.36b TEST] PASS — Stonebrook Downtime Hub completed: 28 passed, 0 failed.
+
+Static package checks performed before delivery:
+- Modified-file delimiter balance passed.
+- BuildVersion is 0.8.36b.
+- 0.8.36b validator contains 28 runtime assertions.
+- Full ZIP integrity tested.
+
+Runtime verification remains pending until Unity log is returned by the user.

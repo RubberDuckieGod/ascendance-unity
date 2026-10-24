@@ -1,0 +1,44 @@
+Ascendance Unity 0.10.1a — Client Presentation Context Hotfix
+Static validation: 41 passed, 0 failed.
+
+PASS — BuildVersion is 0.10.1a
+PASS — PlayerSettings bundleVersion is 0.10.1a
+PASS — Startup banner remains Client Command Routing
+PASS — Router validator prefix is 0.10.1a
+PASS — Router validator menu is 0.10.1a
+PASS — Router snapshot expects 0.10.1a
+PASS — Server foundation re-baselined to 0.10.1a
+PASS — Master regression re-baselined to 0.10.1a
+PASS — Router validator contains 28 checks
+PASS — Server foundation validator remains 24 checks
+PASS — Master regression remains 54 checks
+PASS — Fingerprint captured before temporary authority context
+PASS — Temporary authority context installed before command routing
+PASS — Presentation context restored after command routing
+PASS — After fingerprint captured after presentation restoration
+PASS — Rejected-command block no longer owns the only restoration path
+PASS — Hot-seat presentation regression assertion exists
+PASS — Second-Hero server-owned session assertion remains
+PASS — Second-Hero END TURN assertion remains
+PASS — Router telemetry assertion remains
+PASS — L007 validator accepts legitimate bonus-Loot chains
+PASS — L007 validator wording documents bonus-Loot chains
+PASS — Router remains transport-agnostic
+PASS — Loopback transport remains installed
+PASS — Server room authority still validates Hero ownership
+PASS — Server room authority still validates stale revisions
+PASS — Server room authority still de-duplicates commands
+PASS — GameBootstrap still installs client router
+PASS — Authoritative Resources data unchanged from 0.10.1
+PASS — C# braces balanced: Assets/Editor/FullHeroRuntimeTestTools0860.cs
+PASS — C# braces balanced: Assets/Editor/FullLocationRuntimeTestTools0858.cs
+PASS — C# braces balanced: Assets/Editor/DedicatedServerFoundationTestTools0100.cs
+PASS — C# braces balanced: Assets/Editor/FullCampaignIntegrationTestTools0861.cs
+PASS — C# braces balanced: Assets/Editor/FullEnemyRuntimeTestTools0859.cs
+PASS — C# braces balanced: Assets/Editor/ClientCommandRoutingTestTools0101.cs
+PASS — C# braces balanced: Assets/Editor/AscendanceDedicatedServerBuilder0100.cs
+PASS — C# braces balanced: Assets/Editor/MasterSaveLoadRegressionTestTools0862.cs
+PASS — C# braces balanced: Assets/Scripts/Core/AscendanceGameManager.cs
+PASS — C# braces balanced: Assets/Scripts/Core/GameBootstrap.cs
+PASS — C# braces balanced: Assets/Scripts/Online/AscendanceRoomAuthority0100.cs
+PASS — C# braces balanced: Assets/Scripts/Online/AscendanceClientCommandRouter0101.cs
