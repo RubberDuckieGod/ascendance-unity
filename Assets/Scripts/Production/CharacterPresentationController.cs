@@ -164,6 +164,19 @@ namespace Ascendance
             attackFallbackRoutine = StartCoroutine(AttackTimingFallback(style, generation));
         }
 
+        public void CancelGameplayCallbacks0102()
+        {
+            // Switching to a server replica must not finish a local attack. Animation
+            // events can arrive later, so clear callbacks as well as the fallback timer.
+            attackGeneration++;
+            if (attackFallbackRoutine != null) StopCoroutine(attackFallbackRoutine);
+            attackFallbackRoutine = null;
+            pendingImpact = null;
+            pendingFinished = null;
+            impactConsumed = true;
+            attackFinished = true;
+        }
+
         public void NotifyAnimationImpact()
         {
             if (impactConsumed) return;

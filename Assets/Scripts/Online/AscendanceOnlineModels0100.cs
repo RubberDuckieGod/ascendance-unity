@@ -51,6 +51,10 @@ namespace Ascendance.Online
         public string RoomId;
         public string PlayerId;
         public long ExpectedRevision;
+        // Presence changes do not invalidate gameplay decisions made from the same game state.
+        public bool HasExpectedGameplayRevision;
+        public long ExpectedGameplayRevision;
+        public string ExpectedServerInstanceId;
         public ServerCommandType0100 Type;
         public string ActorHeroId;
         public string TargetId;
@@ -95,6 +99,13 @@ namespace Ascendance.Online
     }
 
     [Serializable]
+    public sealed class ServerHeroMovement0102
+    {
+        public string HeroId;
+        public string PendingLocationId;
+    }
+
+    [Serializable]
     public sealed class ServerTransientState0100
     {
         public string TurnHeroId;
@@ -112,6 +123,7 @@ namespace Ascendance.Online
         public string PendingEncounterDeckControlText;
         public List<string> EncounterDeckControlOptions = new();
         public List<string> MovingHeroIds = new();
+        public List<ServerHeroMovement0102> HeroMovement = new();
         public List<string> RecentLog = new();
     }
 
@@ -121,6 +133,7 @@ namespace Ascendance.Online
         public string RoomId;
         public string BuildVersion;
         public long Revision;
+        public long GameplayRevision;
         public string ServerInstanceId;
         public AscendanceSaveData Campaign;
         public ServerTransientState0100 Transient;
@@ -133,6 +146,7 @@ namespace Ascendance.Online
         public string RoomId;
         public string BuildVersion;
         public long Revision;
+        public long GameplayRevision;
         public string CreatedAtUtc;
         public string UpdatedAtUtc;
         public AscendanceSaveData DurableCampaign;

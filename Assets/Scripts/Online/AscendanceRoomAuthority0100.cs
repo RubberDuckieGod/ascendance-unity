@@ -44,8 +44,21 @@ namespace Ascendance.Online
             PersistIfSafe();
         }
 
-        public ServerJoinResult0100 Join(string displayName, string heroId)
+        public ServerJoinResult0100 Join(string displayName, string heroId, string reconnectToken = null)
         {
+            if (!string.IsNullOrWhiteSpace(reconnectToken))
+            {
+                if (!Guid.TryParseExact(reconnectToken, "N", out _))
+                    return JoinReject("BAD_RECONNECT_TOKEN", "JOIN requires a random 32-character session credential.");
+                var previous = Room.Players.FirstOrDefault(p => p != null && string.Equals(p.ReconnectToken, reconnectToken, StringComparison.Ordinal));
+                if (previous != null)
+                {
+                    if (!string.Equals(previous.HeroId, heroId, StringComparison.OrdinalIgnoreCase))
+                        return JoinReject("HERO_OWNERSHIP", "This session credential belongs to another Hero.");
+                    if (!previous.Connected) return Reconnect(reconnectToken);
+                    return new ServerJoinResult0100 { Accepted = true, Code = "JOINED", Message = "Returning the existing Hero session.", Player = ClonePlayer(previous), Snapshot = Snapshot() };
+                }
+            }
             if (!gm.Heroes.TryGetValue(heroId ?? string.Empty, out var hero) || !hero.Participating)
                 return JoinReject("HERO_UNAVAILABLE", "That Hero is not part of this room's active party.");
             if (Room.Players.Any(p => p != null && string.Equals(p.HeroId, hero.Id, StringComparison.OrdinalIgnoreCase)))
@@ -59,7 +72,7 @@ namespace Ascendance.Online
                 PlayerId = Guid.NewGuid().ToString("N"),
                 DisplayName = string.IsNullOrWhiteSpace(displayName) ? "Player" : displayName.Trim(),
                 HeroId = hero.Id,
-                ReconnectToken = Guid.NewGuid().ToString("N"),
+                ReconnectToken = string.IsNullOrWhiteSpace(reconnectToken) ? Guid.NewGuid().ToString("N") : reconnectToken,
                 Connected = true,
                 JoinedAtUtc = now,
                 LastSeenUtc = now
@@ -79,10 +92,14 @@ namespace Ascendance.Online
             return true;
         }
 
-        public ServerJoinResult0100 Reconnect(string reconnectToken)
+        public ServerJoinResult0100 Reconnect(string reconnectToken, string heroId = null)
         {
             var player = Room.Players.FirstOrDefault(p => p != null && !string.IsNullOrWhiteSpace(reconnectToken) && string.Equals(p.ReconnectToken, reconnectToken, StringComparison.Ordinal));
             if (player == null) return JoinReject("RECONNECT_DENIED", "Reconnect token was not recognized.");
+            if (!string.IsNullOrWhiteSpace(heroId) && !string.Equals(player.HeroId, heroId, StringComparison.OrdinalIgnoreCase))
+                return JoinReject("HERO_OWNERSHIP", "This session credential belongs to another Hero.");
+            if (player.Connected)
+                return new ServerJoinResult0100 { Accepted = true, Code = "RECONNECTED", Message = "Reconnected to the same Hero session.", Player = ClonePlayer(player), Snapshot = Snapshot() };
             player.Connected = true;
             player.LastSeenUtc = DateTime.UtcNow.ToString("O");
             CommitRoomMetadata();
@@ -92,16 +109,25 @@ namespace Ascendance.Online
         public ServerCommandResult0100 Execute(ServerCommandEnvelope0100 command)
         {
             if (command == null) return Reject("BAD_COMMAND", "Command payload is missing.");
+            if (!string.IsNullOrWhiteSpace(command.ExpectedServerInstanceId) && !string.Equals(command.ExpectedServerInstanceId, ServerInstanceId, StringComparison.Ordinal))
+                return Reject("SERVER_RESTARTED", "Server restarted; review the current state before issuing a new command.");
             string commandKey = (command.PlayerId ?? string.Empty) + ":" + (command.CommandId ?? string.Empty);
             if (!string.IsNullOrWhiteSpace(command.CommandId) && commandCache.TryGetValue(commandKey, out var cached))
             {
-                var duplicate = CloneResult(cached); duplicate.Duplicate = true; duplicate.Code = "DUPLICATE"; duplicate.Message = "Command already processed; returning the cached authoritative result."; return duplicate;
+                var duplicate = CloneResult(cached);
+                duplicate.Duplicate = true;
+                duplicate.Code = "DUPLICATE";
+                duplicate.Message = "Command already processed; returning its outcome with the current authoritative state.";
+                duplicate.Revision = Room.Revision;
+                duplicate.Snapshot = Snapshot();
+                return duplicate;
             }
             if (string.IsNullOrWhiteSpace(command.CommandId)) return Reject("COMMAND_ID_REQUIRED", "Every gameplay command requires an idempotency CommandId.");
             if (!string.Equals(command.RoomId, Room.RoomId, StringComparison.OrdinalIgnoreCase)) return Cache(commandKey, Reject("ROOM_MISMATCH", "Command targets a different room."));
             var player = FindPlayer(command.PlayerId);
             if (player == null || !player.Connected) return Cache(commandKey, Reject("PLAYER_NOT_CONNECTED", "Player session is not connected."));
-            if (command.ExpectedRevision != Room.Revision) return Cache(commandKey, Reject("STALE_REVISION", $"Expected room revision {command.ExpectedRevision}, authoritative revision is {Room.Revision}."));
+            if (command.ExpectedRevision != Room.Revision && !(command.HasExpectedGameplayRevision && command.ExpectedGameplayRevision == Room.GameplayRevision))
+                return Cache(commandKey, Reject("STALE_REVISION", $"Expected room revision {command.ExpectedRevision}, authoritative revision is {Room.Revision}. Review the updated state before trying another action."));
 
             string actorId = string.IsNullOrWhiteSpace(command.ActorHeroId) ? player.HeroId : command.ActorHeroId;
             if (!string.Equals(actorId, player.HeroId, StringComparison.OrdinalIgnoreCase))
@@ -117,16 +143,20 @@ namespace Ascendance.Online
             string oldHero = gm.SelectedHeroId;
             string oldEnemy = gm.SelectedEnemyId;
             string before = LiveFingerprint();
+            long revisionBefore = Room.Revision;
 
             suppressStateEvents = true;
             gm.SetAuthorityCommandContext0100(actor.Id, command.TargetId);
             suppressStateEvents = false;
 
-            bool routed = RouteCommand(command, actor);
-
-            suppressStateEvents = true;
-            gm.SetAuthorityCommandContext0100(oldHero, oldEnemy);
-            suppressStateEvents = false;
+            bool routed;
+            try { routed = RouteCommand(command, actor); }
+            finally
+            {
+                suppressStateEvents = true;
+                try { gm.SetAuthorityCommandContext0100(oldHero, oldEnemy); }
+                finally { suppressStateEvents = false; }
+            }
 
             string after = LiveFingerprint();
 
@@ -137,7 +167,7 @@ namespace Ascendance.Online
 
             // Most rules paths raise StateChanged. If a valid transient-only path did not,
             // advance the room once here so every accepted command has an authoritative revision.
-            if (command.ExpectedRevision == Room.Revision) CommitLiveState();
+            if (revisionBefore == Room.Revision) CommitLiveState();
             player.LastSeenUtc = DateTime.UtcNow.ToString("O");
             var result = new ServerCommandResult0100 { Accepted = true, Code = "ACCEPTED", Message = "Command committed by server authority.", Revision = Room.Revision, Snapshot = Snapshot() };
             Cache(commandKey, result);
@@ -152,6 +182,7 @@ namespace Ascendance.Online
                 RoomId = Room.RoomId,
                 BuildVersion = AscendanceGameManager.BuildVersion,
                 Revision = Room.Revision,
+                GameplayRevision = Room.GameplayRevision,
                 ServerInstanceId = ServerInstanceId,
                 Campaign = AscendanceSaveSystem.CloneForAuthority0100(campaign),
                 Transient = BuildTransient(),
@@ -262,6 +293,7 @@ namespace Ascendance.Online
         private void CommitLiveState()
         {
             Room.Revision++;
+            Room.GameplayRevision++;
             Room.BuildVersion = AscendanceGameManager.BuildVersion;
             Room.UpdatedAtUtc = DateTime.UtcNow.ToString("O");
             PersistIfSafe();
@@ -313,6 +345,7 @@ namespace Ascendance.Online
                 HasPendingEncounterDeckControl = gm.HasPendingEncounterDeckControl,
                 PendingEncounterDeckControlText = gm.PendingEncounterDeckControlText,
                 MovingHeroIds = gm.ParticipatingHeroes.Where(h => h.Moving).Select(h => h.Id).ToList(),
+                HeroMovement = gm.ParticipatingHeroes.Where(h => h.Moving).Select(h => new ServerHeroMovement0102 { HeroId = h.Id, PendingLocationId = h.PendingLocationId }).ToList(),
                 RecentLog = gm.Log.Skip(Math.Max(0, gm.Log.Count - 40)).ToList()
             };
             state.ReactionOptions = gm.PendingReactionOptions.Select(o => $"{o.HeroId}|{o.CardId}|{o.Label}").ToList();

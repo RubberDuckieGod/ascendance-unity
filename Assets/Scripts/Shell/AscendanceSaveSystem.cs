@@ -9,7 +9,7 @@ namespace Ascendance
     public static class AscendanceSaveSystem
     {
         private const string FileName = "campaign_q001.json";
-        public static string SavePath => Path.Combine(Application.persistentDataPath, FileName);
+        public static string SavePath => Path.Combine(AscendanceStoragePaths0102.PersistentDataPath, FileName);
         public static bool HasSave => File.Exists(SavePath);
         public static bool HasValidSave => TryLoad(out _, out _);
         public static bool CanSave(AscendanceGameManager gm) => gm != null && !gm.IsResolving && !gm.HasPendingReactionWindow && !gm.ParticipatingHeroes.Any(h => h.Moving);
@@ -19,7 +19,7 @@ namespace Ascendance
             if (!CanSave(gm)) { message = "Cannot save during movement, a Reaction window, or combat resolution."; return false; }
             try
             {
-                var data = Capture(gm); Directory.CreateDirectory(Application.persistentDataPath); File.WriteAllText(SavePath, JsonUtility.ToJson(data, true));
+                var data = Capture(gm); Directory.CreateDirectory(AscendanceStoragePaths0102.PersistentDataPath); File.WriteAllText(SavePath, JsonUtility.ToJson(data, true));
                 message = "Campaign saved."; gm.AddLog($"SAVE — Campaign saved with Hero decks, hands, statuses, inventory, and pieces. Resume: {CampaignResumeRuntime0842.DescribeSurface0842(data.ResumeSurface0842)}."); return true;
             }
             catch (Exception ex) { message = "Save failed: " + ex.Message; Debug.LogException(ex); return false; }

@@ -47,7 +47,15 @@ namespace Ascendance.Online
         private static void Install()
         {
             string[] args = Environment.GetCommandLineArgs() ?? Array.Empty<string>();
-            IsDedicatedServerProcess = Application.isBatchMode || args.Any(a => string.Equals(a, "-ascendance-server", StringComparison.OrdinalIgnoreCase));
+            // Batch-mode Editors still need the normal presentation fixture for validation.
+            // Dedicated player builds identify themselves even without a -batchmode flag.
+#if UNITY_SERVER
+            const bool dedicatedBuild = true;
+#else
+            const bool dedicatedBuild = false;
+#endif
+            IsDedicatedServerProcess = dedicatedBuild || (!Application.isEditor && Application.isBatchMode)
+                || args.Any(a => string.Equals(a, "-ascendance-server", StringComparison.OrdinalIgnoreCase));
             string envPort = Environment.GetEnvironmentVariable("ASCENDANCE_PORT");
             if (int.TryParse(envPort, out var parsedEnvPort)) RequestedPort = Mathf.Clamp(parsedEnvPort, 1, 65535);
             for (int i = 0; i < args.Length - 1; i++)

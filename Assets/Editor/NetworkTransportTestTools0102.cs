@@ -19,6 +19,7 @@ namespace Ascendance.EditorTools
         [MenuItem("Ascendance/Validation/Test 0.10.2c - Real Network Transport (Play Mode)")]
         public static void Test0102()
         {
+            AscendanceStoragePaths0102.RequireIsolatedValidationDirectory();
             if (!Application.isPlaying) { Debug.LogError(Prefix + " Enter Play Mode first."); return; }
             var gm = AscendanceGameManager.Instance;
             if (gm == null) { Debug.LogError(Prefix + " No AscendanceGameManager found."); return; }
@@ -189,7 +190,7 @@ namespace Ascendance.EditorTools
                         ActorHeroId = "Aldric"
                     }
                 };
-                var commandTask = SendRawAsync(server.BoundPort, AscendanceNetworkCodec0102.SerializeRequest(commandRequest));
+                var commandTask = SendAuthenticatedRawAsync(server.BoundPort, roomId, joined.Player, AscendanceNetworkCodec0102.SerializeRequest(commandRequest));
                 int commandFrames = 0;
                 while (!commandTask.IsCompleted && commandFrames++ < 1200) yield return null;
                 AscendanceNetworkResponse0102 commandResponse = null;
@@ -197,7 +198,10 @@ namespace Ascendance.EditorTools
                     commandResponse = AscendanceNetworkCodec0102.DeserializeResponse(commandTask.Result);
                 Check(commandResponse != null && commandResponse.Accepted && commandResponse.CommandResult != null && commandResponse.CommandResult.Accepted && gm.TurnHeroId == "Aldric",
                     "START TURN crosses a real TCP socket into room authority and executes on the Unity main thread.");
-                Check(commandResponse?.Snapshot != null && commandResponse.Snapshot.Revision == isolated.Room.Revision && commandResponse.Snapshot.Campaign?.Version == "0.10.2c",
+                Check(commandResponse?.Snapshot != null && commandResponse.CommandResult != null
+                    && commandResponse.Snapshot.Revision == commandResponse.CommandResult.Revision
+                    && commandResponse.Snapshot.Revision <= isolated.Room.Revision
+                    && commandResponse.Snapshot.Campaign?.Version == "0.10.2c",
                     "Socket command response returns the committed 0.10.2c authoritative snapshot/revision.");
 
                 var mismatch = new AscendanceNetworkRequest0102 { RequestId = "BADROOM-0102", Operation = "HELLO", RoomId = roomId + "-WRONG" };
@@ -240,6 +244,26 @@ namespace Ascendance.EditorTools
                 using var client = new TcpClient { NoDelay = true, ReceiveTimeout = 10000, SendTimeout = 10000 };
                 client.Connect("127.0.0.1", port);
                 using NetworkStream stream = client.GetStream();
+                AscendanceNetworkCodec0102.WriteFrame(stream, requestJson);
+                return AscendanceNetworkCodec0102.ReadFrame(stream);
+            });
+        }
+
+        private static Task<string> SendAuthenticatedRawAsync(int port, string roomId, ServerPlayerSession0100 player, string requestJson)
+        {
+            return Task.Run(() =>
+            {
+                using var client = new TcpClient { NoDelay = true, ReceiveTimeout = 10000, SendTimeout = 10000 };
+                client.Connect("127.0.0.1", port);
+                using NetworkStream stream = client.GetStream();
+                var reconnect = new AscendanceNetworkRequest0102
+                {
+                    RequestId = Guid.NewGuid().ToString("N"), Operation = "RECONNECT", RoomId = roomId,
+                    HeroId = player.HeroId, ReconnectToken = player.ReconnectToken
+                };
+                AscendanceNetworkCodec0102.WriteFrame(stream, AscendanceNetworkCodec0102.SerializeRequest(reconnect));
+                var authenticated = AscendanceNetworkCodec0102.DeserializeResponse(AscendanceNetworkCodec0102.ReadFrame(stream));
+                if (authenticated == null || !authenticated.Accepted) throw new InvalidOperationException("Socket fixture could not authenticate its Hero session.");
                 AscendanceNetworkCodec0102.WriteFrame(stream, requestJson);
                 return AscendanceNetworkCodec0102.ReadFrame(stream);
             });

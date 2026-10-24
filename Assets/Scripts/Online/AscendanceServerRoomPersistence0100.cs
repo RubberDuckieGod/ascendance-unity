@@ -7,7 +7,7 @@ namespace Ascendance.Online
 {
     public static class AscendanceServerRoomPersistence0100
     {
-        public static string RootPath => Path.Combine(Application.persistentDataPath, "AscendanceServerRooms0100");
+        public static string RootPath => Path.Combine(AscendanceStoragePaths0102.PersistentDataPath, "AscendanceServerRooms0100");
 
         public static string PathFor(string roomId)
         {

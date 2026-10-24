@@ -70,14 +70,14 @@ namespace Ascendance
         public bool NextGoblinEncounterWarDrummer { get; private set; }
         public EncounterDeckControlState PendingEncounterDeckControl { get; private set; }
         public RewardChoiceState PendingRewardChoice { get; private set; }
-        public bool HasPendingEncounterDeckControl => PendingEncounterDeckControl != null;
-        public bool HasPendingRewardChoice => PendingRewardChoice != null;
-        public string PendingEncounterDeckControlText => PendingEncounterDeckControl==null?string.Empty:$"{PendingEncounterDeckControl.SourceCardId} {PendingEncounterDeckControl.SourceCardName}: {DeckControlModeDescription(PendingEncounterDeckControl.Mode)} — {string.Join(" | ",PendingEncounterDeckControl.RevealedCardIds.Select(EncounterCardLabel))}";
-        public IReadOnlyList<EncounterDeckControlOption> EncounterDeckControlOptions => BuildEncounterDeckControlOptions();
-        public string PendingRewardChoiceText => PendingRewardChoice==null?string.Empty:$"{PendingRewardChoice.SourceCardId} {PendingRewardChoice.SourceCardName}: {PendingRewardChoice.Prompt}";
+        public bool HasPendingEncounterDeckControl => remotePresentation0102?.HasPendingEncounterDeckControl ?? PendingEncounterDeckControl != null;
+        public bool HasPendingRewardChoice => remotePresentation0102?.HasPendingRewardChoice ?? PendingRewardChoice != null;
+        public string PendingEncounterDeckControlText => remotePresentation0102 != null ? remotePresentation0102.PendingEncounterDeckControlText ?? string.Empty : PendingEncounterDeckControl==null?string.Empty:$"{PendingEncounterDeckControl.SourceCardId} {PendingEncounterDeckControl.SourceCardName}: {DeckControlModeDescription(PendingEncounterDeckControl.Mode)} — {string.Join(" | ",PendingEncounterDeckControl.RevealedCardIds.Select(EncounterCardLabel))}";
+        public IReadOnlyList<EncounterDeckControlOption> EncounterDeckControlOptions => remotePresentation0102 != null ? remoteDeckOptions0102 : BuildEncounterDeckControlOptions();
+        public string PendingRewardChoiceText => remotePresentation0102 != null ? remotePresentation0102.PendingRewardChoiceText ?? string.Empty : PendingRewardChoice==null?string.Empty:$"{PendingRewardChoice.SourceCardId} {PendingRewardChoice.SourceCardName}: {PendingRewardChoice.Prompt}";
         // Runtime-safe accessor. Unlike the Debug* validator helpers, this must exist in standalone Player builds.
         public string PendingRewardChoiceMode => PendingRewardChoice?.Mode;
-        public IReadOnlyList<RewardChoiceOption> RewardChoiceOptions => BuildRewardChoiceOptions();
+        public IReadOnlyList<RewardChoiceOption> RewardChoiceOptions => remotePresentation0102 != null ? remoteRewardOptions0102 : BuildRewardChoiceOptions();
         public readonly List<string> SearchDeck = new();
         public readonly List<string> SearchDiscard = new();
         public readonly List<string> EncounterDeck = new();
@@ -96,6 +96,7 @@ namespace Ascendance
         {
             get
             {
+                if (remotePresentation0102 != null) return remotePresentation0102.PendingReactionText ?? string.Empty;
                 if (pendingReactionKind == ReactionWindowKind.BeforeEnemyAttack) return $"{pendingEnemy?.DisplayName} attacks {pendingTarget?.DisplayName}. Choose reactions, then Resolve Attack.";
                 if (pendingReactionKind == ReactionWindowKind.BeforeHeroDamage) return $"{pendingTarget?.DisplayName} would suffer {pendingIncomingDamage} damage ({pendingDamageSource}). Choose reactions, then Resolve Damage.";
                 if (pendingReactionKind == ReactionWindowKind.AfterEnemyAttack) return $"{pendingEnemy?.DisplayName}'s Attack against {pendingTarget?.DisplayName} resolved for {pendingLastDamage} damage. Choose any triggered reactions.";
@@ -214,6 +215,7 @@ namespace Ascendance
         public void ApplySaveData(AscendanceSaveData save)
         {
             if (save == null) return;
+            if (!applyingRemoteSnapshot0102) ClearRemotePresentation0102();
             if (save.PartyHeroIds != null && save.PartyHeroIds.Count > 0) SetParty(save.PartyHeroIds, save.SelectedHeroId, false);
             else if (save.Heroes != null && save.Heroes.Count > 0) SetParty(save.Heroes.Select(h => h.Id), save.SelectedHeroId, false);
 
@@ -250,7 +252,7 @@ namespace Ascendance
             // 0.8.36b — A resolved Quest save represents Stonebrook downtime, not an in-Quest modal.
             // Reward/deck-control prompts belong to live Quest resolution and must not survive as blockers
             // after QuestComplete/QuestFailed has already been committed. Mid-Quest saves still restore them.
-            if(QuestComplete||QuestFailed)
+            if(!applyingRemoteSnapshot0102&&(QuestComplete||QuestFailed))
             {
                 PendingEncounterDeckControl=null;
                 PendingRewardChoice=null;
@@ -309,7 +311,7 @@ namespace Ascendance
                     hero.Downed = stored.Downed;
                     hero.Dead = stored.Dead;
                     hero.MovedThisTurn = stored.MovedThisTurn;
-                    bool legacyHeroSave = (stored.DeckIds == null || stored.DeckIds.Count == 0) && (stored.HandIds == null || stored.HandIds.Count == 0);
+                    bool legacyHeroSave = !applyingRemoteSnapshot0102 && (stored.DeckIds == null || stored.DeckIds.Count == 0) && (stored.HandIds == null || stored.HandIds.Count == 0);
                     hero.HealingPotions = legacyHeroSave ? 1 : Mathf.Max(0, stored.HealingPotions);
                     hero.KillCount = Mathf.Max(0, stored.KillCount);
                     hero.BlacksmithingXp0837 = Mathf.Max(0, stored.BlacksmithingXp0837);
@@ -373,7 +375,7 @@ namespace Ascendance
 
             // 0.8.13 defeat-state invariant repair. A positive-Health Hero cannot remain Downed,
             // a Dead Hero is always at 0 Health, and legacy 0-Health records are classified once.
-            foreach (var hero in ParticipatingHeroes)
+            foreach (var hero in ParticipatingHeroes.Where(_ => !applyingRemoteSnapshot0102))
             {
                 if (hero.Dead)
                 {
@@ -400,7 +402,7 @@ namespace Ascendance
                 }
             }
 
-            if(!QuestComplete&&!QuestFailed&&ParticipatingHeroes.All(h=>h.IsDefeated))
+            if(!applyingRemoteSnapshot0102&&!QuestComplete&&!QuestFailed&&ParticipatingHeroes.All(h=>h.IsDefeated))
             {
                 QuestFailed=true;
                 AddLog($"SAVE STATE REPAIR — all participating Heroes are Defeated; {CurrentQuestId0829} is marked Failed.");
@@ -461,6 +463,8 @@ namespace Ascendance
             foreach (var hero in ParticipatingHeroes)
                 if (!hero.TurnCompleted && !IsHeroTakingTurn(hero)) { hero.Actions = 0; hero.AttackOnlyActions = 0; }
             SelectedEnemyId = !string.IsNullOrEmpty(save.SelectedEnemyId) && Enemies.TryGetValue(save.SelectedEnemyId, out var se) && !se.Defeated ? save.SelectedEnemyId : FirstLivingEnemyAtSelectedHeroLocation()?.Id;
+            // Replica application finishes with its authoritative transient state and one notification.
+            if (applyingRemoteSnapshot0102) return;
             // Reconcile the authoritative campaign layer after every resolved-Quest load so the
             // currently restored Quest outcome and Completed/Failed quest history cannot diverge.
             if(QuestComplete||QuestFailed)SyncCampaignProgress0833();
@@ -746,8 +750,11 @@ namespace Ascendance
             }
             // 0.8.50 content migration: older saves knew only the first 20 Search cards. Preserve every
             // already drawn/discarded card, then add only the newly authored missing physical copies.
-            ReconcileAuthoredDeckCopies0850(SearchDeck,SearchDiscard,SearchEncounterContent0820.BuildSearchDeck(),"Search");
-            ReconcileAuthoredDeckCopies0850(EncounterDeck,EncounterDiscard,SearchEncounterContent0820.BuildEncounterDeck(),"Stonebrook Encounter");
+            if (!applyingRemoteSnapshot0102)
+            {
+                ReconcileAuthoredDeckCopies0850(SearchDeck,SearchDiscard,SearchEncounterContent0820.BuildSearchDeck(),"Search");
+                ReconcileAuthoredDeckCopies0850(EncounterDeck,EncounterDiscard,SearchEncounterContent0820.BuildEncounterDeck(),"Stonebrook Encounter");
+            }
         }
 
         private void ReconcileAuthoredDeckCopies0850(List<string> deck,List<string> discard,List<string> expected,string label)
@@ -799,7 +806,7 @@ namespace Ascendance
             {
                 foreach(var id in encounter.SpawnedEnemyIds)
                     if(Enemies.TryGetValue(id,out var enemy)&&enemy.EncounterSpawned&&string.IsNullOrEmpty(enemy.EncounterInstanceId))enemy.EncounterInstanceId=encounter.InstanceId;
-                TryCompleteEncounter(encounter,"save restoration");
+                if (!applyingRemoteSnapshot0102) TryCompleteEncounter(encounter,"save restoration");
             }
         }
 
@@ -3966,6 +3973,6 @@ namespace Ascendance
         public EnemyState FirstLivingEnemyAtSelectedHeroLocation(){var h=SelectedHero;return h==null?null:Enemies.Values.FirstOrDefault(e=>!e.Defeated&&e.LocationId==h.LocationId);}
         public void RegisterHeroAvatar(HeroAvatar avatar){HeroAvatars[avatar.HeroId]=avatar;if(avatar.HeroId==SelectedHeroId)Camera.main?.GetComponent<IsometricCameraController>()?.FocusOn(avatar.transform.position);}
         public void RegisterEnemyAvatar(EnemyAvatar avatar)=>EnemyAvatars[avatar.EnemyId]=avatar;
-        public void AddLog(string message){log.Add(message);if(log.Count>180)log.RemoveAt(0);Debug.Log("[ASCENDANCE] "+message);LogAdded?.Invoke(message);}
+        public void AddLog(string message){if(applyingRemoteSnapshot0102)return;log.Add(message);if(log.Count>180)log.RemoveAt(0);Debug.Log("[ASCENDANCE] "+message);LogAdded?.Invoke(message);}
     }
 }

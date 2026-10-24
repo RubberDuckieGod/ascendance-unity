@@ -21,6 +21,7 @@ namespace Ascendance.Online
             public readonly object Sync = new();
             public readonly HashSet<string> PlayerIds = new(StringComparer.OrdinalIgnoreCase);
             public TcpClient Client;
+            public volatile bool Closed;
         }
 
         private sealed class PendingRequest
@@ -34,7 +35,9 @@ namespace Ascendance.Online
         public static AscendanceTcpServer0102 Instance { get; private set; }
 
         private readonly ConcurrentQueue<PendingRequest> pendingRequests = new();
-        private readonly ConcurrentQueue<string> disconnectedPlayers = new();
+        private readonly ConcurrentQueue<ConnectionContext> disconnectedConnections = new();
+        // Accessed only by Unity's main thread. A reconnect transfers the session lease.
+        private readonly Dictionary<string, ConnectionContext> playerConnections = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentBag<TcpClient> openClients = new();
         private readonly List<Thread> clientThreads = new();
         private readonly object clientThreadsLock = new();
@@ -45,6 +48,7 @@ namespace Ascendance.Online
         private volatile bool running;
 
         public bool IsListening => running && listener != null;
+        public long ProcessedDisconnects { get; private set; }
         public int BoundPort { get; private set; }
         public string BoundAddress => "0.0.0.0";
 
@@ -86,8 +90,18 @@ namespace Ascendance.Online
 
         private void Update()
         {
-            while (disconnectedPlayers.TryDequeue(out var playerId))
-                authority?.Disconnect(playerId);
+            while (disconnectedConnections.TryDequeue(out var connection))
+            {
+                ProcessedDisconnects++;
+                List<string> players;
+                lock (connection.Sync) players = connection.PlayerIds.ToList();
+                foreach (var playerId in players)
+                    if (playerConnections.TryGetValue(playerId, out var current) && ReferenceEquals(current, connection))
+                    {
+                        playerConnections.Remove(playerId);
+                        authority?.Disconnect(playerId);
+                    }
+            }
 
             int budget = 64;
             while (budget-- > 0 && pendingRequests.TryDequeue(out var pending))
@@ -153,9 +167,8 @@ namespace Ascendance.Online
             }
             finally
             {
-                List<string> players;
-                lock (context.Sync) players = context.PlayerIds.ToList();
-                foreach (var id in players) disconnectedPlayers.Enqueue(id);
+                context.Closed = true;
+                disconnectedConnections.Enqueue(context);
             }
         }
 
@@ -171,8 +184,15 @@ namespace Ascendance.Online
                     return;
                 }
 
-                var response = HandleRequest(request, pending.Connection);
+                var response = pending.Connection.Closed
+                    ? RejectNetwork(request, "CONNECTION_CLOSED", "Connection closed before its request was processed.")
+                    : HandleRequest(request, pending.Connection);
                 pending.ResponseJson = AscendanceNetworkCodec0102.SerializeResponse(response);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                pending.ResponseJson = AscendanceNetworkCodec0102.SerializeResponse(RejectNetwork(null, "SERVER_ERROR", "Server could not process the request."));
             }
             finally { pending.Completed.Set(); }
         }
@@ -194,7 +214,7 @@ namespace Ascendance.Online
 
                 case "JOIN":
                 {
-                    var join = authority.Join(request.DisplayName, request.HeroId);
+                    var join = authority.Join(request.DisplayName, request.HeroId, request.ReconnectToken);
                     if (join.Accepted && join.Player != null) TrackPlayer(connection, join.Player.PlayerId);
                     return new AscendanceNetworkResponse0102
                     {
@@ -210,7 +230,7 @@ namespace Ascendance.Online
 
                 case "RECONNECT":
                 {
-                    var join = authority.Reconnect(request.ReconnectToken);
+                    var join = authority.Reconnect(request.ReconnectToken, request.HeroId);
                     if (join.Accepted && join.Player != null) TrackPlayer(connection, join.Player.PlayerId);
                     return new AscendanceNetworkResponse0102
                     {
@@ -227,6 +247,8 @@ namespace Ascendance.Online
                 case "COMMAND":
                 {
                     if (request.Command == null) return RejectNetwork(request, "BAD_COMMAND", "COMMAND request contains no command envelope.");
+                    if (string.IsNullOrWhiteSpace(request.Command.PlayerId) || !playerConnections.TryGetValue(request.Command.PlayerId, out var owner) || !ReferenceEquals(owner, connection))
+                        return RejectNetwork(request, "PLAYER_NOT_BOUND", "JOIN or RECONNECT on this connection before issuing commands for its Hero.");
                     var result = authority.Execute(request.Command);
                     return new AscendanceNetworkResponse0102
                     {
@@ -247,9 +269,15 @@ namespace Ascendance.Online
             }
         }
 
-        private static void TrackPlayer(ConnectionContext connection, string playerId)
+        private void TrackPlayer(ConnectionContext connection, string playerId)
         {
             if (connection == null || string.IsNullOrWhiteSpace(playerId)) return;
+            if (playerConnections.TryGetValue(playerId, out var previous) && !ReferenceEquals(previous, connection))
+            {
+                lock (previous.Sync) previous.PlayerIds.Remove(playerId);
+                // Revoke only this session; another Hero may share the older connection.
+            }
+            playerConnections[playerId] = connection;
             lock (connection.Sync) connection.PlayerIds.Add(playerId);
         }
 
@@ -285,6 +313,7 @@ namespace Ascendance.Online
                 clientThreads.Clear();
             }
             listener = null;
+            playerConnections.Clear();
             BoundPort = 0;
         }
 

@@ -1,0 +1,25 @@
+# Reference only. release.py init renders and records the exact managed unit.
+# Replace every placeholder before using this unit outside the helper.
+[Unit]
+Description=Ascendance dedicated server
+After=network.target
+
+[Service]
+Type=simple
+User=SERVICE_USER
+Group=SERVICE_GROUP
+WorkingDirectory=DATA_HOME
+EnvironmentFile=CONFIG_DIRECTORY/server.env
+ExecStart=INSTALL_ROOT/run-ascendance.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=DATA_HOME LOG_DIRECTORY
+
+[Install]
+WantedBy=multi-user.target

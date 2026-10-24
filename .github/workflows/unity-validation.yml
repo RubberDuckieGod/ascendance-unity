@@ -1,0 +1,53 @@
+name: Licensed Unity validation
+
+# Deliberately manual: public pull requests must never execute arbitrary source on a
+# licensed self-hosted machine. Configure a protected unity-validation environment.
+on:
+  workflow_dispatch:
+    inputs:
+      build_players:
+        description: Build Linux server and Windows player after runtime gates pass
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unity-validation-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  unity:
+    runs-on: [self-hosted, Windows, X64, unity-6000.6.5f1]
+    environment: unity-validation
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          persist-credentials: false
+      - name: Require the configured licensed Editor
+        shell: powershell
+        env:
+          UNITY_EDITOR_PATH: ${{ vars.UNITY_EDITOR_PATH }}
+        run: |
+          if (!$env:UNITY_EDITOR_PATH) { throw 'Set UNITY_EDITOR_PATH in the protected unity-validation environment.' }
+          if (!(Test-Path -LiteralPath $env:UNITY_EDITOR_PATH -PathType Leaf)) { throw 'Configured Editor executable is missing.' }
+      - name: Run runtime gates and requested builds
+        shell: powershell
+        env:
+          UNITY_EDITOR_PATH: ${{ vars.UNITY_EDITOR_PATH }}
+          BUILD_PLAYERS: ${{ inputs.build_players }}
+        run: |
+          $arguments = @{ Artifacts = (Join-Path $env:RUNNER_TEMP ('ascendance-unity-' + $env:GITHUB_RUN_ID + '-' + $env:GITHUB_RUN_ATTEMPT)) }
+          if ($env:BUILD_PLAYERS -eq 'true') { $arguments.BuildLinuxServer = $true; $arguments.BuildWindows = $true }
+          & ./tools/Run-UnityValidation.ps1 @arguments
+      - name: Preserve results and complete build outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-validation-${{ github.sha }}
+          path: ${{ runner.temp }}/ascendance-unity-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7

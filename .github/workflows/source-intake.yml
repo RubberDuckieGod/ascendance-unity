@@ -1,0 +1,36 @@
+name: Source intake
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-intake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test intake, verdict validation and release helpers
+        run: python -B -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Check shell syntax
+        run: bash -n tools/run_unity_validation.sh Deploy/DigitalOcean/run-ascendance.sh
+      - name: Validate supplied metadata without executing legacy verifiers
+        run: python -B tools/project_intake.py --metadata-only --report "${{ runner.temp }}/ascendance-metadata-status.json"
+      - name: Require a complete minimum source handoff
+        if: always()
+        run: python -B tools/project_intake.py --require-source --report "${{ runner.temp }}/ascendance-intake-status.json"
+      - name: Preserve the actual intake results, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-intake-status
+          path: |
+            ${{ runner.temp }}/ascendance-intake-status.json
+            ${{ runner.temp }}/ascendance-metadata-status.json
+          if-no-files-found: error

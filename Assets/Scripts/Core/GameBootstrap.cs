@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Ascendance.Online;
+using Object = UnityEngine.Object;
 
 namespace Ascendance
 {
@@ -45,20 +47,6 @@ namespace Ascendance
             {
                 world = root.AddComponent<StonebrookWorldBuilder>();
                 clientRouter = root.AddComponent<AscendanceClientCommandRouter0101>();
-                root.AddComponent<AscendanceHUD>();
-                root.AddComponent<CampaignHubUI0834>();
-                root.AddComponent<QuestResultsUI0835>();
-                root.AddComponent<DowntimeUI0836>();
-                root.AddComponent<QuestBriefingUI0841>();
-                root.AddComponent<CampaignEndUI0844>();
-                root.AddComponent<CampaignLaunchpadUI0845>();
-                root.AddComponent<CampaignResumeController0842>();
-                root.AddComponent<CampaignAutoSave0842>();
-                root.AddComponent<CRPGInputController>();
-                root.AddComponent<MovementPathPreview>();
-                root.AddComponent<CombatTimeEffects>();
-                root.AddComponent<PauseMenuController>();
-                EnsureEventSystem();
             }
             else
             {
@@ -71,14 +59,52 @@ namespace Ascendance
             // Linux/Windows server builds expose the same room authority over TCP.
             manager.Initialize();
             AscendanceSession.ApplyTo(manager);
-            serverAuthority.Initialize(manager);
+            if (dedicatedServer || !AscendanceRemoteClientBootstrap0102.RemoteRequested) serverAuthority.Initialize(manager);
             if (clientRouter != null)
             {
                 clientRouter.Initialize(manager, serverAuthority);
                 AscendanceRemoteClientBootstrap0102.TryInstall(clientRouter, manager);
             }
             if (tcpServer != null) tcpServer.Initialize(serverAuthority);
-            if (world != null) world.Build();
+            if (world != null) WhenPresentationReady0102(clientRouter, () =>
+            {
+                if (root == null) return;
+                root.AddComponent<AscendanceHUD>();
+                root.AddComponent<CampaignHubUI0834>();
+                root.AddComponent<QuestResultsUI0835>();
+                root.AddComponent<DowntimeUI0836>();
+                root.AddComponent<QuestBriefingUI0841>();
+                root.AddComponent<CampaignEndUI0844>();
+                root.AddComponent<CampaignLaunchpadUI0845>();
+                // Save-slot restoration and local autosaving belong to the local campaign. Remote
+                // presentation is restored exclusively from the authoritative room snapshot.
+                if (!AscendanceRemoteClientBootstrap0102.RemoteRequested)
+                {
+                    root.AddComponent<CampaignResumeController0842>();
+                    root.AddComponent<CampaignAutoSave0842>();
+                }
+                root.AddComponent<CRPGInputController>();
+                root.AddComponent<MovementPathPreview>();
+                root.AddComponent<CombatTimeEffects>();
+                root.AddComponent<PauseMenuController>();
+                EnsureEventSystem();
+                world.Build();
+            });
+        }
+
+        public static void WhenPresentationReady0102(AscendanceClientCommandRouter0101 router, Action createPresentation)
+        {
+            if (router == null || router.Transport is not IAscendanceSnapshotSource0102 || router.HasAuthoritativeSnapshot)
+            {
+                createPresentation?.Invoke();
+                return;
+            }
+            void OnSnapshot(ServerStateSnapshot0100 snapshot)
+            {
+                router.SnapshotApplied -= OnSnapshot;
+                createPresentation?.Invoke();
+            }
+            router.SnapshotApplied += OnSnapshot;
         }
 
         private static void EnsureEventSystem()

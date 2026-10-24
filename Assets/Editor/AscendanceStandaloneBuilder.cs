@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
+using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -25,7 +27,7 @@ namespace Ascendance.EditorTools
             PlayerSettings.resizableWindow = true;
             PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
 
-            string output = Path.GetFullPath("Builds/Windows/Ascendance.exe");
+            string output = AscendanceBuildArguments0102.OutputPath("Builds/Windows/Ascendance.exe");
             Directory.CreateDirectory(Path.GetDirectoryName(output));
 
             var options = new BuildPlayerOptions
@@ -42,12 +44,28 @@ namespace Ascendance.EditorTools
             if (summary.result == BuildResult.Succeeded)
             {
                 Debug.Log($"[ASCENDANCE] Windows build complete: {output} ({summary.totalSize / (1024f * 1024f):F1} MB)");
-                EditorUtility.RevealInFinder(output);
+                if (!Application.isBatchMode) EditorUtility.RevealInFinder(output);
             }
             else
             {
-                Debug.LogError($"[ASCENDANCE] Windows build failed: {summary.result}");
+                throw new BuildFailedException($"[ASCENDANCE] Windows build failed: {summary.result}");
             }
+        }
+    }
+
+    internal static class AscendanceBuildArguments0102
+    {
+        internal static string OutputPath(string fallback)
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (!string.Equals(args[i], "-buildOutput", StringComparison.OrdinalIgnoreCase)) continue;
+                if (i + 1 == args.Length || string.IsNullOrWhiteSpace(args[i + 1]) || args[i + 1].StartsWith("-", StringComparison.Ordinal))
+                    throw new ArgumentException("-buildOutput requires an explicit output file path.");
+                return Path.GetFullPath(args[i + 1]);
+            }
+            return Path.GetFullPath(fallback);
         }
     }
 }

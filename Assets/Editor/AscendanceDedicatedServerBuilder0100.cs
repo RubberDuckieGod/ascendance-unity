@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace Ascendance.EditorTools
             PlayerSettings.productName = "Ascendance";
             PlayerSettings.bundleVersion = AscendanceGameManager.BuildVersion;
 
-            string output = Path.GetFullPath(relativeOutput);
+            string output = AscendanceBuildArguments0102.OutputPath(relativeOutput);
             Directory.CreateDirectory(Path.GetDirectoryName(output));
             var options = new BuildPlayerOptions
             {
@@ -42,7 +43,7 @@ namespace Ascendance.EditorTools
             if (report.summary.result == BuildResult.Succeeded)
                 Debug.Log($"[ASCENDANCE][SERVER] {label} dedicated-server build complete: {output} ({report.summary.totalSize / (1024f * 1024f):F1} MB)");
             else
-                Debug.LogError($"[ASCENDANCE][SERVER] {label} dedicated-server build failed: {report.summary.result}");
+                throw new BuildFailedException($"[ASCENDANCE][SERVER] {label} dedicated-server build failed: {report.summary.result}");
         }
     }
 }
