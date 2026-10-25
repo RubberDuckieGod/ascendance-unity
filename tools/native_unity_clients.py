@@ -159,8 +159,8 @@ def tls_fixture(output):
                 "ASCENDANCE_TLS": "1", "ASCENDANCE_CERT_SHA256": pin, "ASCENDANCE_ROOM_ACCESS_KEY": access}, certificate
 
 
-def unfocus_and_arrange(display, authority):
-    """Move real X input focus to the root, so neither Unity player is focused."""
+def unfocus_and_arrange(display, authority, player_pids):
+    """Find actual native windows recursively by PID, arrange them and remove focus."""
     previous = os.environ.get("XAUTHORITY")
     os.environ["XAUTHORITY"] = str(authority)
     connection = None
@@ -170,7 +170,12 @@ def unfocus_and_arrange(display, authority):
         x.XOpenDisplay.argtypes = [ctypes.c_char_p]; x.XOpenDisplay.restype = pointer
         x.XDefaultRootWindow.argtypes = [pointer]; x.XDefaultRootWindow.restype = window
         x.XQueryTree.argtypes = [pointer, window, ctypes.POINTER(window), ctypes.POINTER(window), ctypes.POINTER(ctypes.POINTER(window)), ctypes.POINTER(ctypes.c_uint)]
-        x.XFetchName.argtypes = [pointer, window, ctypes.POINTER(ctypes.c_char_p)]
+        x.XInternAtom.argtypes = [pointer, ctypes.c_char_p, ctypes.c_int]; x.XInternAtom.restype = window
+        x.XGetWindowProperty.argtypes = [pointer, window, window, ctypes.c_long, ctypes.c_long, ctypes.c_int, window,
+                                        ctypes.POINTER(window), ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_ulong),
+                                        ctypes.POINTER(ctypes.c_ulong), ctypes.POINTER(ctypes.POINTER(ctypes.c_ubyte))]
+        x.XGetGeometry.argtypes = [pointer, window, ctypes.POINTER(window), ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int),
+                                  ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_uint)]
         x.XMoveResizeWindow.argtypes = [pointer, window, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint]
         x.XSetInputFocus.argtypes = [pointer, window, ctypes.c_int, ctypes.c_ulong]
         x.XGetInputFocus.argtypes = [pointer, ctypes.POINTER(window), ctypes.POINTER(ctypes.c_int)]
@@ -179,24 +184,69 @@ def unfocus_and_arrange(display, authority):
         connection = x.XOpenDisplay(display.encode())
         if not connection: raise RuntimeError("Could not authenticate to private X display")
         root = x.XDefaultRootWindow(connection)
-        children, count, root_return, parent = ctypes.POINTER(window)(), ctypes.c_uint(), window(), window()
+        pid_atom = x.XInternAtom(connection, b"_NET_WM_PID", 0)
+
+        def geometry(w):
+            root_return, left, top = window(), ctypes.c_int(), ctypes.c_int()
+            width, height, border, depth = [ctypes.c_uint() for _ in range(4)]
+            if not x.XGetGeometry(connection, w, ctypes.byref(root_return), ctypes.byref(left), ctypes.byref(top),
+                                  ctypes.byref(width), ctypes.byref(height), ctypes.byref(border), ctypes.byref(depth)):
+                raise RuntimeError("Could not read actual native window geometry")
+            return {"x": left.value, "y": top.value, "width": width.value, "height": height.value}
+
+        def pid_of(w):
+            actual, fmt, count, after = window(), ctypes.c_int(), ctypes.c_ulong(), ctypes.c_ulong()
+            data = ctypes.POINTER(ctypes.c_ubyte)()
+            try:
+                status = x.XGetWindowProperty(connection, w, pid_atom, 0, 1, 0, 0, ctypes.byref(actual), ctypes.byref(fmt),
+                                             ctypes.byref(count), ctypes.byref(after), ctypes.byref(data))
+                if status == 0 and fmt.value == 32 and count.value and data:
+                    return ctypes.cast(data, ctypes.POINTER(ctypes.c_ulong))[0]
+            finally:
+                if data: x.XFree(ctypes.cast(data, pointer))
+            return None
+
+        def discover():
+            found = {}
+            def visit(w, outer=None, depth=0):
+                if depth > 10: raise RuntimeError("Unexpected native X window nesting")
+                pid = pid_of(w)
+                if pid in player_pids:
+                    candidate = {"pid": pid, "window": w, "outer": outer or w, **geometry(w)}
+                    if pid not in found or candidate["width"] * candidate["height"] > found[pid]["width"] * found[pid]["height"]:
+                        found[pid] = candidate
+                children, count, root_return, parent = ctypes.POINTER(window)(), ctypes.c_uint(), window(), window()
+                if x.XQueryTree(connection, w, ctypes.byref(root_return), ctypes.byref(parent), ctypes.byref(children), ctypes.byref(count)):
+                    try:
+                        for index in range(count.value):
+                            child = children[index]
+                            visit(child, child if w == root else outer, depth + 1)
+                    finally:
+                        if children: x.XFree(ctypes.cast(children, pointer))
+            visit(root)
+            return found
+
+        found = await_value("Actual native X windows for both process IDs", discover,
+                            lambda f: set(f) == set(player_pids), timeout=10)
         windows = []
-        if x.XQueryTree(connection, root, ctypes.byref(root_return), ctypes.byref(parent), ctypes.byref(children), ctypes.byref(count)):
-            for index in range(count.value):
-                name = ctypes.c_char_p()
-                if x.XFetchName(connection, children[index], ctypes.byref(name)) and name.value:
-                    title = name.value.decode(errors="replace")
-                    if "Ascendance" in title:
-                        x.XMoveResizeWindow(connection, children[index], 800 * len(windows), 0, 800, 600)
-                        windows.append(title)
-                    x.XFree(ctypes.cast(name, pointer))
-            if children: x.XFree(children)
+        for index, pid in enumerate(player_pids):
+            entry = found[pid]
+            x.XMoveResizeWindow(connection, entry["outer"], 800 * index, 0, 800, 600)
+            if entry["window"] != entry["outer"]:
+                x.XMoveResizeWindow(connection, entry["window"], 0, 0, 800, 600)
+        x.XSync(connection, 0)
+        for index, pid in enumerate(player_pids):
+            entry = found[pid]
+            inner, outer = geometry(entry["window"]), geometry(entry["outer"])
+            if [inner["width"], inner["height"], outer["x"], outer["y"], outer["width"], outer["height"]] != [800, 600, 800 * index, 0, 800, 600]:
+                raise AssertionError("Native window geometry does not match the real two-window fixture: " + repr((inner, outer)))
+            windows.append({"pid": pid, "window": entry["window"], "outerWindow": entry["outer"], "innerGeometry": inner, "outerGeometry": outer})
         x.XSetInputFocus(connection, root, 1, 0)
         x.XSync(connection, 0)
         focused, revert = window(), ctypes.c_int()
         x.XGetInputFocus(connection, ctypes.byref(focused), ctypes.byref(revert))
         if focused.value != root: raise AssertionError("Real X input focus did not leave both players")
-        return {"focusedRoot": True, "playerWindowTitles": windows}
+        return {"focusedRoot": True, "nativeWindows": windows}
     finally:
         if connection: x.XCloseDisplay(connection)
         if previous is None: os.environ.pop("XAUTHORITY", None)
@@ -296,7 +346,9 @@ def main():
                 bad.stop()
             check("Rejected native connections add no sessions", 2, len(observer.snapshot()["Players"]))
             report["transport"] = "TLS 1.2 with certificate pin and room invitation"
-        report["focus"] = unfocus_and_arrange(display, authority)
+        report["focus"] = unfocus_and_arrange(display, authority, [client.process.pid for client in clients])
+        check("Two actual native process windows have independent 800 by 600 geometry", [[800, 600], [800, 600]],
+              [[w["innerGeometry"]["width"], w["innerGeometry"]["height"]] for w in report["focus"]["nativeWindows"]])
         check("X input focus is outside both native Unity players", True, report["focus"]["focusedRoot"])
         for client in clients:
             frame = client.state()["Frame"]
@@ -329,20 +381,20 @@ def main():
         before = visible_state(a.state())
         a_id = a.state()["PlayerId"]
         a.stop(); a.start()
-        unfocus_and_arrange(display, authority)
+        report["restartedFocus"] = unfocus_and_arrange(display, authority, [client.process.pid for client in clients])
         check("Restarted native client retains Hero ownership", a_id, a.state()["PlayerId"])
         check("Restarted native client restores canonical gameplay", before, visible_state(a.state()))
 
         idle_start = time.monotonic()
         idle_frames = {client.hero: client.state()["Frame"] for client in clients}
         time.sleep(36)
+        report["idleSeconds"] = time.monotonic() - idle_start
         check("Two native clients remain connected beyond 35 seconds", [True, True], [a.state()["Connected"], b.state()["Connected"]])
         report["idleFrameProgress"] = {client.hero: client.state()["Frame"] - idle_frames[client.hero] for client in clients}
         for client in clients:
             check(client.hero + " main loop stays live throughout unfocused idle", True, report["idleFrameProgress"][client.hero] > 30)
             check(client.hero + " idle observation is fresh", True, time.time() - (client.output / "state.json").stat().st_mtime < 3)
         check("Idle native peer state is stable", before, visible_state(b.state()))
-        report["idleSeconds"] = time.monotonic() - idle_start
 
         old_instance = a.state()["ServerInstanceId"]
         server_before = observer.snapshot()

@@ -11,6 +11,7 @@ import copy
 import hashlib
 import hmac
 import functools
+from enum import IntEnum
 import ssl
 import json
 import os
@@ -25,6 +26,18 @@ import traceback
 import uuid
 
 MAX_FRAME = 8 * 1024 * 1024
+
+
+class Command(IntEnum):
+    # Protocol values from AscendanceOnlineModels0100.ServerCommandType0100.
+    START_TURN = 0
+    END_TURN = 1
+    MOVE = 2
+    BASIC_ATTACK = 3
+    QUEST_PRIMARY = 7
+    HEALING_POTION = 9
+    REWARD_CHOICE = 12
+    ENCOUNTER_DECK_CHOICE = 13
 
 
 def read_exact(stream: socket.socket, size: int) -> bytes:
@@ -345,9 +358,9 @@ def main():
             report["unauthenticatedClosureSeconds"] = bounded_waits
             check("Security rejections leave the authenticated native listener healthy", [True, 0], [bootstrap.exchange("HELLO").get("Accepted"), len(bootstrap.snapshot()["Players"])])
         accepted("Fresh unmodified native party starts Aldric's real turn", bootstrap.join("Aldric", uuid.uuid4().hex))
-        started_native = accepted("Fresh native StartTurn succeeds before save/restart", bootstrap.command(0))
+        started_native = accepted("Fresh native StartTurn succeeds before save/restart", bootstrap.command(Command.START_TURN))
         check("Fresh native StartTurn grants three Actions", 3, hero(started_native, "Aldric")["Actions"])
-        accepted("Fresh native EndTurn succeeds before restart", bootstrap.command(1))
+        accepted("Fresh native EndTurn succeeds before restart", bootstrap.command(Command.END_TURN))
         bootstrap.close(); clients.clear(); server.stop()
         check("Native room save is created only in isolated XDG directory", True, server.save_path.is_file() and server.save_path.resolve().is_relative_to(root))
 
@@ -358,9 +371,9 @@ def main():
         transient = restored_hello["Snapshot"]["Transient"]
         check("Unmodified native save restart has no phantom pending choices", [False, False], [transient["HasPendingRewardChoice"], transient["HasPendingEncounterDeckControl"]])
         accepted("Rowan joins the unchanged restarted room", restored.join("Rowan", uuid.uuid4().hex))
-        resumed = accepted("Next Hero starts after actual untouched native save/restart", restored.command(0))
+        resumed = accepted("Next Hero starts after actual untouched native save/restart", restored.command(Command.START_TURN))
         check("Restored native StartTurn grants correct Actions", [3, "Rowan"], [hero(resumed, "Rowan")["Actions"], resumed["Transient"]["TurnHeroId"]])
-        accepted("Rowan ends restored native turn", restored.command(1))
+        accepted("Rowan ends restored native turn", restored.command(Command.END_TURN))
         restored.close(); clients.clear(); server.stop()
 
         # Preserve partial and extension data: only entirely default optional
@@ -398,10 +411,10 @@ def main():
         check("Legitimate restored reward/deck choices retain real options", [True, True, ["GOLD", "LOOT"], ["KEEP", "BOTTOM0"]], [snap["Transient"]["HasPendingRewardChoice"], snap["Transient"]["HasPendingEncounterDeckControl"], [o.split("|", 1)[0] for o in snap["Transient"]["RewardOptions"]], [o.split("|", 1)[0] for o in snap["Transient"]["EncounterDeckControlOptions"]]])
         accepted("Actor joins while legitimate choices are pending", pending.join("Aldric", uuid.uuid4().hex))
         gold_before = snap["Campaign"]["PartyGold"]
-        chosen = accepted("Actual restored Gold reward resolves", pending.command(13, OptionKey="GOLD"))
+        chosen = accepted("Actual restored Gold reward resolves", pending.command(Command.REWARD_CHOICE, OptionKey="GOLD"))
         check("Restored reward grants exactly 25 Gold and clears its prompt", [gold_before + 25, False, True], [chosen["Campaign"]["PartyGold"], chosen["Transient"]["HasPendingRewardChoice"], chosen["Transient"]["HasPendingEncounterDeckControl"]])
         order = chosen["Campaign"]["EncounterDeckIds"]
-        kept = accepted("Actual restored Encounter KEEP option resolves", pending.command(14, OptionKey="KEEP"))
+        kept = accepted("Actual restored Encounter KEEP option resolves", pending.command(Command.ENCOUNTER_DECK_CHOICE, OptionKey="KEEP"))
         check("Restored KEEP preserves deck order and clears deck prompt", [order, False], [kept["Campaign"]["EncounterDeckIds"], kept["Transient"]["HasPendingEncounterDeckControl"]])
         pending.close(); clients.clear(); server.stop()
 
@@ -428,44 +441,44 @@ def main():
         b = wire(server.port, room); clients.append(b)
         token_a, token_b = uuid.uuid4().hex, uuid.uuid4().hex
         first = accepted("Aldric joins native server", a.join("Aldric", token_a))
-        start_command = a.envelope(0, first)
+        start_command = a.envelope(Command.START_TURN, first)
         accepted("Rowan joins through independent socket", b.join("Rowan", token_b))
         a_id, b_id = a.player["PlayerId"], b.player["PlayerId"]
         snap = accepted("Presence-only revision does not reject Aldric's legal StartTurn", a.exchange("COMMAND", Command=start_command))
         check("StartTurn grants exactly three Actions and correct owner", [3, "Aldric"], [hero(snap, "Aldric")["Actions"], snap["Transient"]["TurnHeroId"]])
-        check("Concurrent Rowan turn is rejected by rules", "RULE_REJECTED", b.command(0).get("Code"))
-        check("Foreign Hero actor is rejected", "HERO_OWNERSHIP", a.command(1, ActorHeroId="Rowan").get("Code"))
+        check("Concurrent Rowan turn is rejected by rules", "RULE_REJECTED", b.command(Command.START_TURN).get("Code"))
+        check("Foreign Hero actor is rejected", "HERO_OWNERSHIP", a.command(Command.END_TURN, ActorHeroId="Rowan").get("Code"))
         stranger = wire(server.port, room); clients.append(stranger)
-        forged = b.envelope(1)
+        forged = b.envelope(Command.END_TURN)
         check("Unjoined socket cannot use a disclosed PlayerId", "PLAYER_NOT_BOUND", stranger.exchange("COMMAND", Command=forged).get("Code"))
         check("Claimed Hero cannot be stolen by another credential", "HERO_CLAIMED", stranger.join("Aldric", uuid.uuid4().hex).get("Code"))
         rejoin = a.join("Aldric", token_a)
         check("Repeated JOIN retains same session and exactly two players", [True, a_id, 2], [rejoin.get("Accepted"), rejoin.get("Player", {}).get("PlayerId"), len(rejoin["Snapshot"]["Players"])])
 
-        attack = a.envelope(3, TargetId=enemy_id)
+        attack = a.envelope(Command.BASIC_ATTACK, TargetId=enemy_id)
         snap = accepted("First actual BasicAttack commits", a.exchange("COMMAND", Command=attack))
         check("Iron Longsword 4 Attack against 1 Armor deals exactly three", [2, 3], [hero(snap, "Aldric")["Actions"], enemy_health(snap, enemy_id)])
         peer = b.snapshot()
         check("Peer observes actual first attack Health/Action totals", [2, 3], [hero(peer, "Aldric")["Actions"], enemy_health(peer, enemy_id)])
         duplicate = a.exchange("COMMAND", Command=attack)
         check("Immediate duplicate attack executes once", [True, True, 2, 3], [duplicate.get("Accepted"), duplicate.get("CommandResult", {}).get("Duplicate"), hero(duplicate["Snapshot"], "Aldric")["Actions"], enemy_health(duplicate["Snapshot"], enemy_id)])
-        snap = accepted("Second BasicAttack commits", a.command(3, TargetId=enemy_id))
+        snap = accepted("Second BasicAttack commits", a.command(Command.BASIC_ATTACK, TargetId=enemy_id))
         check("Second attack defeats Raider once for one Action", [1, 0, 1], [hero(snap, "Aldric")["Actions"], enemy_health(snap, enemy_id), hero(snap, "Aldric")["KillCount"]])
         duplicate = a.exchange("COMMAND", Command=attack)
         check("Old duplicate returns fresh current state without another kill", [True, 1, 0, 1], [duplicate.get("CommandResult", {}).get("Duplicate"), hero(duplicate["Snapshot"], "Aldric")["Actions"], enemy_health(duplicate["Snapshot"], enemy_id), hero(duplicate["Snapshot"], "Aldric")["KillCount"]])
-        snap = accepted("Actual native movement is accepted", a.command(2, TargetId="L001"))
+        snap = accepted("Actual native movement is accepted", a.command(Command.MOVE, TargetId="L001"))
         deadline = time.monotonic() + 5
         while (snap["Transient"]["MovingHeroIds"] or hero(snap, "Aldric")["LocationId"] != "L001") and time.monotonic() < deadline:
             time.sleep(.05); snap = a.snapshot()
         check("Connected revealed move spends one Action and completes", [0, "L001", []], [hero(snap, "Aldric")["Actions"], hero(snap, "Aldric")["LocationId"], snap["Transient"]["MovingHeroIds"]])
-        snap = accepted("Aldric ends his own turn", a.command(1))
+        snap = accepted("Aldric ends his own turn", a.command(Command.END_TURN))
         check("EndTurn marks completed and releases owner", [True, "", 0], [hero(snap, "Aldric")["TurnCompleted"], snap["Transient"]["TurnHeroId"], hero(snap, "Aldric")["Actions"]])
-        snap = accepted("Rowan starts next native Hero turn", b.command(0))
+        snap = accepted("Rowan starts next native Hero turn", b.command(Command.START_TURN))
         check("Rowan receives three Actions", [3, "Rowan"], [hero(snap, "Rowan")["Actions"], snap["Transient"]["TurnHeroId"]])
-        snap = accepted("Actual Healing Potion commits", b.command(10, TargetId="Rowan"))
+        snap = accepted("Actual Healing Potion commits", b.command(Command.HEALING_POTION, TargetId="Rowan"))
         check("Potion recovers printed four Health, consumes one and pays one Action", [8, 0, 2], [hero(snap, "Rowan")["Health"], hero(snap, "Rowan")["HealingPotions"], hero(snap, "Rowan")["Actions"]])
         check("Peer converges to all persistent gameplay values", durable_view(snap), durable_view(a.snapshot()))
-        check("Genuinely stale gameplay command is rejected", "STALE_REVISION", a.exchange("COMMAND", Command=a.envelope(0, first)).get("Code"))
+        check("Genuinely stale gameplay command is rejected", "STALE_REVISION", a.exchange("COMMAND", Command=a.envelope(Command.START_TURN, first)).get("Code"))
 
         idle_before = durable_view(a.snapshot())
         idle_started = time.monotonic()
@@ -478,13 +491,13 @@ def main():
         replacement = wire(server.port, room); clients.append(replacement)
         recon = replacement.reconnect("Rowan", token_b)
         check("Reconnect retains the same Hero session", [True, b_id, "Rowan"], [recon.get("Accepted"), recon.get("Player", {}).get("PlayerId"), recon.get("Player", {}).get("HeroId")])
-        check("Older socket loses command ownership after reconnect", "PLAYER_NOT_BOUND", b.command(1).get("Code"))
+        check("Older socket loses command ownership after reconnect", "PLAYER_NOT_BOUND", b.command(Command.END_TURN).get("Code"))
         b.close(); clients.remove(b)
         time.sleep(.15)
         view = replacement.snapshot()
         check("Closing old socket does not disconnect replacement lease", True, next(p["Connected"] for p in view["Players"] if p["PlayerId"] == b_id))
         previous_instance = view["ServerInstanceId"]
-        old_uncertain_command = replacement.envelope(8, view)
+        old_uncertain_command = replacement.envelope(Command.QUEST_PRIMARY, view)
         before_restart = durable_view(view)
         for client in clients: client.close()
         clients.clear(); time.sleep(.1); server.stop()
@@ -500,13 +513,17 @@ def main():
         stale = b2.exchange("COMMAND", Command=old_uncertain_command)
         check("Uncertain previous-process command cannot replay", "SERVER_RESTARTED", stale.get("Code"))
         check("Rejected replay preserves post-restart Actions and objective", [2, 0], [hero(b2.snapshot(), "Rowan")["Actions"], b2.snapshot()["Campaign"]["VillagersRescued"]])
-        snap = accepted("A new post-restart objective command commits", b2.command(8))
+        snap = accepted("A new post-restart objective command commits", b2.command(Command.QUEST_PRIMARY))
         check("Real rescue after restart spends one Action and rescues one Villager", [1, 1, 8], [hero(snap, "Rowan")["Actions"], snap["Campaign"]["VillagersRescued"], hero(snap, "Rowan")["Health"]])
         check("Both independent clients converge after restart gameplay", durable_view(snap), durable_view(a2.snapshot()))
         report["status"] = "PASS"
     except Exception as error:
         report["status"] = "FAIL"
         report["error"] = type(error).__name__ + ": " + str(error)
+        if not any(not c["passed"] for c in checks):
+            checks.append({"name": "Native scenario reaches every required acceptance step",
+                           "expected": "No unexpected native startup or protocol exception",
+                           "actual": report["error"], "passed": False})
         report["remainingScenarios"] = "Not executed after the first failure; not passing."
         traceback.print_exc()
     finally:

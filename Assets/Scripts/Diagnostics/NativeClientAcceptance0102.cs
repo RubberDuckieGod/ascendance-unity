@@ -92,6 +92,10 @@ namespace Ascendance.Diagnostics
             runner.hero = Argument("-asc-native-hero") ?? "Aldric";
             runner.rejectionProbe = Argument("-asc-native-reject-probe") == "1";
             DontDestroyOnLoad(runner.gameObject);
+            // Normal settings API, scoped to the validated temporary PlayerPrefs.
+            // MainMenu will apply these saved windowed settings instead of the
+            // default fullscreen mode, which hides a peer in the private X display.
+            AscendanceSettings.SaveAndApply(false, 800, 600, .8f);
             Application.targetFrameRate = 30;
         }
 

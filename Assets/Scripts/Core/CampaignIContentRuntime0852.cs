@@ -285,7 +285,7 @@ namespace Ascendance
 
         private void Append0852SearchChoiceOptions(List<RewardChoiceOption> options,RewardChoiceState state)
         {
-            if(state==null)return;var hero=RewardHeroFor(state.HeroId);var ids=state.RevealedCardIds??new List<string>();
+            if(state==null||string.IsNullOrEmpty(state.Mode))return;var hero=RewardHeroFor(state.HeroId);var ids=state.RevealedCardIds??new List<string>();
             if(state.Mode.StartsWith("SearchHeroRecovery",StringComparison.OrdinalIgnoreCase))
             {
                 foreach(var id in ids)if(Heroes.TryGetValue(id,out var h)){options.Add(new RewardChoiceOption{Key=$"HEAL:{id}",Label=$"{h.DisplayName}: recover Health"});if(h.Statuses.Any(s=>s!=null&&!s.Beneficial))options.Add(new RewardChoiceOption{Key=$"CLEANSE:{id}",Label=$"{h.DisplayName}: remove 1 negative Condition"});}return;
@@ -318,7 +318,7 @@ namespace Ascendance
 
         private bool TryResolve0852SearchChoice(RewardChoiceState state,HeroState hero,string key,out bool result)
         {
-            result=false;if(state==null)return false;var ids=state.RevealedCardIds??new List<string>();
+            result=false;if(state==null||string.IsNullOrEmpty(state.Mode))return false;var ids=state.RevealedCardIds??new List<string>();
             if(state.Mode.StartsWith("SearchHeroRecovery",StringComparison.OrdinalIgnoreCase))
             {
                 int heal=2;var m=Regex.Match(state.Mode,@"SearchHeroRecovery(\d+)");if(m.Success)int.TryParse(m.Groups[1].Value,out heal);
