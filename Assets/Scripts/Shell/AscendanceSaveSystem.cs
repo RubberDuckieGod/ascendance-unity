@@ -38,7 +38,7 @@ namespace Ascendance
             {
                 string json = File.ReadAllText(SavePath);
                 if (string.IsNullOrWhiteSpace(json)) { message = "Campaign save is empty."; return false; }
-                save = JsonUtility.FromJson<AscendanceSaveData>(json);
+                save = AscendanceOptionalSaveState0102.Normalize(JsonUtility.FromJson<AscendanceSaveData>(json));
                 if (save == null || string.IsNullOrWhiteSpace(save.QuestId) || save.Heroes == null || save.Heroes.Count == 0)
                 {
                     save = null; message = "Campaign save is unreadable or incomplete."; return false;
@@ -70,7 +70,7 @@ namespace Ascendance
 
         public static AscendanceSaveData CloneForAuthority0100(AscendanceSaveData data)
         {
-            return data == null ? null : JsonUtility.FromJson<AscendanceSaveData>(JsonUtility.ToJson(data));
+            return data == null ? null : AscendanceOptionalSaveState0102.Normalize(JsonUtility.FromJson<AscendanceSaveData>(JsonUtility.ToJson(data)));
         }
 
         private static AscendanceSaveData Capture(AscendanceGameManager gm)

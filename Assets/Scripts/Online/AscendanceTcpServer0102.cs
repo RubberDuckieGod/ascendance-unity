@@ -22,6 +22,7 @@ namespace Ascendance.Online
             public readonly HashSet<string> PlayerIds = new(StringComparer.OrdinalIgnoreCase);
             public TcpClient Client;
             public volatile bool Closed;
+            public volatile bool SecurityAuthenticated;
         }
 
         private sealed class PendingRequest
@@ -44,6 +45,7 @@ namespace Ascendance.Online
 
         private AscendanceRoomAuthority0100 authority;
         private TcpListener listener;
+        private AscendanceServerTransportSecurity0102 security;
         private Thread acceptThread;
         private volatile bool running;
 
@@ -71,18 +73,21 @@ namespace Ascendance.Online
 
             try
             {
+                security = AscendanceServerTransportSecurity0102.FromEnvironment();
                 listener = new TcpListener(IPAddress.Any, Mathf.Clamp(port, 0, 65535));
                 listener.Start(8);
                 BoundPort = ((IPEndPoint)listener.LocalEndpoint).Port;
                 running = true;
                 acceptThread = new Thread(AcceptLoop) { IsBackground = true, Name = "Ascendance-TCP-Accept" };
                 acceptThread.Start();
-                Debug.Log($"[ASCENDANCE][NETWORK] TCP authority listening on 0.0.0.0:{BoundPort} room={authority.Room.RoomId} protocol={AscendanceNetworkCodec0102.ProtocolVersion}.");
+                Debug.Log($"[ASCENDANCE][NETWORK] TCP authority listening on 0.0.0.0:{BoundPort} room={authority.Room.RoomId} protocol={AscendanceNetworkCodec0102.ProtocolVersion} tls={security.Enabled}.");
                 return true;
             }
             catch (Exception ex)
             {
                 running = false;
+                try { listener?.Stop(); } catch { }
+                security?.Dispose(); security = null;
                 Debug.LogError("[ASCENDANCE][NETWORK] TCP server failed to start: " + ex.Message);
                 return false;
             }
@@ -142,7 +147,9 @@ namespace Ascendance.Online
             try
             {
                 using var client = context.Client;
-                using NetworkStream stream = client.GetStream();
+                var transportSecurity = security;
+                if (transportSecurity == null) return;
+                using Stream stream = transportSecurity.Open(client.GetStream());
                 while (running && client.Connected)
                 {
                     string json = AscendanceNetworkCodec0102.ReadFrame(stream);
@@ -155,6 +162,11 @@ namespace Ascendance.Online
                         break;
                     }
                     AscendanceNetworkCodec0102.WriteFrame(stream, pending.ResponseJson ?? AscendanceNetworkCodec0102.SerializeResponse(RejectNetwork(null, "EMPTY_RESPONSE", "Server produced no response.")));
+                    if (transportSecurity.Enabled)
+                    {
+                        if (!context.SecurityAuthenticated) break;
+                        stream.ReadTimeout = Timeout.Infinite;
+                    }
                 }
             }
             catch (EndOfStreamException) { }
@@ -178,9 +190,9 @@ namespace Ascendance.Online
             {
                 AscendanceNetworkRequest0102 request = null;
                 try { request = AscendanceNetworkCodec0102.DeserializeRequest(pending.Json); }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    pending.ResponseJson = AscendanceNetworkCodec0102.SerializeResponse(RejectNetwork(null, "BAD_JSON", ex.Message));
+                    pending.ResponseJson = AscendanceNetworkCodec0102.SerializeResponse(RejectNetwork(null, "BAD_JSON", "Invalid network JSON."));
                     return;
                 }
 
@@ -200,6 +212,9 @@ namespace Ascendance.Online
         private AscendanceNetworkResponse0102 HandleRequest(AscendanceNetworkRequest0102 request, ConnectionContext connection)
         {
             if (request == null) return RejectNetwork(null, "BAD_REQUEST", "Request payload is missing.");
+            if (security == null || !security.Authorizes(request.RoomAccessKey))
+                return RejectNetwork(request, "ROOM_ACCESS_DENIED", "Room access key was rejected.");
+            connection.SecurityAuthenticated = true;
             if (request.ProtocolVersion != AscendanceNetworkCodec0102.ProtocolVersion)
                 return RejectNetwork(request, "PROTOCOL_MISMATCH", $"Client protocol {request.ProtocolVersion} does not match server protocol {AscendanceNetworkCodec0102.ProtocolVersion}.");
             if (!string.Equals(request.RoomId, authority.Room.RoomId, StringComparison.OrdinalIgnoreCase))
@@ -313,6 +328,7 @@ namespace Ascendance.Online
                 clientThreads.Clear();
             }
             listener = null;
+            security?.Dispose(); security = null;
             playerConnections.Clear();
             BoundPort = 0;
         }

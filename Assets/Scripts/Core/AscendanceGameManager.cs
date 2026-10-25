@@ -215,6 +215,7 @@ namespace Ascendance
         public void ApplySaveData(AscendanceSaveData save)
         {
             if (save == null) return;
+            AscendanceOptionalSaveState0102.Normalize(save);
             if (!applyingRemoteSnapshot0102) ClearRemotePresentation0102();
             if (save.PartyHeroIds != null && save.PartyHeroIds.Count > 0) SetParty(save.PartyHeroIds, save.SelectedHeroId, false);
             else if (save.Heroes != null && save.Heroes.Count > 0) SetParty(save.Heroes.Select(h => h.Id), save.SelectedHeroId, false);

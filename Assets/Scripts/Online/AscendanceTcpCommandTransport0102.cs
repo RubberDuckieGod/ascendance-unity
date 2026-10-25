@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,13 +24,14 @@ namespace Ascendance.Online
         private readonly int port;
         private readonly string roomId;
         private readonly string displayName;
+        private readonly AscendanceClientTransportSecurity0102 security;
         private readonly object sync = new();
         private readonly ConcurrentDictionary<string, string> credentials = new(StringComparer.OrdinalIgnoreCase);
         private readonly CancellationTokenSource lifetime = new();
         private int pollingStarted;
         private volatile bool disposed;
         private TcpClient client;
-        private NetworkStream stream;
+        private Stream stream;
         private volatile bool connected;
         private long revision;
         private string playerId;
@@ -46,12 +48,13 @@ namespace Ascendance.Online
         public ServerStateSnapshot0100 LastSnapshot => lastSnapshot;
         public ServerStateSnapshot0100 LatestSnapshot => lastSnapshot;
 
-        public AscendanceTcpCommandTransport0102(string hostName, int serverPort, string requestedRoomId, string playerDisplayName)
+        public AscendanceTcpCommandTransport0102(string hostName, int serverPort, string requestedRoomId, string playerDisplayName, AscendanceClientTransportSecurity0102 transportSecurity = null)
         {
             host = string.IsNullOrWhiteSpace(hostName) ? "127.0.0.1" : hostName.Trim();
             port = Math.Max(1, Math.Min(65535, serverPort <= 0 ? 7777 : serverPort));
             roomId = string.IsNullOrWhiteSpace(requestedRoomId) ? "LOCAL-ROOM" : requestedRoomId.Trim();
             displayName = string.IsNullOrWhiteSpace(playerDisplayName) ? "Player" : playerDisplayName.Trim();
+            security = transportSecurity ?? new AscendanceClientTransportSecurity0102();
         }
 
         public Task<bool> ConnectAsync()
@@ -78,7 +81,8 @@ namespace Ascendance.Online
                         throw new TimeoutException("Server connection timed out.");
                     }
                     connecting.GetAwaiter().GetResult();
-                    stream = client.GetStream();
+                    stream = security.Open(client.GetStream(), host);
+                    if (security.Enabled) { stream.ReadTimeout = IoTimeoutMs; stream.WriteTimeout = IoTimeoutMs; }
                     connected = true;
                     var response = Exchange(NewRequest("HELLO"));
                     if (!response.Accepted)
@@ -265,7 +269,7 @@ namespace Ascendance.Online
 
         private AscendanceNetworkRequest0102 NewRequest(string operation) => new()
         {
-            RequestId = Guid.NewGuid().ToString("N"), Operation = operation, RoomId = roomId
+            RequestId = Guid.NewGuid().ToString("N"), Operation = operation, RoomId = roomId, RoomAccessKey = security.RoomAccessKey
         };
 
         private AscendanceNetworkResponse0102 Exchange(AscendanceNetworkRequest0102 request)
@@ -329,6 +333,9 @@ namespace Ascendance.Online
         public static int Port { get; private set; } = 7777;
         public static string RoomId { get; private set; } = "LOCAL-ROOM";
         public static string DisplayName { get; private set; } = "Player";
+        public static bool TlsEnabled { get; private set; }
+        public static string CertificateSha256 { get; private set; } = string.Empty;
+        private static string RoomAccessKey = string.Empty;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Parse()
@@ -337,23 +344,39 @@ namespace Ascendance.Online
             string endpoint = Environment.GetEnvironmentVariable("ASCENDANCE_SERVER_ENDPOINT");
             RoomId = FirstNonBlank(Environment.GetEnvironmentVariable("ASCENDANCE_ROOM"), "LOCAL-ROOM");
             DisplayName = FirstNonBlank(Environment.GetEnvironmentVariable("ASCENDANCE_PLAYER"), "Player");
+            TlsEnabled = string.Equals(Environment.GetEnvironmentVariable("ASCENDANCE_TLS"), "1", StringComparison.OrdinalIgnoreCase) || string.Equals(Environment.GetEnvironmentVariable("ASCENDANCE_TLS"), "true", StringComparison.OrdinalIgnoreCase);
+            CertificateSha256 = Environment.GetEnvironmentVariable("ASCENDANCE_CERT_SHA256")?.Trim() ?? string.Empty;
+            RoomAccessKey = Environment.GetEnvironmentVariable("ASCENDANCE_ROOM_ACCESS_KEY")?.Trim() ?? string.Empty;
 
             for (int i = 0; i < args.Length; i++)
             {
                 if (string.Equals(args[i], "-ascendance-connect", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) endpoint = args[++i];
                 else if (string.Equals(args[i], "-room", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) RoomId = FirstNonBlank(args[++i], RoomId);
                 else if (string.Equals(args[i], "-player", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) DisplayName = FirstNonBlank(args[++i], DisplayName);
+                else if (string.Equals(args[i], "-ascendance-tls", StringComparison.OrdinalIgnoreCase)) TlsEnabled = true;
+                else if (string.Equals(args[i], "-ascendance-cert-sha256", StringComparison.OrdinalIgnoreCase))
+                {
+                    TlsEnabled = true;
+                    CertificateSha256 = i + 1 < args.Length ? args[++i] : string.Empty;
+                }
             }
 
+            if (CertificateSha256.Length != 0 || RoomAccessKey.Length != 0) TlsEnabled = true;
             if (string.IsNullOrWhiteSpace(endpoint)) { RemoteRequested = false; return; }
             RemoteRequested = TryParseEndpoint(endpoint, out var parsedHost, out var parsedPort);
-            if (RemoteRequested) { Host = parsedHost; Port = parsedPort; }
+            if (RemoteRequested)
+            {
+                Host = parsedHost; Port = parsedPort;
+                // Remote snapshots are installed on Unity's main thread even when
+                // another player's window is focused or this client is minimized.
+                Application.runInBackground = true;
+            }
         }
 
         public static bool TryInstall(AscendanceClientCommandRouter0101 router, AscendanceGameManager gm)
         {
             if (!RemoteRequested || router == null) return false;
-            var remote = new AscendanceTcpCommandTransport0102(Host, Port, RoomId, DisplayName);
+            var remote = new AscendanceTcpCommandTransport0102(Host, Port, RoomId, DisplayName, new AscendanceClientTransportSecurity0102(TlsEnabled, CertificateSha256, RoomAccessKey));
             router.SetTransport(remote);
             // The router consumes the initial snapshot on Unity's thread before remote input.
             _ = remote.ConnectAsync();

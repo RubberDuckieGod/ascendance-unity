@@ -15,6 +15,7 @@ namespace Ascendance.Online
         public string DisplayName;
         public string HeroId;
         public string ReconnectToken;
+        public string RoomAccessKey;
         public ServerCommandEnvelope0100 Command;
     }
 

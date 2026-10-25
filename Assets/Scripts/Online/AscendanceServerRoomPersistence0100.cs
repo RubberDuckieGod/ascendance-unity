@@ -47,6 +47,7 @@ namespace Ascendance.Online
                 {
                     room = null; message = "Server room save is incomplete."; return false;
                 }
+                AscendanceOptionalSaveState0102.Normalize(room.DurableCampaign);
                 room.Players ??= new System.Collections.Generic.List<ServerPlayerSession0100>();
                 message = "Server room save ready.";
                 return true;
