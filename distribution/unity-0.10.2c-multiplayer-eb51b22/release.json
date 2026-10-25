@@ -1,0 +1,40 @@
+{
+  "format": 1,
+  "release": "unity-0.10.2c-multiplayer-eb51b22",
+  "sourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+  "endpoint": "159.65.100.206:7777",
+  "helpers": {
+    "upgrade-existing.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/eb51b2292cf433a2cbe5dabb4863f1fef993161a/Deploy/DigitalOcean/upgrade-existing.py",
+      "sha256": "4ae6e6d50d5ab0b0098fb9ef7d397195706f4338603fbf3de92798f03b0cbba3"
+    },
+    "inspect-existing.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/eb51b2292cf433a2cbe5dabb4863f1fef993161a/Deploy/DigitalOcean/inspect-existing.py",
+      "sha256": "1082801265691b2a39cb440d1ecbe8c87a3af17601f20bab7edd52e0c0de4ac4"
+    },
+    "release.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/eb51b2292cf433a2cbe5dabb4863f1fef993161a/Deploy/DigitalOcean/release.py",
+      "sha256": "7df3f6571ea7abe23a165e536eff664c1ab0685f7d7b0c6b912377d42ee9b49b"
+    },
+    "native_server_acceptance.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/eb51b2292cf433a2cbe5dabb4863f1fef993161a/tools/native_server_acceptance.py",
+      "sha256": "282120863fd079fc01cf36138ebb795db4ed15b6a2ebbbae131f81d3b87fa7ae"
+    }
+  },
+  "server": {
+    "archive": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2c-multiplayer-eb51b22/ascendance-linux-server-unity-0.10.2c-multiplayer-eb51b22.zip",
+      "sha256": "c3b0c2632846545612e5b00baeb889b773c69a04719e577518bebc253a496f90"
+    },
+    "manifest": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2c-multiplayer-eb51b22/linux-server-manifest.json",
+      "sha256": "1d0a9eed0d7ebf4b6583848c71b6153fd527b215ba69d3cdec2bbd67d59f5cfa"
+    }
+  },
+  "client": {
+    "archive": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2c-multiplayer-eb51b22/ascendance-windows-unity-0.10.2c-multiplayer-eb51b22.zip",
+      "sha256": "52b4e968ac9db60243233f094ff27bcecc8db800b016f91610932040bb79fd6f"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+name: Upload validated eb51b22 assets to existing draft
+
+on:
+  push:
+    branches: [distribution/unity-eb51b22]
+    paths:
+      - distribution/unity-0.10.2c-multiplayer-eb51b22/**
+      - .github/workflows/upload-validated-eb51b22.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upload-draft-release-423732969
+  cancel-in-progress: false
+
+jobs:
+  upload-existing-draft:
+    if: github.repository == 'RubberDuckieGod/ascendance-unity' && github.ref == 'refs/heads/distribution/unity-eb51b22' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the isolated distribution branch without retained credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify every public asset against the frozen trusted manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, pathlib, re
+          root = pathlib.Path('distribution/unity-0.10.2c-multiplayer-eb51b22')
+          manifest = root / 'SHA256SUMS'
+          expected = '600ec422ce1423e7aaf05d55d6dcdde8bd2bd0d8a1c70f438c4b82d42e31910d'
+          assert hashlib.sha256(manifest.read_bytes()).hexdigest() == expected, 'Untrusted checksum manifest'
+          entries = {}
+          for line in manifest.read_text().splitlines():
+              match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9][A-Za-z0-9._-]*)', line)
+              assert match, 'Invalid checksum record'
+              checksum, name = match.groups()
+              assert name not in entries, 'Duplicate checksum record'
+              entries[name] = checksum
+          assert len(entries) == 10, 'Unexpected frozen asset count'
+          assert {p.name for p in root.iterdir()} == set(entries) | {'SHA256SUMS'}, 'Unexpected/missing public assets'
+          for name, checksum in entries.items():
+              path = root / name
+              assert path.is_file() and not path.is_symlink(), 'Nonregular public asset'
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == checksum, 'Asset checksum mismatch: ' + name
+          descriptor = json.loads((root / 'release.json').read_text())
+          assert descriptor['release'] == 'unity-0.10.2c-multiplayer-eb51b22'
+          assert descriptor['sourceRevision'] == 'eb51b2292cf433a2cbe5dabb4863f1fef993161a'
+          print('Verified all 11 frozen public files; no game build or deployment is performed.')
+          PY
+
+      - name: Upload verified files using this job's GitHub token and keep the release a draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess, tempfile
+          repository = 'RubberDuckieGod/ascendance-unity'
+          tag = 'unity-0.10.2c-multiplayer-eb51b22'
+          revision = 'eb51b2292cf433a2cbe5dabb4863f1fef993161a'
+          root = pathlib.Path('distribution') / tag
+          def release():
+              result = subprocess.run(['gh', 'api', '--method', 'GET', 'repos/' + repository + '/releases/423732969'], check=True, capture_output=True, text=True)
+              data = json.loads(result.stdout)
+              assert data['id'] == 423732969 and data['draft'] is True, 'Release must remain the existing draft'
+              assert data['tag_name'] == tag and data['target_commitish'] == revision, 'Release identity differs from validated source'
+              return data
+          for path in sorted(root.iterdir()):
+              data = release()
+              existing = [asset for asset in data['assets'] if asset['name'] == path.name]
+              if existing:
+                  assert len(existing) == 1, 'Duplicate existing release asset'
+                  with tempfile.TemporaryDirectory() as folder:
+                      subprocess.run(['gh', 'release', 'download', tag, '--repo', repository, '--pattern', path.name, '--dir', folder], check=True)
+                      assert hashlib.sha256((pathlib.Path(folder) / path.name).read_bytes()).digest() == hashlib.sha256(path.read_bytes()).digest(), 'Existing asset differs; refusing replacement'
+                  print('Already uploaded and reverified:', path.name)
+              else:
+                  subprocess.run(['gh', 'release', 'upload', tag, str(path), '--repo', repository], check=True)
+                  print('Uploaded:', path.name)
+          data = release()
+          assert {asset['name'] for asset in data['assets']} == {path.name for path in root.iterdir()}, 'Draft asset set differs from frozen files'
+          print('All assets uploaded. The release is still a draft; no publish, merge, or deployment was requested.')
+          PY

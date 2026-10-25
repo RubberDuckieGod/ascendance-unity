@@ -1,0 +1,23 @@
+{
+  "RuntimeSourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+  "builds": {
+    "linux": {
+      "file": "AscendanceServer.provenance.json",
+      "fileManifestSha256": "1d0a9eed0d7ebf4b6583848c71b6153fd527b215ba69d3cdec2bbd67d59f5cfa",
+      "sha256": "cb0b750cc85eabfca2042727abdee5178aea1dc0e886b739ce2d8e2a601b2cb1",
+      "sourceDirty": false,
+      "sourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+      "target": "StandaloneLinux64"
+    },
+    "windows": {
+      "file": "Ascendance.provenance.json",
+      "fileManifestSha256": "69b8b2e065fa4471cf19b9107b5edcfe91a6a7e223415373545635e6ce7b30f9",
+      "sha256": "adba9b69390d9cc2f8f600400e591c1afc322fda76a89d14c49734479e0d3022",
+      "sourceDirty": false,
+      "sourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+      "target": "StandaloneWindows64"
+    }
+  },
+  "format": 1,
+  "release": "unity-0.10.2c-multiplayer-eb51b22"
+}
