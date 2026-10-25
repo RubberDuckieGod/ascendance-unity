@@ -164,7 +164,9 @@ namespace Ascendance.Diagnostics
             if (request.Operation == "reconnect")
             {
                 router.SetTransport(new AscendanceTcpCommandTransport0102(AscendanceRemoteClientBootstrap0102.Host,
-                    AscendanceRemoteClientBootstrap0102.Port, AscendanceRemoteClientBootstrap0102.RoomId, AscendanceRemoteClientBootstrap0102.DisplayName));
+                    AscendanceRemoteClientBootstrap0102.Port, AscendanceRemoteClientBootstrap0102.RoomId, AscendanceRemoteClientBootstrap0102.DisplayName,
+                    new AscendanceClientTransportSecurity0102(AscendanceRemoteClientBootstrap0102.TlsEnabled,
+                        AscendanceRemoteClientBootstrap0102.CertificateSha256, Environment.GetEnvironmentVariable("ASCENDANCE_ROOM_ACCESS_KEY"))));
                 _ = ((AscendanceTcpCommandTransport0102)router.Transport).ConnectAsync();
                 StartCoroutine(ReadyAndJoin(request)); return;
             }
@@ -229,7 +231,8 @@ namespace Ascendance.Diagnostics
         private static void AtomicWrite(string path, string data)
         {
             File.WriteAllText(path + ".tmp", data);
-            File.Move(path + ".tmp", path, true);
+            if (File.Exists(path)) File.Replace(path + ".tmp", path, null);
+            else File.Move(path + ".tmp", path);
         }
         private void OnDestroy() { ClearPending(); Application.logMessageReceived -= CaptureError; }
     }

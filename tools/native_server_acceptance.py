@@ -255,7 +255,7 @@ def main():
     report = {
         "scope": "Compiled native Linux server plus two independent Python TCP clients; not Unity player/UI acceptance",
         "buildVersion": "0.10.2c", "sourceRevision": args.source_revision or "UNKNOWN_NOT_PROVEN",
-        "transport": "TLS with exact DER pin, time and IP SAN verification" if args.tls_cert_sha256 else "Plain TCP on isolated loopback only",
+        "transport": "TLS with exact DER pin, time and IP SAN verification" if args.tls_cert_sha256 else "Plain TCP with loopback test clients on an isolated high port",
         "authentication": "Private room-access-key file" if args.tls_cert_sha256 else "Legacy no room key",
         "checks": checks, "limitations": ["Independent Unity player rendering/input was not exercised."],
     }
@@ -319,6 +319,30 @@ def main():
             finally:
                 if plaintext: plaintext.close()
             check("Plaintext cannot obtain a protocol HELLO from the TLS listener", True, plaintext_rejected)
+            bounded_waits = {}
+            for label, open_connection in [
+                ("unfinished TLS handshake", lambda: socket.create_connection(("127.0.0.1", server.port), timeout=5)),
+                ("TLS connection without first room-authenticated request", lambda: wire(server.port, room).socket),
+            ]:
+                pending = open_connection()
+                waiting_started = time.monotonic()
+                pending.settimeout(7)
+                closed = False
+                try:
+                    while time.monotonic() - waiting_started < 7:
+                        if not pending.recv(1):
+                            closed = True
+                            break
+                except TimeoutError:
+                    pass  # A client read timeout is not evidence of server closure.
+                except (ConnectionResetError, BrokenPipeError, ssl.SSLEOFError):
+                    closed = True
+                finally:
+                    pending.close()
+                elapsed = time.monotonic() - waiting_started
+                bounded_waits[label] = elapsed
+                check("Native server closes " + label + " within seven seconds", [True, True], [closed, elapsed < 7])
+            report["unauthenticatedClosureSeconds"] = bounded_waits
             check("Security rejections leave the authenticated native listener healthy", [True, 0], [bootstrap.exchange("HELLO").get("Accepted"), len(bootstrap.snapshot()["Players"])])
         accepted("Fresh unmodified native party starts Aldric's real turn", bootstrap.join("Aldric", uuid.uuid4().hex))
         started_native = accepted("Fresh native StartTurn succeeds before save/restart", bootstrap.command(0))
