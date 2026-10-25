@@ -40,10 +40,15 @@ namespace Ascendance
 
         private void Update()
         {
+            // Remote clients keep their networking and presentation running in
+            // the background. An unfocused window must not consume stale input.
+            if (!Application.isFocused) return;
             Vector2 move = ReadMove();
             Vector2 pointer = PointerPosition();
             bool pointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-            if (!pointerOverUI)
+            bool pointerInsideWindow = pointer.x >= 0f && pointer.x < Screen.width
+                && pointer.y >= 0f && pointer.y < Screen.height;
+            if (!pointerOverUI && pointerInsideWindow)
             {
                 if (pointer.x <= EdgeScrollPixels) move.x -= 1f;
                 if (pointer.x >= Screen.width - EdgeScrollPixels) move.x += 1f;

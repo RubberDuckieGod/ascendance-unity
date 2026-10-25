@@ -9,10 +9,13 @@ import unittest
 
 SOURCE = Path(__file__).resolve().parents[1] / "Deploy" / "DigitalOcean" / "inspect-existing.py"
 SPEC = importlib.util.spec_from_file_location("existing_inspection", SOURCE)
-MODULE = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(MODULE)
+MODULE = None
+if os.name == "posix":
+    MODULE = importlib.util.module_from_spec(SPEC)
+    SPEC.loader.exec_module(MODULE)
 
 
+@unittest.skipUnless(os.name == "posix", "Linux /proc inspection fixtures")
 class ExistingInspection(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="asc-inspection-")

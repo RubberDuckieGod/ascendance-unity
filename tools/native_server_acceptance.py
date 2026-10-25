@@ -40,6 +40,48 @@ class Command(IntEnum):
     ENCOUNTER_DECK_CHOICE = 13
 
 
+# Kept standalone from the Linux-only upgrader so this harness also runs on
+# developer machines; both predicates reject the actual native default DTO only.
+def blank_authority(value, path=()):
+    # JsonUtility materializes null reference fields as default DTOs, including
+    # these authored initializers. This allowlist comes from the actual native
+    # denied-HELLO DTO, not a production room. Every other nonblank leaf fails.
+    defaults = {
+        ("Campaign", "Version"): "0.10.2c",
+        ("Campaign", "QuestId"): "Q001",
+        ("Campaign", "CampaignProgress0833", "CurrentWorldEventId"): "WE001",
+        ("Campaign", "CampaignProgress0833", "WorldEventDay"): 1,
+        ("Campaign", "CampaignProgress0833", "TotalCampaignDay"): 1,
+        ("Campaign", "SearchTravelSeverityRound0852"): -1,
+        ("Campaign", "SearchGoblinSeverityRound0852"): -1,
+        ("Campaign", "SearchConditionWardRound0852"): -1,
+    }
+    # Default CommandResult contains its own default Snapshot as well.
+    if path and path[0] == "Snapshot":
+        path = path[1:]
+    if len(path) > 16:
+        return False
+    if isinstance(value, dict):
+        return len(value) <= 500 and all(blank_authority(item, (*path, key)) for key, item in value.items())
+    if isinstance(value, list):
+        return len(value) == 0
+    if value is None or value == "" or value is False or type(value) in (int, float) and value == 0:
+        return True
+    return path in defaults and type(value) is type(defaults[path]) and value == defaults[path]
+
+
+def denied_without_authority(response):
+    if response.get("Accepted") is not False or response.get("Code") != "ROOM_ACCESS_DENIED":
+        return False
+    # CommandResult can itself carry another Snapshot; allow only blank values
+    # there and in Player, never session/reconnect proof or nested room state.
+    for name in ["Snapshot", "Player", "CommandResult"]:
+        value = response.get(name)
+        if value is not None and (not isinstance(value, dict) or not blank_authority(value)):
+            return False
+    return True
+
+
 def read_exact(stream: socket.socket, size: int) -> bytes:
     chunks = bytearray()
     while len(chunks) < size:
@@ -307,11 +349,10 @@ def main():
                     denied = untrusted.exchange("HELLO")
                 finally:
                     untrusted.close()
-                snapshot = denied.get("Snapshot") or {}
-                # JsonUtility may serialize a null response reference as an
-                # empty default DTO. Assert no actual room/Hero/session state.
-                exposed = bool(snapshot.get("RoomId") or snapshot.get("Players") or (snapshot.get("Campaign") or {}).get("Heroes"))
-                check("TLS request with " + label + " room key is rejected without authority data", [False, "ROOM_ACCESS_DENIED", False], [denied.get("Accepted"), denied.get("Code"), exposed])
+                # Null response references serialize as default DTOs, including
+                # known constructor defaults. Reject every other populated leaf,
+                # including a nested command Snapshot or reconnect credential.
+                check("TLS request with " + label + " room key is rejected without authority data", [False, "ROOM_ACCESS_DENIED", True], [denied.get("Accepted"), denied.get("Code"), denied_without_authority(denied)])
             wrong_pin = ("1" if args.tls_cert_sha256[0] == "0" else "0") + args.tls_cert_sha256[1:]
             rejected = False
             try:

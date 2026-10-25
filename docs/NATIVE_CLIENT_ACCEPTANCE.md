@@ -24,6 +24,7 @@ The expected gameplay and network results include:
 - Two distinct graphical processes receive the authoritative party, create its two avatars and HUD, and claim separate Hero sessions.
 - Actual native TLS rejects a wrong certificate pin and wrong room invitation without claiming another player.
 - Real X windows are identified by process ID, measured at 800 by 600 pixels, arranged separately, and left unfocused. Both main loops must advance.
+- The real pointer is parked outside both windows. One player is focused through X11 while the other reports unfocused; neither camera may drift. Both cameras must also remain within 0.01 world units through the later 36-second unfocused interval. Visible world and Hero renderers plus before/after PNGs support bounded visual review.
 - Starting Aldric's turn grants three Actions. Rowan cannot start a concurrent turn.
 - Aldric's potion restores Rowan from 4 to 8 Health and spends one Action and one potion.
 - Aldric's two attacks against the Raider each deal exactly 3 damage and spend one Action. Both replicas observe the costs and damage.
@@ -33,3 +34,5 @@ The expected gameplay and network results include:
 - Restarting the native server preserves the actual saved game. Both clients accept the new server identity, reconnect, and perform a subsequent move with exactly one Action charged.
 
 `results.json` records expected versus actual values and failures. Native logs, isolated saves, actual process/window IDs, frame progress and `native-clients.png` provide supporting evidence. Screenshot capture being unavailable is reported explicitly. A passed command or build alone does not satisfy the gameplay assertions. Retain failed-run evidence when correcting a harness or application defect; use a new directory for every rerun.
+
+Audio playback is outside this suite. Hosts without an audio device can report native FMOD startup errors before the development driver's managed log subscription starts. The managed gameplay-error assertion does not certify audio initialization; inspect the complete player logs for startup diagnostics.

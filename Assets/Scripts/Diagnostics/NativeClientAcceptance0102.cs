@@ -37,15 +37,22 @@ namespace Ascendance.Diagnostics
             public string Id, LocationId;
             public int Health, Armor;
         }
+        [Serializable] public sealed class AvatarScreenView
+        {
+            public string HeroId;
+            public float[] ScreenPosition;
+        }
         [Serializable] public sealed class State
         {
             public string HeroId, PlayerId, SelectedHeroId, TurnHeroId, ServerInstanceId, RoomId, Build, PersistentDataPath, ConnectionError;
             public long Revision, GameplayRevision, CommandsSent, CommandsAccepted;
-            public int Frame, Round, Gold, AvatarCount;
-            public bool Ready, Connected, Dedicated, HasHud, IsResolving, PendingReaction, PendingReward, PendingDeckControl, RejectedConnect, RunInBackground;
+            public int Frame, Round, Gold, AvatarCount, VisibleWorldRenderers, VisibleHeroRenderers, ScreenWidth, ScreenHeight;
+            public bool Ready, Connected, Dedicated, HasHud, IsResolving, PendingReaction, PendingReward, PendingDeckControl, RejectedConnect, RunInBackground, IsFocused;
+            public float[] CameraPosition, PointerPosition;
             public HeroView[] Heroes;
             public LocationView[] Locations;
             public EnemyView[] Enemies;
+            public AvatarScreenView[] AvatarScreens;
             public string[] Errors;
         }
         [Serializable] public sealed class Reply
@@ -198,6 +205,8 @@ namespace Ascendance.Diagnostics
         {
             var gm = AscendanceGameManager.Instance; var router = AscendanceClientCommandRouter0101.Instance;
             var remote = router?.Transport as AscendanceTcpCommandTransport0102; var snapshot = router?.LastSnapshot;
+            var camera = Camera.main;
+            var world = GameObject.Find("Stonebrook_World");
             return new State
             {
                 HeroId = hero, PlayerId = remote?.PlayerId, SelectedHeroId = gm?.SelectedHeroId, TurnHeroId = gm?.TurnHeroId,
@@ -211,6 +220,17 @@ namespace Ascendance.Diagnostics
                 Dedicated = AscendanceDedicatedServerBootstrap0100.IsDedicatedServerProcess,
                 HasHud = gm != null && gm.GetComponent<AscendanceHUD>() != null,
                 RunInBackground = Application.runInBackground,
+                IsFocused = Application.isFocused,
+                ScreenWidth = Screen.width, ScreenHeight = Screen.height,
+                PointerPosition = new[] { Input.mousePosition.x, Input.mousePosition.y },
+                CameraPosition = camera == null ? Array.Empty<float>() : new[] { camera.transform.position.x, camera.transform.position.y, camera.transform.position.z },
+                VisibleWorldRenderers = world == null ? 0 : world.GetComponentsInChildren<Renderer>().Count(r => r.enabled && r.isVisible),
+                VisibleHeroRenderers = gm?.HeroAvatars?.Values.Where(a => a != null).SelectMany(a => a.GetComponentsInChildren<Renderer>()).Count(r => r.enabled && r.isVisible) ?? 0,
+                AvatarScreens = gm == null || camera == null ? Array.Empty<AvatarScreenView>() : gm.HeroAvatars.Where(pair => pair.Value != null).Select(pair =>
+                {
+                    Vector3 point = camera.WorldToScreenPoint(pair.Value.transform.position + Vector3.up);
+                    return new AvatarScreenView { HeroId = pair.Key, ScreenPosition = new[] { point.x, point.y, point.z } };
+                }).ToArray(),
                 IsResolving = gm?.IsResolving == true, PendingReaction = gm?.HasPendingReactionWindow == true,
                 PendingReward = gm?.HasPendingRewardChoice == true, PendingDeckControl = gm?.HasPendingEncounterDeckControl == true,
                 Heroes = gm?.ParticipatingHeroes.Select(h => new HeroView { Id = h.Id, Health = h.Health, MaxHealth = h.MaxHealth,

@@ -1,0 +1,378 @@
+"""Deployment safeguards with synthetic artifacts/services; no real activation."""
+import copy
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import stat
+import shutil
+import ssl
+import subprocess
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest import mock
+import zipfile
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load(name):
+    spec = importlib.util.spec_from_file_location(name.replace("-", "_"), ROOT / "Deploy" / "DigitalOcean" / (name + ".py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+UPGRADE = load("upgrade-existing") if os.name == "posix" else None
+RELEASE = load("release") if os.name == "posix" else None
+INSPECTOR = load("inspect-existing") if os.name == "posix" else None
+
+
+@unittest.skipUnless(os.name == "posix", "Linux deployment safeguards")
+class UpgradeSafety(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="asc-upgrade-fixture-")
+        self.addCleanup(self.temp.cleanup)
+        self.folder = Path(self.temp.name)
+        self.legacy = self.folder / "legacy"
+        self.release_root = self.folder / "releases-root"
+        self.config = self.folder / "private-transport"
+        self.backups = self.folder / "backups"
+        self.systemd = self.folder / "systemd"
+        self.data = self.folder / "data" / "config" / "unity3d" / "Ascendance" / "Ascendance"
+        for path in [self.legacy, self.release_root, self.backups, self.systemd, self.data]:
+            path.mkdir(parents=True)
+        self.room_file = self.data / "AscendanceServerRooms0100" / "ASC-PRIMARY.json"
+        self.room_file.parent.mkdir()
+        self.room_file.write_text('{"original":"durable game data"}')
+        self.unit = self.systemd / "ascendance.service"
+        self.unit.write_text("[Service]\nUser=ascendance\nWorkingDirectory=" + str(self.legacy) + "\n")
+        self.binary = self.legacy / "AscendanceServer.x86_64"
+        self.binary.write_bytes(b"original-code-never-executed")
+        self.release = self.release_root / "releases" / "test-release"
+        (self.release / "build").mkdir(parents=True)
+        (self.release / "build" / "AscendanceServer.x86_64").write_bytes(b"new-code-never-executed")
+        self.plan = {"service": "ascendance", "warnings": [],
+                     "serviceProperties": {"MainPID": "123", "ActiveState": "active", "SubState": "running", "User": "ascendance", "WorkingDirectory": str(self.legacy), "FragmentPath": str(self.unit)},
+                     "process": {"pid": 123, "uid": os.getuid(), "gid": os.getgid(), "executable": str(self.binary), "executableSha256": hashlib.sha256(self.binary.read_bytes()).hexdigest(), "workingDirectory": str(self.legacy), "environment": {"HOME": str(self.folder / "home")}, "room": "ASC-PRIMARY", "port": 7777, "booleanFlags": ["-ascendance-server", "-batchmode", "-nographics"], "logFile": "/var/log/ascendance/server.log"},
+                     "persistence": {"expectedDataDirectory": {"path": str(self.data), "symlinkComponent": False}, "expectedRoomFileExists": True},
+                     "unitFileChecksums": [{"path": str(self.unit), "sha256": hashlib.sha256(self.unit.read_bytes()).hexdigest()}]}
+        self.security = {"pin": "a" * 64, "key": "b" * 64,
+                         "environment": {"ASCENDANCE_TLS_PFX_PATH": str(self.config / "server.pfx"), "ASCENDANCE_TLS_PFX_PASSWORD_FILE": str(self.config / "password"), "ASCENDANCE_ROOM_ACCESS_KEY_FILE": str(self.config / "access-key")}}
+        self.descriptor = {"release": "test-release", "sourceRevision": "a" * 40, "endpoint": "159.65.100.206:7777"}
+        self.addCleanup(mock.patch.stopall)
+        mock.patch.multiple(UPGRADE, ROOT=self.release_root, LEGACY=self.legacy, CONFIG=self.config, BACKUPS=self.backups, SYSTEMD=self.systemd).start()
+        # Ownership operations are simulated: these fixture tests run unprivileged
+        # and do not claim that systemd or on-host activation has occurred.
+        mock.patch.object(UPGRADE.os, "fchown", lambda *args: None).start()
+        self.actual_durable_phase = UPGRADE.require_durable_phase
+        mock.patch.object(UPGRADE, "require_durable_phase", return_value=None).start()
+
+    def activate(self, **changes):
+        plan = copy.deepcopy(self.plan)
+        plan.update(changes)
+        return UPGRADE.activate("ascendance", self.release, plan, self.security, INSPECTOR, UPGRADE.plan_fingerprint(plan), self.descriptor)
+
+    def mock_plan(self):
+        return mock.patch.object(UPGRADE, "checked_plan", side_effect=lambda *args: copy.deepcopy(self.plan))
+
+    def fixture_backup(self, *args):
+        target = self.backups / "verified-backup"
+        target.mkdir()
+        return target
+
+    def fake_directory(self, path, mode=0o700, gid=0):
+        path.mkdir(parents=True, exist_ok=True)
+        path.chmod(mode)
+
+    def test_fingerprint_ignores_process_restart_but_detects_config_or_room_changes(self):
+        changed = copy.deepcopy(self.plan)
+        changed["process"]["pid"] = 999
+        changed["serviceProperties"]["MainPID"] = "999"
+        self.assertEqual(UPGRADE.plan_fingerprint(self.plan), UPGRADE.plan_fingerprint(changed))
+        changed["process"]["room"] = "DIFFERENT"
+        self.assertNotEqual(UPGRADE.plan_fingerprint(self.plan), UPGRADE.plan_fingerprint(changed))
+
+    def test_unit_override_preserves_live_routing_data_and_log_without_secret_or_home_override(self):
+        body = UPGRADE.override_text(self.release, self.plan, self.security).decode()
+        self.assertIn('"-room" "ASC-PRIMARY" "-port" "7777"', body)
+        self.assertIn('"-logFile" "/var/log/ascendance/server.log"', body)
+        self.assertIn('Environment="XDG_CONFIG_HOME=' + str(self.data.parents[2]) + '"', body)
+        self.assertNotIn("HOME=", body.replace("XDG_CONFIG_HOME=", ""))
+        self.assertNotIn(self.security["key"], body)
+        self.assertEqual(self.unit.read_text().splitlines()[0], "[Service]")
+
+    def test_unit_argument_metacharacters_refuse_before_activation(self):
+        self.plan["process"]["room"] = "ROOM$UNSAFE"
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "escaping"):
+                self.activate()
+            system.assert_not_called()
+
+    def test_connected_players_prevent_backup_and_stop(self):
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=1), mock.patch.object(UPGRADE, "backup_existing") as backup, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Players are still connected"):
+                self.activate()
+            backup.assert_not_called()
+            system.assert_not_called()
+
+    def test_failed_backup_never_stops_existing_game(self):
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing", side_effect=UPGRADE.Refusal("failed backup")), mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "failed backup"):
+                self.activate()
+            system.assert_not_called()
+
+    def test_a_player_connecting_during_backup_refuses_before_stop(self):
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", side_effect=[0, 1]), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "player connected"):
+                self.activate()
+            system.assert_not_called()
+
+    def test_failure_restores_previous_code_configuration_but_never_replaces_saves(self):
+        commands = []
+        starts = 0
+        original = self.room_file.read_bytes()
+        def system(args, **kwargs):
+            nonlocal starts
+            commands.append(args)
+            if args[1] == "start":
+                starts += 1
+                if starts == 1:
+                    self.room_file.write_bytes(b"new-server-state-retained-for-manual-review")
+            return SimpleNamespace(stdout="inactive\n" if "--property=ActiveState" in args else "")
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "secure_directory", side_effect=self.fake_directory), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "healthy", side_effect=[UPGRADE.Refusal("new health failed"), None]) as health:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Save data was not automatically rolled back"):
+                self.activate()
+        self.assertEqual(starts, 2)
+        self.assertEqual(self.binary.read_bytes(), b"original-code-never-executed")
+        self.assertEqual(self.room_file.read_bytes(), b"new-server-state-retained-for-manual-review")
+        self.assertEqual((self.backups / "verified-backup" / "data-after-stop" / "AscendanceServerRooms0100" / "ASC-PRIMARY.json").read_bytes(), original)
+        self.assertFalse((self.systemd / "ascendance.service.d" / "80-ascendance-release.conf").exists())
+        self.assertEqual(health.call_args_list[1].kwargs["expected_executable"], str(self.binary))
+        self.assertIsNone(health.call_args_list[1].args[3])  # Original server was plaintext.
+
+    def test_recovery_failure_is_distinct_from_successful_rollback(self):
+        def system(args, **kwargs):
+            return SimpleNamespace(stdout="inactive\n" if "--property=ActiveState" in args else "")
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "secure_directory", side_effect=self.fake_directory), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "healthy", side_effect=UPGRADE.Refusal("both health checks fail")):
+            with self.assertRaisesRegex(UPGRADE.RecoveryFailure, "both failed"):
+                self.activate()
+
+    def test_backup_copy_is_private_and_hash_verified(self):
+        target = self.folder / "private-copy"
+        hashes = UPGRADE.backup_tree(self.data, target, INSPECTOR)
+        self.assertEqual(hashes["AscendanceServerRooms0100/ASC-PRIMARY.json"], hashlib.sha256(self.room_file.read_bytes()).hexdigest())
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o700)
+        self.assertEqual(stat.S_IMODE((target / "AscendanceServerRooms0100" / "ASC-PRIMARY.json").stat().st_mode), 0o600)
+
+    def test_real_backup_keeps_code_unit_data_and_transport_files_private(self):
+        self.config.mkdir()
+        (self.config / "private-key-fixture").write_text("synthetic-private-transport-value")
+        before = self.room_file.read_bytes(), self.unit.read_bytes(), self.binary.read_bytes()
+        with mock.patch.object(UPGRADE, "secure_directory", side_effect=self.fake_directory), mock.patch.object(UPGRADE, "run", return_value=SimpleNamespace(stdout="")):
+            backup = UPGRADE.backup_existing(self.plan, "reviewed-release", INSPECTOR)
+        import tarfile
+        with tarfile.open(backup / "previous-code.tar.gz") as archive:
+            self.assertEqual(archive.extractfile("previous-code/AscendanceServer.x86_64").read(), self.binary.read_bytes())
+        self.assertEqual((backup / "data-before-stop" / "AscendanceServerRooms0100" / "ASC-PRIMARY.json").read_bytes(), self.room_file.read_bytes())
+        self.assertEqual((backup / "configuration" / self.unit.relative_to("/")).read_bytes(), self.unit.read_bytes())
+        self.assertEqual((backup / "private-transport-configuration" / "private-key-fixture").read_text(), "synthetic-private-transport-value")
+        self.assertEqual(stat.S_IMODE(backup.stat().st_mode), 0o700)
+        self.assertEqual(before, (self.room_file.read_bytes(), self.unit.read_bytes(), self.binary.read_bytes()))
+
+    def test_backup_refuses_a_source_that_changes_during_copy(self):
+        copytree = UPGRADE.shutil.copytree
+        def mutate(source, destination, *args, **kwargs):
+            result = copytree(source, destination, *args, **kwargs)
+            if Path(source) == self.data:
+                self.room_file.write_text("changed-during-copy")
+            return result
+        with mock.patch.object(UPGRADE.shutil, "copytree", side_effect=mutate):
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Data changed"):
+                UPGRADE.backup_tree(self.data, self.folder / "inconsistent-copy", INSPECTOR)
+
+    def test_backup_refuses_new_file_membership_during_copy(self):
+        copytree = UPGRADE.shutil.copytree
+        def mutate(source, destination, *args, **kwargs):
+            result = copytree(source, destination, *args, **kwargs)
+            if Path(source) == self.data:
+                (self.data / "new-save-during-copy.json").write_text("{}")
+            return result
+        with mock.patch.object(UPGRADE.shutil, "copytree", side_effect=mutate):
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Data changed"):
+                UPGRADE.backup_tree(self.data, self.folder / "incomplete-copy", INSPECTOR)
+
+    def test_full_old_code_manifest_detects_changed_assembly_with_same_executable(self):
+        assembly = self.legacy / "AscendanceServer_Data" / "Managed" / "Assembly-CSharp.dll"
+        assembly.parent.mkdir(parents=True)
+        assembly.write_bytes(b"old-gameplay-code")
+        original = UPGRADE.tree_proof(self.legacy)
+        unchanged_binary = self.binary.read_bytes()
+        assembly.write_bytes(b"changed-gameplay-code")
+        self.assertNotEqual(original, UPGRADE.tree_proof(self.legacy))
+        self.assertEqual(self.binary.read_bytes(), unchanged_binary)
+
+    def test_corrupted_rollback_code_archive_cannot_pass_manifest_verification(self):
+        import tarfile
+        proof = UPGRADE.tree_proof(self.legacy)
+        archive_path = self.folder / "altered-code.tar.gz"
+        self.binary.write_bytes(b"corrupted-backup-code")
+        with tarfile.open(archive_path, "w:gz") as archive:
+            archive.add(self.legacy, arcname="previous-code")
+        with self.assertRaisesRegex(UPGRADE.Refusal, "manifest verification"):
+            UPGRADE.verify_code_archive(archive_path, proof)
+
+    def test_environment_file_proof_detects_private_value_drift_without_disclosing_values(self):
+        environment = self.folder / "private.env"
+        environment.write_text("SYNTHETIC_SECRET=first-private-value\n")
+        environment.chmod(0o600)
+        with mock.patch.object(UPGRADE, "run", return_value=SimpleNamespace(stdout=str(environment) + " (ignore_errors=no)\n")):
+            # Fixture file ownership is the test runner's; production requires root.
+            original_proof = UPGRADE.file_proof
+            def proof(path):
+                value = original_proof(path)
+                value["uid"] = 0
+                return value
+            with mock.patch.object(UPGRADE, "file_proof", side_effect=proof):
+                first = UPGRADE.environment_proof("ascendance", INSPECTOR)
+                environment.write_text("SYNTHETIC_SECRET=second-private-value\n")
+                second = UPGRADE.environment_proof("ascendance", INSPECTOR)
+        self.assertNotEqual(first, second)
+        self.assertNotIn("private-value", json.dumps(first) + json.dumps(second))
+
+    def test_environment_file_symlink_is_refused_before_content_read(self):
+        target = self.folder / "private.env"
+        target.write_text("SYNTHETIC_SECRET=private-value\n")
+        link = self.folder / "unsafe.env"
+        link.symlink_to(target)
+        with mock.patch.object(UPGRADE, "run", return_value=SimpleNamespace(stdout=str(link) + " (ignore_errors=no)\n")), mock.patch.object(UPGRADE, "file_proof") as proof:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "path identity"):
+                UPGRADE.environment_proof("ascendance", INSPECTOR)
+            proof.assert_not_called()
+
+    def test_endpoint_must_match_the_actual_droplet_interface_before_staging(self):
+        addresses = [{"addr_info": [{"family": "inet", "local": "159.65.100.206"},
+                                    {"family": "inet", "local": "10.46.0.5"}]}]
+        with mock.patch.object(UPGRADE, "run", return_value=SimpleNamespace(stdout=json.dumps(addresses))):
+            UPGRADE.require_endpoint_on_host("159.65.100.206")
+            with self.assertRaisesRegex(UPGRADE.Refusal, "does not belong"):
+                UPGRADE.require_endpoint_on_host("203.0.113.9")
+
+    def test_actual_native_default_denial_dto_is_accepted_without_authority_data(self):
+        response = json.loads((ROOT / "tests/fixtures/native-denied-default-response.json").read_text())
+        self.assertTrue(response["Snapshot"])
+        self.assertTrue(UPGRADE.denied_without_authority(response))
+
+    def test_populated_authority_fields_in_any_denial_dto_are_rejected(self):
+        blank = json.loads((ROOT / "tests/fixtures/native-denied-default-response.json").read_text())
+        for route, value in [
+            (("Snapshot", "RoomId"), "PRIVATE-ROOM"),
+            (("Snapshot", "ServerInstanceId"), "instance"),
+            (("Snapshot", "Revision"), 1),
+            (("Snapshot", "Players"), [{"PlayerId": "session"}]),
+            (("Snapshot", "Campaign", "PartyGold"), 20),
+            (("Snapshot", "Campaign", "Heroes"), [{"Id": "Aldric"}]),
+            (("Snapshot", "Transient", "RecentLog"), ["private log"]),
+            (("CommandResult", "Snapshot", "Campaign", "PartyGold"), 20),
+            (("Player", "ReconnectToken"), "private reconnect proof")]:
+            response = copy.deepcopy(blank)
+            parent = response
+            for name in route[:-1]: parent = parent[name]
+            parent[route[-1]] = value
+            with self.subTest(route=route):
+                self.assertFalse(UPGRADE.denied_without_authority(response))
+
+    def test_secure_health_checks_missing_and_actual_incorrect_keys_before_authenticated_hello(self):
+        inspector = SimpleNamespace(inspect=lambda service: copy.deepcopy(self.plan))
+        with mock.patch.object(UPGRADE, "hello") as hello:
+            UPGRADE.healthy("ascendance", self.release, self.plan, self.security, inspector, timeout=1, expected_executable=str(self.binary))
+        self.assertEqual(len(hello.call_args_list), 3)
+        self.assertIsNone(hello.call_args_list[0].args[3])
+        wrong = hello.call_args_list[1]
+        self.assertRegex(wrong.args[3], r"^[0-9a-f]{64}$")
+        self.assertNotEqual(wrong.args[3], self.security["key"])
+        self.assertTrue(wrong.kwargs["expect_denied"])
+        self.assertEqual(hello.call_args_list[2].args[3], self.security["key"])
+
+    def test_read_only_restart_guard_blocks_transient_resolution_but_preserves_persisted_choices(self):
+        base = {"Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+                              "MovingHeroIds": [], "HeroMovement": [],
+                              "HasPendingRewardChoice": True, "HasPendingEncounterDeckControl": True}}
+        with mock.patch.object(UPGRADE, "legacy_hello", return_value=base):
+            self.actual_durable_phase(self.plan, self.security)
+        for name, value in [("IsResolving", True), ("HasPendingReactionWindow", True), ("MovingHeroIds", ["Aldric"]), ("HeroMovement", [{"HeroId": "Aldric"}])]:
+            snapshot = copy.deepcopy(base)
+            snapshot["Transient"][name] = value
+            with self.subTest(name=name), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
+                with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                    self.actual_durable_phase(self.plan, self.security)
+
+    def test_archive_traversal_is_rejected_before_writing_build(self):
+        archive = self.folder / "unsafe.zip"
+        with zipfile.ZipFile(archive, "w") as output:
+            output.writestr("LinuxServer/../../outside", "bad")
+        destination = self.folder / "build"
+        with self.assertRaisesRegex(UPGRADE.Refusal, "Unsafe server archive path"):
+            UPGRADE.extract_build(archive, destination, {}, RELEASE)
+        self.assertFalse(destination.exists())
+        self.assertFalse((self.folder.parent / "outside").exists())
+
+    def test_artifact_directories_allow_service_read_under_restrictive_umask(self):
+        archive = self.folder / "synthetic.zip"
+        elf = b"\x7fELF\x02\x01" + b"\0" * 12 + b"\x3e\x00" + b"synthetic-not-executable"
+        files = {"AscendanceServer.x86_64": elf, "UnityPlayer.so": elf, "AscendanceServer_Data/file": b"data"}
+        manifest = {"format": 1, "files": {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}}
+        with zipfile.ZipFile(archive, "w") as output:
+            for name, data in files.items():
+                output.writestr("LinuxServer/" + name, data)
+        previous = os.umask(0o077)
+        try:
+            destination = self.folder / "extracted"
+            UPGRADE.extract_build(archive, destination, manifest, RELEASE)
+        finally:
+            os.umask(previous)
+        self.assertEqual(stat.S_IMODE(destination.stat().st_mode), 0o755)
+        self.assertEqual(stat.S_IMODE((destination / "AscendanceServer_Data").stat().st_mode), 0o755)
+        self.assertEqual(stat.S_IMODE((destination / "AscendanceServer.x86_64").stat().st_mode), 0o755)
+
+    @unittest.skipUnless(shutil.which("openssl"), "OpenSSL is required for real certificate fixture")
+    def test_generated_transport_files_use_real_certificate_and_compatible_private_pfx(self):
+        def directory(path, mode=0o700, gid=0):
+            path.mkdir(parents=True, mode=mode)
+            path.chmod(mode)
+        with mock.patch.object(UPGRADE, "secure_directory", side_effect=directory), mock.patch.object(UPGRADE.os, "chown", lambda *args: None):
+            security = UPGRADE.secure_configuration("ascendance", self.plan["process"], "159.65.100.206", INSPECTOR)
+        cert_bytes = ssl.PEM_cert_to_DER_cert((self.config / "server.crt").read_text())
+        self.assertEqual(security["pin"], hashlib.sha256(cert_bytes).hexdigest())
+        self.assertEqual(len(security["key"]), 64)
+        for name in ["server.pfx", "pfx-password", "room-access-key", "server.crt"]:
+            self.assertEqual(stat.S_IMODE((self.config / name).stat().st_mode), 0o640)
+        self.assertFalse((self.config / "temporary-key.pem").exists())
+        result = subprocess.run(["openssl", "pkcs12", "-in", str(self.config / "server.pfx"), "-passin", "file:" + str(self.config / "pfx-password"), "-noout"], capture_output=True)
+        self.assertEqual(result.returncode, 0, "The generated PFX must be readable with its private password file")
+        san = subprocess.check_output(["openssl", "x509", "-in", str(self.config / "server.crt"), "-noout", "-ext", "subjectAltName"], text=True)
+        self.assertIn("IP Address:159.65.100.206", san)
+        self.assertIn("IP Address:127.0.0.1", san)
+        self.assertIn("DNS:localhost", san)
+
+    def test_wrong_certificate_pin_prevents_sending_any_access_key(self):
+        class Stream:
+            sent = []
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def settimeout(self, value): pass
+            def getpeercert(self, binary_form=False): return b"wrong certificate"
+            def sendall(self, data): self.sent.append(data)
+        stream = Stream()
+        context = SimpleNamespace(wrap_socket=lambda *args, **kwargs: stream)
+        with mock.patch.object(UPGRADE.socket, "create_connection", return_value=stream), mock.patch.object(UPGRADE.ssl, "SSLContext", return_value=context):
+            with self.assertRaisesRegex(UPGRADE.Refusal, "certificate differs"):
+                UPGRADE.hello(7777, "ASC-PRIMARY", "a" * 64, "b" * 64)
+        self.assertEqual(stream.sent, [])
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -11,6 +11,7 @@ import copy
 import ctypes
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import secrets
@@ -159,7 +160,7 @@ def tls_fixture(output):
                 "ASCENDANCE_TLS": "1", "ASCENDANCE_CERT_SHA256": pin, "ASCENDANCE_ROOM_ACCESS_KEY": access}, certificate
 
 
-def unfocus_and_arrange(display, authority, player_pids):
+def unfocus_and_arrange(display, authority, player_pids, focused_pid=None):
     """Find actual native windows recursively by PID, arrange them and remove focus."""
     previous = os.environ.get("XAUTHORITY")
     os.environ["XAUTHORITY"] = str(authority)
@@ -179,6 +180,10 @@ def unfocus_and_arrange(display, authority, player_pids):
         x.XMoveResizeWindow.argtypes = [pointer, window, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint]
         x.XSetInputFocus.argtypes = [pointer, window, ctypes.c_int, ctypes.c_ulong]
         x.XGetInputFocus.argtypes = [pointer, ctypes.POINTER(window), ctypes.POINTER(ctypes.c_int)]
+        x.XWarpPointer.argtypes = [pointer, window, window, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint, ctypes.c_int, ctypes.c_int]
+        x.XQueryPointer.argtypes = [pointer, window, ctypes.POINTER(window), ctypes.POINTER(window),
+                                   ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int),
+                                   ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_uint)]
         x.XSync.argtypes = [pointer, ctypes.c_int]; x.XCloseDisplay.argtypes = [pointer]
         x.XFree.argtypes = [pointer]
         connection = x.XOpenDisplay(display.encode())
@@ -241,12 +246,27 @@ def unfocus_and_arrange(display, authority, player_pids):
             if [inner["width"], inner["height"], outer["x"], outer["y"], outer["width"], outer["height"]] != [800, 600, 800 * index, 0, 800, 600]:
                 raise AssertionError("Native window geometry does not match the real two-window fixture: " + repr((inner, outer)))
             windows.append({"pid": pid, "window": entry["window"], "outerWindow": entry["outer"], "innerGeometry": inner, "outerGeometry": outer})
-        x.XSetInputFocus(connection, root, 1, 0)
+        # Parking below both windows exercises the real out-of-window pointer
+        # that previously drove background edge scrolling away from the world.
+        x.XWarpPointer(connection, 0, root, 0, 0, 0, 0, 800, 800)
+        focus_target = root if focused_pid is None else found[focused_pid]["window"]
+        x.XSetInputFocus(connection, focus_target, 1, 0)
         x.XSync(connection, 0)
         focused, revert = window(), ctypes.c_int()
         x.XGetInputFocus(connection, ctypes.byref(focused), ctypes.byref(revert))
-        if focused.value != root: raise AssertionError("Real X input focus did not leave both players")
-        return {"focusedRoot": True, "nativeWindows": windows}
+        if focused.value != focus_target: raise AssertionError("Actual native X focus did not reach its requested target")
+        root_return, child = window(), window()
+        root_x, root_y, local_x, local_y = [ctypes.c_int() for _ in range(4)]
+        mask = ctypes.c_uint()
+        if not x.XQueryPointer(connection, root, ctypes.byref(root_return), ctypes.byref(child), ctypes.byref(root_x), ctypes.byref(root_y),
+                               ctypes.byref(local_x), ctypes.byref(local_y), ctypes.byref(mask)):
+            raise AssertionError("Actual pointer is not on the isolated X display")
+        if [root_x.value, root_y.value] != [800, 800]: raise AssertionError("Could not park real pointer outside both windows")
+        outside = all(not (w["outerGeometry"]["x"] <= root_x.value < w["outerGeometry"]["x"] + 800
+                          and w["outerGeometry"]["y"] <= root_y.value < w["outerGeometry"]["y"] + 600) for w in windows)
+        if not outside: raise AssertionError("Actual pointer remains within a native window")
+        return {"focusedRoot": focused.value == root, "focusedProcessId": focused_pid, "nativeWindows": windows,
+                "pointer": {"x": root_x.value, "y": root_y.value}, "pointerOutsideNativeWindows": outside}
     finally:
         if connection: x.XCloseDisplay(connection)
         if previous is None: os.environ.pop("XAUTHORITY", None)
@@ -272,7 +292,8 @@ def main():
     report = {"kind": "independent-native-Unity-players", "room": room, "checks": [],
               "boundaries": ["Development test driver; shipping build excludes it.",
                              "Synthetic local fixture; no production data.",
-                             "Native server wire retry/duplicate coverage is a separate suite."]}
+                             "Native server wire retry/duplicate coverage is a separate suite.",
+                             "Audio output is not validated on this host; native FMOD startup messages can precede managed error capture."]}
     clients, rejection_clients = [], []
     observer = None
     xvfb = None
@@ -286,8 +307,22 @@ def main():
 
     def accepted(client, command, **fields):
         reply = client.request(Type=command, **fields)
+        if not reply["Accepted"]:
+            report["unexpectedCommandRejection"] = {"hero": client.hero, "command": command,
+                                                    "code": reply.get("Code"), "message": reply.get("Message")}
         check(client.hero + " " + command + " accepted through production router", True, reply["Accepted"])
         return reply["State"]
+
+    def capture(name):
+        try:
+            subprocess.run(["import", "-display", display, "-window", "root", str(output / name)],
+                           env={**os.environ, "XAUTHORITY": str(authority)}, check=True, timeout=15,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            report.setdefault("screenshots", []).append(name)
+            return name
+        except Exception as error:
+            report["visualCapture"] = {"status": "UNSUPPORTED", "reason": str(error)}
+            return None
 
     try:
         observer, initial = server.start()
@@ -352,8 +387,31 @@ def main():
         check("X input focus is outside both native Unity players", True, report["focus"]["focusedRoot"])
         for client in clients:
             frame = client.state()["Frame"]
-            client.wait("advances real unfocused frames", lambda s: s.get("Frame", 0) > frame + 10)
+            client.wait("advances real unfocused frames", lambda s: s.get("Frame", 0) > frame + 10 and not s.get("IsFocused"))
             check(client.hero + " native game advances while unfocused", True, client.state()["Frame"] > frame + 10)
+            check(client.hero + " actual world renderers are visible", True, client.state()["VisibleWorldRenderers"] > 0)
+            check(client.hero + " actual Hero renderers are visible", True, client.state()["VisibleHeroRenderers"] > 0)
+        report["focusedOutsidePointer"] = unfocus_and_arrange(display, authority, [client.process.pid for client in clients], a.process.pid)
+        for client in clients:
+            frame = client.state()["Frame"]
+            client.wait("settles with one real focused window", lambda s: s.get("Frame", 0) >= frame + 30
+                        and s.get("IsFocused") == (client is a))
+        check("Native Unity observes one focused and one unfocused player", [True, False], [a.state()["IsFocused"], b.state()["IsFocused"]])
+        focused_state = a.state()
+        point = focused_state["PointerPosition"]
+        report["focusedOutsidePointer"]["unityPointer"] = point
+        check("Focused Unity player observes pointer outside its window", True,
+              len(point) == 2 and not (0 <= point[0] < focused_state["ScreenWidth"] and 0 <= point[1] < focused_state["ScreenHeight"]))
+        probe_cameras = {client.hero: client.state()["CameraPosition"] for client in clients}
+        time.sleep(2)
+        report["focusedOutsidePointer"]["camera"] = {}
+        for client in clients:
+            position = client.state()["CameraPosition"]
+            drift = math.dist(probe_cameras[client.hero], position) if len(position) == len(probe_cameras[client.hero]) == 3 else math.inf
+            report["focusedOutsidePointer"]["camera"][client.hero] = {"before": probe_cameras[client.hero], "after": position, "drift": drift}
+            check(client.hero + " camera stays still with pointer outside focused peer", True, drift <= .01)
+        report["focusAfterPointerProbe"] = unfocus_and_arrange(display, authority, [client.process.pid for client in clients])
+        capture("native-clients-before.png")
 
         state = accepted(a, "StartTurn")
         check("Native StartTurn grants three Actions", [3, "Aldric"], [body(state, "Aldric")["Actions"], state["TurnHeroId"]])
@@ -369,8 +427,12 @@ def main():
             actual_enemy = next((e["Health"] for e in state["Enemies"] if e["Id"] == victim["Id"]), 0)
             check("Native Attack exact damage and cost " + str(after_actions), [after_actions, after_health], [body(state, "Aldric")["Actions"], actual_enemy])
             b.wait("observes exact Attack effect", lambda s: body(s, "Aldric")["Actions"] == after_actions and next((e["Health"] for e in s["Enemies"] if e["Id"] == victim["Id"]), 0) == after_health)
-        accepted(a, "EndTurn")
-        a.wait("zero-Action turn ended explicitly", lambda s: not s.get("TurnHeroId"))
+        ended = accepted(a, "EndTurn")
+        for client in clients:
+            client.wait("observes explicit EndTurn before next Hero input", lambda s: not s.get("TurnHeroId")
+                        and s.get("GameplayRevision", -1) >= ended["GameplayRevision"])
+        check("Both native peers observe completed turn before next Hero starts", ["", ""],
+              [client.state().get("TurnHeroId") or "" for client in clients])
         state = accepted(b, "StartTurn")
         check("Second native Hero receives own three Actions", [3, "Rowan"], [body(state, "Rowan")["Actions"], state["TurnHeroId"]])
         accepted(b, "Move", TargetId="L001")
@@ -385,15 +447,32 @@ def main():
         check("Restarted native client retains Hero ownership", a_id, a.state()["PlayerId"])
         check("Restarted native client restores canonical gameplay", before, visible_state(a.state()))
 
+        # Let the normal selection/camera smoothing settle before measuring a
+        # genuinely input-free interval. Networking keeps running throughout.
+        for client in clients:
+            frame = client.state()["Frame"]
+            client.wait("settles camera before idle", lambda s: s.get("Frame", 0) >= frame + 30 and not s.get("IsFocused"))
+        idle_cameras = {client.hero: client.state()["CameraPosition"] for client in clients}
+        for client in clients:
+            check(client.hero + " has a finite real camera position", True,
+                  len(idle_cameras[client.hero]) == 3 and all(math.isfinite(v) for v in idle_cameras[client.hero]))
+
         idle_start = time.monotonic()
         idle_frames = {client.hero: client.state()["Frame"] for client in clients}
         time.sleep(36)
         report["idleSeconds"] = time.monotonic() - idle_start
         check("Two native clients remain connected beyond 35 seconds", [True, True], [a.state()["Connected"], b.state()["Connected"]])
         report["idleFrameProgress"] = {client.hero: client.state()["Frame"] - idle_frames[client.hero] for client in clients}
+        report["idleCamera"] = {}
         for client in clients:
             check(client.hero + " main loop stays live throughout unfocused idle", True, report["idleFrameProgress"][client.hero] > 30)
             check(client.hero + " idle observation is fresh", True, time.time() - (client.output / "state.json").stat().st_mtime < 3)
+            state = client.state()
+            check(client.hero + " receives no focus during idle", False, state["IsFocused"])
+            position = state["CameraPosition"]
+            drift = math.dist(idle_cameras[client.hero], position) if len(position) == 3 else math.inf
+            report["idleCamera"][client.hero] = {"before": idle_cameras[client.hero], "after": position, "drift": drift}
+            check(client.hero + " camera stays within 0.01 world units during unfocused idle", True, drift <= .01)
         check("Idle native peer state is stable", before, visible_state(b.state()))
 
         old_instance = a.state()["ServerInstanceId"]
@@ -413,13 +492,22 @@ def main():
         for client in clients:
             client.wait("moves after persisted restart", lambda s: body(s, "Rowan")["LocationId"] == "L000" and not body(s, "Rowan")["Moving"])
             check(client.hero + " sees post-restart Action cost once", 1, body(client.state(), "Rowan")["Actions"])
-            check(client.hero + " has no Unity errors", [], client.state()["Errors"])
-        try:
-            subprocess.run(["import", "-display", display, "-window", "root", str(output / "native-clients.png")],
-                           env={**os.environ, "XAUTHORITY": str(authority)}, check=True, timeout=15, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-            report["screenshot"] = "native-clients.png"
-        except Exception as error:
-            report["visualCapture"] = {"status": "UNSUPPORTED", "reason": str(error)}
+            check(client.hero + " has no observed managed gameplay errors", [], client.state()["Errors"])
+        # State is sampled in Update. Give Canvas/world rendering subsequent
+        # real frames before recording the human-reviewable desktop image.
+        for client in clients:
+            frame = client.state()["Frame"]
+            client.wait("renders final committed gameplay", lambda s: s.get("Frame", 0) >= frame + 3)
+            check(client.hero + " world remains visibly rendered after restart", True, client.state()["VisibleWorldRenderers"] > 0)
+            check(client.hero + " Hero remains visibly rendered after restart", True, client.state()["VisibleHeroRenderers"] > 0)
+            state = client.state()
+            report.setdefault("finalRendering", {})[client.hero] = {k: state[k] for k in
+                ["ScreenWidth", "ScreenHeight", "CameraPosition", "VisibleWorldRenderers", "VisibleHeroRenderers", "AvatarScreens"]}
+            check(client.hero + " actual Hero body projects inside rendered viewport", True,
+                  any(len(a["ScreenPosition"]) == 3 and a["ScreenPosition"][2] > 0
+                      and 0 <= a["ScreenPosition"][0] < state["ScreenWidth"]
+                      and 0 <= a["ScreenPosition"][1] < state["ScreenHeight"] for a in state["AvatarScreens"]))
+        report["screenshot"] = capture("native-clients.png")
         report["nativeProcesses"] = {"server": server.process.pid, "Aldric": a.process.pid, "Rowan": b.process.pid}
         report["passed"] = True
     except Exception:

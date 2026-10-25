@@ -4,6 +4,23 @@ This checkout contains the recovered Unity project: the uploaded Assets baseline
 
 The game version remains **0.10.2c**. Identify reliability revisions by Git commit and the build's SHA-256 manifest. The source destination is the public [RubberDuckieGod/ascendance-unity](https://github.com/RubberDuckieGod/ascendance-unity) repository; the owner explicitly authorized public publication.
 
+## Multiplayer rollout status
+
+**The secure DigitalOcean upgrade is not deployed.** Final validation of the current source and its matching release artifacts is pending. No public client release or download URL has been published yet. The existing server's identity, service and actual save location have been inspected; that inspection does not establish that the new build is running. Render hosts a separate JavaScript game.
+
+The review branch adds encrypted transport, a private invite launcher, native restart repairs, and a staged upgrade for the existing DigitalOcean service. See [validation status](docs/VALIDATION_STATUS.md) and [multiplayer review](docs/MULTIPLAYER_REVIEW.md) for the evidence and remaining gates.
+
+## Playing with friends after activation
+
+Players need the complete matching **Windows game ZIP**, not Unity or the Unity Editor. These steps become usable after the owner completes secure server activation and receives the private invite:
+
+1. Extract the entire Windows ZIP to a new folder. Keep `Ascendance.exe`, `Ascendance_Data`, `UnityPlayer.dll`, the other libraries, and both `Play-AscendanceMultiplayer` launcher files together.
+2. Obtain `Ascendance.invite.json` privately from the server owner. Put it beside `Play-AscendanceMultiplayer.cmd`, or supply its full path when the launcher asks. The invite contains the endpoint, room, pinned certificate and private access key; never upload it to GitHub or paste it into chat.
+3. Run **Play-AscendanceMultiplayer.cmd** and enter your own player name. Every friend uses a distinct name. Keep that name and the same Windows user profile for later reconnects.
+4. In the game, choose **NEW GAME**, select a Hero that is available in the server's existing party, then choose **BEGIN ADVENTURE**. Each player must control a different Hero. Local party selection does not replace the server campaign or add Heroes to its party.
+
+The room supports at most **four player sessions**. A fresh default party is Garruk, Rowan, Aldric and Elara; an existing campaign may have a different party. If a Hero is already claimed, use your original session to reconnect or select an unclaimed Hero. Do not delete reconnect data to work around ownership checks. Friends use the same private invite and matching client build; a Render URL or browser room code cannot connect this Unity client.
+
 ## Setup and local checks
 
 Open this directory with a licensed Unity 6000.6.5f1 Editor. Install the matching Linux Dedicated Server build support for server builds and Windows standalone support for Windows clients. Unity restores the pinned packages and regenerates Library on first import; the uploaded Library cache is unnecessary.
@@ -36,25 +53,25 @@ bash tools/run_unity_validation.sh \
 
 Add `--build-linux-server` to request the Linux server build after validation. Keep the full build output, including its data directory and UnityPlayer library. The wrapper records logs and results under `artifacts/unity-validation/`.
 
-The wrappers create isolated test-save directories and run all six gates: **master 54/0, server foundation 24/0, routing 29/0, transport 27/0, reliability 22/0, snapshot 20/0**. All six gates passed in a licensed cloud Editor run on 2026-10-24, with zero nested errors. See [runtime results](docs/RUNTIME_RESULTS_20261024.json). The inherited Play Mode menu is **Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**; it now requires the same explicit isolated-data environment as batch validation. Use the wrapper for the full chain.
+The wrappers create isolated test-save directories and run all six gates: **master 54/0, server foundation 24/0, routing 29/0, transport 27/0, reliability 22/0, snapshot 20/0**. All six passed for prior commit `9792d169b1141d0dbef043906246f3fe0dab4497` in a licensed cloud Editor on 2026-10-24, with zero nested errors; see [runtime results](docs/RUNTIME_RESULTS_20261024.json). Those earlier passes do not validate later source changes or two independent native clients. Final current-source verdicts remain pending. The inherited Play Mode menu is **Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**; it requires the same explicit isolated-data environment as batch validation. Use the wrapper for the full chain.
 
 The automatic **Source intake** GitHub Action runs static/helper checks. **Licensed Unity validation** is a separate manual workflow for a Windows self-hosted runner labeled `unity-6000.6.5f1`, with an existing licensed Editor and build modules. Configure a protected `unity-validation` environment and its `UNITY_EDITOR_PATH` variable. Review the selected commit before dispatching it; public pull requests never automatically execute on that machine. This workflow becomes dispatchable after it is present on the default branch. Neither workflow deploys a server.
 
-Windows clients build through **Ascendance → Build → Build Windows Standalone 0.10.2c**. Server builds use **Build Linux Dedicated Server 0.10.2c**. The cloud run compiled the project and built complete Linux dedicated-server and Windows players. Independent native-client acceptance and DigitalOcean activation remain outstanding.
+Windows clients build through **Ascendance → Build → Build Windows Standalone 0.10.2c**. Server builds use **Build Linux Dedicated Server 0.10.2c**. Earlier cloud runs compiled and emitted complete Linux dedicated-server and Windows players. Final builds must match the source revision under review. Native server/protocol checks, two independent Unity GUI clients, Windows compilation and DigitalOcean activation are separate acceptance gates.
 
 ## Multiplayer and DigitalOcean
 
-Clients send length-prefixed UTF-8 JSON over persistent custom TCP connections, normally port **7777**. The dedicated Unity process owns room authority and executes queued gameplay commands on Unity's main thread. Local play uses the same command boundary through a loopback transport.
+Clients send length-prefixed UTF-8 JSON over persistent custom TCP connections, normally port **7777**. The dedicated Unity process owns room authority and executes queued gameplay commands on Unity's main thread. Local play uses the same command boundary through a loopback transport. Online clients keep processing in the background so an unfocused window can receive authoritative updates.
 
-The supplied transport is plain TCP: reconnect credentials are bearer credentials and are not encrypted on the wire. Do not expose it to untrusted networks without reviewing encrypted transport or a trusted private tunnel. This change adds socket-bound ownership and reconnect reliability, not TLS or player-account authentication. Upgrade client and server together for the new revision/snapshot behavior.
+TLS is optional in the transport for trusted local tests, and **required by the DigitalOcean upgrade**. Secure clients use TLS 1.2, require the exact SHA-256 certificate pin, and check the certificate's hostname and validity period. A 64-character hexadecimal room access key accompanies every RPC, including the initial HELLO, SNAPSHOT and PING. A failed secure connection never retries as plaintext. The shared room key controls access; it is not an individual player-account system. Socket-bound Hero ownership and reconnect credentials remain separate checks.
 
-Example arguments for an already verified client build:
+Use the private-invite launcher for online play. It passes the access key only through the child process environment, never through command-line arguments, public launchers or URLs. Server TLS requires all three private file settings together: `ASCENDANCE_TLS_PFX_PATH`, `ASCENDANCE_TLS_PFX_PASSWORD_FILE` and `ASCENDANCE_ROOM_ACCESS_KEY_FILE`; partial configuration fails closed. With all three absent, trusted local fixtures retain plain TCP.
 
-```text
--ascendance-connect SERVER_HOST:7777 -room ROOM_ID -player PLAYER_NAME
-```
+The inspected existing target is `159.65.100.206:7777`, room `ASC-PRIMARY`, service `ascendance`. Its persistent Unity data is `/var/lib/ascendance/.config/unity3d/Ascendance/Ascendance`, including `AscendanceServerRooms0100`. The upgrade preserves that identity and data path, stages immutable code separately, and verifies an isolated TLS native-server canary before stopping the existing service. It checks that players have disconnected, creates verified code/configuration/data backups and a consistent data backup after a graceful stop, then activates and checks the secured service. Recovery restores prior code/configuration; it does not silently replace campaign saves.
 
-The [DigitalOcean deployment tools](Deploy/DigitalOcean/README.md) support reviewed Linux release artifacts, separate persistent data, and checked activation/rollback. Their fixture tests use fake services and synthetic artifacts. No production deployment or live multiplayer acceptance has been completed by adding these tools. An existing server requires inspection of its service, actual save path, and backups before migration.
+This cloud workspace cannot carry SSH through its network proxy; the owner's Windows SSH connection works. After final proofs and release review, one pinned owner-side PowerShell command will download and verify the matching client and server, stage the release, run the private canary, back up and activate it through that existing SSH connection. It retrieves the private invite using SCP and applies a Windows ACL restricted to the owner. SSH private keys, passphrases, TLS private material, access keys and private invites stay out of Git and chat. Share the game ZIP and the private invite with trusted friends privately.
+
+Public inbound **TCP 7777** is opened only after verified secure activation. SSH remains restricted to the owner's home address; no UDP port is needed. Any later rollback to the old plaintext server must first restrict public game access. See the [deployment tools](Deploy/DigitalOcean/README.md) for the underlying artifact helpers. A staged artifact, helper fixture pass or successful port connection does not prove a production upgrade or correct gameplay.
 
 ## Source and history
 
