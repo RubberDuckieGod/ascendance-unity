@@ -8,6 +8,7 @@ from pathlib import Path
 import stat
 import shutil
 import ssl
+import struct
 import subprocess
 import tempfile
 from types import SimpleNamespace
@@ -298,7 +299,7 @@ class UpgradeSafety(unittest.TestCase):
         self.assertEqual(hello.call_args_list[2].args[3], self.security["key"])
 
     def test_read_only_restart_guard_blocks_transient_resolution_but_preserves_persisted_choices(self):
-        base = {"Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+        base = {"RoomId": self.plan["process"]["room"], "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
                               "MovingHeroIds": [], "HeroMovement": [],
                               "HasPendingRewardChoice": True, "HasPendingEncounterDeckControl": True}}
         with mock.patch.object(UPGRADE, "legacy_hello", return_value=base):
@@ -309,6 +310,44 @@ class UpgradeSafety(unittest.TestCase):
             with self.subTest(name=name), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
                 with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
                     self.actual_durable_phase(self.plan, self.security)
+
+    def test_pre_stop_guard_separates_exact_filename_identity_from_plain_and_tls_health(self):
+        exact = {"RoomId": "ASC-PRIMARY", "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+                                                         "MovingHeroIds": [], "HeroMovement": []}}
+        drift = copy.deepcopy(exact)
+        drift["RoomId"] = "asc-primary"
+        for transport in ["plain", "tls"]:
+            plan = copy.deepcopy(self.plan)
+            if transport == "tls":
+                plan["process"]["executable"] = str(self.release / "build" / "AscendanceServer.x86_64")
+            for snapshot in [exact, drift]:
+                with self.subTest(transport=transport, exact=snapshot is exact), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot), mock.patch.object(UPGRADE, "hello", return_value=snapshot):
+                    if snapshot is exact:
+                        self.actual_durable_phase(plan, self.security)
+                    else:
+                        with self.assertRaisesRegex(UPGRADE.Refusal, "capitalization differs; activation not started"):
+                            self.actual_durable_phase(plan, self.security)
+
+    def test_live_room_case_drift_refuses_before_any_backup_or_stop(self):
+        drift = {"RoomId": "asc-primary", "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+                                                         "MovingHeroIds": [], "HeroMovement": []}}
+        with self.mock_plan(), mock.patch.object(UPGRADE, "require_durable_phase", side_effect=self.actual_durable_phase), mock.patch.object(UPGRADE, "legacy_hello", return_value=drift), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing") as backup, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "keep service running until the active save path is verified"):
+                self.activate()
+            backup.assert_not_called()
+            system.assert_not_called()
+
+    def test_room_case_drift_at_second_phase_check_still_refuses_before_stop(self):
+        exact = {"RoomId": "ASC-PRIMARY", "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+                                                         "MovingHeroIds": [], "HeroMovement": []}}
+        drift = copy.deepcopy(exact)
+        drift["RoomId"] = "asc-primary"
+        with self.mock_plan(), mock.patch.object(UPGRADE, "require_durable_phase", side_effect=self.actual_durable_phase), mock.patch.object(UPGRADE, "legacy_hello", side_effect=[exact, drift]) as health, mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup) as backup, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "capitalization differs; activation not started"):
+                self.activate()
+            self.assertEqual(health.call_count, 2)
+            backup.assert_called_once()
+            system.assert_not_called()
 
     def test_archive_traversal_is_rejected_before_writing_build(self):
         archive = self.folder / "unsafe.zip"
@@ -372,6 +411,93 @@ class UpgradeSafety(unittest.TestCase):
             with self.assertRaisesRegex(UPGRADE.Refusal, "certificate differs"):
                 UPGRADE.hello(7777, "ASC-PRIMARY", "a" * 64, "b" * 64)
         self.assertEqual(stream.sent, [])
+
+
+@unittest.skipUnless(os.name == "posix", "Linux deployment wire compatibility")
+class HealthWireCompatibility(unittest.TestCase):
+    # Actual framed request/response bytes exercise the production helper; no
+    # service, network connection, account or deployment is involved.
+    class Stream:
+        def __init__(self, overrides=None, actual_room="ASC-PRIMARY"):
+            self.overrides = overrides or {}
+            self.actual_room = actual_room
+            self.pending = b""
+            self.request = None
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        def settimeout(self, value): pass
+        def getpeercert(self, binary_form=False): return b"public fixture certificate"
+        def sendall(self, frame):
+            self.request = json.loads(frame[4:])
+            response = {"ProtocolVersion": 1, "RequestId": self.request["RequestId"],
+                        "Accepted": True, "Code": "HELLO", "ServerBuildVersion": "0.10.2c",
+                        "Message": "PRIVATE-RESPONSE-MESSAGE",
+                        "Player": {"ReconnectToken": "PRIVATE-RECONNECT-PROOF"},
+                        "Snapshot": {"RoomId": self.actual_room,
+                                     "Campaign": {"PrivateFixture": "PRIVATE-CAMPAIGN-DATA"},
+                                     "Transient": {"RecentLog": ["PRIVATE-PLAYER-LOG"]}}}
+            response.update(self.overrides)
+            body = json.dumps(response).encode()
+            self.pending = struct.pack("!I", len(body)) + body
+        def recv(self, size):
+            part, self.pending = self.pending[:size], self.pending[size:]
+            return part
+
+    def invoke(self, transport, overrides=None, room="asc-primary", actual_room="ASC-PRIMARY", expect_denied=False):
+        stream = self.Stream(overrides, actual_room)
+        context = SimpleNamespace(wrap_socket=lambda *args, **kwargs: stream)
+        with mock.patch.object(UPGRADE.socket, "create_connection", return_value=stream), mock.patch.object(UPGRADE.ssl, "SSLContext", return_value=context):
+            if transport == "plain":
+                result = UPGRADE.legacy_hello(17777, room)
+            else:
+                result = UPGRADE.hello(17777, room, hashlib.sha256(stream.getpeercert()).hexdigest(), "PRIVATE-ACCESS-KEY", expect_denied=expect_denied)
+        return result, stream.request
+
+    def test_case_variants_match_native_ascii_room_routing_for_plain_and_tls(self):
+        for transport in ["plain", "tls"]:
+            with self.subTest(transport=transport):
+                snapshot, request = self.invoke(transport)
+                self.assertEqual(snapshot["RoomId"], "ASC-PRIMARY")
+                self.assertEqual(request["RoomId"], "asc-primary")
+                self.assertEqual(request["Operation"], "HELLO")
+                self.assertNotIn("ClientBuildVersion", request)
+                self.assertNotIn("ReconnectToken", request)
+
+    def test_wire_identity_failures_keep_all_guards_and_print_public_metadata_only(self):
+        cases = [("correlation", {"RequestId": "wrong-correlation"}, "requestIdMatches"),
+                 ("wrong-room", {"Snapshot": {"RoomId": "OTHER-ROOM"}}, "roomMatches"),
+                 ("wrong-build", {"ServerBuildVersion": "0.10.2b"}, "serverBuildVersion"),
+                 ("wrong-protocol", {"ProtocolVersion": 2}, "protocolVersion"),
+                 ("missing-protocol", {"ProtocolVersion": None}, "protocolVersion"),
+                 ("boolean-protocol", {"ProtocolVersion": True}, "protocolVersion"),
+                 ("rejected", {"Accepted": False}, "accepted"),
+                 ("wrong-code", {"Code": "PONG"}, "code"),
+                 ("invalid-code", {"Code": "DO-NOT-ECHO-THIS\n"}, "<invalid>")]
+        for transport in ["plain", "tls"]:
+            for name, overrides, expected_label in cases:
+                with self.subTest(transport=transport, case=name):
+                    with self.assertRaises(UPGRADE.Refusal) as caught:
+                        self.invoke(transport, overrides)
+                    error = str(caught.exception)
+                    self.assertIn(expected_label, error)
+                    for private in ["PRIVATE-RESPONSE-MESSAGE", "PRIVATE-RECONNECT-PROOF", "PRIVATE-CAMPAIGN-DATA", "PRIVATE-PLAYER-LOG", "PRIVATE-ACCESS-KEY", "DO-NOT-ECHO-THIS"]:
+                        self.assertNotIn(private, error)
+
+    def test_nonascii_or_padded_room_ids_are_not_normalized_into_matches(self):
+        for room in ["ASC-PRIMAR\u0131", " ASC-PRIMARY ", "ASC-PRIMARY/OTHER"]:
+            for transport in ["plain", "tls"]:
+                with self.subTest(room=room, transport=transport):
+                    with self.assertRaisesRegex(UPGRADE.Refusal, "roomMatches"):
+                        self.invoke(transport, actual_room=room)
+
+    def test_denied_tls_response_still_requires_protocol_correlation_and_no_state(self):
+        denied = {"Accepted": False, "Code": "ROOM_ACCESS_DENIED", "Player": None, "Snapshot": None, "CommandResult": None}
+        self.assertIsNone(self.invoke("tls", denied, expect_denied=True)[0])
+        for failure in [{"ProtocolVersion": 2}, {"RequestId": "wrong"}, {"Player": {"ReconnectToken": "PRIVATE-RECONNECT-PROOF"}}]:
+            with self.subTest(failure=list(failure)):
+                with self.assertRaises(UPGRADE.Refusal) as caught:
+                    self.invoke("tls", {**denied, **failure}, expect_denied=True)
+                self.assertNotIn("PRIVATE-RECONNECT-PROOF", str(caught.exception))
 
 
 if __name__ == "__main__":

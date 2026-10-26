@@ -460,6 +460,46 @@ def denied_without_authority(response):
     return True
 
 
+def same_room(actual, expected):
+    # Native routing uses OrdinalIgnoreCase. Limit this comparison to the same
+    # ASCII room alphabet accepted by checked_plan; do not fold other identities.
+    return all(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,128}", value)
+               for value in (actual, expected)) and actual.lower() == expected.lower()
+
+
+def public_hello_identity(response, request_id, room):
+    response = response if isinstance(response, dict) else {}
+    snapshot = response.get("Snapshot")
+    snapshot = snapshot if isinstance(snapshot, dict) else {}
+    def public_string(value, pattern):
+        if value is None:
+            return "<missing>"
+        return value if isinstance(value, str) and re.fullmatch(pattern, value) else "<invalid>"
+    protocol = response.get("ProtocolVersion")
+    accepted = response.get("Accepted")
+    return {
+        "requestIdMatches": response.get("RequestId") == request_id,
+        "accepted": accepted if type(accepted) is bool else "<missing-or-invalid>",
+        "code": public_string(response.get("Code"), r"[A-Z0-9_]{1,64}"),
+        "serverBuildVersion": public_string(response.get("ServerBuildVersion"), r"[0-9][0-9A-Za-z._+-]{0,63}"),
+        "protocolVersion": protocol if type(protocol) is int and 0 <= protocol <= 65535 else "<missing-or-invalid>",
+        "roomExactMatches": snapshot.get("RoomId") == room,
+        "roomMatches": bool(same_room(snapshot.get("RoomId"), room)),
+    }
+
+
+def verify_hello_identity(response, request_id, room, label):
+    metadata = public_hello_identity(response, request_id, room)
+    valid = (metadata["requestIdMatches"] and metadata["accepted"] is True
+             and metadata["code"] == "HELLO" and metadata["serverBuildVersion"] == "0.10.2c"
+             and type(metadata["protocolVersion"]) is int and metadata["protocolVersion"] == 1
+             and metadata["roomMatches"])
+    # Public wire identity fields and booleans only: never include response
+    # messages, snapshots, players, logs, reconnect proof or room access keys.
+    require(valid, label + " verification failed: " + json.dumps(metadata, sort_keys=True))
+    return response["Snapshot"]
+
+
 def hello(port, room, pin, key, expect_denied=False):
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
@@ -477,11 +517,13 @@ def hello(port, room, pin, key, expect_denied=False):
             size = struct.unpack("!I", frame_read(stream, 4))[0]
             require(0 < size <= 8 * 1024 * 1024, "Invalid secure health response size")
             response = json.loads(frame_read(stream, size))
-            require(response.get("RequestId") == request["RequestId"], "Health response correlation mismatch")
             if key is None or expect_denied:
+                metadata = public_hello_identity(response, request["RequestId"], room)
+                require(metadata["requestIdMatches"] and type(metadata["protocolVersion"]) is int and metadata["protocolVersion"] == 1,
+                        "Secure HELLO envelope verification failed: " + json.dumps(metadata, sort_keys=True))
                 require(denied_without_authority(response), "Unauthenticated access was not rejected without authority data")
             else:
-                require(response.get("Accepted") is True and response.get("Code") == "HELLO" and response.get("ServerBuildVersion") == "0.10.2c" and response.get("Snapshot", {}).get("RoomId") == room, "Authenticated secure health did not match this room/build")
+                verify_hello_identity(response, request["RequestId"], room, "Read-only authenticated secure HELLO identity")
             return response.get("Snapshot")
 
 
@@ -496,8 +538,7 @@ def legacy_hello(port, room):
         size = struct.unpack("!I", frame_read(stream, 4))[0]
         require(0 < size <= 8 * 1024 * 1024, "Invalid previous-service health response size")
         response = json.loads(frame_read(stream, size))
-        require(response.get("RequestId") == request["RequestId"] and response.get("Accepted") is True and response.get("Code") == "HELLO" and response.get("ServerBuildVersion") == "0.10.2c" and response.get("Snapshot", {}).get("RoomId") == room, "Previous-service recovery did not match its room/build")
-        return response["Snapshot"]
+        return verify_hello_identity(response, request["RequestId"], room, "Read-only legacy HELLO identity")
 
 
 def require_durable_phase(plan, security):
@@ -506,6 +547,11 @@ def require_durable_phase(plan, security):
         snapshot = hello(process["port"], process["room"], security["pin"], security["key"])
     else:
         snapshot = legacy_hello(process["port"], process["room"])
+    # Routing accepts ASCII case variants, but Linux persistence filenames do
+    # not. Restarting a CLI/save-case mismatch can reload and overwrite stale
+    # progress; health compatibility must never authorize that restart.
+    require(snapshot.get("RoomId") == process["room"],
+            "Live room/save filename capitalization differs; activation not started; keep service running until the active save path is verified.")
     transient = snapshot.get("Transient") or {}
     require(transient.get("IsResolving") is False and transient.get("HasPendingReactionWindow") is False and transient.get("MovingHeroIds") == [] and transient.get("HeroMovement") == [], "Game has an unresolved movement/reaction/resolution; finish it and save before activation")
 
