@@ -139,7 +139,32 @@ if ($Phase -ne 'Supervisor') {
         $evidence.error = $_.Exception.Message
         throw
     } finally {
+        if ($Phase -eq 'Test') {
+            # Only after the private-DACL assertions, let the supervisor inspect
+            # the seeded SACL and delete this synthetic tree. The ordinary owner
+            # still lacks SeSecurityPrivilege and cannot restore/change a SACL.
+            try {
+                $ownedRoot = Join-Path $WorkRoot 'ordinary-owned'
+                $items = @((Get-Item -LiteralPath $ownedRoot)) + @(Get-ChildItem -LiteralPath $ownedRoot -Recurse -Force)
+                $administrators = New-Object Security.Principal.SecurityIdentifier('S-1-5-32-544')
+                foreach ($item in $items) {
+                    $acl = $item.GetAccessControl($accessSections)
+                    $inheritance = [Security.AccessControl.InheritanceFlags]::None
+                    if ($item -is [IO.DirectoryInfo]) {
+                        $inheritance = [Security.AccessControl.InheritanceFlags]::ContainerInherit -bor [Security.AccessControl.InheritanceFlags]::ObjectInherit
+                    }
+                    $rule = New-Object Security.AccessControl.FileSystemAccessRule($administrators, 'FullControl', $inheritance, 'None', 'Allow')
+                    [void]$acl.AddAccessRule($rule)
+                    $item.SetAccessControl($acl)
+                }
+                $evidence.supervisorAccess = 'Restored after ordinary-user assertions, DACL only'
+            } catch {
+                $evidence.passed = $false
+                $evidence.cleanupAccessError = $_.Exception.Message
+            }
+        }
         $evidence | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $WorkRoot "$Phase-result.json") -Encoding UTF8
+        Assert-Fixture $evidence.passed 'Ordinary-user validation or synthetic-fixture cleanup access failed.'
     }
     return
 }
@@ -193,7 +218,7 @@ try {
             }
         }
         $arguments = @('-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', $fixtureScript, '-Phase', $childPhase, '-WorkRoot', $root, '-ExpectedSid', $ExpectedSid, '-WrapperPath', $WrapperPath)
-        $process = Start-Process -FilePath "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -ArgumentList $arguments -Credential $credential -LoadUserProfile -WorkingDirectory $root -PassThru -Wait -RedirectStandardOutput (Join-Path $root "$childPhase-stdout.txt") -RedirectStandardError (Join-Path $root "$childPhase-stderr.txt")
+        $process = Start-Process -FilePath "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -ArgumentList $arguments -Credential $credential -WorkingDirectory $root -PassThru -Wait -RedirectStandardOutput (Join-Path $root "$childPhase-stdout.txt") -RedirectStandardError (Join-Path $root "$childPhase-stderr.txt")
         $resultFile = Join-Path $root "$childPhase-result.json"
         if (Test-Path -LiteralPath $resultFile) { Copy-Item -LiteralPath $resultFile -Destination $ResultDirectory }
         Get-Content -LiteralPath (Join-Path $root "$childPhase-stdout.txt")
@@ -212,6 +237,7 @@ try {
     $summary.passed = $true
 } catch {
     $summary.error = $_.Exception.Message
+    $summary.errorStack = $_.ScriptStackTrace
     throw
 } finally {
     try {
@@ -230,6 +256,7 @@ try {
     } catch {
         $summary.cleanup = 'FAIL'
         $summary.cleanupError = $_.Exception.Message
+        $summary.cleanupStack = $_.ScriptStackTrace
         $summary.passed = $false
     }
     $summary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $ResultDirectory 'summary.json') -Encoding UTF8
