@@ -1,0 +1,161 @@
+{
+  "format": 1,
+  "toolingSourceRevision": "910d7bdbb1d5f2a0367287ed1d68379e6ca78218",
+  "runtimeSourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+  "wrapperSha256": "176a7f99a122d347b71ce74a6574dcf84f043ab298b77a26a0135c7ecfa01bfa",
+  "actualWindowsWorkflow": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40249083895",
+  "powershellVersion": "5.1.26100.33648",
+  "ordinaryUserWithoutSeSecurityPrivilege": true,
+  "passed": true,
+  "checksPassed": 34,
+  "checksFailed": 0,
+  "checks": [
+    {
+      "name": "Actual child is Windows PowerShell 5.1",
+      "passed": true
+    },
+    {
+      "name": "Actual child identity is the new isolated account",
+      "passed": true
+    },
+    {
+      "name": "Actual child token is not an administrator",
+      "passed": true
+    },
+    {
+      "name": "Actual child token has no SeSecurityPrivilege, even disabled",
+      "passed": true
+    },
+    {
+      "name": "No GitHub credential is supplied to the child",
+      "passed": true
+    },
+    {
+      "name": "Fixture is genuinely owned by the ordinary user",
+      "passed": true
+    },
+    {
+      "name": "Fixture initially inherits foreign Everyone access",
+      "passed": true
+    },
+    {
+      "name": "Fixture is genuinely owned by the ordinary user",
+      "passed": true
+    },
+    {
+      "name": "Fixture initially inherits foreign Everyone access",
+      "passed": true
+    },
+    {
+      "name": "Actual child is Windows PowerShell 5.1",
+      "passed": true
+    },
+    {
+      "name": "Actual child identity is the new isolated account",
+      "passed": true
+    },
+    {
+      "name": "Actual child token is not an administrator",
+      "passed": true
+    },
+    {
+      "name": "Actual child token has no SeSecurityPrivilege, even disabled",
+      "passed": true
+    },
+    {
+      "name": "No GitHub credential is supplied to the child",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "Owner and primary group are unchanged",
+      "passed": true
+    },
+    {
+      "name": "Protect is idempotent",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "Owner and primary group are unchanged",
+      "passed": true
+    },
+    {
+      "name": "Protect is idempotent",
+      "passed": true
+    },
+    {
+      "name": "Protect preserves file contents",
+      "passed": true
+    },
+    {
+      "name": "New descendants inherit only ordinary-user FullControl",
+      "passed": true
+    },
+    {
+      "name": "New descendants inherit only ordinary-user FullControl",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "Invite destination is protected before any bytes are written",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "DACL is protected and contains only the ordinary user with explicit FullControl",
+      "passed": true
+    },
+    {
+      "name": "Protected invite overwrite and copy preserve exact bytes",
+      "passed": true
+    },
+    {
+      "name": "Unsafe fixture is refused (another Windows owner)",
+      "passed": true
+    },
+    {
+      "name": "Refused foreign-owner file is unchanged",
+      "passed": true
+    },
+    {
+      "name": "Unsafe fixture is refused (reparse point)",
+      "passed": true
+    },
+    {
+      "name": "Unsafe fixture is refused (reparse point)",
+      "passed": true
+    },
+    {
+      "name": "Refused junction and ancestor leave their target unchanged",
+      "passed": true
+    }
+  ],
+  "existingAuditSettings": {
+    "status": "PASS",
+    "fixtures": 2
+  },
+  "fixtureCleanup": "PASS",
+  "linuxHelperTests": {
+    "passed": 94,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Windows permission helper only; no Unity gameplay, SSH, server deployment or firewall change in the test."
+}

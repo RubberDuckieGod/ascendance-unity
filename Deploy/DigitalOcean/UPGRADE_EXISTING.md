@@ -16,6 +16,10 @@ before transferring the invitation. Foreign-owned paths and filesystem links
 are refused. It does not require administrator elevation. The revised wrapper
 fixes the `SeSecurityPrivilege` failure in the original Windows permission step;
 the validated game builds and release descriptor are unchanged.
+The [actual Windows PowerShell 5.1 test](https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40249083895)
+passed under a separate ordinary account with no `SeSecurityPrivilege`, including
+34 setup/permission assertions, two unchanged audit policies and full cleanup.
+See the [recorded evidence](../../docs/WINDOWS_DEPLOYMENT_ACL_VALIDATION_910D7BD.json).
 
 Without `-Apply`, the wrapper stages the immutable server release, prepares
 private transport files, and runs a complete native server canary with synthetic
