@@ -10,6 +10,13 @@ OpenSSH key. The wrapper prepares the complete verified Windows client before
 requesting any server activation. Source scripts, Linux server archive, and
 manifest are separately pinned by the reviewed release descriptor.
 
+The Windows wrapper runs as the current Windows user. It changes only access
+permissions, preserves ownership and audit settings, and verifies private paths
+before transferring the invitation. Foreign-owned paths and filesystem links
+are refused. It does not require administrator elevation. The revised wrapper
+fixes the `SeSecurityPrivilege` failure in the original Windows permission step;
+the validated game builds and release descriptor are unchanged.
+
 Without `-Apply`, the wrapper stages the immutable server release, prepares
 private transport files, and runs a complete native server canary with synthetic
 rooms and temporary data. It leaves the active service running. With `-Apply`,

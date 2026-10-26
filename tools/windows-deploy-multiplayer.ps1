@@ -29,20 +29,89 @@ function Get-AscendanceVerifiedFile {
     }
 }
 
+function Get-AscendanceRegularPath {
+    param([string]$Path)
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+    if ($item -isnot [System.IO.FileInfo] -and $item -isnot [System.IO.DirectoryInfo]) {
+        throw 'Owner permissions require a regular filesystem file or directory.'
+    }
+    $component = $item
+    while ($null -ne $component) {
+        if (($component.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+            throw 'Owner permissions refuse a reparse point in the target or any parent directory.'
+        }
+        if ($component -is [System.IO.FileInfo]) { $component = $component.Directory }
+        else { $component = $component.Parent }
+    }
+    return $item
+}
+
+function Get-AscendanceAccessSecurity {
+    param([System.IO.FileSystemInfo]$Item)
+    # Never request Audit/SACL: an ordinary Windows user does not have
+    # SeSecurityPrivilege, and the existing audit descriptor is not ours to edit.
+    $sections = [System.Security.AccessControl.AccessControlSections]::Access -bor
+                [System.Security.AccessControl.AccessControlSections]::Owner -bor
+                [System.Security.AccessControl.AccessControlSections]::Group
+    if ($PSVersionTable.PSEdition -eq 'Core') {
+        return [System.IO.FileSystemAclExtensions]::GetAccessControl($Item, $sections)
+    }
+    return $Item.GetAccessControl($sections)
+}
+
 function Protect-AscendanceOwnerPath {
     param([string]$Path)
+    $item = Get-AscendanceRegularPath $Path
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $acl = Get-Acl -LiteralPath $Path
-    $acl.SetAccessRuleProtection($true, $false)
-    foreach ($rule in @($acl.Access)) { [void]$acl.RemoveAccessRuleAll($rule) }
-    if (Test-Path -LiteralPath $Path -PathType Container) {
-        $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity.User, 'FullControl', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
-    } else {
-        $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity.User, 'FullControl', 'Allow')
+    $sidType = [System.Security.Principal.SecurityIdentifier]
+    $before = Get-AscendanceAccessSecurity $item
+    $owner = $before.GetOwner($sidType).Value
+    $group = $before.GetGroup($sidType).Value
+    if ($owner -ne $identity.User.Value) {
+        throw 'This path belongs to another Windows owner. Choose a new output directory owned by your current user; ownership will not be changed.'
     }
+    $inheritance = [System.Security.AccessControl.InheritanceFlags]::None
+    if ($item -is [System.IO.DirectoryInfo]) {
+        $acl = New-Object System.Security.AccessControl.DirectorySecurity
+        $inheritance = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit -bor
+                       [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
+    } else {
+        $acl = New-Object System.Security.AccessControl.FileSecurity
+    }
+    # A fresh descriptor has only Access modified. Persisting it through the
+    # filesystem ACL API writes DACL_SECURITY_INFORMATION, never owner/group or
+    # audit sections. Set-Acl/SetOwner caused SeSecurityPrivilege failures here.
+    $acl.SetAccessRuleProtection($true, $false)
+    $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity.User,
+        [System.Security.AccessControl.FileSystemRights]::FullControl, $inheritance,
+        [System.Security.AccessControl.PropagationFlags]::None,
+        [System.Security.AccessControl.AccessControlType]::Allow)
     [void]$acl.AddAccessRule($rule)
-    $acl.SetOwner($identity.User)
-    Set-Acl -LiteralPath $Path -AclObject $acl
+    if ($PSVersionTable.PSEdition -eq 'Core') {
+        [System.IO.FileSystemAclExtensions]::SetAccessControl($item, $acl)
+    } else {
+        $item.SetAccessControl($acl)
+    }
+    $verify = Get-AscendanceAccessSecurity (Get-AscendanceRegularPath $Path)
+    $rules = @($verify.GetAccessRules($true, $true, $sidType))
+    if (-not $verify.AreAccessRulesProtected -or $rules.Count -ne 1 -or
+        $rules[0].IsInherited -or $rules[0].IdentityReference.Value -ne $identity.User.Value -or
+        $rules[0].AccessControlType -ne [System.Security.AccessControl.AccessControlType]::Allow -or
+        $rules[0].FileSystemRights -ne [System.Security.AccessControl.FileSystemRights]::FullControl -or
+        $rules[0].InheritanceFlags -ne $inheritance -or
+        $rules[0].PropagationFlags -ne [System.Security.AccessControl.PropagationFlags]::None -or
+        $verify.GetOwner($sidType).Value -ne $owner -or $verify.GetGroup($sidType).Value -ne $group) {
+        throw 'Owner-only permissions could not be verified. No private invite will be copied to this path.'
+    }
+}
+
+function New-AscendanceOwnerFile {
+    param([string]$Path)
+    [void](Get-AscendanceRegularPath (Split-Path -Parent $Path))
+    $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::CreateNew,
+        [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+    $stream.Dispose()
+    Protect-AscendanceOwnerPath $Path
 }
 
 function Expand-AscendanceClientZip {
@@ -145,12 +214,15 @@ $result | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $publicResultFile 
 Protect-AscendanceOwnerPath $publicResultFile
 if ([string]$result.ownerProfilePath -notmatch '^/etc/ascendance-secure/[A-Za-z0-9._-]+\.json$') { throw 'Unexpected private invite path.' }
 $privateInvite = Join-Path $session 'Ascendance.invite.json'
+New-AscendanceOwnerFile $privateInvite
 & scp -o StrictHostKeyChecking=yes -o ServerAliveInterval=20 -o ServerAliveCountMax=6 "${SshTarget}:$($result.ownerProfilePath)" $privateInvite
 if ($LASTEXITCODE -ne 0) { throw "The server activated, but its private invite could not be retrieved. It remains private on the server. Public activation metadata is saved at $publicResultFile." }
 Protect-AscendanceOwnerPath $privateInvite
 
-Copy-Item -LiteralPath $privateInvite -Destination (Join-Path $gameDirectory 'Ascendance.invite.json')
-Protect-AscendanceOwnerPath (Join-Path $gameDirectory 'Ascendance.invite.json')
+$gameInvite = Join-Path $gameDirectory 'Ascendance.invite.json'
+New-AscendanceOwnerFile $gameInvite
+Copy-Item -LiteralPath $privateInvite -Destination $gameInvite
+Protect-AscendanceOwnerPath $gameInvite
 Write-Host "Secure server activated: $($result.endpoint), room $($result.room)."
 Write-Host "Server certificate SHA-256: $($result.certificateSha256)"
 Write-Host "On-server backup retained at: $($result.backupDirectory)"

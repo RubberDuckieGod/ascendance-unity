@@ -100,6 +100,33 @@ class MultiplayerLauncher(unittest.TestCase):
         self.assertEqual((destination / "Windows/Ascendance.exe").read_bytes(), b"synthetic-not-executable")
         self.assertEqual((destination / "Windows/Ascendance_Data/fixture").read_bytes(), b"required-data")
 
+    def test_existing_private_file_cannot_be_truncated_by_precreation(self):
+        before = self.profile.read_bytes()
+        output = self.ps("New-AscendanceOwnerFile $inviteFile")
+        self.assertNotEqual(output.returncode, 0)
+        self.assertEqual(self.profile.read_bytes(), before)
+        self.assertNotIn(self.invite["accessKey"], output.stdout + output.stderr)
+
+    @unittest.skipUnless(os.name == "posix", "Windows junctions are tested by the nonadmin Windows CI fixture")
+    def test_reparse_file_is_refused_before_windows_acl_access(self):
+        link = self.folder / "linked-invite.json"
+        link.symlink_to(self.profile)
+        before = self.profile.read_bytes()
+        output = self.ps("Protect-AscendanceOwnerPath '" + str(link) + "'")
+        self.assertNotEqual(output.returncode, 0)
+        self.assertIn("reparse point", output.stderr)
+        self.assertEqual(self.profile.read_bytes(), before)
+
+    @unittest.skipUnless(os.name == "posix", "Windows junctions are tested by the nonadmin Windows CI fixture")
+    def test_reparse_ancestor_is_refused_before_windows_acl_access(self):
+        directory = self.folder / "linked-parent"
+        directory.symlink_to(self.folder, target_is_directory=True)
+        before = self.profile.read_bytes()
+        output = self.ps("Protect-AscendanceOwnerPath '" + str(directory / self.profile.name) + "'")
+        self.assertNotEqual(output.returncode, 0)
+        self.assertIn("reparse point", output.stderr)
+        self.assertEqual(self.profile.read_bytes(), before)
+
 
 if __name__ == "__main__":
     unittest.main()
