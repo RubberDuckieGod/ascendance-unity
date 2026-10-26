@@ -5,8 +5,15 @@ This package upgrades the inspected `ascendance` systemd service on
 remains `/var/lib/ascendance/.config/unity3d/Ascendance/Ascendance`. It neither
 clears saves nor creates player sessions in the existing room.
 
-The owner runs the SHA-256-pinned Windows wrapper using the existing Windows
-OpenSSH key. The wrapper prepares the complete verified Windows client before
+For a direct installation, open an interactive root SSH session and run the
+checksum-pinned `install-release.py --apply` entrypoint on the Droplet. It fetches
+the existing reviewed release and delegates to the same canary, backup and
+activation implementation. Progress goes to stderr and public result JSON goes
+to stdout. Without `--apply` it only stages and validates. The private invitation
+stays on the Droplet for a separate owner-only transfer after activation.
+
+The owner can also run the SHA-256-pinned Windows wrapper using the existing
+Windows OpenSSH key. The wrapper prepares the complete verified Windows client before
 requesting any server activation. Source scripts, Linux server archive, and
 manifest are separately pinned by the reviewed release descriptor.
 
