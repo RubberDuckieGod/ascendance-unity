@@ -42,6 +42,7 @@ class OnHostInstaller(unittest.TestCase):
         checksum = hashlib.sha256(self.payload).hexdigest()
         self.data = {
             "format": 1, "release": INSTALLER.RELEASE, "sourceRevision": INSTALLER.SOURCE_REVISION,
+            "deploymentRevision": INSTALLER.DEPLOYMENT_REVISION,
             "endpoint": "159.65.100.206:7777",
             "helpers": {name: {"url": INSTALLER.SOURCE_BASE + relative, "sha256": checksum}
                         for name, relative in INSTALLER.HELPER_PATHS.items()},
@@ -115,7 +116,13 @@ class OnHostInstaller(unittest.TestCase):
             temporary.assert_not_called()
             child.assert_not_called()
 
-    def exercise(self, apply, bad_archive=False):
+    def diagnosis(self):
+        return {"format": "ascendance-readonly-hello-diagnostic-1", "readOnly": True,
+                "hello": {"responseReceived": True, "accepted": True, "code": "HELLO",
+                          "protocolVersion": 1, "serverBuildVersion": "0.10.2c",
+                          "requestIdMatches": True, "snapshotRoomMatchesExpected": True}}
+
+    def exercise(self, apply, bad_archive=False, diagnosis=None, upgrade_code=0):
         descriptor_bytes = json.dumps(self.data).encode()
         routes = {INSTALLER.DESCRIPTOR_URL: descriptor_bytes}
         for entry in self.data["helpers"].values(): routes[entry["url"]] = self.payload
@@ -125,7 +132,11 @@ class OnHostInstaller(unittest.TestCase):
         bootstrap = self.folder / "private-bootstrap"
         bootstrap.mkdir()
         output, errors = io.StringIO(), io.StringIO()
-        with mock.patch.object(INSTALLER.sys, "platform", "linux"), mock.patch.object(INSTALLER.os, "geteuid", return_value=0, create=True), mock.patch.object(INSTALLER.os, "umask"), mock.patch.object(INSTALLER.tempfile, "mkdtemp", return_value=str(bootstrap)), mock.patch.object(INSTALLER, "DESCRIPTOR_SHA256", hashlib.sha256(descriptor_bytes).hexdigest()), mock.patch.object(INSTALLER.urllib.request, "build_opener", return_value=downloads), mock.patch.object(INSTALLER.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as child, contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+        def run(command, **kwargs):
+            if Path(command[1]).name == "diagnose-existing.py":
+                return SimpleNamespace(returncode=0, stdout=json.dumps(diagnosis or self.diagnosis()), stderr="PRIVATE-RAW-STDERR")
+            return SimpleNamespace(returncode=upgrade_code, stdout=json.dumps({"status": "REFUSED" if upgrade_code else "STAGED_SECURE"}), stderr="PRIVATE-RAW-STDERR")
+        with mock.patch.object(INSTALLER.sys, "platform", "linux"), mock.patch.object(INSTALLER.os, "geteuid", return_value=0, create=True), mock.patch.object(INSTALLER.os, "umask"), mock.patch.object(INSTALLER.tempfile, "mkdtemp", return_value=str(bootstrap)), mock.patch.object(INSTALLER, "DESCRIPTOR_SHA256", hashlib.sha256(descriptor_bytes).hexdigest()), mock.patch.object(INSTALLER.urllib.request, "build_opener", return_value=downloads), mock.patch.object(INSTALLER.subprocess, "run", side_effect=run) as child, contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
             code = INSTALLER.main(["--apply"] if apply else [])
         return code, child, downloads, bootstrap, output.getvalue(), errors.getvalue()
 
@@ -133,13 +144,13 @@ class OnHostInstaller(unittest.TestCase):
     def test_staging_downloads_only_verified_server_inputs_before_delegation(self):
         code, child, downloads, bootstrap, output, errors = self.exercise(False)
         self.assertEqual(code, 0)
-        self.assertEqual(len(downloads.requests), 7)
+        self.assertEqual(len(downloads.requests), 8)
         command = child.call_args.args[0]
         self.assertEqual(Path(command[1]), bootstrap / "upgrade-existing.py")
         self.assertNotIn("--apply", command)
         self.assertEqual(child.call_args.kwargs["stdin"], INSTALLER.subprocess.DEVNULL)
         self.assertFalse(child.call_args.kwargs.get("shell", False))
-        self.assertEqual(output, "")  # Progress does not contaminate child result JSON.
+        self.assertEqual(json.loads(output)["status"], "STAGED_SECURE")
         self.assertIn("staging only", errors)
         self.assertEqual(bootstrap.stat().st_mode & 0o777, 0o700)
         self.assertFalse(any("windows" in url.lower() or "invite" in url.lower() for url in downloads.requests))
@@ -149,15 +160,59 @@ class OnHostInstaller(unittest.TestCase):
         code, child, _, _, _, errors = self.exercise(True)
         self.assertEqual(code, 0)
         self.assertIn("--apply", child.call_args.args[0])
+        self.assertEqual(Path(child.call_args_list[0].args[0][1]).name, "diagnose-existing.py")
         self.assertIn("isolated canary, backup and recovery", errors)
 
     @unittest.skipUnless(os.name == "posix", "The on-host bootstrap requires Linux filesystem paths")
     def test_tampered_server_never_invokes_any_service_or_upgrader(self):
         code, child, _, _, output, _ = self.exercise(True, bad_archive=True)
         self.assertEqual(code, 1)
-        child.assert_not_called()
+        self.assertEqual(child.call_count, 1)  # Read-only probe only; no upgrader.
+        self.assertEqual(Path(child.call_args.args[0][1]).name, "diagnose-existing.py")
         self.assertEqual(json.loads(output)["status"], "REFUSED")
         self.assertIn("checksum mismatch", json.loads(output)["message"])
+
+    def test_case_drift_reports_diagnostic_without_game_download_canary_or_upgrade(self):
+        diagnosis = self.diagnosis()
+        diagnosis["hello"].update(snapshotRoomMatchesExpected=False, snapshotRoomMatchesAsciiCaseInsensitive=True)
+        code, child, downloads, _, output, errors = self.exercise(True, diagnosis=diagnosis)
+        self.assertEqual(code, 1)
+        result = json.loads(output)
+        self.assertEqual(result["failedIdentityChecks"], ["snapshotRoomMatchesExpected"])
+        self.assertFalse(result["productionServiceChanged"])
+        self.assertEqual(result["diagnostic"], diagnosis)
+        self.assertEqual(child.call_count, 1)
+        self.assertFalse(any(url.endswith(".zip") for url in downloads.requests))
+        self.assertNotIn("PRIVATE-RAW-STDERR", output + errors)
+
+    def test_unknown_build_protocol_and_correlation_are_never_waived(self):
+        for key, value in [("serverBuildVersion", "0.8.62b"), ("protocolVersion", True),
+                           ("requestIdMatches", False), ("code", "OTHER"), ("accepted", False)]:
+            report = self.diagnosis()
+            report["hello"][key] = value
+            with self.subTest(key=key):
+                self.assertIn(key, INSTALLER.identity_blockers(report))
+
+    def test_unavailable_plaintext_probe_defers_to_authenticated_upgrader(self):
+        report = {"readOnly": True, "format": "ascendance-readonly-hello-diagnostic-1",
+                  "hello": {"responseReceived": False, "error": "TimeoutError"}}
+        code, child, _, _, output, _ = self.exercise(True, diagnosis=report)
+        self.assertEqual(code, 0)
+        self.assertEqual(child.call_count, 2)
+        self.assertNotIn("diagnostic", json.loads(output))
+
+    def test_later_upgrade_refusal_includes_redacted_probe_automatically(self):
+        code, child, _, _, output, errors = self.exercise(True, upgrade_code=1)
+        self.assertEqual(code, 1)
+        self.assertEqual(json.loads(output)["diagnostic"], self.diagnosis())
+        self.assertEqual(child.call_count, 2)
+        self.assertNotIn("PRIVATE-RAW-STDERR", output + errors)
+
+    def test_invalid_diagnostic_output_is_not_echoed(self):
+        with mock.patch.object(INSTALLER.subprocess, "run", return_value=SimpleNamespace(stdout="PRIVATE malformed raw response")):
+            result = INSTALLER.inspect_current(self.folder)
+        self.assertFalse(result["diagnosticAvailable"])
+        self.assertNotIn("PRIVATE", json.dumps(result))
 
 
 if __name__ == "__main__":

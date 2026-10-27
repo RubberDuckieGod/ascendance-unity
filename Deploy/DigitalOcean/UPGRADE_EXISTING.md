@@ -7,10 +7,26 @@ clears saves nor creates player sessions in the existing room.
 
 For a direct installation, open an interactive root SSH session and run the
 checksum-pinned `install-release.py --apply` entrypoint on the Droplet. It fetches
-the existing reviewed release and delegates to the same canary, backup and
+the existing reviewed runtime with separately pinned deployment helpers and delegates to the same canary, backup and
 activation implementation. Progress goes to stderr and public result JSON goes
 to stdout. Without `--apply` it only stages and validates. The private invitation
 stays on the Droplet for a separate owner-only transfer after activation.
+
+The revised entrypoint uses `releases/release-deployment-ef41d18.json`; the
+original published `release.json` and game binaries remain unchanged. For an
+apply request it runs the pinned read-only service diagnostic before downloading
+the game archive or running the canary. Known build, protocol, correlation or
+exact room/save identity mismatches return the precise failed checks and safe
+diagnostics immediately, without stopping the service. An unavailable plaintext
+probe defers to the upgrader's transport-aware checks. Later failures attach the
+diagnostic automatically; a separate diagnostic command is unnecessary.
+
+Wire routing accepts ASCII room capitalization differences, but Linux save
+filenames and existing clients' reconnect storage do not. A capitalization
+mismatch remains blocked until the actual active save and original launcher are
+verified. Do not force that guard or change client invitation spelling. Native
+fixtures reproduce both lost progress under stale spelling and retained progress
+under exact active spelling; they do not certify a production migration.
 
 The owner can also run the SHA-256-pinned Windows wrapper using the existing
 Windows OpenSSH key. The wrapper prepares the complete verified Windows client before

@@ -94,5 +94,12 @@
   },
   "runtimeDefectStatus": "Unresolved malformed/aliased room-file capitalization case; deployment is refused before stop until the active save path is verified. Wire case compatibility alone does not make migration safe.",
   "productionRefusalCause": "Awaiting owner read-only diagnostic; case drift is a reproduced candidate, not an established host cause.",
-  "releaseStatus": "This deployment-tool patch is not yet incorporated into the pinned public release descriptor. Existing game binaries and runtime source eb51 are unchanged."
+  "releaseStatus": "Revised on-host installer uses a separately pinned deployment descriptor with ef41 helper guards and automatic read-only diagnostics. Original release.json and runtime source/binaries eb51 are unchanged. No production activation is verified.",
+  "nativeCaseTransitionProof": {
+    "status": "PASS",
+    "passed": 30,
+    "failed": 0,
+    "report": "NATIVE_CASE_TRANSITION_PROOF.json",
+    "limitations": "Actual isolated native processes only; no systemd or production migration proof; original launcher and active host identity remain unverified."
+  }
 }

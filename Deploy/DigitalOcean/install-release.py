@@ -20,15 +20,17 @@ import urllib.request
 
 RELEASE = "unity-0.10.2c-multiplayer-eb51b22"
 SOURCE_REVISION = "eb51b2292cf433a2cbe5dabb4863f1fef993161a"
+DEPLOYMENT_REVISION = "ef41d18f1a21ffd81dcbebec5465fc6c707c4e58"
 RELEASE_BASE = "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/" + RELEASE + "/"
-SOURCE_BASE = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/" + SOURCE_REVISION + "/"
-DESCRIPTOR_URL = RELEASE_BASE + "release.json"
-DESCRIPTOR_SHA256 = "91be6e70423791cd66bd89eada21e411301720694b05279c02bba541953b80bd"
+SOURCE_BASE = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/" + DEPLOYMENT_REVISION + "/"
+DESCRIPTOR_URL = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/6eff0a0eb2bef9de7ad86acc8488285a44989297/Deploy/DigitalOcean/releases/release-deployment-ef41d18.json"
+DESCRIPTOR_SHA256 = "c147f9237dba9b6df4a1238d82faba60786eeff0558c522b5ead6f24d9a59222"
 HELPER_PATHS = {
     "upgrade-existing.py": "Deploy/DigitalOcean/upgrade-existing.py",
     "inspect-existing.py": "Deploy/DigitalOcean/inspect-existing.py",
     "release.py": "Deploy/DigitalOcean/release.py",
     "native_server_acceptance.py": "tools/native_server_acceptance.py",
+    "diagnose-existing.py": "Deploy/DigitalOcean/diagnose-existing.py",
 }
 NETWORK_HOSTS = {"github.com", "raw.githubusercontent.com", "release-assets.githubusercontent.com",
                  "objects.githubusercontent.com", "github-releases.githubusercontent.com"}
@@ -97,6 +99,7 @@ def descriptor(path):
     require(isinstance(data, dict) and type(data.get("format")) is int and data["format"] == 1,
             "Unsupported release descriptor")
     require(data.get("release") == RELEASE and data.get("sourceRevision") == SOURCE_REVISION and
+            data.get("deploymentRevision") == DEPLOYMENT_REVISION and
             data.get("endpoint") == "159.65.100.206:7777", "Release identity differs from the reviewed server release")
     require(isinstance(data.get("helpers"), dict) and set(data["helpers"]) == set(HELPER_PATHS), "Unexpected release helpers")
     entries = []
@@ -113,6 +116,34 @@ def descriptor(path):
     return entries
 
 
+def inspect_current(root):
+    """Run only the pinned read-only probe; never echo raw subprocess errors."""
+    try:
+        result = subprocess.run([sys.executable, str(root / "diagnose-existing.py")],
+                                check=False, stdin=subprocess.DEVNULL, capture_output=True,
+                                text=True, timeout=40)
+        report = json.loads(result.stdout)
+        require(isinstance(report, dict) and report.get("readOnly") is True and
+                report.get("format") == "ascendance-readonly-hello-diagnostic-1",
+                "Unexpected read-only diagnostic format")
+        return report
+    except Exception as error:
+        return {"readOnly": True, "diagnosticAvailable": False, "error": type(error).__name__}
+
+
+def identity_blockers(report):
+    # An already secured listener cannot answer the plaintext probe. In that
+    # case the upgrader performs its authenticated checks; do not guess.
+    response = report.get("hello")
+    if not isinstance(response, dict) or response.get("responseReceived") is not True:
+        return []
+    required = {"accepted": True, "code": "HELLO", "protocolVersion": 1,
+                "serverBuildVersion": "0.10.2c", "requestIdMatches": True,
+                "snapshotRoomMatchesExpected": True}
+    return [name for name, expected in required.items()
+            if type(response.get(name)) is not type(expected) or response[name] != expected]
+
+
 def prepare_and_run(apply=False):
     require(sys.platform.startswith("linux") and os.geteuid() == 0, "Run this installer in the owner's Linux root SSH session")
     os.umask(0o077)
@@ -124,7 +155,26 @@ def prepare_and_run(apply=False):
     progress("verifying the fixed public release descriptor")
     descriptor_path = root / "release.json"
     download(DESCRIPTOR_URL, DESCRIPTOR_SHA256, descriptor_path, 64 * 1024)
-    for name, entry, _, limit in descriptor(descriptor_path):
+    entries = descriptor(descriptor_path)
+    for name, entry, _, limit in entries:
+        if name not in HELPER_PATHS:
+            continue
+        progress("downloading and verifying " + name)
+        download(entry["url"], entry["sha256"], root / name, limit)
+    diagnosis = None
+    if apply:
+        progress("checking the running server identity before downloading the game archive or stopping the service")
+        diagnosis = inspect_current(root)
+        blockers = identity_blockers(diagnosis)
+        if blockers:
+            print(json.dumps({"status": "REFUSED", "phase": "read-only-preflight",
+                              "productionServiceChanged": False,
+                              "message": "Running server identity needs a targeted compatibility fix; activation was not started.",
+                              "failedIdentityChecks": blockers, "diagnostic": diagnosis}, indent=2))
+            return 1
+    for name, entry, _, limit in entries:
+        if name in HELPER_PATHS:
+            continue
         progress("downloading and verifying " + name)
         download(entry["url"], entry["sha256"], root / name, limit)
     command = [sys.executable, str(root / "upgrade-existing.py"), "--descriptor", str(descriptor_path),
@@ -133,9 +183,25 @@ def prepare_and_run(apply=False):
         command.append("--apply")
     progress("starting the reviewed upgrader with isolated canary, backup and recovery checks" if apply else
              "staging only; production activation was not requested")
-    # The trusted upgrader emits its public result JSON directly to stdout.
-    # No shell, SSH stdin pipe, account JOIN or private invite transfer is used.
-    return subprocess.run(command, check=False, stdin=subprocess.DEVNULL).returncode
+    # The trusted upgrader emits only public JSON. On failure attach the pinned
+    # diagnostic automatically, avoiding a second owner command. Raw stderr is
+    # never displayed because subprocess errors can contain private values.
+    result = subprocess.run(command, check=False, stdin=subprocess.DEVNULL,
+                            capture_output=True, text=True)
+    try:
+        public = json.loads(result.stdout)
+        require(isinstance(public, dict), "Unexpected deployment result format")
+    except Exception:
+        public = {"status": "REFUSED", "message": "Upgrader returned no recognized result; successful activation is not assumed."}
+        if diagnosis is None:
+            diagnosis = inspect_current(root)
+        public["diagnostic"] = diagnosis
+        print(json.dumps(public, indent=2))
+        return result.returncode or 1
+    if result.returncode != 0:
+        public["diagnostic"] = diagnosis if diagnosis is not None else inspect_current(root)
+    print(json.dumps(public, indent=2))
+    return result.returncode
 
 
 def main(argv=None):
