@@ -1,0 +1,28 @@
+{
+  "format": "ascendance-readonly-hello-diagnostic-1",
+  "readOnly": true,
+  "hello": {
+    "responseReceived": true,
+    "accepted": true,
+    "code": "HELLO",
+    "protocolVersion": 1,
+    "serverBuildVersion": "0.10.2g",
+    "requestIdMatches": true,
+    "expectedRoomId": "ASC-PRIMARY",
+    "snapshotRoomId": "ASC-PRIMARY",
+    "snapshotRoomMatchesExpected": true,
+    "snapshotRoomMatchesAsciiCaseInsensitive": true,
+    "buildMatchesExpected": false,
+    "transient": {
+      "IsResolving": false,
+      "HasPendingReactionWindow": false,
+      "HasPendingRewardChoice": false,
+      "HasPendingEncounterDeckControl": false,
+      "MovingHeroIdsCount": 0,
+      "HeroMovementCount": null,
+      "ReactionOptionsCount": 0,
+      "RewardOptionsCount": 0,
+      "EncounterDeckControlOptionsCount": 0
+    }
+  }
+}

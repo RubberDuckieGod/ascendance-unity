@@ -193,6 +193,21 @@ class OnHostInstaller(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertIn(key, INSTALLER.identity_blockers(report))
 
+    def test_observed_live_0102g_is_not_silently_downgraded_to_candidate_c(self):
+        report = json.loads((ROOT / "tests/fixtures/observed-0102g-hello-metadata.json").read_text())
+        self.assertEqual(report["hello"]["serverBuildVersion"], "0.10.2g")
+        self.assertTrue(report["hello"]["snapshotRoomMatchesExpected"])
+        self.assertIsNone(report["hello"]["transient"]["HeroMovementCount"])
+        code, child, downloads, _, output, _ = self.exercise(True, diagnosis=report)
+        result = json.loads(output)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["failedIdentityChecks"], ["serverBuildVersion"])
+        self.assertFalse(result["productionServiceChanged"])
+        self.assertEqual(result["diagnostic"], report)
+        self.assertEqual(child.call_count, 1)
+        self.assertEqual(Path(child.call_args.args[0][1]).name, "diagnose-existing.py")
+        self.assertFalse(any(url.endswith(".zip") for url in downloads.requests))
+
     def test_unavailable_plaintext_probe_defers_to_authenticated_upgrader(self):
         report = {"readOnly": True, "format": "ascendance-readonly-hello-diagnostic-1",
                   "hello": {"responseReceived": False, "error": "TimeoutError"}}

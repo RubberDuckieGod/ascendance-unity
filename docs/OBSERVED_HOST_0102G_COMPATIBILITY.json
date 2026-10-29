@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "scope": "Owner-supplied read-only DigitalOcean diagnostic; no production gameplay or save contents inspected",
+  "observation": {
+    "serverBuildVersion": "0.10.2g",
+    "protocolVersion": 1,
+    "roomExactMatches": true,
+    "requestIdMatches": true,
+    "accepted": true,
+    "failedIdentityChecks": [
+      "serverBuildVersion"
+    ],
+    "managedAssembly": {
+      "available": true,
+      "path": "/opt/ascendance/AscendanceServer_Data/Managed/Assembly-CSharp.dll",
+      "sha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
+      "bytes": 1262592
+    },
+    "unityPlayer": {
+      "available": true,
+      "path": "/opt/ascendance/UnityPlayer.so",
+      "sha256": "8d5a32f46f562cb89cbd1f72a4c6cf9ce1fa792dd84edd175c1c784caf43f74d",
+      "bytes": 44882216
+    },
+    "movementMetadata": {
+      "IsResolving": false,
+      "HasPendingReactionWindow": false,
+      "HasPendingRewardChoice": false,
+      "HasPendingEncounterDeckControl": false,
+      "MovingHeroIdsCount": 0,
+      "HeroMovementCount": null,
+      "ReactionOptionsCount": 0,
+      "RewardOptionsCount": 0,
+      "EncounterDeckControlOptionsCount": 0
+    }
+  },
+  "candidate": {
+    "sourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+    "build": "0.10.2c",
+    "onHostIsolatedCanary": {
+      "available": true,
+      "path": "/opt/ascendance-upgrades/releases/unity-0.10.2c-multiplayer-eb51b22/canary-125e8814254b4410a243118d519f0e54/result.json",
+      "status": "PASS",
+      "passed": 80,
+      "failed": 0,
+      "sourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+      "isolatedNativeRoomSave": true
+    }
+  },
+  "sourceSearch": {
+    "linkedRepositoryMain": "0.10.2c",
+    "linkedRepositoryBranchesAndReleases": "No 0.10.2g source or release found",
+    "localCompiledArtifactsChecked": 15,
+    "localCompiledArtifactsMatchingHostAssembly": 0
+  },
+  "outcome": {
+    "status": "REFUSED",
+    "phase": "read-only-preflight",
+    "productionServiceChanged": false,
+    "roomCaseDriftObserved": false,
+    "compatibleInPlaceUpgrade": "UNVERIFIED",
+    "publicMultiplayerRoute": "UNVERIFIED"
+  },
+  "requiredForInPlaceUpgrade": [
+    "Authoritative 0.10.2g source and matching compiled legacy artifact",
+    "Review save and protocol differences; do not simply allow or relabel versions",
+    "Port tested fixes into the matching source and build matching client/server",
+    "Version-specific maintenance and rollback checks; g omits HeroMovement",
+    "Native isolated migration tests preserving the complete durable state"
+  ],
+  "alternative": "User explicitly chose to keep the current campaign. Do not create a replacement fresh campaign or load existing g saves in the c runtime. Awaiting authoritative g source."
+}

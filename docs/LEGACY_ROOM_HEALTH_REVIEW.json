@@ -93,7 +93,7 @@
     "conditionalRiskConfirmedForBothBuilds": true
   },
   "runtimeDefectStatus": "Unresolved malformed/aliased room-file capitalization case; deployment is refused before stop until the active save path is verified. Wire case compatibility alone does not make migration safe.",
-  "productionRefusalCause": "Awaiting owner read-only diagnostic; case drift is a reproduced candidate, not an established host cause.",
+  "productionRefusalCause": "Owner diagnostic establishes a live 0.10.2g server versus the 0.10.2c candidate. Room, protocol and correlation match; no room-case drift was observed. The live build omits HeroMovement. See OBSERVED_HOST_0102G_COMPATIBILITY.json. In-place compatibility is unverified and the source for g is unavailable in the linked repository.",
   "releaseStatus": "Revised on-host installer uses a separately pinned deployment descriptor with ef41 helper guards and automatic read-only diagnostics. Original release.json and runtime source/binaries eb51 are unchanged. No production activation is verified.",
   "nativeCaseTransitionProof": {
     "status": "PASS",
