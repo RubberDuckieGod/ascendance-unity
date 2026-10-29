@@ -8,6 +8,8 @@ Corrected launcher source: `900ef329c3fbe4dda7df8fdd3a47f08116453f99`, SHA-256 `
 
 Client-only installer source: `5bd137a753cc22ce2d63739fb76adcfef0308305`, SHA-256 `219a5a1bb67b29a9033b898cb31d3566c027197ac7fca6c277f9c9c7b41970a0`. It verifies the original immutable h archive and runtime provenance, then overlays the separately pinned corrected launcher before copying the private invitation. No server update or Unity rebuild is required.
 
+[Actual Windows PowerShell 5.1 regression](https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40807452940) reproduced the original error (4/4 checks) and passed the corrected launcher (20/20 checks), including actual `.cmd` → PowerShell → synthetic native executable, paths with spaces, exact arguments and private environment inheritance. [Expected/actual evidence and limits](WINDOWS_LAUNCHER_ACCEPTANCE_0102H.json). Local launcher fixtures passed 10/10 and client-installer fixtures passed 15/15.
+
 For an already installed game, run this in normal Windows PowerShell. Enter the path to the extracted `Windows` folder when prompted:
 
 ```powershell
