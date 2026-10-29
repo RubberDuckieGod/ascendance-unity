@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -62,7 +63,11 @@ namespace Ascendance.Online
             foreach (var p in Room.Players) if (p != null) p.Connected = false; // process restart requires reconnect proof.
             committedGameplayFingerprint = LiveFingerprint();
             gm.StateChanged += OnGameStateChanged;
-            PersistIfSafe();
+            if (!PersistIfSafe())
+            {
+                gm.StateChanged -= OnGameStateChanged;
+                throw new IOException("Room authority could not establish a durable initial save.");
+            }
         }
 
         public ServerJoinResult0100 Join(string displayName, string heroId, string reconnectToken = null)
@@ -339,11 +344,12 @@ namespace Ascendance.Online
             if (persistenceEnabled) Persist(out _);
         }
 
-        private void PersistIfSafe()
+        private bool PersistIfSafe()
         {
-            if (!persistenceEnabled || !AscendanceSaveSystem.CanSave(gm)) return;
+            if (!persistenceEnabled) return true;
+            if (!AscendanceSaveSystem.CanSave(gm)) return false;
             Room.DurableCampaign = AscendanceSaveSystem.CloneForAuthority0100(SafeCapture());
-            Persist(out _);
+            return Persist(out _);
         }
 
         private bool Persist(out string message) => !persistenceEnabled ? ReturnFalse(out message, "Persistence disabled for this authority instance.") : AscendanceServerRoomPersistence0100.Save(Room, out message);
