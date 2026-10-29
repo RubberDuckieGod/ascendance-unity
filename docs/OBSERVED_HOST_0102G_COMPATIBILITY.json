@@ -69,5 +69,5 @@
     "Native isolated migration tests preserving the complete durable state"
   ],
   "alternative": "User explicitly chose to keep the current campaign. Do not create a replacement fresh campaign or load existing g saves in the c runtime. Awaiting authoritative g source.",
-  "latestUserReport": "User reports the live server was rolled back to 0.10.2c. Awaiting fresh installer verification. Continue updating the existing campaign; do not create a new campaign. Original c movement DTO compatibility is now handled by the revised deployment helper."
+  "latestUserReport": "User reported a rollback to c, but the subsequent 9665236 installer output still observes 0.10.2g, the same MainPID 36848 and managed-assembly SHA f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd. No activation occurred. Continue preserving the current campaign. Next collect only the installed game assembly for data-only compatibility inspection; no saves, logs or credentials requested."
 }
