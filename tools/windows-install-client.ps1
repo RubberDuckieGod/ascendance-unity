@@ -169,6 +169,28 @@ function Assert-AscendanceClientProvenance {
     }
 }
 
+function Install-AscendanceReviewedLauncher {
+    param([string]$GameDirectory, [string]$DownloadDirectory)
+    # The immutable h game archive predates the Windows PowerShell 5.1 launcher
+    # repair. Overlay only this separately pinned public script; keep its build
+    # provenance, executable, data and private invitation untouched.
+    [void](Get-AscendanceRegularPath $GameDirectory)
+    [void](Get-AscendanceRegularPath $DownloadDirectory)
+    $target = Join-Path $GameDirectory 'Play-AscendanceMultiplayer.ps1'
+    $item = Get-AscendanceRegularPath $target
+    if ($item -isnot [IO.FileInfo]) { throw 'The extracted launcher is not a regular file.' }
+    $download = Join-Path $DownloadDirectory 'Play-AscendanceMultiplayer.reviewed.ps1'
+    if (Test-Path -LiteralPath $download) { throw 'The reviewed launcher download path already exists.' }
+    $url = 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/900ef329c3fbe4dda7df8fdd3a47f08116453f99/tools/Play-AscendanceMultiplayer.ps1'
+    $sha256 = 'a4fed209aef94cde891a528b5d6d29601892b39a9b440635982fb7fab50591e1'
+    Get-AscendanceVerifiedFile $url $sha256 $download
+    [void](Get-AscendanceRegularPath $download)
+    Copy-Item -LiteralPath $download -Destination $target -Force
+    if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash -ne $sha256) {
+        throw 'The installed launcher does not match its reviewed checksum.'
+    }
+}
+
 function Read-AscendanceClientProfile {
     param([string]$Path, [string]$Endpoint, [string]$Room, [string]$CertificateSha256)
     try { $profile = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json }
@@ -250,6 +272,7 @@ foreach ($name in @('Ascendance_Data','UnityPlayer.dll','Play-AscendanceMultipla
     if ($name -ne 'Ascendance_Data' -and $item -isnot [IO.FileInfo]) { throw 'A required extracted client file is invalid.' }
 }
 Assert-AscendanceClientProvenance (Join-Path $gameDirectory 'Ascendance.provenance.json') $ExpectedSourceRevision
+Install-AscendanceReviewedLauncher $gameDirectory $session
 $privateInvite = Join-Path $gameDirectory 'Ascendance.invite.json'
 New-AscendanceOwnerFile $privateInvite
 Write-Host 'Copying the private connection profile with your existing Windows SSH key. Enter its passphrase only in this terminal.'

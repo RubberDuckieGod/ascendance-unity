@@ -40,6 +40,16 @@ class ClientOnlyHandoff(unittest.TestCase):
                            "source": {"vcs": "git", "revision": SOURCE, "dirty": False}}
         self.provenance_file = self.folder / "build.provenance.json"
         self.provenance_file.write_text(json.dumps(self.provenance))
+        self.game = self.folder / "Game with spaces"
+        self.game.mkdir()
+        self.staging = self.folder / "Private staging"
+        self.staging.mkdir()
+        self.launcher = self.game / "Play-AscendanceMultiplayer.ps1"
+        self.launcher.write_bytes(b"original archived launcher")
+        self.game_executable = self.game / "Ascendance.exe"
+        self.game_executable.write_bytes(b"unchanged synthetic executable")
+        self.private_invite = self.game / "Ascendance.invite.json"
+        self.private_invite.write_bytes(self.profile.read_bytes())
 
     def ps(self, body):
         def quote(value): return "'" + str(value).replace("'", "''") + "'"
@@ -71,6 +81,57 @@ class ClientOnlyHandoff(unittest.TestCase):
         result = self.ps("'imported'")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout.strip(), "imported")
+
+    def test_reviewed_launcher_overlay_verifies_pin_and_changes_only_launcher(self):
+        def quote(value): return "'" + str(value).replace("'", "''") + "'"
+        before_executable = self.game_executable.read_bytes()
+        before_invite = self.private_invite.read_bytes()
+        script = ROOT / "tools/Play-AscendanceMultiplayer.ps1"
+        result = self.ps(
+            "function global:Invoke-WebRequest { param($Uri,$OutFile,[switch]$UseBasicParsing); "
+            "if($Uri -cne 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/900ef329c3fbe4dda7df8fdd3a47f08116453f99/tools/Play-AscendanceMultiplayer.ps1'){throw 'Unexpected URL'}; "
+            "Copy-Item -LiteralPath " + quote(script) + " -Destination $OutFile }; "
+            "Install-AscendanceReviewedLauncher " + quote(self.game) + " " + quote(self.staging) + "; 'installed'")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), "installed")
+        self.assertEqual(self.launcher.read_bytes(), script.read_bytes())
+        self.assertEqual(self.game_executable.read_bytes(), before_executable)
+        self.assertEqual(self.private_invite.read_bytes(), before_invite)
+        self.assertNotIn(self.invite["accessKey"], result.stdout + result.stderr)
+
+    def test_modified_launcher_download_is_refused_before_replacement(self):
+        def quote(value): return "'" + str(value).replace("'", "''") + "'"
+        before = self.launcher.read_bytes()
+        result = self.ps(
+            "function global:Invoke-WebRequest { param($Uri,$OutFile,[switch]$UseBasicParsing); "
+            "[IO.File]::WriteAllText($OutFile,'tampered public launcher') }; "
+            "Install-AscendanceReviewedLauncher " + quote(self.game) + " " + quote(self.staging))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("reviewed release checksum", result.stderr)
+        self.assertEqual(self.launcher.read_bytes(), before)
+        self.assertNotIn(self.invite["accessKey"], result.stdout + result.stderr)
+
+    def test_existing_staged_launcher_is_refused_without_replacement_or_network(self):
+        def quote(value): return "'" + str(value).replace("'", "''") + "'"
+        staged = self.staging / "Play-AscendanceMultiplayer.reviewed.ps1"
+        staged.write_bytes(b"must not overwrite")
+        before = self.launcher.read_bytes()
+        result = self.ps("Install-AscendanceReviewedLauncher " + quote(self.game) + " " + quote(self.staging))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("download path already exists", result.stderr)
+        self.assertEqual(staged.read_bytes(), b"must not overwrite")
+        self.assertEqual(self.launcher.read_bytes(), before)
+
+    @unittest.skipUnless(os.name == "posix", "POSIX symlink fixture")
+    def test_launcher_symlink_is_refused_before_download(self):
+        def quote(value): return "'" + str(value).replace("'", "''") + "'"
+        self.launcher.unlink()
+        self.launcher.symlink_to(self.game_executable)
+        before = self.game_executable.read_bytes()
+        result = self.ps("Install-AscendanceReviewedLauncher " + quote(self.game) + " " + quote(self.staging))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("reparse point", result.stderr)
+        self.assertEqual(self.game_executable.read_bytes(), before)
 
     def test_matching_h_release_and_clean_windows_provenance_are_accepted(self):
         result = self.ps("$d=Get-Content $descriptorPath -Raw | ConvertFrom-Json; "
