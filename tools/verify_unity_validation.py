@@ -6,11 +6,11 @@ from pathlib import Path
 
 EXPECTED = {"master": 54, "foundation": 24, "router": 29, "network": 27, "reliability": 22, "snapshot": 20}
 TERMINALS = {
-    "master": ("[ASCENDANCE][0.10.2c TEST]", "Master Save/Load + Full Regression"),
-    "foundation": ("[ASCENDANCE][0.10.2c SERVER]", "Dedicated Server Authority Foundation"),
-    "router": ("[ASCENDANCE][0.10.2c ROUTER]", "Client Command Routing"),
-    "network": ("[ASCENDANCE][0.10.2c NETWORK]", "Real Network Transport"),
-    "reliability": ("[ASCENDANCE][0.10.2c RELIABILITY]", "Network Reliability"),
+    "master": ("[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression"),
+    "foundation": ("[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation"),
+    "router": ("[ASCENDANCE][0.10.2h ROUTER]", "Client Command Routing"),
+    "network": ("[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport"),
+    "reliability": ("[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability"),
 }
 
 
@@ -29,7 +29,7 @@ def verify(path: Path) -> dict:
         raise ValueError("Validation verdict must be an object")
     if result.get("passed") is not True or type(result.get("errorCount")) is not int or result["errorCount"] != 0 or result.get("errors"):
         raise ValueError(f"Unity validation failed: {result.get('reason', 'no reason supplied')}")
-    if result.get("editorVersion") != "6000.6.5f1" or result.get("buildVersion") != "0.10.2c":
+    if result.get("editorVersion") != "6000.6.5f1" or result.get("buildVersion") != "0.10.2h":
         raise ValueError("Unexpected Unity Editor or game version in validation verdict")
     gates = result.get("gates", [])
     if not isinstance(gates, list) or any(not isinstance(g, dict) for g in gates):

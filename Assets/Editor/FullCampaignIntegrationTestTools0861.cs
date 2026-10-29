@@ -43,7 +43,7 @@ namespace Ascendance.EditorTools
             try
             {
                 HeroDatabase.EnsureLoaded();FullContentCatalog0850.EnsureLoaded();
-                Check(AscendanceGameManager.BuildVersion=="0.10.2c","Build identifies the Full Campaign End-to-End Integration milestone.");
+                Check(AscendanceGameManager.BuildVersion=="0.10.2h","Build identifies the Full Campaign End-to-End Integration milestone.");
                 Check(CampaignContent0845.Campaigns.Count==6&&CampaignContent0845.Campaigns.Values.All(c=>c.RuntimePlayable),"all six authored campaigns are registered as runtime-playable.");
                 Check(CampaignContent0833.WorldEvents.Count==24&&FullContentCatalog0850.WorldEventCount==24,"all 24 World Events are registered in authored content and live campaign routing.");
                 Check(FullContentCatalog0850.QuestCount==72&&Enumerable.Range(1,72).All(n=>CampaignContent0845.Campaigns.ContainsKey(CampaignContent0845.CampaignForQuest0845($"Q{n:000}"))),"all 72 Quests map into the six-campaign registry.");

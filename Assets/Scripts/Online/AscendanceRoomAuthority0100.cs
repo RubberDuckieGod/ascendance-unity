@@ -23,14 +23,33 @@ namespace Ascendance.Online
 
         public PersistedServerRoom0100 Room { get; private set; }
         public string ServerInstanceId { get; } = Guid.NewGuid().ToString("N");
+        public bool RestoredFromPersistence0102d { get; }
+        public string PersistencePath0102d => AscendanceServerRoomPersistence0100.PathFor(Room?.RoomId);
 
         public AscendanceRoomAuthority0100(AscendanceGameManager gameManager, string roomId, bool persistence = true, PersistedServerRoom0100 restored = null)
         {
             gm = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             persistenceEnabled = persistence;
+            string requestedRoomId = NormalizeRoomId(roomId);
+            if (restored != null)
+            {
+                // Wire room routing is case-insensitive, but Linux save names
+                // are not. Refuse before constructor persistence can overwrite
+                // the active file with a stale case-variant room.
+                if (!string.Equals(restored.RoomId, requestedRoomId, StringComparison.Ordinal))
+                    throw new InvalidOperationException("Saved room identity differs from its requested filename.");
+                if (restored.DurableCampaign == null)
+                    throw new InvalidOperationException("Restored room has no durable campaign.");
+                AscendanceOptionalSaveState0102.Normalize(restored.DurableCampaign);
+            }
+            else if (persistenceEnabled && AscendanceServerRoomPersistence0100.SavePathExists(requestedRoomId))
+            {
+                throw new InvalidOperationException("An existing room save must be restored before authority creation.");
+            }
+            RestoredFromPersistence0102d = restored != null;
             Room = restored ?? new PersistedServerRoom0100
             {
-                RoomId = NormalizeRoomId(roomId),
+                RoomId = requestedRoomId,
                 BuildVersion = AscendanceGameManager.BuildVersion,
                 Revision = 0,
                 CreatedAtUtc = DateTime.UtcNow.ToString("O"),
@@ -187,6 +206,10 @@ namespace Ascendance.Online
                 Revision = Room.Revision,
                 GameplayRevision = Room.GameplayRevision,
                 ServerInstanceId = ServerInstanceId,
+                RoomStateOrigin0102d = RestoredFromPersistence0102d ? "RESTORED_FROM_SERVER_DISK" : "FRESH_SERVER_PROCESS_STATE",
+                RoomCreatedAtUtc0102d = Room.CreatedAtUtc,
+                RoomUpdatedAtUtc0102d = Room.UpdatedAtUtc,
+                PersistencePath0102d = PersistencePath0102d,
                 Campaign = AscendanceSaveSystem.CloneForAuthority0100(campaign),
                 Transient = BuildTransient(),
                 Players = Room.Players.Where(p => p != null).Select(p => new ServerPlayerView0100 { PlayerId = p.PlayerId, DisplayName = p.DisplayName, HeroId = p.HeroId, Connected = p.Connected }).ToList()

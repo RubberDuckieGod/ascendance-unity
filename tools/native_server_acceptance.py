@@ -47,7 +47,7 @@ def blank_authority(value, path=()):
     # these authored initializers. This allowlist comes from the actual native
     # denied-HELLO DTO, not a production room. Every other nonblank leaf fails.
     defaults = {
-        ("Campaign", "Version"): "0.10.2c",
+        ("Campaign", "Version"): "0.10.2h",
         ("Campaign", "QuestId"): "Q001",
         ("Campaign", "CampaignProgress0833", "CurrentWorldEventId"): "WE001",
         ("Campaign", "CampaignProgress0833", "WorldEventDay"): 1,
@@ -309,7 +309,7 @@ def main():
     checks = []
     report = {
         "scope": "Compiled native Linux server plus two independent Python TCP clients; not Unity player/UI acceptance",
-        "buildVersion": "0.10.2c", "sourceRevision": args.source_revision or "UNKNOWN_NOT_PROVEN",
+        "buildVersion": "0.10.2h", "sourceRevision": args.source_revision or "UNKNOWN_NOT_PROVEN",
         "transport": "TLS with exact DER pin, time and IP SAN verification" if args.tls_cert_sha256 else "Plain TCP with loopback test clients on an isolated high port",
         "authentication": "Private room-access-key file" if args.tls_cert_sha256 else "Legacy no room key",
         "checks": checks, "limitations": ["Independent Unity player rendering/input was not exercised."],
@@ -338,7 +338,7 @@ def main():
         room = "NATIVE-ACCEPTANCE-" + uuid.uuid4().hex
         server = NativeServer(build, root, room, environment=tls_environment, client_factory=wire)
         bootstrap, initial = server.start(); clients.append(bootstrap)
-        check("Compiled server performs protocol HELLO", [True, "HELLO", "0.10.2c", 1], [initial.get("Accepted"), initial.get("Code"), initial.get("ServerBuildVersion"), initial.get("ProtocolVersion")])
+        check("Compiled server performs protocol HELLO", [True, "HELLO", "0.10.2h", 1], [initial.get("Accepted"), initial.get("Code"), initial.get("ServerBuildVersion"), initial.get("ProtocolVersion")])
         check("Default native server party is authored four-Hero party", ["Garruk", "Rowan", "Aldric", "Elara"], initial["Snapshot"]["Campaign"]["PartyHeroIds"])
         check("Protocol mismatch is rejected", "PROTOCOL_MISMATCH", bootstrap.exchange("HELLO", ProtocolVersion=99).get("Code"))
         check("Wrong room is rejected", "ROOM_MISMATCH", bootstrap.exchange("HELLO", RoomId=room + "-WRONG").get("Code"))
@@ -423,6 +423,12 @@ def main():
         pristine = json.loads(server.save_path.read_text())
         pristine["Players"] = []
         pristine["DurableCampaign"].update({"TurnHeroId": "", "SelectedHeroId": "Aldric"})
+        # These authored partial/extension cases model pre-presence-schema saves.
+        # Schema 1 false flags intentionally suppress stale payloads; that newer
+        # contract is exercised separately by the actual g-to-h migration proof.
+        pristine["DurableCampaign"].update({"PendingStateSchema0102f": 0,
+                                          "HasPendingRewardChoice0102f": False,
+                                          "HasPendingEncounterDeckControl0102f": False})
         for h in pristine["DurableCampaign"]["Heroes"]:
             h.update({"Actions": 0, "TurnCompleted": False})
         reward_fields = ["SourceCardId", "SourceCardName", "HeroId", "Mode", "Prompt", "RevealedCardIds"]
@@ -444,6 +450,8 @@ def main():
         # Known real choice modes must also remain usable after restore.
         saved = copy.deepcopy(pristine)
         body = saved["DurableCampaign"]
+        body.update({"PendingStateSchema0102f": 1, "HasPendingRewardChoice0102f": True,
+                     "HasPendingEncounterDeckControl0102f": True})
         body["PendingRewardChoice"] = {"SourceCardId": "SD082", "SourceCardName": "Isolated native reward", "HeroId": "Aldric", "Mode": "Gold25OrLoot1", "Prompt": "Choose the printed reward", "RevealedCardIds": []}
         body["PendingEncounterDeckControl"] = {"SourceCardId": "SD041", "SourceCardName": "Isolated native deck inspection", "Mode": "MayBottomTop", "RevealedCardIds": body["EncounterDeckIds"][:1]}
         server.save_path.write_text(json.dumps(saved))

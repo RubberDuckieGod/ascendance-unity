@@ -52,7 +52,7 @@ namespace Ascendance.Online
         public bool IsListening => running && listener != null;
         public long ProcessedDisconnects { get; private set; }
         public int BoundPort { get; private set; }
-        public string BoundAddress => "0.0.0.0";
+        public string BoundAddress => (listener?.LocalEndpoint as IPEndPoint)?.Address.ToString() ?? "0.0.0.0";
 
         private void Awake() => Instance = this;
 
@@ -74,13 +74,17 @@ namespace Ascendance.Online
             try
             {
                 security = AscendanceServerTransportSecurity0102.FromEnvironment();
-                listener = new TcpListener(IPAddress.Any, Mathf.Clamp(port, 0, 65535));
+                // Maintenance restores use a private save copy and must never
+                // expose that copy on a public or private network interface.
+                var bindAddress = Environment.GetEnvironmentVariable("ASCENDANCE_LISTEN_LOOPBACK") == "1"
+                    ? IPAddress.Loopback : IPAddress.Any;
+                listener = new TcpListener(bindAddress, Mathf.Clamp(port, 0, 65535));
                 listener.Start(8);
                 BoundPort = ((IPEndPoint)listener.LocalEndpoint).Port;
                 running = true;
                 acceptThread = new Thread(AcceptLoop) { IsBackground = true, Name = "Ascendance-TCP-Accept" };
                 acceptThread.Start();
-                Debug.Log($"[ASCENDANCE][NETWORK] TCP authority listening on 0.0.0.0:{BoundPort} room={authority.Room.RoomId} protocol={AscendanceNetworkCodec0102.ProtocolVersion} tls={security.Enabled}.");
+                Debug.Log($"[ASCENDANCE][NETWORK] TCP authority listening on {BoundAddress}:{BoundPort} room={authority.Room.RoomId} protocol={AscendanceNetworkCodec0102.ProtocolVersion} tls={security.Enabled}.");
                 return true;
             }
             catch (Exception ex)

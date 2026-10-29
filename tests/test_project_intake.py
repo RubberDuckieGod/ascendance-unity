@@ -21,7 +21,7 @@ class IntakeTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.write("ProjectSettings/ProjectVersion.txt", "m_EditorVersion: 6000.6.5f1\nm_EditorVersionWithRevision: 6000.6.5f1 (3ff58d469c8a)\n")
-        self.write("ProjectSettings/ProjectSettings.asset", "PlayerSettings:\n  companyName: Ascendance\n  productName: Ascendance\n  bundleVersion: 0.10.2c\n")
+        self.write("ProjectSettings/ProjectSettings.asset", "PlayerSettings:\n  companyName: Ascendance\n  productName: Ascendance\n  bundleVersion: 0.10.2h\n")
         self.write("ProjectSettings/EditorSettings.asset", "EditorSettings:\n  m_SerializationMode: 2\n")
         self.write("ProjectSettings/VersionControlSettings.asset", "VersionControlSettings:\n  m_Mode: Visible Meta Files\n")
         self.write("ProjectSettings/EditorBuildSettings.asset", """EditorBuildSettings:

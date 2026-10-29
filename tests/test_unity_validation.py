@@ -16,7 +16,7 @@ spec.loader.exec_module(verdict)
 
 
 def fixture():
-    result = dict(passed=True, reason='Synthetic helper fixture', editorVersion='6000.6.5f1', buildVersion='0.10.2c', errorCount=0, errors=[], gates=[])
+    result = dict(passed=True, reason='Synthetic helper fixture', editorVersion='6000.6.5f1', buildVersion='0.10.2h', errorCount=0, errors=[], gates=[])
     for name, count in verdict.EXPECTED.items():
         if name == 'snapshot':
             terminal = f'[ASCENDANCE TEST 0.10.2 SNAPSHOT] PASS — {count} checks.'
@@ -56,12 +56,12 @@ class VerdictTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError): self.verify(data)
 
     def test_error_and_failure_cannot_be_hidden_by_pass_flag(self):
-        for field, value in [('passed', False), ('errorCount', 1), ('errorCount', False), ('errors', ['Exception']), ('editorVersion', '6000.0.1f1'), ('buildVersion', 'wrong')]:
+        for field, value in [('passed', False), ('errorCount', 1), ('errorCount', False), ('errors', ['Exception']), ('editorVersion', '6000.0.1f1'), ('buildVersion', 'wrong'), ('buildVersion', '0.10.2c'), ('buildVersion', '0.10.2g')]:
             data = fixture(); data[field] = value
             with self.subTest(field=field, value=value), self.assertRaises(ValueError): self.verify(data)
 
     def test_terminal_must_name_correct_gate_count_and_success(self):
-        for terminal in ['', 'PASS', '[ASCENDANCE][0.10.2c TEST] FAIL', fixture()['gates'][1]['terminalMessage']]:
+        for terminal in ['', 'PASS', '[ASCENDANCE][0.10.2h TEST] FAIL', fixture()['gates'][1]['terminalMessage']]:
             data = fixture(); data['gates'][0]['terminalMessage'] = terminal
             with self.subTest(terminal=terminal), self.assertRaises(ValueError): self.verify(data)
 

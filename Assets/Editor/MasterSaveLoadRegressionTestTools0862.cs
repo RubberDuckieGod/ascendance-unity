@@ -11,12 +11,12 @@ namespace Ascendance.EditorTools
 {
     public static class MasterSaveLoadRegressionTestTools0862
     {
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Master Save Load + Full Regression (Play Mode)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Master Save Load + Full Regression (Play Mode)")]
         public static void Test0862()
         {
-            if (!Application.isPlaying) { Debug.LogError("[ASCENDANCE][0.10.2c TEST] Enter Play Mode first."); return; }
+            if (!Application.isPlaying) { Debug.LogError("[ASCENDANCE][0.10.2h TEST] Enter Play Mode first."); return; }
             var gm = AscendanceGameManager.Instance;
-            if (gm == null) { Debug.LogError("[ASCENDANCE][0.10.2c TEST] No AscendanceGameManager found."); return; }
+            if (gm == null) { Debug.LogError("[ASCENDANCE][0.10.2h TEST] No AscendanceGameManager found."); return; }
             gm.StartCoroutine(Run(gm));
         }
 
@@ -25,8 +25,8 @@ namespace Ascendance.EditorTools
             int pass = 0, fail = 0;
             void Check(bool ok, string label)
             {
-                if (ok) { pass++; Debug.Log("[ASCENDANCE][0.10.2c TEST] PASS — " + label); }
-                else { fail++; Debug.LogError("[ASCENDANCE][0.10.2c TEST] FAIL — " + label); }
+                if (ok) { pass++; Debug.Log("[ASCENDANCE][0.10.2h TEST] PASS — " + label); }
+                else { fail++; Debug.LogError("[ASCENDANCE][0.10.2h TEST] FAIL — " + label); }
             }
 
             string path = AscendanceSaveSystem.SavePath;
@@ -35,7 +35,7 @@ namespace Ascendance.EditorTools
 
             try
             {
-                Check(AscendanceGameManager.BuildVersion == "0.10.2c", "Build identifies the Master Save/Load + Full Regression milestone.");
+                Check(AscendanceGameManager.BuildVersion == "0.10.2h", "Build identifies the Master Save/Load + Full Regression milestone.");
 
                 var world = UnityEngine.Object.FindAnyObjectByType<StonebrookWorldBuilder>();
                 int waitFrames = 0;
@@ -90,7 +90,7 @@ namespace Ascendance.EditorTools
                     Name = "Regression Ward",
                     RemainingTurns = 1,
                     RemainingRounds = 1,
-                    Source = "0.10.2c regression",
+                    Source = "0.10.2h regression",
                     Beneficial = true,
                     ExpiryTiming = StatusExpiryTiming.EndOfRound,
                     RemainingExpiryTriggers = 1,
@@ -109,7 +109,7 @@ namespace Ascendance.EditorTools
                 l000.TemporaryTags.Add(new LocationTagInstance
                 {
                     Tag = "0862 Regression Tag",
-                    Source = "0.10.2c regression",
+                    Source = "0.10.2h regression",
                     SourceHeroId = "Garruk",
                     ExpiryTiming = StatusExpiryTiming.EndOfRound,
                     RemainingExpiryTriggers = 1
@@ -131,7 +131,7 @@ namespace Ascendance.EditorTools
                         Name = "Regression Mark",
                         RemainingTurns = 1,
                         RemainingRounds = 1,
-                        Source = "0.10.2c regression",
+                        Source = "0.10.2h regression",
                         Beneficial = false,
                         ExpiryTiming = StatusExpiryTiming.EndOfRound,
                         RemainingExpiryTriggers = 1,
@@ -153,7 +153,7 @@ namespace Ascendance.EditorTools
                 Check(CampaignResumeRuntime0842.DetermineCaptureSurface0842(gm) == CampaignResumeRuntime0842.MidQuest, "Live gameplay identifies MID_QUEST as the authoritative resume surface.");
                 Check(AscendanceSaveSystem.SaveCurrent(gm, out _), "Representative mid-Quest state saves through the authoritative save system.");
                 var midSave = AscendanceSaveSystem.Load();
-                Check(midSave != null && midSave.Version == "0.10.2c" && midSave.ResumeSurface0842 == CampaignResumeRuntime0842.MidQuest, "Save JSON records 0.10.2c and the MID_QUEST resume surface.");
+                Check(midSave != null && midSave.Version == "0.10.2h" && midSave.ResumeSurface0842 == CampaignResumeRuntime0842.MidQuest, "Save JSON records 0.10.2h and the MID_QUEST resume surface.");
                 Check(midSave != null && midSave.PartyGold == 432 && midSave.GeneralReputation == 2, "Party Gold and General Reputation persist into the save payload.");
 
                 var savedHero = midSave?.Heroes?.FirstOrDefault(h => h.Id == "Garruk");
@@ -260,7 +260,7 @@ namespace Ascendance.EditorTools
 
                 // Surface regression: MID_QUEST -> RESULTS -> DOWNTIME -> CAMPAIGN_HUB.
                 var resume = UnityEngine.Object.FindAnyObjectByType<CampaignResumeController0842>();
-                Check(resume != null, "Persistent resume controller remains installed for 0.10.2c.");
+                Check(resume != null, "Persistent resume controller remains installed for 0.10.2h.");
                 Check(AscendanceSaveSystem.SaveCurrent(gm, out _) && AscendanceSaveSystem.Load()?.ResumeSurface0842 == CampaignResumeRuntime0842.MidQuest, "MID_QUEST surface still persists after master state restoration.");
 
                 gm.DebugResolveCampaignQuest0833(true);
@@ -314,7 +314,7 @@ namespace Ascendance.EditorTools
                 yield return null;
                 Check(dayOneSave != null && gm.CurrentCampaignId0845 == CampaignContent0845.CampaignII && gm.CurrentQuestId0829 == "Q013" && gm.WorldEventDay0833 == 1 && gm.TotalCampaignDay0833 == 1 && gm.CampaignArchive0845.Count == 1, "Campaign II active Q013 Day-1 state survives save/load with archive intact.");
 
-                // One-click inherited full regression gate. 0.10.2c explicitly re-baselines
+                // One-click inherited full regression gate. 0.10.2h explicitly re-baselines
                 // the live runtime before every inherited validator. Without this isolation the
                 // prior Q013 save/load scenario can leave a reward choice and Q013 enemies alive,
                 // contaminating validators that were authored against a fresh Q001 runtime.
@@ -322,27 +322,27 @@ namespace Ascendance.EditorTools
 
                 yield return PrepareNestedBaseline0862a(gm);
                 yield return RunNestedValidator(FullLocationRuntimeTestTools0858.Test0858, "Full Location Runtime Execution completed:", ok => nestedPass = ok);
-                Check(nestedPass, "Inherited 0.8.58c Full Location Runtime Execution suite passes under the 0.10.2c baseline.");
+                Check(nestedPass, "Inherited 0.8.58c Full Location Runtime Execution suite passes under the 0.10.2h baseline.");
 
                 nestedPass = false;
                 yield return PrepareNestedBaseline0862a(gm);
                 yield return RunNestedValidator(FullEnemyRuntimeTestTools0859.Test0859, "Full Enemy Runtime Execution completed:", ok => nestedPass = ok);
-                Check(nestedPass, "Inherited 0.8.59b Full Enemy Runtime Execution suite passes under the 0.10.2c baseline.");
+                Check(nestedPass, "Inherited 0.8.59b Full Enemy Runtime Execution suite passes under the 0.10.2h baseline.");
 
                 nestedPass = false;
                 yield return PrepareNestedBaseline0862a(gm);
                 Check(gm.EnemyAvatars.Count == gm.Enemies.Count && gm.EnemyAvatars.Keys.All(id => gm.Enemies.ContainsKey(id)),
                     "Nested reset prunes stale Enemy presentation registrations before the next regression suite.");
                 yield return RunNestedValidator(FullHeroRuntimeTestTools0860.Test0860, "Full Hero & Hero Card Runtime Execution completed:", ok => nestedPass = ok);
-                Check(nestedPass, "Inherited 0.8.60c Full Hero & Hero Card Runtime Execution suite passes under the 0.10.2c baseline.");
+                Check(nestedPass, "Inherited 0.8.60c Full Hero & Hero Card Runtime Execution suite passes under the 0.10.2h baseline.");
 
                 nestedPass = false;
                 yield return PrepareNestedBaseline0862a(gm);
                 yield return RunNestedValidator(FullCampaignIntegrationTestTools0861.Test0861, "Full Campaign End-to-End Integration completed:", ok => nestedPass = ok);
-                Check(nestedPass, "Inherited 0.8.61 Full Campaign End-to-End Integration suite passes under the 0.10.2c baseline.");
+                Check(nestedPass, "Inherited 0.8.61 Full Campaign End-to-End Integration suite passes under the 0.10.2h baseline.");
 
                 // Corrupt-save handling remains part of the master gate.
-                File.WriteAllText(path, "{ 0.10.2c intentionally corrupt regression payload");
+                File.WriteAllText(path, "{ 0.10.2h intentionally corrupt regression payload");
                 Check(AscendanceSaveSystem.HasSave && !AscendanceSaveSystem.HasValidSave, "Corrupt save files are not accepted as valid Continue state.");
                 Check(!AscendanceSaveSystem.TryLoad(out _, out var corruptMessage) && !string.IsNullOrWhiteSpace(corruptMessage), "Corrupt save parsing fails cleanly with a player-facing message.");
             }
@@ -368,8 +368,8 @@ namespace Ascendance.EditorTools
             if (restoredOriginalSave && hadSave && previousSave != null)
                 restoredOriginalSave = previousSave.SequenceEqual(File.ReadAllBytes(path));
             Check(restoredOriginalSave, "Validator restores the exact pre-test campaign save file bytes.");
-            if (fail == 0) Debug.Log($"[ASCENDANCE][0.10.2c TEST] PASS — Master Save/Load + Full Regression completed: {pass} passed, 0 failed.");
-            else Debug.LogError($"[ASCENDANCE][0.10.2c TEST] FAIL — Master Save/Load + Full Regression completed: {pass} passed, {fail} failed.");
+            if (fail == 0) Debug.Log($"[ASCENDANCE][0.10.2h TEST] PASS — Master Save/Load + Full Regression completed: {pass} passed, 0 failed.");
+            else Debug.LogError($"[ASCENDANCE][0.10.2h TEST] FAIL — Master Save/Load + Full Regression completed: {pass} passed, {fail} failed.");
         }
 
         private static IEnumerator PrepareNestedBaseline0862a(AscendanceGameManager gm)

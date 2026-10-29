@@ -135,6 +135,10 @@ namespace Ascendance.Online
         public long Revision;
         public long GameplayRevision;
         public string ServerInstanceId;
+        public string RoomStateOrigin0102d;
+        public string RoomCreatedAtUtc0102d;
+        public string RoomUpdatedAtUtc0102d;
+        public string PersistencePath0102d;
         public AscendanceSaveData Campaign;
         public ServerTransientState0100 Transient;
         public List<ServerPlayerView0100> Players = new();

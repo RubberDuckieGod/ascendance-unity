@@ -81,7 +81,7 @@ then
 fi
 
 mkdir "$artifacts_dir/game-data"
-printf '%s\n' 'ascendance-unity-validation-0.10.2c' >"$artifacts_dir/game-data/.ascendance-validation-data"
+printf '%s\n' 'ascendance-unity-validation-0.10.2h' >"$artifacts_dir/game-data/.ascendance-validation-data"
 export ASCENDANCE_TEST_MODE=1
 export ASCENDANCE_TEST_DATA_DIR="$artifacts_dir/game-data"
 # Keep HOME, XDG_CONFIG_HOME, and existing Unity licensing/authentication untouched.

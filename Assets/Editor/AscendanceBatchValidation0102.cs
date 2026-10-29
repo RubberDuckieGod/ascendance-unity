@@ -26,11 +26,11 @@ namespace Ascendance.EditorTools
         private static readonly List<string> Errors = new List<string>();
         private static readonly Terminal[] Required =
         {
-            new Terminal("master", "[ASCENDANCE][0.10.2c TEST]", "Master Save/Load + Full Regression completed:", 54),
-            new Terminal("foundation", "[ASCENDANCE][0.10.2c SERVER]", "Dedicated Server Authority Foundation completed:", 24),
-            new Terminal("router", "[ASCENDANCE][0.10.2c ROUTER]", "Client Command Routing completed:", 29),
-            new Terminal("network", "[ASCENDANCE][0.10.2c NETWORK]", "Real Network Transport completed:", 27),
-            new Terminal("reliability", "[ASCENDANCE][0.10.2c RELIABILITY]", "Network Reliability completed:", 22),
+            new Terminal("master", "[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression completed:", 54),
+            new Terminal("foundation", "[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation completed:", 24),
+            new Terminal("router", "[ASCENDANCE][0.10.2h ROUTER]", "Client Command Routing completed:", 29),
+            new Terminal("network", "[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport completed:", 27),
+            new Terminal("reliability", "[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability completed:", 22),
             new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20)
         };
 

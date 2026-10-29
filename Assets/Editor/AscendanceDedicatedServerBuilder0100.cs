@@ -11,13 +11,13 @@ namespace Ascendance.EditorTools
     {
         private static readonly string[] ServerScenes = { "Assets/Scenes/Stonebrook.unity" };
 
-        [MenuItem("Ascendance/Build/Build Windows Dedicated Server 0.10.2c")]
+        [MenuItem("Ascendance/Build/Build Windows Dedicated Server 0.10.2h")]
         public static void BuildWindowsDedicatedServer0100()
         {
             BuildServer(BuildTarget.StandaloneWindows64, "Builds/WindowsServer/AscendanceServer.exe", "Windows");
         }
 
-        [MenuItem("Ascendance/Build/Build Linux Dedicated Server 0.10.2c")]
+        [MenuItem("Ascendance/Build/Build Linux Dedicated Server 0.10.2h")]
         public static void BuildLinuxDedicatedServer0102()
         {
             BuildServer(BuildTarget.StandaloneLinux64, "Builds/LinuxServer/AscendanceServer.x86_64", "Linux");

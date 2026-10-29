@@ -13,9 +13,16 @@ namespace Ascendance
         public static bool HasSave => File.Exists(SavePath);
         public static bool HasValidSave => TryLoad(out _, out _);
         public static bool CanSave(AscendanceGameManager gm) => gm != null && !gm.IsResolving && !gm.HasPendingReactionWindow && !gm.ParticipatingHeroes.Any(h => h.Moving);
+        public static bool RemoteAuthorityOwnsPersistence0102d =>
+            Online.AscendanceClientCommandRouter0101.Instance?.IsRemoteTcp == true;
 
         public static bool SaveCurrent(AscendanceGameManager gm, out string message)
         {
+            if (RemoteAuthorityOwnsPersistence0102d)
+            {
+                message = "Online campaign persistence is owned by the server.";
+                return true;
+            }
             if (!CanSave(gm)) { message = "Cannot save during movement, a Reaction window, or combat resolution."; return false; }
             try
             {
@@ -73,9 +80,64 @@ namespace Ascendance
             return data == null ? null : AscendanceOptionalSaveState0102.Normalize(JsonUtility.FromJson<AscendanceSaveData>(JsonUtility.ToJson(data)));
         }
 
+        public static AscendanceSaveData NormalizePendingStatePresence0102f(AscendanceSaveData data)
+        {
+            if (data == null) return null;
+            if (data.PendingStateSchema0102f > 1)
+                throw new NotSupportedException("The campaign uses an unsupported pending-state schema.");
+
+            bool deck = !AscendanceOptionalSaveState0102.IsEmpty(data.PendingEncounterDeckControl);
+            bool reward = !AscendanceOptionalSaveState0102.IsEmpty(data.PendingRewardChoice);
+            if (data.PendingStateSchema0102f >= 1)
+            {
+                data.HasPendingEncounterDeckControl0102f &= deck;
+                data.HasPendingRewardChoice0102f &= reward;
+            }
+            else
+            {
+                data.HasPendingEncounterDeckControl0102f = deck;
+                data.HasPendingRewardChoice0102f = reward;
+            }
+            if (!data.HasPendingEncounterDeckControl0102f) data.PendingEncounterDeckControl = null;
+            if (!data.HasPendingRewardChoice0102f) data.PendingRewardChoice = null;
+            return data;
+        }
+
+        public static bool HasSerializedPendingEncounterDeckControl0102f(AscendanceSaveData data) =>
+            NormalizePendingStatePresence0102f(data)?.HasPendingEncounterDeckControl0102f == true;
+
+        public static bool HasSerializedPendingRewardChoice0102f(AscendanceSaveData data) =>
+            NormalizePendingStatePresence0102f(data)?.HasPendingRewardChoice0102f == true;
+
         private static AscendanceSaveData Capture(AscendanceGameManager gm)
         {
             gm.SyncCampaignProgress0833();
+            var deck = gm.PendingEncounterDeckControl == null ? null : new EncounterDeckControlSaveData
+            {
+                SourceCardId = gm.PendingEncounterDeckControl.SourceCardId,
+                SourceCardName = gm.PendingEncounterDeckControl.SourceCardName,
+                Mode = gm.PendingEncounterDeckControl.Mode,
+                RevealedCardIds = gm.PendingEncounterDeckControl.RevealedCardIds?.ToList() ?? new List<string>()
+            };
+            var reward = gm.PendingRewardChoice == null ? null : new RewardChoiceSaveData
+            {
+                SourceCardId = gm.PendingRewardChoice.SourceCardId,
+                SourceCardName = gm.PendingRewardChoice.SourceCardName,
+                HeroId = gm.PendingRewardChoice.HeroId,
+                Mode = gm.PendingRewardChoice.Mode,
+                Prompt = gm.PendingRewardChoice.Prompt,
+                RevealedCardIds = gm.PendingRewardChoice.RevealedCardIds?.ToList() ?? new List<string>()
+            };
+            bool validDeck = gm.HasPersistableEncounterDeckControl0102e();
+            bool validReward = gm.HasPersistableRewardChoice0102e();
+            bool meaningfulDeck = !AscendanceOptionalSaveState0102.IsEmpty(deck);
+            bool meaningfulReward = !AscendanceOptionalSaveState0102.IsEmpty(reward);
+            // A schema-1 false flag would discard an incomplete or extension payload.
+            // Retain such meaningful state under the legacy schema instead of inventing
+            // a supported choice or silently clearing information during a round trip.
+            bool legacyPending = meaningfulDeck && !validDeck || meaningfulReward && !validReward;
+            bool saveDeck = legacyPending ? meaningfulDeck : validDeck;
+            bool saveReward = legacyPending ? meaningfulReward : validReward;
             var data = new AscendanceSaveData
             {
                 Version=AscendanceGameManager.BuildVersion, SavedAtUtc=DateTime.UtcNow.ToString("O"), ResumeSurface0842=CampaignResumeRuntime0842.DetermineCaptureSurface0842(gm), QuestId=gm.CurrentQuestId0829, QuestSpawnSerial0829=gm.QuestSpawnSerialForSave0829, NextQuestSupply0829=gm.NextQuestSupply0829, ReduceFirstWE002TravelScout0830=gm.ReduceFirstWE002TravelScout0830, RemoveEliteFromQ007Setup0830=gm.RemoveEliteFromQ007Setup0830, PartyMorale0831=gm.PartyMorale0831, RemoveSiegeEngineFromQ008Setup0831=gm.RemoveSiegeEngineFromQ008Setup0831, CaptainRolandAssistsQ0100832=gm.CaptainRolandAssistsQ0100832, Round=gm.Round,
@@ -85,8 +147,10 @@ namespace Ascendance
                 LastSearchCardId=gm.LastSearchCardId, LastEncounterCardId=gm.LastEncounterCardId, LastEncounterSeverity=gm.LastEncounterSeverity,
                 PendingContentInstruction=gm.PendingContentInstruction, NextTravelEncounterSeverityModifier=gm.NextTravelEncounterSeverityModifier, SkipNextTravelEncounter=gm.SkipNextTravelEncounter, NextGoblinEncounterMovementBonus=gm.NextGoblinEncounterMovementBonus, NextGoblinEncounterWarDrummer=gm.NextGoblinEncounterWarDrummer,
                 SearchTravelSeverityModifier0852=gm.SearchTravelSeverityModifierForSave0852, SearchTravelSeverityRound0852=gm.SearchTravelSeverityRoundForSave0852, SearchGoblinSeverityModifier0852=gm.SearchGoblinSeverityModifierForSave0852, SearchGoblinSeverityRound0852=gm.SearchGoblinSeverityRoundForSave0852, SearchConditionWard0852=gm.SearchConditionWardForSave0852, SearchConditionWardRound0852=gm.SearchConditionWardRoundForSave0852, DeferredPostEncounter0852=gm.DeferredPostEncounterForSave0852.ToList(),
-                PendingEncounterDeckControl=gm.PendingEncounterDeckControl==null?null:new EncounterDeckControlSaveData{SourceCardId=gm.PendingEncounterDeckControl.SourceCardId,SourceCardName=gm.PendingEncounterDeckControl.SourceCardName,Mode=gm.PendingEncounterDeckControl.Mode,RevealedCardIds=gm.PendingEncounterDeckControl.RevealedCardIds.ToList()},
-                PendingRewardChoice=gm.PendingRewardChoice==null?null:new RewardChoiceSaveData{SourceCardId=gm.PendingRewardChoice.SourceCardId,SourceCardName=gm.PendingRewardChoice.SourceCardName,HeroId=gm.PendingRewardChoice.HeroId,Mode=gm.PendingRewardChoice.Mode,Prompt=gm.PendingRewardChoice.Prompt,RevealedCardIds=gm.PendingRewardChoice.RevealedCardIds.ToList()}, EncounterSpawnSerial=gm.EncounterSpawnSerialForSave,
+                PendingStateSchema0102f=legacyPending?0:1,
+                HasPendingEncounterDeckControl0102f=saveDeck,HasPendingRewardChoice0102f=saveReward,
+                PendingEncounterDeckControl=saveDeck?deck:null,
+                PendingRewardChoice=saveReward?reward:null, EncounterSpawnSerial=gm.EncounterSpawnSerialForSave,
                 EncounterInstanceSerial=gm.EncounterInstanceSerialForSave,EncounterObjectSerial=gm.EncounterObjectSerialForSave,CompletedEncounterCount=gm.CompletedEncounterCount,LastCompletedEncounterCardId=gm.LastCompletedEncounterCardId,
                 SearchDeckIds=gm.SearchDeck.ToList(), SearchDiscardIds=gm.SearchDiscard.ToList(), EncounterDeckIds=gm.EncounterDeck.ToList(), EncounterDiscardIds=gm.EncounterDiscard.ToList(), ExplorationDeckIds=gm.ExplorationDeck0828.ToList(),
                 SelectedHeroId=gm.SelectedHeroId, TurnHeroId=gm.TurnHeroId, SelectedEnemyId=gm.SelectedEnemyId, PartyHeroIds=gm.PartyHeroIds

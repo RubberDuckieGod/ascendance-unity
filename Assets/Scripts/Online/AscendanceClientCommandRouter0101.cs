@@ -218,8 +218,27 @@ namespace Ascendance.Online
         public bool RequestStartOrEndTurn()
         {
             if (gm == null) return false;
-            string actor = gm.TurnHeroId ?? gm.SelectedHeroId;
-            return Accepted(Send(gm.TurnHero == null ? ServerCommandType0100.StartTurn : ServerCommandType0100.EndTurn, actor));
+            bool endingTurn = gm.TurnHero != null;
+            if (!endingTurn && !IsRemoteTcp) EnsureStartableHeroSelected0102g(gm.SelectedHeroId);
+            string actor = endingTurn ? gm.TurnHeroId : gm.SelectedHeroId;
+            bool accepted = Accepted(Send(endingTurn ? ServerCommandType0100.EndTurn : ServerCommandType0100.StartTurn, actor));
+            if (accepted && endingTurn && !IsRemoteTcp && gm.TurnHero == null) EnsureStartableHeroSelected0102g(actor);
+            return accepted;
+        }
+
+        private bool EnsureStartableHeroSelected0102g(string afterHeroId)
+        {
+            // Local hot-seat play can hand control to the next eligible Hero.
+            // Remote clients keep their selected/owned actor and server ownership checks.
+            if (gm == null || gm.TurnHero != null || IsRemoteTcp) return false;
+            if (gm.CanStartHeroTurn(gm.SelectedHero)) return true;
+            var eligible = gm.ParticipatingHeroes.Where(gm.CanStartHeroTurn).OrderBy(h => h.PartyIndex).ToList();
+            if (eligible.Count == 0) return false;
+            int afterIndex = !string.IsNullOrWhiteSpace(afterHeroId) && gm.Heroes.TryGetValue(afterHeroId, out var previous)
+                ? previous.PartyIndex : -1;
+            var next = eligible.FirstOrDefault(h => h.PartyIndex > afterIndex) ?? eligible[0];
+            if (!string.Equals(gm.SelectedHeroId, next.Id, StringComparison.OrdinalIgnoreCase)) gm.SelectHero(next.Id);
+            return true;
         }
 
         public bool RequestMove(string locationId) => Accepted(Send(ServerCommandType0100.Move, gm?.TurnHeroId ?? gm?.SelectedHeroId, targetId: locationId));

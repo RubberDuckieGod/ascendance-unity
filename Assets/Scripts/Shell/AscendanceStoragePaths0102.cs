@@ -21,7 +21,7 @@ namespace Ascendance
 
 #if UNITY_EDITOR
         public const string ValidationSentinel = ".ascendance-validation-data";
-        public const string ValidationSentinelContents = "ascendance-unity-validation-0.10.2c";
+        public const string ValidationSentinelContents = "ascendance-unity-validation-0.10.2h";
 
         public static string RequireIsolatedValidationDirectory()
         {

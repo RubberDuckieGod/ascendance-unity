@@ -9,6 +9,12 @@ namespace Ascendance
 
         public static bool SaveWithFeedback0843(AscendanceGameManager gm,out string message)
         {
+            if (AscendanceSaveSystem.RemoteAuthorityOwnsPersistence0102d)
+            {
+                bool saved = AscendanceSaveSystem.SaveCurrent(gm, out message);
+                if (saved) message = "SERVER-AUTHORITATIVE • local save skipped";
+                return saved;
+            }
             if(!AscendanceSaveSystem.SaveCurrent(gm,out var raw))
             {
                 message="SAVE FAILED — "+raw+" Previous campaign save was not replaced.";

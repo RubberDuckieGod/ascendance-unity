@@ -16,7 +16,7 @@ namespace Ascendance.EditorTools
             "Assets/Scenes/Stonebrook.unity"
         };
 
-        [MenuItem("Ascendance/Build/Build Windows Standalone 0.10.2c")]
+        [MenuItem("Ascendance/Build/Build Windows Standalone 0.10.2h")]
         public static void BuildWindowsStandalone()
         {
             PlayerSettings.companyName = "Ascendance";

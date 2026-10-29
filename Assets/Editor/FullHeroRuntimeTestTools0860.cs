@@ -46,7 +46,7 @@ namespace Ascendance.EditorTools
             }
 
             HeroDatabase.EnsureLoaded();FullContentCatalog0850.EnsureLoaded();
-            Check(AscendanceGameManager.BuildVersion=="0.10.2c","Build identifies the Full Hero & Hero Card Runtime Execution milestone.");
+            Check(AscendanceGameManager.BuildVersion=="0.10.2h","Build identifies the Full Hero & Hero Card Runtime Execution milestone.");
             Check(gm.DebugHeroDefinitionCount0860()==16,"authoritative Hero catalog contains 16 Heroes.");
             Check(gm.DebugHeroCardDefinitionCount0860()==323,"authoritative Hero-card catalog contains 323 definitions.");
             Check(gm.DebugHeroCardExecutableCount0860()==323,"all 323 authored Hero cards have an executable runtime path.");

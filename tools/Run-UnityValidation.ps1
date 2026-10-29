@@ -73,7 +73,7 @@ $oldData = $env:ASCENDANCE_TEST_DATA_DIR
 try {
     $dataDir = Join-Path $Artifacts 'game-data'
     [void][IO.Directory]::CreateDirectory($dataDir)
-    [IO.File]::WriteAllText((Join-Path $dataDir '.ascendance-validation-data'), "ascendance-unity-validation-0.10.2c`n")
+    [IO.File]::WriteAllText((Join-Path $dataDir '.ascendance-validation-data'), "ascendance-unity-validation-0.10.2h`n")
     $env:ASCENDANCE_TEST_MODE = '1'
     $env:ASCENDANCE_TEST_DATA_DIR = $dataDir
     $resultsPath = Join-Path $Artifacts 'validation-results.json'
@@ -83,7 +83,7 @@ try {
         '-ascendance-results',$resultsPath,'-ascendance-timeout',"$TimeoutSeconds",'-logFile',(Join-Path $Artifacts 'validation.log')) `
         -DeadlineSeconds ($TimeoutSeconds + 90) -OutputLog (Join-Path $Artifacts 'editor-console.txt')
     $result = Get-Content -LiteralPath $resultsPath -Raw | ConvertFrom-Json
-    if ($result.passed -ne $true -or $result.errorCount -ne 0 -or $result.editorVersion -ne '6000.6.5f1' -or $result.buildVersion -ne '0.10.2c') { throw 'Unity verdict is failed or has unexpected versions/errors.' }
+    if ($result.passed -ne $true -or $result.errorCount -ne 0 -or $result.editorVersion -ne '6000.6.5f1' -or $result.buildVersion -ne '0.10.2h') { throw 'Unity verdict is failed or has unexpected versions/errors.' }
     $expected = @{ master=54; foundation=24; router=29; network=27; reliability=22; snapshot=20 }
     $seen = @{}
     foreach ($gate in $result.gates) {

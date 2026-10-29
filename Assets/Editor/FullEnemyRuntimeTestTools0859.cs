@@ -27,7 +27,7 @@ namespace Ascendance.EditorTools
             void Put(HeroState h,string authored){var l=gm.DebugLocationByAuthored0858(authored);if(l!=null)h.LocationId=l.Id;}
 
             FullContentCatalog0850.EnsureLoaded();
-            Check(AscendanceGameManager.BuildVersion=="0.10.2c","Build identifies the Full Enemy Runtime Execution milestone.");
+            Check(AscendanceGameManager.BuildVersion=="0.10.2h","Build identifies the Full Enemy Runtime Execution milestone.");
             Check(FullContentCatalog0850.EnemyCount==125,"full authored catalog contains 125 Enemy definitions.");
             Check(gm.DebugEnemyCount0859()==125,"all 125 authored Enemies have an executable Enemy runtime path.");
             Check(Enumerable.Range(1,125).Select(i=>$"E{i:000}").All(id=>FullContentCatalog0850.Root.enemies.Any(e=>e.id==id)),"Enemy IDs are contiguous E001-E125.");

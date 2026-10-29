@@ -88,7 +88,7 @@ namespace Ascendance.Diagnostics
                 || !Path.IsPathRooted(output) || string.IsNullOrWhiteSpace(config) || !Path.IsPathRooted(config)
                 || Path.GetFullPath(config) != Path.Combine(Path.GetFullPath(output), "config")
                 || !File.Exists(Path.Combine(output, ".ascendance-native-client"))
-                || File.ReadAllText(Path.Combine(output, ".ascendance-native-client")).Trim() != "isolated-native-0.10.2c"
+                || File.ReadAllText(Path.Combine(output, ".ascendance-native-client")).Trim() != "isolated-native-0.10.2h"
                 || !AscendanceRemoteClientBootstrap0102.TryParseEndpoint(endpoint, out var host, out int port)
                 || host != "127.0.0.1" || port < 1024
                 || !(Argument("-room") ?? "").StartsWith("NATIVE-ACCEPTANCE-", StringComparison.Ordinal)

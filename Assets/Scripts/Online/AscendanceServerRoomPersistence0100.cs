@@ -16,14 +16,30 @@ namespace Ascendance.Online
             return Path.Combine(RootPath, safe + ".json");
         }
 
+        // Unlike File.Exists, an occupied but unreadable/non-file path must not
+        // be mistaken for an absent save and replaced by a fresh campaign.
+        public static bool SavePathExists(string roomId)
+        {
+            try { File.GetAttributes(PathFor(roomId)); return true; }
+            catch (FileNotFoundException) { return false; }
+            catch (DirectoryNotFoundException) { return false; }
+        }
+
         public static bool Save(PersistedServerRoom0100 room, out string message)
         {
             if (room == null || string.IsNullOrWhiteSpace(room.RoomId)) { message = "Room is invalid."; return false; }
             try
             {
+                string path = PathFor(room.RoomId);
+                if (SavePathExists(room.RoomId)
+                    && (File.GetAttributes(path) & (FileAttributes.Directory | FileAttributes.ReparsePoint)) != 0)
+                {
+                    message = "Server room save must be a regular file.";
+                    return false;
+                }
                 Directory.CreateDirectory(RootPath);
                 room.UpdatedAtUtc = DateTime.UtcNow.ToString("O");
-                File.WriteAllText(PathFor(room.RoomId), JsonUtility.ToJson(room, true));
+                File.WriteAllText(path, JsonUtility.ToJson(room, true));
                 message = "Server room saved.";
                 return true;
             }
@@ -39,13 +55,24 @@ namespace Ascendance.Online
         {
             room = null;
             string path = PathFor(roomId);
-            if (!File.Exists(path)) { message = "No server room save found."; return false; }
             try
             {
+                if (!SavePathExists(roomId)) { message = "No server room save found."; return false; }
+                if ((File.GetAttributes(path) & (FileAttributes.Directory | FileAttributes.ReparsePoint)) != 0)
+                {
+                    message = "Server room save must be a regular file.";
+                    return false;
+                }
                 room = JsonUtility.FromJson<PersistedServerRoom0100>(File.ReadAllText(path));
-                if (room == null || string.IsNullOrWhiteSpace(room.RoomId) || room.DurableCampaign == null)
+                if (room == null || string.IsNullOrWhiteSpace(room.RoomId) || room.DurableCampaign == null
+                    || room.DurableCampaign.Heroes == null
+                    || !room.DurableCampaign.Heroes.Any(h => h != null && !string.IsNullOrWhiteSpace(h.Id)))
                 {
                     room = null; message = "Server room save is incomplete."; return false;
+                }
+                if (!string.Equals(room.RoomId, roomId?.Trim(), StringComparison.Ordinal))
+                {
+                    room = null; message = "Saved room identity differs from its requested filename."; return false;
                 }
                 AscendanceOptionalSaveState0102.Normalize(room.DurableCampaign);
                 room.Players ??= new System.Collections.Generic.List<ServerPlayerSession0100>();
@@ -54,7 +81,8 @@ namespace Ascendance.Online
             }
             catch (Exception ex)
             {
-                Debug.LogWarning("[ASCENDANCE][SERVER] Room load rejected: " + ex.Message);
+                room = null;
+                Debug.LogWarning("[ASCENDANCE][SERVER] Room load rejected: " + ex.GetType().Name);
                 message = "Server room save could not be read.";
                 return false;
             }

@@ -55,7 +55,7 @@ class Client:
         output.mkdir()
         for name in ["config", "cache", "data", "tmp", "requests", "responses"]:
             (output / name).mkdir()
-        (output / ".ascendance-native-client").write_text("isolated-native-0.10.2c\n")
+        (output / ".ascendance-native-client").write_text("isolated-native-0.10.2h\n")
 
     def start(self):
         self.runs += 1
@@ -326,7 +326,7 @@ def main():
 
     try:
         observer, initial = server.start()
-        check("Fresh native server HELLO reports 0.10.2c", "0.10.2c", initial.get("ServerBuildVersion"))
+        check("Fresh native server HELLO reports 0.10.2h", "0.10.2h", initial.get("ServerBuildVersion"))
         observer.close(); observer = None; server.stop()
         fixture = json.loads(server.save_path.read_text())
         campaign = fixture["DurableCampaign"]

@@ -25,7 +25,7 @@ namespace Ascendance.EditorTools
             void SafeSearchDeck(){gm.SearchDeck.Clear();gm.SearchDiscard.Clear();gm.SearchDeck.AddRange(new[]{"SD001","SD002","SD003","SD004","SD005","SD006"});}
 
             FullContentCatalog0850.EnsureLoaded();
-            Check(AscendanceGameManager.BuildVersion=="0.10.2c","Build identifies the Full Location Runtime Execution milestone.");
+            Check(AscendanceGameManager.BuildVersion=="0.10.2h","Build identifies the Full Location Runtime Execution milestone.");
             Check(FullContentCatalog0850.LocationCount==236,"full authored catalog contains 236 Location definitions.");
             Check(gm.DebugLocationCount0858()==236,"all 236 authored Locations have an executable Location runtime path.");
             Check(Enumerable.Range(0,236).Select(i=>$"L{i:000}").All(id=>FullContentCatalog0850.TryGetLocation(id,out _)),"Location IDs are contiguous L000-L235.");

@@ -16,7 +16,7 @@ namespace Ascendance.EditorTools
     {
         private const string Prefix = "[ASCENDANCE TEST 0.10.2 SNAPSHOT]";
 
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Remote Snapshot Presentation (Play Mode)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Remote Snapshot Presentation (Play Mode)")]
         public static void ValidateCurrentPlayMode()
         {
             AscendanceStoragePaths0102.RequireIsolatedValidationDirectory();

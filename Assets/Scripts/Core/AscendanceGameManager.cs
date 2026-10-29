@@ -35,7 +35,7 @@ namespace Ascendance
 
     public sealed partial class AscendanceGameManager : MonoBehaviour
     {
-        public const string BuildVersion = "0.10.2c";
+        public const string BuildVersion = "0.10.2h";
         public static AscendanceGameManager Instance { get; private set; }
 
         public readonly Dictionary<string, HeroState> Heroes = new(StringComparer.OrdinalIgnoreCase);
@@ -464,6 +464,13 @@ namespace Ascendance
             foreach (var hero in ParticipatingHeroes)
                 if (!hero.TurnCompleted && !IsHeroTakingTurn(hero)) { hero.Actions = 0; hero.AttackOnlyActions = 0; }
             SelectedEnemyId = !string.IsNullOrEmpty(save.SelectedEnemyId) && Enemies.TryGetValue(save.SelectedEnemyId, out var se) && !se.Defeated ? save.SelectedEnemyId : FirstLivingEnemyAtSelectedHeroLocation()?.Id;
+            // Explicit f/g presence semantics are checked against fully restored decks,
+            // Heroes and inventory. Legacy schema-0 partial choices remain preserved.
+            if (save.PendingStateSchema0102f == 1)
+            {
+                SanitizeRestoredEncounterDeckControl0102e();
+                SanitizeRestoredRewardChoice0102e();
+            }
             // Replica application finishes with its authoritative transient state and one notification.
             if (applyingRemoteSnapshot0102) return;
             // Reconcile the authoritative campaign layer after every resolved-Quest load so the
@@ -2938,6 +2945,14 @@ namespace Ascendance
             TurnHeroId=null;
             var remaining=ParticipatingHeroes.Where(h=>!h.IsDefeated&&!h.TurnCompleted).OrderBy(h=>h.PartyIndex).ToList();
             if(remaining.Count==0){StartCoroutine(ResolveRound());return;}
+            var currentSelection=SelectedHero;
+            if(currentSelection==null||currentSelection.IsDefeated||currentSelection.TurnCompleted||!currentSelection.Participating)
+            {
+                var next=remaining.FirstOrDefault(h=>h.PartyIndex>hero.PartyIndex)??remaining[0];
+                SelectedHeroId=next.Id;
+                SelectedEnemyId=FirstLivingEnemyAtSelectedHeroLocation()?.Id;
+                AddLog($"HERO HANDOFF — {next.DisplayName} is selected as the next unfinished Hero. Choose another unfinished Hero before Start Turn to change activation order.");
+            }
             AddLog($"HERO PHASE — choose the next Hero to take a turn ({remaining.Count} remaining).");
             StateChanged?.Invoke();
         }

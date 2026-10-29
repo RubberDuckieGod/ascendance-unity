@@ -14,9 +14,9 @@ namespace Ascendance.EditorTools
 {
     public static class NetworkTransportTestTools0102
     {
-        private const string Prefix = "[ASCENDANCE][0.10.2c NETWORK]";
+        private const string Prefix = "[ASCENDANCE][0.10.2h NETWORK]";
 
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Real Network Transport (Play Mode)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Real Network Transport (Play Mode)")]
         public static void Test0102()
         {
             AscendanceStoragePaths0102.RequireIsolatedValidationDirectory();
@@ -35,7 +35,7 @@ namespace Ascendance.EditorTools
                 else { fail++; Debug.LogError(Prefix + " FAIL — " + label); }
             }
 
-            Check(AscendanceGameManager.BuildVersion == "0.10.2c", "BuildVersion identifies the Real Network Transport milestone.");
+            Check(AscendanceGameManager.BuildVersion == "0.10.2h", "BuildVersion identifies the Real Network Transport milestone.");
             Check(AscendanceNetworkCodec0102.ProtocolVersion == 1 && AscendanceNetworkCodec0102.MaxFrameBytes >= 1024 * 1024,
                 "Wire protocol publishes a bounded versioned framed-message contract.");
             Check(typeof(AscendanceTcpCommandTransport0102).GetInterfaces().Contains(typeof(IAscendanceCommandTransport0101)),
@@ -104,7 +104,7 @@ namespace Ascendance.EditorTools
                 if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) inheritedErrors++;
                 if (string.IsNullOrEmpty(condition) || !condition.Contains("Client Command Routing completed:")) return;
                 routerFinished = true;
-                routerPassed = condition.Contains("[ASCENDANCE][0.10.2c ROUTER] PASS") && condition.Contains("29 passed, 0 failed");
+                routerPassed = condition.Contains("[ASCENDANCE][0.10.2h ROUTER] PASS") && condition.Contains("29 passed, 0 failed");
             }
             Application.logMessageReceived += OnRouterLog;
             try
@@ -115,7 +115,7 @@ namespace Ascendance.EditorTools
             }
             finally { Application.logMessageReceived -= OnRouterLog; }
             Check(routerFinished && routerPassed, "Locked Client Command Routing suite remains 29 passed / 0 failed under real transport.");
-            Check(inheritedErrors == 0, "Inherited router/server/core gates emit zero Unity Error/Exception/Assert entries under 0.10.2c.");
+            Check(inheritedErrors == 0, "Inherited router/server/core gates emit zero Unity Error/Exception/Assert entries under 0.10.2h.");
 
             var restore = AscendanceSaveSystem.CaptureForAuthority0100(gm);
             AscendanceRoomAuthority0100 isolated = null;
@@ -169,7 +169,7 @@ namespace Ascendance.EditorTools
                     helloResponse = AscendanceNetworkCodec0102.DeserializeResponse(helloTask.Result);
                 Check(helloResponse != null && helloResponse.Accepted && helloResponse.Code == "HELLO" && helloResponse.Snapshot != null && helloResponse.Snapshot.RoomId == roomId,
                     "A real localhost TCP HELLO crosses the socket and returns the authoritative room snapshot.");
-                Check(helloResponse != null && helloResponse.ProtocolVersion == 1 && helloResponse.ServerBuildVersion == "0.10.2c",
+                Check(helloResponse != null && helloResponse.ProtocolVersion == 1 && helloResponse.ServerBuildVersion == "0.10.2h",
                     "TCP handshake enforces protocol/build identity before gameplay commands.");
 
                 var joined = isolated.Join("Network Validator", "Aldric");
@@ -201,8 +201,8 @@ namespace Ascendance.EditorTools
                 Check(commandResponse?.Snapshot != null && commandResponse.CommandResult != null
                     && commandResponse.Snapshot.Revision == commandResponse.CommandResult.Revision
                     && commandResponse.Snapshot.Revision <= isolated.Room.Revision
-                    && commandResponse.Snapshot.Campaign?.Version == "0.10.2c",
-                    "Socket command response returns the committed 0.10.2c authoritative snapshot/revision.");
+                    && commandResponse.Snapshot.Campaign?.Version == "0.10.2h",
+                    "Socket command response returns the committed 0.10.2h authoritative snapshot/revision.");
 
                 var mismatch = new AscendanceNetworkRequest0102 { RequestId = "BADROOM-0102", Operation = "HELLO", RoomId = roomId + "-WRONG" };
                 var mismatchTask = SendRawAsync(server.BoundPort, AscendanceNetworkCodec0102.SerializeRequest(mismatch));

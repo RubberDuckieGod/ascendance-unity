@@ -14,9 +14,9 @@ namespace Ascendance.EditorTools
     // Real localhost sockets and the production client/server classes. No simulated rules.
     public static class NetworkReliabilityTestTools0102
     {
-        private const string Prefix = "[ASCENDANCE][0.10.2c RELIABILITY]";
+        private const string Prefix = "[ASCENDANCE][0.10.2h RELIABILITY]";
 
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Network Reliability (Play Mode)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Network Reliability (Play Mode)")]
         public static void Test0102Reliability()
         {
             AscendanceStoragePaths0102.RequireIsolatedValidationDirectory();
