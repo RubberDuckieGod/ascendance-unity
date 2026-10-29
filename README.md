@@ -4,29 +4,29 @@ This candidate preserves the reviewed 0.10.2g pending-choice schema and original
 
 The existing-service installer first validates the exact original managed assembly and save fields. It restores a private copied campaign with the new server on loopback and compares complete state before stopping the live service. Invalid, unsupported, unreadable or unwritable saves are refused; the target never replaces a rejected existing campaign with a fresh room.
 
-Clean runtime source: `55d25c03a3279a8396d5b8954e73180e08f7a0c5`. [Matching candidate release](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-multiplayer-55d25c0). Deployment helpers have separate immutable pins. Production activation and the public DigitalOcean route remain pending owner execution.
+Clean runtime source: `55d25c03a3279a8396d5b8954e73180e08f7a0c5`. [Matching candidate release](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-multiplayer-55d25c0). Deployment helpers have separate immutable pins. The owner activated h on DigitalOcean with the existing campaign restored. The public TLS endpoint and its certificate pin passed an independent read-only check; see [live activation evidence](docs/DIGITALOCEAN_H_ACTIVATION.json). Owner Windows gameplay and friend connections remain pending.
 
 Validation: 176 Editor checks; native plain/TLS 73/80; two independent Linux GUI clients 77; actual legacy-code migration/refusal checks 166; copied-room restoration API 13; helper fixtures 175; Windows client ACL helpers 34 on a real ordinary account. [Evidence and limitations](docs/MULTIPLAYER_ACCEPTANCE_0102H.json). Windows gameplay/audio, complete original host asset equivalence and every authored interaction are not certified.
 
 Use the pinned on-host entrypoint described in [the existing-server guide](Deploy/DigitalOcean/UPGRADE_EXISTING.md). After verified activation, `tools/windows-install-client.ps1` installs the matching client in private LocalAppData and retrieves the invitation through ordinary interactive SCP. No merge or production deployment runs automatically.
 
-# Ascendance Unity 0.10.2c
+## Recovered project baseline (historical 0.10.2c)
 
 This checkout contains the recovered Unity project: the uploaded Assets baseline has 156 C# scripts, MainMenu and Stonebrook scenes, four authored JSON catalogs, art, and original asset metadata. Packages and ProjectSettings pin **Unity 6000.6.5f1**. New validation and deployment helpers are maintained alongside that baseline.
 
-The game version remains **0.10.2c**. Identify reliability revisions by Git commit and the build's SHA-256 manifest. The source destination is the public [RubberDuckieGod/ascendance-unity](https://github.com/RubberDuckieGod/ascendance-unity) repository; the owner explicitly authorized public publication.
+The recovered baseline was **0.10.2c**; the current reviewed runtime is **0.10.2h** as described above. Identify reliability revisions by Git commit and the build's SHA-256 manifest. The source destination is the public [RubberDuckieGod/ascendance-unity](https://github.com/RubberDuckieGod/ascendance-unity) repository; the owner explicitly authorized public publication.
 
-## Multiplayer rollout status
+## Earlier c candidate validation (superseded by h)
 
-**The secure DigitalOcean upgrade is not deployed.** Source `eb51b2292cf433a2cbe5dabb4863f1fef993161a` passed all **176 Editor checks**, **91 helper tests** with no skips, **73 plain / 80 TLS native-server checks**, and **77 independent native Unity GUI checks**. Matching Linux server, Linux GUI development client and Windows client builds succeeded. Both GUI windows passed actual world/Hero visibility review after idle and restart. The [matching prerelease](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2c-multiplayer-eb51b22) now includes complete client/server downloads, checksums and detailed validation reports. See the [acceptance summary](docs/MULTIPLAYER_ACCEPTANCE_EB51B22.json). Server activation remains pending.
+**Historical c candidate; not the currently deployed build.** Source `eb51b2292cf433a2cbe5dabb4863f1fef993161a` passed all **176 Editor checks**, **91 helper tests** with no skips, **73 plain / 80 TLS native-server checks**, and **77 independent native Unity GUI checks**. Matching Linux server, Linux GUI development client and Windows client builds succeeded. Both GUI windows passed actual world/Hero visibility review after idle and restart. The [matching prerelease](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2c-multiplayer-eb51b22) now includes complete client/server downloads, checksums and detailed validation reports. See the [acceptance summary](docs/MULTIPLAYER_ACCEPTANCE_EB51B22.json). That c candidate was superseded by the compatible h release.
 
-The existing server's identity, service and actual save location have been inspected; that inspection does not establish that the new build is running. Render hosts a separate JavaScript game. Windows was compiled here; the independent graphical acceptance uses Linux players. Audio output is unvalidated.
+The original service and save-path inspection preceded the h activation recorded above. Render hosts a separate JavaScript game. Windows was compiled here; the independent graphical acceptance uses Linux players. Audio output is unvalidated.
 
 The review branch adds encrypted transport, a private invite launcher, native restart repairs, and a staged upgrade for the existing DigitalOcean service. See [validation status](docs/VALIDATION_STATUS.md) and [multiplayer review](docs/MULTIPLAYER_REVIEW.md) for the evidence and remaining gates.
 
 ## Playing with friends after activation
 
-Players need the complete matching **Windows game ZIP**, not Unity or the Unity Editor. These steps become usable after the owner completes secure server activation and receives the private invite:
+Players need the complete matching **0.10.2h Windows game ZIP**, not Unity or the Unity Editor. The server is active; the owner can retrieve its private invite with the client-only installer:
 
 1. Extract the entire Windows ZIP to a new folder. Keep `Ascendance.exe`, `Ascendance_Data`, `UnityPlayer.dll`, the other libraries, and both `Play-AscendanceMultiplayer` launcher files together.
 2. Obtain `Ascendance.invite.json` privately from the server owner. Put it beside `Play-AscendanceMultiplayer.cmd`, or supply its full path when the launcher asks. The invite contains the endpoint, room, pinned certificate and private access key; never upload it to GitHub or paste it into chat.

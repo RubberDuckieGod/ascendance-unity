@@ -50,14 +50,15 @@
       "actionsRun": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40801909570"
     }
   },
-  "deploymentStatus": "NOT_ACTIVATED; owner execution pending, production unchanged",
+  "deploymentStatus": "ACTIVATED_SECURE_PUBLIC; existing campaign restored; owner Windows gameplay pending",
   "scopeLimits": [
     "The original g code was executed with the verified candidate runtime and supplied project assets; complete original host assets were not recovered.",
-    "The private-copy probe simulated root ownership/runuser plumbing on the local nonroot host; production/systemd switching is not certified.",
-    "Windows game execution, audio output, every authored content interaction and the public DigitalOcean client route remain unvalidated.",
+    "The local private-copy API tests simulated root ownership/runuser plumbing. The owner subsequently reported successful on-host private restoration and activation; the external public listener was independently verified.",
+    "Windows game execution, audio output, every authored content interaction and authenticated public player sessions remain unvalidated. The public TLS endpoint, certificate pin and missing-key rejection passed independently.",
     "Unknown future/partial pending mechanics are preserved where possible; they are not declared playable.",
     "Three Editor runs were blocked by a Unity optional Search indexing startup race. The normal six gates passed after disabling the supported optional indexOnEditorStartup test-project preference; no gameplay assertion or error filtering was changed."
   ],
   "legacyAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
-  "legacyFixtureArchiveSha256": "95a4b20d4a45fa58c64490aeb9fb95baacf1641050737e412638891f53b9b424"
+  "legacyFixtureArchiveSha256": "95a4b20d4a45fa58c64490aeb9fb95baacf1641050737e412638891f53b9b424",
+  "activationEvidence": "DIGITALOCEAN_H_ACTIVATION.json"
 }
