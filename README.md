@@ -8,7 +8,7 @@ Clean runtime source: `55d25c03a3279a8396d5b8954e73180e08f7a0c5`. [Matching cand
 
 Validation: 176 Editor checks; native plain/TLS 73/80; two independent Linux GUI clients 77; actual legacy-code migration/refusal checks 166; copied-room restoration API 13; helper fixtures 175; Windows client ACL helpers 34 on a real ordinary account. [Evidence and limitations](docs/MULTIPLAYER_ACCEPTANCE_0102H.json). Windows gameplay/audio, complete original host asset equivalence and every authored interaction are not certified.
 
-Use the pinned on-host entrypoint described in [the existing-server guide](Deploy/DigitalOcean/UPGRADE_EXISTING.md). After verified activation, `tools/windows-install-client.ps1` installs the matching client in private LocalAppData and retrieves the invitation through ordinary interactive SCP. No merge or production deployment runs automatically.
+Use the pinned on-host entrypoint described in [the existing-server guide](Deploy/DigitalOcean/UPGRADE_EXISTING.md). After verified activation, `tools/windows-install-client.ps1` installs the matching client in private LocalAppData and retrieves the invitation through ordinary interactive SCP. It also applies the separately pinned [Windows launcher repair](docs/WINDOWS_LAUNCHER_REPAIR_0102H.md); the original h ZIP requires that launcher correction before use. No merge or production deployment runs automatically.
 
 ## Recovered project baseline (historical 0.10.2c)
 
