@@ -451,6 +451,303 @@ class UpgradeSafety(unittest.TestCase):
                 with self.assertRaisesRegex(UPGRADE.Refusal, "serverBuildVersion"):
                     self.actual_durable_phase(self.plan, self.security)
 
+    def reviewed_schema(self):
+        return json.loads((ROOT / "Deploy/DigitalOcean/save-schema-0102g.json").read_text())
+
+    def enable_g_migration(self):
+        room = {"RoomId": "ASC-PRIMARY", "BuildVersion": "0.10.2g", "Revision": 77,
+                "CreatedAtUtc": "2025-01-02T03:04:05Z", "UpdatedAtUtc": "2025-01-03T03:04:05Z",
+                "Players": [{"PlayerId": "synthetic-player", "DisplayName": "PRIVATE-NAME",
+                             "HeroId": "Aldric", "ReconnectToken": "PRIVATE-TOKEN", "Connected": False,
+                             "JoinedAtUtc": "2025-01-02T03:05:00Z", "LastSeenUtc": "2025-01-03T03:05:00Z"}],
+                "DurableCampaign": {"Version": "0.10.2g", "SavedAtUtc": "2025-01-03T03:04:05Z",
+                                    "QuestId": "Q001", "PartyGold": 136,
+                                    "Heroes": [{"Id": "Aldric", "Health": 7, "Level": 1}],
+                                    "Enemies": [{"Id": "enemy-b", "Health": 3}, {"Id": "enemy-a", "Health": 4}],
+                                    "PendingStateSchema0102f": 1, "HasPendingRewardChoice0102f": False,
+                                    "HasPendingEncounterDeckControl0102f": False,
+                                    "PendingRewardChoice": {"SourceCardId": "SD082", "Mode": "Gold25OrLoot1"},
+                                    "PendingEncounterDeckControl": None}}
+        self.room_file.write_text(json.dumps(room))
+        self.room_file.chmod(0o600)
+        self.plan["process"]["wireBuildVersion"] = "0.10.2g"
+        self.plan["upgradeVerification"] = {"code": UPGRADE.tree_proof(self.legacy),
+                                               "sourceIdentity": {"buildVersion": "0.10.2g", "transport": "plain",
+                                                                  "managedAssemblySha256": UPGRADE.SOURCE_G_SHA256}}
+        self.descriptor["buildVersion"] = "0.10.2h"
+        self.descriptor["helpers"] = {UPGRADE.SCHEMA_NAME: {
+            "sha256": hashlib.sha256((ROOT / "Deploy/DigitalOcean/save-schema-0102g.json").read_bytes()).hexdigest()}}
+        self.security["buildVersion"] = "0.10.2h"
+        return room
+
+    def snapshot_for_room(self, room, restored=True, path=None):
+        return {"RoomId": room["RoomId"], "BuildVersion": room["BuildVersion"], "Revision": room["Revision"],
+                "Campaign": copy.deepcopy(room["DurableCampaign"]),
+                "Players": [{key: player.get(key) for key in ("PlayerId", "DisplayName", "HeroId", "Connected")}
+                            for player in room["Players"]],
+                "Transient": {"IsResolving": False, "HasPendingReactionWindow": False, "MovingHeroIds": []},
+                "RoomStateOrigin0102d": "RESTORED_FROM_SERVER_DISK" if restored else "FRESH_SERVER_PROCESS_STATE",
+                "RoomCreatedAtUtc0102d": room["CreatedAtUtc"],
+                "PersistencePath0102d": str(path or self.room_file)}
+
+    def test_g_build_is_accepted_only_for_exact_reviewed_managed_code(self):
+        code = {"files": {"AscendanceServer_Data/Managed/Assembly-CSharp.dll": {"sha256": UPGRADE.SOURCE_G_SHA256}}}
+        identity = UPGRADE.reviewed_build_identity(code)
+        self.assertEqual(identity["buildVersion"], "0.10.2g")
+        code["files"]["AscendanceServer_Data/Managed/Assembly-CSharp.dll"]["sha256"] = "e" * 64
+        with self.assertRaisesRegex(UPGRADE.Refusal, "not a reviewed legacy source"):
+            UPGRADE.reviewed_build_identity(code)
+
+    def test_modern_source_code_must_match_a_reviewed_or_exact_pinned_target_assembly(self):
+        checksum = "d" * 64
+        code = {"files": {"AscendanceServer_Data/Managed/Assembly-CSharp.dll": {"sha256": checksum}}}
+        with self.assertRaisesRegex(UPGRADE.Refusal, "not a reviewed legacy source"):
+            UPGRADE.reviewed_build_identity(code, modern=True)
+        with self.assertRaisesRegex(UPGRADE.Refusal, "not a reviewed legacy source"):
+            UPGRADE.reviewed_build_identity(code, modern=True, target_checksum="e" * 64)
+        identity = UPGRADE.reviewed_build_identity(code, modern=True, target_checksum=checksum)
+        self.assertEqual(identity["buildVersion"], "0.10.2h")
+        self.assertEqual(identity["transport"], "secure")
+
+    def test_reviewed_g_uses_g_wire_contract_instead_of_target_h_version(self):
+        room = self.enable_g_migration()
+        with OneFrameServer(self.snapshot_for_room(room), build="0.10.2g") as peer:
+            plan = copy.deepcopy(self.plan)
+            plan["process"]["port"] = peer.port
+            self.actual_durable_phase(plan, self.security)
+            self.assertEqual(peer.request["Operation"], "HELLO")
+        with OneFrameServer(self.snapshot_for_room(room), build="0.10.2c") as peer:
+            plan["process"]["port"] = peer.port
+            with self.assertRaisesRegex(UPGRADE.Refusal, "serverBuildVersion"):
+                self.actual_durable_phase(plan, self.security)
+
+    def test_pinned_schema_checksum_cannot_be_replaced(self):
+        self.enable_g_migration()
+        descriptor = copy.deepcopy(self.descriptor)
+        descriptor["helpers"][UPGRADE.SCHEMA_NAME]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(UPGRADE.Refusal, "checksum differs"):
+            UPGRADE.load_save_schema(descriptor)
+
+    def test_unknown_nested_field_or_mutated_scalar_refuses_before_backup_or_stop(self):
+        for mutation in [lambda room: room["DurableCampaign"]["Heroes"][0].update(PRIVATE_UNKNOWN_FIELD=1),
+                         lambda room: room["DurableCampaign"]["Heroes"][0].update(Health="7"),
+                         lambda room: room["DurableCampaign"].update(PendingStateSchema0102f=2)]:
+            room = self.enable_g_migration()
+            mutation(room)
+            self.room_file.write_text(json.dumps(room))
+            with self.subTest(mutation=mutation), self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=self.snapshot_for_room(room)), mock.patch.object(UPGRADE, "backup_existing") as backup, mock.patch.object(UPGRADE, "private_restore_probe") as probe, mock.patch.object(UPGRADE, "run") as system:
+                with self.assertRaises(UPGRADE.Refusal) as error:
+                    self.activate()
+                self.assertNotIn("PRIVATE", str(error.exception))
+                backup.assert_not_called()
+                probe.assert_not_called()
+                system.assert_not_called()
+
+    def test_live_and_disk_gold_mismatch_prevents_copy_probe_or_service_stop(self):
+        room = self.enable_g_migration()
+        snapshot = self.snapshot_for_room(room)
+        snapshot["Campaign"]["PartyGold"] = 135
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=snapshot), mock.patch.object(UPGRADE, "backup_existing") as backup, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Live campaign"):
+                self.activate()
+            backup.assert_not_called()
+            system.assert_not_called()
+
+    def test_failed_private_copy_restore_does_not_stop_production(self):
+        room = self.enable_g_migration()
+        before = self.room_file.read_bytes()
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=self.snapshot_for_room(room)), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "private_restore_probe", side_effect=UPGRADE.Refusal("Private copy lost progress")) as probe, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "Private copy lost progress"):
+                self.activate()
+            probe.assert_called_once()
+            system.assert_not_called()
+        self.assertEqual(self.room_file.read_bytes(), before)
+
+    def test_movement_after_private_copy_inspection_still_prevents_stop(self):
+        room = self.enable_g_migration()
+        clear = self.snapshot_for_room(room)
+        moving = copy.deepcopy(clear)
+        moving["Transient"]["MovingHeroIds"] = ["Aldric"]
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", side_effect=self.actual_durable_phase), mock.patch.object(UPGRADE, "legacy_hello", side_effect=[clear, clear, moving]), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "private_restore_probe", return_value={"verified": True}), mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                self.activate()
+            system.assert_not_called()
+
+    def test_semantic_migration_retains_gold_player_credentials_and_ordered_cards(self):
+        room = self.enable_g_migration()
+        expected = UPGRADE.semantic_room(room)
+        after = copy.deepcopy(room)
+        after.update(BuildVersion="0.10.2h", UpdatedAtUtc="new-reviewed-time", GameplayRevision=0)
+        after["DurableCampaign"].update(Version="0.10.2h", SavedAtUtc="new-reviewed-time", PendingRewardChoice=None)
+        after["DurableCampaign"]["Enemies"].reverse()
+        self.assertEqual(UPGRADE.semantic_room(after), expected)
+        for change in [lambda current: current["DurableCampaign"].update(PartyGold=135),
+                       lambda current: current["Players"][0].update(ReconnectToken="DIFFERENT-PRIVATE-TOKEN"),
+                       lambda current: current["DurableCampaign"]["Heroes"][0].update(Health=6)]:
+            changed = copy.deepcopy(after)
+            change(changed)
+            self.assertNotEqual(UPGRADE.semantic_room(changed), expected)
+        before = copy.deepcopy(room)
+        before["DurableCampaign"]["Heroes"][0]["HandIds"] = ["CARD-A", "CARD-B"]
+        after = copy.deepcopy(before)
+        after["DurableCampaign"]["Heroes"][0]["HandIds"].reverse()
+        self.assertNotEqual(UPGRADE.semantic_room(before), UPGRADE.semantic_room(after))
+
+    def test_fresh_room_or_lost_gold_cannot_pass_post_start_restore_proof(self):
+        expected = self.enable_g_migration()
+        current = copy.deepcopy(expected)
+        current["BuildVersion"] = current["DurableCampaign"]["Version"] = "0.10.2h"
+        self.room_file.write_text(json.dumps(current))
+        schema = self.reviewed_schema()
+        UPGRADE.prove_restored_state(self.plan, self.snapshot_for_room(current), expected, schema, "0.10.2h")
+        with self.assertRaisesRegex(UPGRADE.Refusal, "did not prove restoration"):
+            UPGRADE.prove_restored_state(self.plan, self.snapshot_for_room(current, restored=False), expected, schema, "0.10.2h")
+        current["DurableCampaign"]["PartyGold"] = 135
+        self.room_file.write_text(json.dumps(current))
+        with self.assertRaisesRegex(UPGRADE.Refusal, "durable progress differs"):
+            UPGRADE.prove_restored_state(self.plan, self.snapshot_for_room(current), expected, schema, "0.10.2h")
+
+    def test_false_presence_flag_semantics_do_not_erase_true_pending_reward(self):
+        room = self.enable_g_migration()
+        absent = UPGRADE.semantic_campaign(room["DurableCampaign"])
+        room["DurableCampaign"]["HasPendingRewardChoice0102f"] = True
+        present = UPGRADE.semantic_campaign(room["DurableCampaign"])
+        self.assertIsNone(absent["PendingRewardChoice"])
+        self.assertEqual(present["PendingRewardChoice"]["Mode"], "Gold25OrLoot1")
+        self.assertNotEqual(absent, present)
+
+    def test_enemy_reordering_does_not_allow_duplicate_identity_loss(self):
+        room = self.enable_g_migration()
+        room["DurableCampaign"]["Enemies"].append({"Id": "ENEMY-A", "Health": 4})
+        with self.assertRaisesRegex(UPGRADE.Refusal, "duplicate enemy"):
+            UPGRADE.semantic_room(room)
+
+    def test_only_empty_enemy_selection_may_restore_to_first_living_local_enemy(self):
+        expected = self.enable_g_migration()
+        campaign = expected["DurableCampaign"]
+        campaign["SelectedHeroId"] = "Aldric"
+        campaign["SelectedEnemyId"] = None
+        campaign["Heroes"][0]["LocationId"] = "L000"
+        campaign["Enemies"] = [{"Id": "dead", "LocationId": "L000", "Health": 0},
+                               {"Id": "elsewhere", "LocationId": "L001", "Health": 8},
+                               {"Id": "first-local", "LocationId": "L000", "Health": 3},
+                               {"Id": "second-local", "LocationId": "L000", "Health": 5}]
+        restored = copy.deepcopy(expected)
+        restored["DurableCampaign"]["SelectedEnemyId"] = "first-local"
+        self.assertTrue(UPGRADE.rooms_equivalent(expected, restored))
+        for wrong in ["dead", "elsewhere", "second-local", "missing-enemy"]:
+            changed = copy.deepcopy(restored)
+            changed["DurableCampaign"]["SelectedEnemyId"] = wrong
+            with self.subTest(selection=wrong):
+                self.assertFalse(UPGRADE.rooms_equivalent(expected, changed))
+        expected["DurableCampaign"]["SelectedEnemyId"] = "second-local"
+        self.assertFalse(UPGRADE.rooms_equivalent(expected, restored))
+        restored["DurableCampaign"]["SelectedEnemyId"] = "second-local"
+        self.assertTrue(UPGRADE.rooms_equivalent(expected, restored))
+
+    def test_private_copy_probe_never_joins_or_changes_original_room(self):
+        room = self.enable_g_migration()
+        before = self.room_file.read_bytes()
+        launches = []
+        stopped = []
+        def launch(command, **kwargs):
+            launches.append((command, kwargs))
+            return SimpleNamespace(pid=123456, poll=lambda: None)
+        def system(command, **kwargs):
+            port = command[-1].split(":", 1)[1].split()[0]
+            return SimpleNamespace(stdout="LISTEN 0 128 127.0.0.1:" + port + " 0.0.0.0:*\n")
+        def hello(port, requested_room, pin, key, **kwargs):
+            environment = launches[0][1]["env"]
+            path = Path(environment["XDG_CONFIG_HOME"]) / "unity3d/Ascendance/Ascendance/AscendanceServerRooms0100/ASC-PRIMARY.json"
+            copied = json.loads(path.read_text())
+            copied["BuildVersion"] = copied["DurableCampaign"]["Version"] = "0.10.2h"
+            path.write_text(json.dumps(copied))
+            self.assertEqual(kwargs["expected_build"], "0.10.2h")
+            return self.snapshot_for_room(copied, path=path)
+        with mock.patch.object(UPGRADE.subprocess, "Popen", side_effect=launch), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "hello", side_effect=hello) as health, mock.patch.object(UPGRADE, "stop_private_probe", side_effect=lambda child: stopped.append(child.pid)):
+            result = UPGRADE.private_restore_probe("ascendance", self.release, self.plan, self.security, room, self.reviewed_schema())
+        self.assertTrue(result["verified"])
+        self.assertEqual(result["gameplayCommandsSubmitted"], 0)
+        self.assertEqual(health.call_count, 1)
+        self.assertEqual(stopped, [123456])
+        command, kwargs = launches[0]
+        self.assertEqual(kwargs["env"]["ASCENDANCE_LISTEN_LOOPBACK"], "1")
+        self.assertNotIn("HOME", kwargs["env"])
+        self.assertNotIn(self.security["key"], " ".join(command))
+        self.assertEqual(self.room_file.read_bytes(), before)
+
+    def test_private_copy_probe_rejects_public_listener_before_any_room_query(self):
+        room = self.enable_g_migration()
+        def system(command, **kwargs):
+            port = command[-1].split(":", 1)[1].split()[0]
+            return SimpleNamespace(stdout="LISTEN 0 128 0.0.0.0:" + port + " 0.0.0.0:*\n")
+        child = SimpleNamespace(pid=123456, poll=lambda: None)
+        with mock.patch.object(UPGRADE.subprocess, "Popen", return_value=child), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "hello") as health, mock.patch.object(UPGRADE, "stop_private_probe") as stop:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "loopback-only"):
+                UPGRADE.private_restore_probe("ascendance", self.release, self.plan, self.security, room, self.reviewed_schema())
+            health.assert_not_called()
+            stop.assert_called_once_with(child)
+
+    def test_g_recovery_health_and_h_target_health_expect_different_builds(self):
+        self.enable_g_migration()
+        inspector = SimpleNamespace(inspect=lambda service: copy.deepcopy(self.plan))
+        with mock.patch.object(UPGRADE, "legacy_hello", return_value={}) as legacy:
+            UPGRADE.healthy("ascendance", self.release, self.plan, None, inspector,
+                            timeout=1, expected_executable=str(self.binary))
+        legacy.assert_called_once_with(7777, "ASC-PRIMARY", expected_build="0.10.2g")
+        current = copy.deepcopy(self.plan)
+        current["process"]["executable"] = str(self.release / "build/AscendanceServer.x86_64")
+        current["process"]["executableSha256"] = hashlib.sha256((self.release / "build/AscendanceServer.x86_64").read_bytes()).hexdigest()
+        (self.release / "manifest.json").write_text(json.dumps({"files": {
+            "AscendanceServer.x86_64": current["process"]["executableSha256"]}}))
+        inspector = SimpleNamespace(inspect=lambda service: copy.deepcopy(current))
+        with mock.patch.object(UPGRADE, "hello", return_value={}) as secure:
+            UPGRADE.healthy("ascendance", self.release, self.plan, self.security, inspector, timeout=1)
+        self.assertEqual(len(secure.call_args_list), 3)
+        self.assertTrue(all(call.kwargs["expected_build"] == "0.10.2h" for call in secure.call_args_list))
+
+    def test_g_rollback_retains_current_progress_after_target_transport_failure(self):
+        room = self.enable_g_migration()
+        starts = []
+        def system(command, **kwargs):
+            if command[1] == "start":
+                starts.append(command)
+                current = json.loads(self.room_file.read_text())
+                current["BuildVersion"] = current["DurableCampaign"]["Version"] = "0.10.2h" if len(starts) == 1 else "0.10.2g"
+                current.setdefault("GameplayRevision", 0)
+                self.room_file.write_text(json.dumps(current))
+            return SimpleNamespace(stdout="inactive\n" if "--property=ActiveState" in command else "")
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=self.snapshot_for_room(room)), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "private_restore_probe", return_value={"verified": True}), mock.patch.object(UPGRADE, "secure_directory", side_effect=self.fake_directory), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "healthy", side_effect=[UPGRADE.Refusal("Target transport unavailable"), None]) as health:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "previous service configuration/code was restored"):
+                self.activate()
+        self.assertEqual(len(starts), 2)
+        recovery = health.call_args_list[1]
+        self.assertIsNone(recovery.args[3])
+        self.assertEqual(recovery.args[2]["process"]["wireBuildVersion"], "0.10.2g")
+        self.assertEqual(recovery.kwargs["expected_executable"], str(self.binary))
+        self.assertEqual(recovery.kwargs["expected_room"]["DurableCampaign"]["PartyGold"], 136)
+        self.assertEqual(json.loads(self.room_file.read_text())["DurableCampaign"]["PartyGold"], 136)
+
+    def test_lost_target_progress_blocks_unsafe_legacy_restart_and_keeps_verified_backup(self):
+        room = self.enable_g_migration()
+        starts = []
+        def system(command, **kwargs):
+            if command[1] == "start":
+                starts.append(command)
+                current = json.loads(self.room_file.read_text())
+                current["BuildVersion"] = current["DurableCampaign"]["Version"] = "0.10.2h"
+                current["DurableCampaign"]["PartyGold"] = 135
+                self.room_file.write_text(json.dumps(current))
+            return SimpleNamespace(stdout="inactive\n" if "--property=ActiveState" in command else "")
+        with self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=self.snapshot_for_room(room)), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup), mock.patch.object(UPGRADE, "private_restore_probe", return_value={"verified": True}), mock.patch.object(UPGRADE, "secure_directory", side_effect=self.fake_directory), mock.patch.object(UPGRADE, "run", side_effect=system), mock.patch.object(UPGRADE, "healthy", side_effect=UPGRADE.Refusal("Target campaign lost progress")):
+            with self.assertRaisesRegex(UPGRADE.RecoveryFailure, "both failed") as error:
+                self.activate()
+        self.assertNotIn("PRIVATE", str(error.exception))
+        self.assertEqual(len(starts), 1)  # Never let old g load/rewrite an unverified new save.
+        self.assertEqual(json.loads(self.room_file.read_text())["DurableCampaign"]["PartyGold"], 135)
+        backup = self.backups / "verified-backup/data-after-stop/AscendanceServerRooms0100/ASC-PRIMARY.json"
+        self.assertEqual(json.loads(backup.read_text())["DurableCampaign"]["PartyGold"], 136)
+
     def test_pre_stop_guard_separates_exact_filename_identity_from_plain_and_tls_health(self):
         exact = {"RoomId": "ASC-PRIMARY", "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
                                                          "MovingHeroIds": [], "HeroMovement": []}}

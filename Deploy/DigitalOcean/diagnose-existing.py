@@ -18,10 +18,15 @@ import uuid
 
 
 SERVICE = "ascendance"
-BUILD = "0.10.2c"
+BUILD = "0.10.2h"
+REVIEWED_SOURCE_ASSEMBLIES = {
+    "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd": "0.10.2g",
+    "f2064d8a89cdb7120d2e013ec70a87e7381792bb36cc0bbc4c7e4e6c1626d997": "0.10.2c",
+    "6735c174e64ac3223e24be747aabdb2b823aedf354d77ce4b6155b86ab9a1764": "0.10.2c",
+}
 KNOWN_PORT = 7777
 PROPERTIES = ("ActiveState", "SubState", "User", "Group", "WorkingDirectory", "FragmentPath", "MainPID")
-CANARY_ROOT = Path("/opt/ascendance-upgrades/releases/unity-0.10.2c-multiplayer-eb51b22")
+CANARY_ROOT = Path("/opt/ascendance-upgrades/releases")
 
 
 def public_identifier(value, limit=128):
@@ -184,10 +189,25 @@ def hello(room, port):
         return {"responseReceived": False, "error": type(error).__name__}
 
 
+def source_compatibility(service, response):
+    process = service.get("process") if isinstance(service, dict) else None
+    assembly = process.get("managedAssembly") if isinstance(process, dict) else None
+    checksum = assembly.get("sha256") if isinstance(assembly, dict) and assembly.get("available") is True else None
+    expected_source = REVIEWED_SOURCE_ASSEMBLIES.get(checksum)
+    reported = response.get("serverBuildVersion") if isinstance(response, dict) else None
+    return {"managedAssemblyReviewed": expected_source is not None,
+            "expectedSourceBuildVersion": expected_source,
+            "reportedBuildMatchesReviewedSource": expected_source is not None and reported == expected_source,
+            "targetBuildVersion": BUILD}
+
+
 def latest_canary(root=CANARY_ROOT):
     candidates = []
     if root.is_dir():
-        for path in root.glob("canary-*/result.json"):
+        paths = [*root.glob("canary-*/result.json"),
+                 *root.glob("unity-0.10.2h-*/canary-*/result.json"),
+                 *root.glob("unity-0.10.2c-*/canary-*/result.json")]
+        for path in paths:
             if any(part.is_symlink() for part in [path, *path.parents]):
                 continue
             if path.is_file():
@@ -199,6 +219,7 @@ def latest_canary(root=CANARY_ROOT):
         result = json.loads(read_regular(path, 4 * 1024 * 1024))
         return {"available": True, "path": str(path),
                 "status": result.get("status") if result.get("status") in ("PASS", "FAIL") else None,
+                "buildVersion": public_identifier(result.get("buildVersion"), 40),
                 "passed": public_integer(result.get("passed")), "failed": public_integer(result.get("failed")),
                 "sourceRevision": result.get("sourceRevision") if isinstance(result.get("sourceRevision"), str) and re.fullmatch(r"[0-9a-f]{40}", result["sourceRevision"]) else None,
                 "isolatedNativeRoomSave": public_bool(result.get("nativeRoomSaveWasUnderIsolatedXdgDirectory"))}
@@ -220,6 +241,7 @@ def main():
             report["hello"] = hello(route["selectedExpectedRoom"], route["selectedExpectedPort"])
         else:
             report["hello"] = {"responseReceived": False, "error": "Service has no main process"}
+        report["sourceCompatibility"] = source_compatibility(report["service"], report["hello"])
         report["latestIsolatedCanary"] = latest_canary()
         print(json.dumps(report, indent=2))
         return 0

@@ -65,7 +65,7 @@ class ExistingDiagnostic(unittest.TestCase):
             def sendall(self, data):
                 self.request = json.loads(data[4:])
                 response = {"Accepted": True, "Code": "HELLO", "ProtocolVersion": 1,
-                            "RequestId": self.request["RequestId"], "ServerBuildVersion": "0.10.2c",
+                            "RequestId": self.request["RequestId"], "ServerBuildVersion": DIAGNOSTIC.BUILD,
                             "Snapshot": {"RoomId": self.request["RoomId"]}}
                 body = json.dumps(response).encode()
                 self.data = struct.pack("!I", len(body)) + body
@@ -80,6 +80,18 @@ class ExistingDiagnostic(unittest.TestCase):
         self.assertEqual(stream.request["Operation"], "HELLO")
         self.assertTrue(result["requestIdMatches"])
         self.assertTrue(result["buildMatchesExpected"])
+
+    def test_g_source_is_reviewed_by_exact_managed_hash_and_reported_version(self):
+        checksum = "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd"
+        service = {"process": {"managedAssembly": {"available": True, "sha256": checksum}}}
+        result = DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2g"})
+        self.assertTrue(result["managedAssemblyReviewed"])
+        self.assertTrue(result["reportedBuildMatchesReviewedSource"])
+        self.assertEqual(result["expectedSourceBuildVersion"], "0.10.2g")
+        self.assertEqual(result["targetBuildVersion"], "0.10.2h")
+        self.assertFalse(DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2h"})["reportedBuildMatchesReviewedSource"])
+        service["process"]["managedAssembly"]["sha256"] = "0" * 64
+        self.assertFalse(DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2g"})["managedAssemblyReviewed"])
 
     def test_case_only_room_difference_is_visible_without_claiming_an_exact_match(self):
         response = {"Accepted": True, "Code": "HELLO", "Snapshot": {"RoomId": "asc-primary"}}
