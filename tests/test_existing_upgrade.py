@@ -553,6 +553,27 @@ class UpgradeSafety(unittest.TestCase):
             backup.assert_not_called()
             system.assert_not_called()
 
+    def test_live_g_wrong_persistence_path_or_creation_identity_prevents_backup_and_stop(self):
+        for field, value in [("PersistencePath0102d", "/PRIVATE-DIFFERENT-UNITY-IDENTITY/ASC-PRIMARY.json"),
+                             ("RoomCreatedAtUtc0102d", "PRIVATE-DIFFERENT-CREATION")]:
+            room = self.enable_g_migration()
+            snapshot = self.snapshot_for_room(room)
+            snapshot[field] = value
+            with self.subTest(field=field), self.mock_plan(), mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "require_durable_phase", return_value=snapshot), mock.patch.object(UPGRADE, "backup_existing") as backup, mock.patch.object(UPGRADE, "private_restore_probe") as probe, mock.patch.object(UPGRADE, "run") as system:
+                with self.assertRaisesRegex(UPGRADE.Refusal, "persistence path or room creation identity differs") as error:
+                    self.activate()
+                self.assertNotIn("PRIVATE", str(error.exception))
+                backup.assert_not_called()
+                probe.assert_not_called()
+                system.assert_not_called()
+
+    def test_valid_fresh_g_process_may_identify_its_existing_exact_persisted_room(self):
+        room = self.enable_g_migration()
+        snapshot = self.snapshot_for_room(room, restored=False)
+        verified = UPGRADE.capture_migration_state(self.plan, snapshot, self.reviewed_schema())
+        self.assertEqual(verified["CreatedAtUtc"], room["CreatedAtUtc"])
+        self.assertEqual(verified["DurableCampaign"]["PartyGold"], 136)
+
     def test_failed_private_copy_restore_does_not_stop_production(self):
         room = self.enable_g_migration()
         before = self.room_file.read_bytes()

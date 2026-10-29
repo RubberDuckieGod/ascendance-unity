@@ -779,6 +779,14 @@ def rooms_equivalent(expected, actual):
 
 def capture_migration_state(plan, snapshot, schema):
     room = read_private_room(plan, schema)
+    if room["BuildVersion"] in ("0.10.2g", TARGET_BUILD):
+        # The live process, not just the inspector's derived Unity identity,
+        # must identify this exact data file and its creation identity. A new
+        # process may legitimately still report FRESH_SERVER_PROCESS_STATE.
+        require(isinstance(snapshot, dict)
+                and snapshot.get("PersistencePath0102d") == str(room_path(plan))
+                and snapshot.get("RoomCreatedAtUtc0102d") == room["CreatedAtUtc"],
+                "Live persistence path or room creation identity differs; activation was not started")
     require(isinstance(snapshot, dict) and snapshot.get("RoomId") == room["RoomId"]
             and snapshot.get("BuildVersion") == room["BuildVersion"]
             and snapshot.get("Revision") == room["Revision"]

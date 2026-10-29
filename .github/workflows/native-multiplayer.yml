@@ -8,7 +8,7 @@ on:
         type: string
         required: true
       source_revision:
-        description: Exact clean source commit used by the Unity build (40 lowercase hex)
+        description: Exact clean runtime source commit used by the Unity build (40 lowercase hex)
         type: string
         required: true
       server_archive_sha256:
@@ -17,6 +17,10 @@ on:
         required: true
       server_manifest_sha256:
         description: Reviewed linux-server-manifest.json SHA-256
+        type: string
+        required: true
+      legacy_archive_sha256:
+        description: Reviewed ascendance-reviewed-legacy-0102g-assembly.zip SHA-256 (game code only)
         type: string
         required: true
 
@@ -32,20 +36,24 @@ jobs:
       SOURCE_REVISION: ${{ inputs.source_revision }}
       SERVER_ARCHIVE_SHA256: ${{ inputs.server_archive_sha256 }}
       SERVER_MANIFEST_SHA256: ${{ inputs.server_manifest_sha256 }}
+      LEGACY_ARCHIVE_SHA256: ${{ inputs.legacy_archive_sha256 }}
     steps:
       - name: Validate reviewed identifiers
         shell: bash
         run: |
           python3 - <<'PY'
           import os, re
-          for name, pattern in [('RELEASE_TAG', r'[A-Za-z0-9][A-Za-z0-9._-]{0,63}'), ('SOURCE_REVISION', r'[0-9a-f]{40}'), ('SERVER_ARCHIVE_SHA256', r'[0-9a-f]{64}'), ('SERVER_MANIFEST_SHA256', r'[0-9a-f]{64}')]:
+          for name, pattern in [('RELEASE_TAG', r'[A-Za-z0-9][A-Za-z0-9._-]{0,63}'), ('SOURCE_REVISION', r'[0-9a-f]{40}'), ('SERVER_ARCHIVE_SHA256', r'[0-9a-f]{64}'), ('SERVER_MANIFEST_SHA256', r'[0-9a-f]{64}'), ('LEGACY_ARCHIVE_SHA256', r'[0-9a-f]{64}')]:
               if not re.fullmatch(pattern, os.environ[name]):
                   raise SystemExit('Invalid reviewed identifier: ' + name)
           PY
       - uses: actions/checkout@v4
         with:
           repository: RubberDuckieGod/ascendance-unity
-          ref: ${{ inputs.source_revision }}
+          # Tooling can advance after the clean Unity runtime build. Test the
+          # reviewed workflow's own helpers while separately proving the exact
+          # runtime source revision inside the downloaded build provenance.
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Download only reviewed repository release assets
         shell: bash
@@ -54,53 +62,149 @@ jobs:
         run: |
           set -euo pipefail
           mkdir "$RUNNER_TEMP/ascendance-native-input"
-          gh release download "$RELEASE_TAG" --repo RubberDuckieGod/ascendance-unity --dir "$RUNNER_TEMP/ascendance-native-input" --pattern "ascendance-linux-server-$RELEASE_TAG.zip" --pattern linux-server-manifest.json
+          gh release download "$RELEASE_TAG" --repo RubberDuckieGod/ascendance-unity --dir "$RUNNER_TEMP/ascendance-native-input" --pattern "ascendance-linux-server-$RELEASE_TAG.zip" --pattern linux-server-manifest.json --pattern ascendance-reviewed-legacy-0102g-assembly.zip
       - name: Verify hashes, safe archive, complete manifest and clean source provenance
         shell: bash
         run: |
           python3 -B - <<'PY'
-          import hashlib, importlib.util, os
+          import hashlib, importlib.util, os, stat, zipfile
           from pathlib import Path
           root = Path(os.environ['RUNNER_TEMP']) / 'ascendance-native-input'
           archive = root / ('ascendance-linux-server-' + os.environ['RELEASE_TAG'] + '.zip')
           manifest = root / 'linux-server-manifest.json'
-          for path, variable in [(archive, 'SERVER_ARCHIVE_SHA256'), (manifest, 'SERVER_MANIFEST_SHA256')]:
+          legacy = root / 'ascendance-reviewed-legacy-0102g-assembly.zip'
+          for path, variable, limit in [(archive, 'SERVER_ARCHIVE_SHA256', 256 * 1024 * 1024), (manifest, 'SERVER_MANIFEST_SHA256', 4 * 1024 * 1024), (legacy, 'LEGACY_ARCHIVE_SHA256', 4 * 1024 * 1024)]:
+              if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= limit:
+                  raise SystemExit('Unrecognized reviewed release file: ' + path.name)
               if hashlib.sha256(path.read_bytes()).hexdigest() != os.environ[variable]:
                   raise SystemExit('Reviewed release checksum mismatch: ' + path.name)
           spec = importlib.util.spec_from_file_location('packaging', 'tools/package_multiplayer_release.py')
           packaging = importlib.util.module_from_spec(spec); spec.loader.exec_module(packaging)
           packaging.extract_validated_server(archive, manifest, root / 'build', os.environ['SOURCE_REVISION'])
+          # The reviewed old game assembly is only a synthetic migration input.
+          # Never accept player saves, configuration, credentials, or arbitrary
+          # archive paths, even if an incorrect asset was selected by mistake.
+          with zipfile.ZipFile(legacy) as source:
+              entries = source.infolist()
+              if len(entries) != 2 or {entry.filename for entry in entries} != {'Assembly-CSharp.dll', 'README.txt'}:
+                  raise SystemExit('Legacy test ZIP must contain only game code and README.txt')
+              for entry in entries:
+                  mode = (entry.external_attr >> 16) & 0o170000
+                  if entry.is_dir() or mode not in (0, stat.S_IFREG) or entry.flag_bits & 1:
+                      raise SystemExit('Legacy test ZIP contains a directory, link, special or encrypted entry')
+              dll_entry = source.getinfo('Assembly-CSharp.dll')
+              readme_entry = source.getinfo('README.txt')
+              if dll_entry.file_size != 1262592 or not 0 < readme_entry.file_size <= 65536:
+                  raise SystemExit('Legacy test ZIP has unexpected file sizes')
+              source.read(readme_entry).decode('utf-8')
+              dll = source.read(dll_entry)
+          if hashlib.sha256(dll).hexdigest() != 'f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd':
+              raise SystemExit('Legacy game assembly differs from the reviewed installed build')
+          legacy_dir = root / 'legacy'
+          legacy_dir.mkdir(mode=0o700)
+          with (legacy_dir / 'Assembly-CSharp.dll').open('xb') as stream:
+              stream.write(dll)
+          (legacy_dir / 'Assembly-CSharp.dll').chmod(0o600)
           PY
-      - name: Native plain and pinned TLS gameplay acceptance in isolated temporary data
+      - name: Prepare isolated TLS fixture and report directories
         shell: bash
         run: |
           set -euo pipefail
+          umask 077
           asc_private="$RUNNER_TEMP/ascendance-native-private"
           asc_reports="$RUNNER_TEMP/ascendance-native-reports"
           mkdir -m 700 "$asc_private"
           mkdir "$asc_reports"
+          mkdir -m 700 "$RUNNER_TEMP/ascendance-native-work"
           openssl rand -hex 32 > "$asc_private/pfx-password"
           openssl rand -hex 32 > "$asc_private/room-access-key"
           openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 1 -keyout "$asc_private/server.key" -out "$asc_private/server.crt" -subj '/CN=Ascendance CI isolated acceptance' -addext 'subjectAltName=IP:127.0.0.1' -addext 'basicConstraints=critical,CA:FALSE' -addext 'keyUsage=critical,digitalSignature,keyEncipherment' -addext 'extendedKeyUsage=serverAuth' 2>/dev/null
           openssl pkcs12 -export -inkey "$asc_private/server.key" -in "$asc_private/server.crt" -out "$asc_private/server.pfx" -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1 -passout "file:$asc_private/pfx-password"
           openssl x509 -in "$asc_private/server.crt" -outform DER -out "$asc_private/server.der"
           chmod 600 "$asc_private"/*
+      - name: Native plain gameplay, synchronization and persistence acceptance
+        id: plain
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/ascendance-native-input/build" --manifest "$RUNNER_TEMP/ascendance-native-input/linux-server-manifest.json" --source-revision "$SOURCE_REVISION" --output "$RUNNER_TEMP/ascendance-native-reports/plain.json"
+      - name: Native pinned TLS and room-key acceptance
+        id: tls
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          asc_private="$RUNNER_TEMP/ascendance-native-private"
           asc_pin=$(sha256sum "$asc_private/server.der" | cut -d ' ' -f 1)
-          python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/ascendance-native-input/build" --manifest "$RUNNER_TEMP/ascendance-native-input/linux-server-manifest.json" --source-revision "$SOURCE_REVISION" --output "$asc_reports/plain.json" &
-          asc_plain_pid=$!
-          ASCENDANCE_TLS_PFX_PATH="$asc_private/server.pfx" ASCENDANCE_TLS_PFX_PASSWORD_FILE="$asc_private/pfx-password" python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/ascendance-native-input/build" --manifest "$RUNNER_TEMP/ascendance-native-input/linux-server-manifest.json" --source-revision "$SOURCE_REVISION" --tls-cert-sha256 "$asc_pin" --access-key-file "$asc_private/room-access-key" --output "$asc_reports/tls.json" &
-          asc_tls_pid=$!
+          ASCENDANCE_TLS_PFX_PATH="$asc_private/server.pfx" ASCENDANCE_TLS_PFX_PASSWORD_FILE="$asc_private/pfx-password" python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/ascendance-native-input/build" --manifest "$RUNNER_TEMP/ascendance-native-input/linux-server-manifest.json" --source-revision "$SOURCE_REVISION" --tls-cert-sha256 "$asc_pin" --access-key-file "$asc_private/room-access-key" --output "$RUNNER_TEMP/ascendance-native-reports/tls.json"
+      - name: Reviewed g-to-h migration and unsafe-state refusal acceptance
+        id: migration
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          asc_migration="$RUNNER_TEMP/ascendance-native-work/migration"
           set +e
-          wait "$asc_plain_pid"
-          asc_plain_result=$?
-          wait "$asc_tls_pid"
-          asc_tls_result=$?
-          test "$asc_plain_result" -eq 0 -a "$asc_tls_result" -eq 0
-      - name: Upload reports and native logs only
+          python3 -B tools/native_g_h_migration.py --legacy-assembly "$RUNNER_TEMP/ascendance-native-input/legacy/Assembly-CSharp.dll" --candidate-build "$RUNNER_TEMP/ascendance-native-input/build" --manifest "$RUNNER_TEMP/ascendance-native-input/linux-server-manifest.json" --output "$asc_migration"
+          asc_migration_result=$?
+          set -e
+          if test -f "$asc_migration/results.json"; then
+            cp -- "$asc_migration/results.json" "$RUNNER_TEMP/ascendance-native-reports/migration.json"
+          fi
+          exit "$asc_migration_result"
+      - name: Upload only the three public result JSON files
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: native-multiplayer-reports
-          path: ${{ runner.temp }}/ascendance-native-reports/
+          path: |
+            ${{ runner.temp }}/ascendance-native-reports/plain.json
+            ${{ runner.temp }}/ascendance-native-reports/tls.json
+            ${{ runner.temp }}/ascendance-native-reports/migration.json
           if-no-files-found: ignore
           retention-days: 14
+      - name: Require complete successful semantic verdicts for all three boundaries
+        if: always()
+        shell: bash
+        env:
+          PLAIN_OUTCOME: ${{ steps.plain.outcome }}
+          TLS_OUTCOME: ${{ steps.tls.outcome }}
+          MIGRATION_OUTCOME: ${{ steps.migration.outcome }}
+        run: |
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          reports = root / 'ascendance-native-reports'
+          def unique(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise ValueError('Duplicate verdict key')
+                  result[key] = value
+              return result
+          for name, minimum in [('plain', 73), ('tls', 80), ('migration', 164)]:
+              if os.environ[name.upper() + '_OUTCOME'] != 'success':
+                  raise SystemExit('Native boundary step failed or did not execute: ' + name)
+              document = json.loads((reports / (name + '.json')).read_text(), object_pairs_hook=unique)
+              if not isinstance(document, dict) or document.get('status') != 'PASS' or type(document.get('failed')) is not int or document['failed'] != 0 or type(document.get('passed')) is not int or document['passed'] < minimum:
+                  raise SystemExit('Incomplete or failing semantic verdict: ' + name)
+              if name != 'migration':
+                  if document.get('buildVersion') != '0.10.2h' or document.get('sourceRevision') != os.environ['SOURCE_REVISION'] or document.get('nativeRoomSaveWasUnderIsolatedXdgDirectory') is not True:
+                      raise SystemExit('Native runtime identity or isolated-save proof failed: ' + name)
+              else:
+                  manifest_path = root / 'ascendance-native-input/linux-server-manifest.json'
+                  manifest = json.loads(manifest_path.read_text(), object_pairs_hook=unique)
+                  expected_dll = manifest['files']['AscendanceServer_Data/Managed/Assembly-CSharp.dll']
+                  if document.get('candidateManifestSha256') != hashlib.sha256(manifest_path.read_bytes()).hexdigest() or document.get('candidateManagedAssemblySha256') != expected_dll:
+                      raise SystemExit('Migration proof is not bound to the reviewed candidate artifact')
+          PY
+      - name: Remove only this job's private fixtures and downloaded inputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RUNNER_TEMP"
+          test "$RUNNER_TEMP" != /
+          rm -rf -- "$RUNNER_TEMP/ascendance-native-private" "$RUNNER_TEMP/ascendance-native-input" "$RUNNER_TEMP/ascendance-native-work"
