@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
-    [string]$InvitePath = (Join-Path $PSScriptRoot 'Ascendance.invite.json'),
+    [string]$InvitePath,
     [string]$PlayerName,
-    [string]$GameExecutable = (Join-Path $PSScriptRoot 'Ascendance.exe')
+    [string]$GameExecutable
 )
 $ErrorActionPreference = 'Stop'
 
@@ -34,6 +34,18 @@ function Get-AscendancePlayerArguments {
 if ($MyInvocation.InvocationName -eq '.') { return }
 
 if ($env:OS -ne 'Windows_NT') { throw 'This launcher is for the Windows game build.' }
+# Windows PowerShell 5.1 can evaluate parameter defaults before PSScriptRoot is
+# populated. Resolve adjacent files only after entering the script body.
+$launcherDirectory = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($launcherDirectory)) {
+    $launcherDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+if ([string]::IsNullOrWhiteSpace($InvitePath)) {
+    $InvitePath = Join-Path $launcherDirectory 'Ascendance.invite.json'
+}
+if ([string]::IsNullOrWhiteSpace($GameExecutable)) {
+    $GameExecutable = Join-Path $launcherDirectory 'Ascendance.exe'
+}
 if (-not (Test-Path -LiteralPath $InvitePath -PathType Leaf)) {
     $InvitePath = Read-Host 'Full path to the private Ascendance invite JSON from the server owner'
 }
