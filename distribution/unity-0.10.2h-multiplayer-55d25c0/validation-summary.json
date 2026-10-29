@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "buildVersion": "0.10.2h",
+  "sourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5",
+  "sourceDirty": false,
+  "builds": {
+    "linuxServer": "SUCCEEDED",
+    "linuxDevelopmentClient": "SUCCEEDED",
+    "windowsClient": "SUCCEEDED"
+  },
+  "validation": {
+    "editorGates": {
+      "passed": 176,
+      "failed": 0,
+      "unexpectedRuntimeErrors": 0
+    },
+    "nativePlain": {
+      "passed": 73,
+      "failed": 0
+    },
+    "nativeTls": {
+      "passed": 80,
+      "failed": 0
+    },
+    "twoNativeLinuxGuiClients": {
+      "passed": 77,
+      "failed": 0,
+      "visuallyReviewed": true
+    },
+    "actualLegacyCodeMigration": {
+      "passed": 166,
+      "failed": 0
+    },
+    "privateCopiedRoomRestore": {
+      "passed": 13,
+      "failed": 0,
+      "gameplayCommandsSubmitted": 0
+    },
+    "pythonAndPowerShellFixtures": {
+      "passed": 175,
+      "failed": 0,
+      "skipped": 0
+    },
+    "windowsClientPrivateAcl": {
+      "passed": 34,
+      "failed": 0,
+      "actualNonAdministrator": true,
+      "SeSecurityPrivilegePresent": false,
+      "scope": "ACL helper behavior only; no SCP or Windows game execution",
+      "actionsRun": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40801909570"
+    }
+  },
+  "deploymentStatus": "NOT_ACTIVATED; owner execution pending, production unchanged",
+  "scopeLimits": [
+    "The original g code was executed with the verified candidate runtime and supplied project assets; complete original host assets were not recovered.",
+    "The private-copy probe simulated root ownership/runuser plumbing on the local nonroot host; production/systemd switching is not certified.",
+    "Windows game execution, audio output, every authored content interaction and the public DigitalOcean client route remain unvalidated.",
+    "Unknown future/partial pending mechanics are preserved where possible; they are not declared playable.",
+    "Three Editor runs were blocked by a Unity optional Search indexing startup race. The normal six gates passed after disabling the supported optional indexOnEditorStartup test-project preference; no gameplay assertion or error filtering was changed."
+  ],
+  "legacyAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
+  "legacyFixtureArchiveSha256": "95a4b20d4a45fa58c64490aeb9fb95baacf1641050737e412638891f53b9b424"
+}

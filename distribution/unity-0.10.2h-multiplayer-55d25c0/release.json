@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "release": "unity-0.10.2h-multiplayer-55d25c0",
+  "buildVersion": "0.10.2h",
+  "sourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5",
+  "deploymentRevision": "74084eaed79d89dd2c3e955eca2d34c125953262",
+  "endpoint": "159.65.100.206:7777",
+  "helpers": {
+    "upgrade-existing.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/Deploy/DigitalOcean/upgrade-existing.py",
+      "sha256": "c87a4b1376b6999cc2570513b6cd5229cda5db352899f14b87dbade1bb56faaa"
+    },
+    "inspect-existing.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/Deploy/DigitalOcean/inspect-existing.py",
+      "sha256": "1082801265691b2a39cb440d1ecbe8c87a3af17601f20bab7edd52e0c0de4ac4"
+    },
+    "release.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/Deploy/DigitalOcean/release.py",
+      "sha256": "7df3f6571ea7abe23a165e536eff664c1ab0685f7d7b0c6b912377d42ee9b49b"
+    },
+    "native_server_acceptance.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/tools/native_server_acceptance.py",
+      "sha256": "ef89398c442fd8442e7019acf9e913e802e23ac822c84d4d9e2170517e1b8db7"
+    },
+    "diagnose-existing.py": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/Deploy/DigitalOcean/diagnose-existing.py",
+      "sha256": "2795835e5caddd8d3d23968a35527a34f29fd4f6d78b6525e388f211f88539c3"
+    },
+    "save-schema-0102g.json": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/Deploy/DigitalOcean/save-schema-0102g.json",
+      "sha256": "b37dd236da2daec3b3d3171ace8baeb94e35ed94ac323ee1923a8aa20785a0fe"
+    }
+  },
+  "server": {
+    "archive": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2h-multiplayer-55d25c0/ascendance-linux-server-unity-0.10.2h-multiplayer-55d25c0.zip",
+      "sha256": "49b436c9e2e15f568509543b7720d9b2ff2914242f53ffa014d636500e31cc21"
+    },
+    "manifest": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2h-multiplayer-55d25c0/linux-server-manifest.json",
+      "sha256": "e8c330b4cf6b1b2b89e8f20a73617aa69e1e74f39035721ecb2238eb73cfc919"
+    }
+  },
+  "client": {
+    "archive": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2h-multiplayer-55d25c0/ascendance-windows-unity-0.10.2h-multiplayer-55d25c0.zip",
+      "sha256": "705191347e8eb3de5da363e1dd44891e940dec41460201360586b6184ce9ca62"
+    },
+    "installer": {
+      "url": "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/74084eaed79d89dd2c3e955eca2d34c125953262/tools/windows-install-client.ps1",
+      "sha256": "e4d7bf9e4fd1b2096303fca691cc6c05ca1b69a49452be85ee78177ed99ccd0f"
+    }
+  },
+  "testing": {
+    "legacyAssemblyArchive": {
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2h-multiplayer-55d25c0/ascendance-reviewed-legacy-0102g-assembly.zip",
+      "sha256": "95a4b20d4a45fa58c64490aeb9fb95baacf1641050737e412638891f53b9b424"
+    },
+    "legacyAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd"
+  }
+}

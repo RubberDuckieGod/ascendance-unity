@@ -1,0 +1,12 @@
+{
+  "files": {
+    "CONNECTION_README.txt": "f4ed0af222dfdfa80ecbb83a265a7e68d9c3665ef53f45d4cec0a6b131c1bfd4",
+    "RuntimeSourceRevision.json": "fab04ab62e9317d3b177635f5be195a18025e38025108e5539e39b0c36a21078",
+    "ascendance-linux-server-unity-0.10.2h-multiplayer-55d25c0.zip": "49b436c9e2e15f568509543b7720d9b2ff2914242f53ffa014d636500e31cc21",
+    "ascendance-windows-unity-0.10.2h-multiplayer-55d25c0.zip": "705191347e8eb3de5da363e1dd44891e940dec41460201360586b6184ce9ca62",
+    "linux-server-manifest.json": "e8c330b4cf6b1b2b89e8f20a73617aa69e1e74f39035721ecb2238eb73cfc919",
+    "windows-client-manifest.json": "bf47083dfc34b445a215d62c891bed92164763e0f55acb6c6e08a700d32802a4"
+  },
+  "format": 1,
+  "sourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5"
+}
