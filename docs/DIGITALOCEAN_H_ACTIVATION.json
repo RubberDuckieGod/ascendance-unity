@@ -1,0 +1,45 @@
+{
+  "format": 1,
+  "status": "ACTIVATED_SECURE_PUBLIC",
+  "buildVersion": "0.10.2h",
+  "runtimeSourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5",
+  "release": "unity-0.10.2h-multiplayer-55d25c0",
+  "endpoint": "159.65.100.206:7777",
+  "room": "ASC-PRIMARY",
+  "certificateSha256": "7f9987d3848887b028e52e2e8f9077035cedca0e038711212c2ba7c86fb7a6a9",
+  "existingCampaignRestored": true,
+  "existingDataPathPreserved": true,
+  "onHostNativeCanary": {
+    "passed": 80,
+    "failed": 0
+  },
+  "privateCopiedRestoreVerified": true,
+  "privateCopiedRestoreGameplayCommands": 0,
+  "firewall": {
+    "gameTcp7777PublicIPv4": true,
+    "sshRestrictionUnchanged": true,
+    "outboundAndAttachmentsPreserved": true
+  },
+  "externalReadOnlyProbe": {
+    "format": "ascendance-public-h-tls-probe-1",
+    "endpoint": "159.65.100.206:7777",
+    "room": "ASC-PRIMARY",
+    "expectedBuildVersion": "0.10.2h",
+    "expectedCertificateSha256": "7f9987d3848887b028e52e2e8f9077035cedca0e038711212c2ba7c86fb7a6a9",
+    "roomAccessKeySubmitted": false,
+    "playerCredentialsSubmitted": false,
+    "joinRequestsSubmitted": 0,
+    "gameplayCommandsSubmitted": 0,
+    "publicTlsReachable": true,
+    "certificatePinVerified": true,
+    "certificateTimeAndAddressVerified": true,
+    "tlsVersion": "TLSv1.2",
+    "status": "PASS",
+    "buildAndProtocolVerified": true,
+    "missingRoomKeyRejected": true,
+    "deniedResponseAuthorityBlank": true,
+    "requestsSubmitted": 1
+  },
+  "externalWorkflow": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40806085305",
+  "remainingAcceptance": "Owner Windows client install and authenticated gameplay/friend connections have not yet been observed. No production gameplay test or player credential was used for the external probe."
+}
