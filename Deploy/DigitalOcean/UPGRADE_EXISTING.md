@@ -12,8 +12,9 @@ activation implementation. Progress goes to stderr and public result JSON goes
 to stdout. Without `--apply` it only stages and validates. The private invitation
 stays on the Droplet for a separate owner-only transfer after activation.
 
-The revised entrypoint uses `releases/release-deployment-930f369.json`; the
-original published `release.json` and game binaries remain unchanged. For an
+The current h entrypoint pins the matching h release descriptor, runtime source
+55d25c0, reviewed helper source 74084ea, and the g save-schema payload. Earlier
+c releases and their descriptors remain unchanged. For an
 apply request it runs the pinned read-only service diagnostic before downloading
 the game archive or running the canary. Known build, protocol, correlation or
 exact room/save identity mismatches return the precise failed checks and safe
@@ -32,8 +33,8 @@ TCP fixture checks; this is not execution of an original legacy Unity binary.
 
 Wire routing accepts ASCII room capitalization differences, but Linux save
 filenames and existing clients' reconnect storage do not. A capitalization
-mismatch remains blocked until the actual active save and original launcher are
-verified. Do not force that guard or change client invitation spelling. Native
+mismatch remains blocked; the h runtime independently refuses an aliased save
+before an initial write. Do not force that guard or change client invitation spelling. Native
 fixtures reproduce both lost progress under stale spelling and retained progress
 under exact active spelling; they do not certify a production migration.
 
@@ -45,9 +46,9 @@ manifest are separately pinned by the reviewed release descriptor.
 The Windows wrapper runs as the current Windows user. It changes only access
 permissions, preserves ownership and audit settings, and verifies private paths
 before transferring the invitation. Foreign-owned paths and filesystem links
-are refused. It does not require administrator elevation. The revised wrapper
-fixes the `SeSecurityPrivilege` failure in the original Windows permission step;
-the validated game builds and release descriptor are unchanged.
+are refused. It does not require administrator elevation. The access-only permission helper fixes the `SeSecurityPrivilege` failure in
+the original Windows permission step; h client setup reuses those validated
+private-path functions.
 The [actual Windows PowerShell 5.1 test](https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40249083895)
 passed under a separate ordinary account with no `SeSecurityPrivilege`, including
 34 setup/permission assertions, two unchanged audit policies and full cleanup.
@@ -90,3 +91,13 @@ player chooses a distinct available Hero in the server party.
 The native canary and helper fixtures are evidence for the tested scenarios.
 They do not certify every authored card, quest, or combat mechanic. A production
 process-health pass is not a production gameplay test.
+
+## Reviewed g-to-h update
+
+The live g assembly is recognized by exact SHA-256, independently from target h. The pinned recursive schema covers all 24 reachable serialized types and 415 fields; unknown fields/types, duplicate keys, future pending-state schemas or mismatched live/save identities stop the update before the service is stopped.
+
+After the ordinary synthetic native canary, the helper loads a private copy of the stable existing room with target h, using a fresh XDG directory, loopback-only TLS and HELLO only. It compares complete campaign state, ordered card lists, player records including credentials and original creation identity. Only demonstrated restart equivalences are allowed: build/timestamps, enemy-array order with unique IDs, explicit pending-presence normalization, disconnected sessions, and a narrowly verified empty-enemy-selection fallback. Preferred existing targets remain exact. A mismatch leaves the real service and source save unchanged.
+
+After activation the same progress proof and restored-source diagnostics must pass. Recovery verifies the original complete code and current intact state before restarting g. Damaged progress causes an explicit recovery failure with retained backups, rather than silently restoring old campaign data.
+
+The new client-only Windows tool takes the pinned release descriptor URL and checksum, verifies the whole matching h ZIP and clean build provenance, and preprotects the invitation before interactive SCP. Its ACL helpers passed 34 assertions on a real nonadministrator Windows PowerShell 5.1 account without SeSecurityPrivilege. This evidence does not run the game or perform SCP.

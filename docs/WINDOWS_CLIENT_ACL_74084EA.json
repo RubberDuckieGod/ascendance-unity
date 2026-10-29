@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "runs": [
+    {
+      "run": 40801909570,
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40801909570",
+      "sourceRevision": "74084eaed79d89dd2c3e955eca2d34c125953262",
+      "artifact": "windows-powershell-51-client-only-acl",
+      "prepareAssertions": 9,
+      "testAssertions": 25,
+      "totalAssertions": 34,
+      "allAssertionsPassed": true,
+      "actualWindowsPowerShellVersion": "5.1.26100.33648",
+      "actualNonadminIdentityVerified": true,
+      "SeSecurityPrivilegePresent": false,
+      "seededAuditPoliciesPreserved": 2,
+      "auditStatus": "PASS",
+      "cleanup": "PASS",
+      "rawArtifactDirectory": "/workspace/scratch/client-acl-proof-40801909570",
+      "scope": "Real Windows nonadministrator ACL helpers. No game execution, SSH/SCP, download, deployment or complete client installation claimed."
+    },
+    {
+      "run": 40801903299,
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40801903299",
+      "sourceRevision": "74084eaed79d89dd2c3e955eca2d34c125953262",
+      "artifact": "windows-powershell-51-client-only-acl",
+      "prepareAssertions": 9,
+      "testAssertions": 25,
+      "totalAssertions": 34,
+      "allAssertionsPassed": true,
+      "actualWindowsPowerShellVersion": "5.1.26100.33648",
+      "actualNonadminIdentityVerified": true,
+      "SeSecurityPrivilegePresent": false,
+      "seededAuditPoliciesPreserved": 2,
+      "auditStatus": "PASS",
+      "cleanup": "PASS",
+      "rawArtifactDirectory": "/workspace/scratch/client-acl-proof-40801903299",
+      "scope": "Real Windows nonadministrator ACL helpers. No game execution, SSH/SCP, download, deployment or complete client installation claimed."
+    }
+  ]
+}

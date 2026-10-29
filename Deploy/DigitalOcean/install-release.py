@@ -18,19 +18,21 @@ import urllib.parse
 import urllib.request
 
 
-RELEASE = "unity-0.10.2c-multiplayer-eb51b22"
-SOURCE_REVISION = "eb51b2292cf433a2cbe5dabb4863f1fef993161a"
-DEPLOYMENT_REVISION = "930f3696845bf976e401a2337a6f3aa71417d180"
+RELEASE = "unity-0.10.2h-multiplayer-55d25c0"
+BUILD_VERSION = "0.10.2h"
+SOURCE_REVISION = "55d25c03a3279a8396d5b8954e73180e08f7a0c5"
+DEPLOYMENT_REVISION = "74084eaed79d89dd2c3e955eca2d34c125953262"
 RELEASE_BASE = "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/" + RELEASE + "/"
 SOURCE_BASE = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/" + DEPLOYMENT_REVISION + "/"
-DESCRIPTOR_URL = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/398a5b9038bfb3fdb305b989e9012614ea85e2dc/Deploy/DigitalOcean/releases/release-deployment-930f369.json"
-DESCRIPTOR_SHA256 = "6a3701d842c8d6dc500668f2b4ef459cbac8be86c78dc5ee02ab6384bfd3ba3a"
+DESCRIPTOR_URL = RELEASE_BASE + "release.json"
+DESCRIPTOR_SHA256 = "5aa0e2869a7a6b808aab3d05811787b17ca43fca35172fb65738f3cca05659e4"
 HELPER_PATHS = {
     "upgrade-existing.py": "Deploy/DigitalOcean/upgrade-existing.py",
     "inspect-existing.py": "Deploy/DigitalOcean/inspect-existing.py",
     "release.py": "Deploy/DigitalOcean/release.py",
     "native_server_acceptance.py": "tools/native_server_acceptance.py",
     "diagnose-existing.py": "Deploy/DigitalOcean/diagnose-existing.py",
+    "save-schema-0102g.json": "Deploy/DigitalOcean/save-schema-0102g.json",
 }
 NETWORK_HOSTS = {"github.com", "raw.githubusercontent.com", "release-assets.githubusercontent.com",
                  "objects.githubusercontent.com", "github-releases.githubusercontent.com"}
@@ -99,6 +101,7 @@ def descriptor(path):
     require(isinstance(data, dict) and type(data.get("format")) is int and data["format"] == 1,
             "Unsupported release descriptor")
     require(data.get("release") == RELEASE and data.get("sourceRevision") == SOURCE_REVISION and
+            data.get("buildVersion") == BUILD_VERSION and
             data.get("deploymentRevision") == DEPLOYMENT_REVISION and
             data.get("endpoint") == "159.65.100.206:7777", "Release identity differs from the reviewed server release")
     require(isinstance(data.get("helpers"), dict) and set(data["helpers"]) == set(HELPER_PATHS), "Unexpected release helpers")
@@ -108,6 +111,7 @@ def descriptor(path):
     entries.extend([
         ("server.zip", data["server"]["archive"], RELEASE_BASE + "ascendance-linux-server-" + RELEASE + ".zip", 256 * 1024 * 1024),
         ("server-manifest.json", data["server"]["manifest"], RELEASE_BASE + "linux-server-manifest.json", 4 * 1024 * 1024),
+        ("windows-client.zip", data["client"]["archive"], RELEASE_BASE + "ascendance-windows-" + RELEASE + ".zip", 256 * 1024 * 1024),
     ])
     for _, entry, expected_url, _ in entries:
         require(isinstance(entry, dict) and entry.get("url") == expected_url and
@@ -138,10 +142,19 @@ def identity_blockers(report):
     if not isinstance(response, dict) or response.get("responseReceived") is not True:
         return []
     required = {"accepted": True, "code": "HELLO", "protocolVersion": 1,
-                "serverBuildVersion": "0.10.2c", "requestIdMatches": True,
+                "requestIdMatches": True,
                 "snapshotRoomMatchesExpected": True}
-    return [name for name, expected in required.items()
-            if type(response.get(name)) is not type(expected) or response[name] != expected]
+    failed = [name for name, expected in required.items()
+              if type(response.get(name)) is not type(expected) or response[name] != expected]
+    reviewed = report.get("sourceCompatibility")
+    if not (isinstance(reviewed, dict) and reviewed.get("managedAssemblyReviewed") is True
+            and reviewed.get("reportedBuildMatchesReviewedSource") is True
+            and reviewed.get("targetBuildVersion") == BUILD_VERSION
+            and reviewed.get("expectedSourceBuildVersion") in ("0.10.2c", "0.10.2g")):
+        failed.append("reviewedSourceIdentity")
+    elif response.get("serverBuildVersion") != reviewed["expectedSourceBuildVersion"]:
+        failed.append("serverBuildVersion")
+    return failed
 
 
 def prepare_and_run(apply=False):

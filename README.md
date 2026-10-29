@@ -1,3 +1,15 @@
+# Ascendance Unity 0.10.2h — reviewed g campaign compatibility and secure multiplayer
+
+This candidate preserves the reviewed 0.10.2g pending-choice schema and original Hero reconnect credentials while adding pinned TLS, private room access, background synchronization and stable cameras. Solo hot-seat play retains g’s next-Hero handoff; multiplayer clients retain ownership restrictions.
+
+The existing-service installer first validates the exact original managed assembly and save fields. It restores a private copied campaign with the new server on loopback and compares complete state before stopping the live service. Invalid, unsupported, unreadable or unwritable saves are refused; the target never replaces a rejected existing campaign with a fresh room.
+
+Clean runtime source: `55d25c03a3279a8396d5b8954e73180e08f7a0c5`. [Matching candidate release](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-multiplayer-55d25c0). Deployment helpers have separate immutable pins. Production activation and the public DigitalOcean route remain pending owner execution.
+
+Validation: 176 Editor checks; native plain/TLS 73/80; two independent Linux GUI clients 77; actual legacy-code migration/refusal checks 166; copied-room restoration API 13; helper fixtures 175; Windows client ACL helpers 34 on a real ordinary account. [Evidence and limitations](docs/MULTIPLAYER_ACCEPTANCE_0102H.json). Windows gameplay/audio, complete original host asset equivalence and every authored interaction are not certified.
+
+Use the pinned on-host entrypoint described in [the existing-server guide](Deploy/DigitalOcean/UPGRADE_EXISTING.md). After verified activation, `tools/windows-install-client.ps1` installs the matching client in private LocalAppData and retrieves the invitation through ordinary interactive SCP. No merge or production deployment runs automatically.
+
 # Ascendance Unity 0.10.2c
 
 This checkout contains the recovered Unity project: the uploaded Assets baseline has 156 C# scripts, MainMenu and Stonebrook scenes, four authored JSON catalogs, art, and original asset metadata. Packages and ProjectSettings pin **Unity 6000.6.5f1**. New validation and deployment helpers are maintained alongside that baseline.

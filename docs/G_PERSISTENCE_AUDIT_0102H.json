@@ -1,0 +1,100 @@
+{
+  "scope": "Data-only Mono.Cecil metadata and IL audit of owner-supplied installed server assembly; target assembly not executed",
+  "sha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
+  "serializedTypeCount": 104,
+  "gSerializedFieldsAbsentFromCandidateC": [
+    {
+      "gFieldType": "System.Int32",
+      "field": "PendingStateSchema0102f",
+      "cFieldType": null,
+      "type": "Ascendance.AscendanceSaveData"
+    },
+    {
+      "gFieldType": "System.Boolean",
+      "field": "HasPendingEncounterDeckControl0102f",
+      "cFieldType": null,
+      "type": "Ascendance.AscendanceSaveData"
+    },
+    {
+      "gFieldType": "System.Boolean",
+      "field": "HasPendingRewardChoice0102f",
+      "cFieldType": null,
+      "type": "Ascendance.AscendanceSaveData"
+    },
+    {
+      "gFieldType": "System.String",
+      "field": "RoomStateOrigin0102d",
+      "cFieldType": null,
+      "type": "Ascendance.Online.ServerStateSnapshot0100"
+    },
+    {
+      "gFieldType": "System.String",
+      "field": "RoomCreatedAtUtc0102d",
+      "cFieldType": null,
+      "type": "Ascendance.Online.ServerStateSnapshot0100"
+    },
+    {
+      "gFieldType": "System.String",
+      "field": "RoomUpdatedAtUtc0102d",
+      "cFieldType": null,
+      "type": "Ascendance.Online.ServerStateSnapshot0100"
+    },
+    {
+      "gFieldType": "System.String",
+      "field": "PersistencePath0102d",
+      "cFieldType": null,
+      "type": "Ascendance.Online.ServerStateSnapshot0100"
+    }
+  ],
+  "persistentCompatibility": {
+    "rootRoomAndPlayerSessionFields": "All serialized g field names and types present in candidate c; candidate adds GameplayRevision",
+    "campaignDifference": "Three explicit pending presence/schema fields in g are absent from c; c-only blank normalization does not honor an explicit g false flag",
+    "normalizer": "For schema>=1 flags=storedFlags AND meaningfulPayload; for schema<1 flags=meaningfulPayload. Null payloads whose flag is false. Normalizer does not change schema. Meaningful means any non-whitespace source/name/mode (plus hero/prompt for reward) or a nonempty revealed-card list.",
+    "capture": "g Capture sets schema1 and booleans from HasPersistable* predicates and emits payload only while predicate true.",
+    "deckPersistable": "Payload != null; SourceCardId and Mode non-whitespace; revealed count>0; options count>0; top of encounter deck matches revealed cards ordinal-ignore-case.",
+    "rewardPersistable": "Payload != null; Mode non-whitespace; reward options count>0.",
+    "apply": "ApplySaveData normalizes presence before restore and sanitizes pending deck/reward after restoring search/encounter decks using persistable predicates.",
+    "saveAndClone": "Local TryLoad, authority Clone and server room TryLoad normalize explicit presence. Capture writes schema1.",
+    "sourcePaths": [
+      "Assets/Scripts/Shell/AscendanceSaveData.cs",
+      "Assets/Scripts/Shell/AscendanceSaveSystem.cs",
+      "Assets/Scripts/Core/AscendanceGameManager.cs",
+      "Assets/Scripts/Online/AscendanceServerRoomPersistence0100.cs"
+    ]
+  },
+  "remotePersistence": {
+    "gProperty": "AscendanceSaveSystem.RemoteAuthorityOwnsPersistence0102d => AscendanceClientCommandRouter0101.Instance?.IsRemoteTcp ?? false",
+    "gSaveCurrent": "Returns true and message before CanSave/filesystem when remote authority owns persistence. Candidate c currently lacks this guard.",
+    "deleteSave": "No remote guard in g DeleteSave."
+  },
+  "serverLifecycle": {
+    "dataRoot": "Application.persistentDataPath/AscendanceServerRooms0100",
+    "loadFailure": "Initialize still creates a fresh room after failed TryLoad; no refusal in g",
+    "constructor": "Retains existing RoomId after trim, sets build, preserves player/session data except Connected=false, subscribes state events and immediately persists if safe",
+    "diagnostics": "Snapshot has 4 extra g diagnostic strings: origin, created, updated and persistence path; no extra persistent room/session fields",
+    "sourcePaths": [
+      "Assets/Scripts/Online/AscendanceRoomAuthority0100.cs",
+      "Assets/Scripts/Online/AscendanceServerAuthority0100.cs"
+    ]
+  },
+  "wire": {
+    "protocolVersion": 1,
+    "maxFrameBytes": 8388608,
+    "commandEnumValues": "0 through 36, same named values as candidate c",
+    "gRequest": "No RoomAccessKey; candidate adds optional field for secured transport",
+    "gSnapshot": "No GameplayRevision or HeroMovement details; authoritative MovingHeroIds remains available",
+    "versionCompatibility": "Existing clients verify exact build; forward update needs matching rebuilt client/server and separate original/target health expectations"
+  },
+  "recommendations": [
+    "Preserve the 3 g pending schema fields and recovered semantics before migrating existing campaign data.",
+    "Port remote SaveCurrent ownership guard.",
+    "Retain/add restored-room diagnostics and require restoration proof during activation to avoid silent fresh-room fallback.",
+    "Keep new security, ownership, revision, async/background and camera fixes from validated branch.",
+    "Use explicit compatibility tests for g schema false flags with stale meaningful payloads, true valid choices, legacy schema0, process restart and reconnect credentials.",
+    "Resolve schema-aware behavior for current branch tests that deliberately preserve meaningful partial choices; blindly copying g sanitizers changes that behavior."
+  ],
+  "limits": [
+    "This metadata/IL audit does not certify Unity assets, authored content, original platform-conditional sources, gameplay behavior, or production migration.",
+    "Large full-fingerprint differences include compiler-generated naming/optimization/attribute noise; changed method fingerprints alone do not prove behavior changes."
+  ]
+}

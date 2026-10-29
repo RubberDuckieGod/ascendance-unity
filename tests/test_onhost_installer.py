@@ -43,12 +43,14 @@ class OnHostInstaller(unittest.TestCase):
         self.data = {
             "format": 1, "release": INSTALLER.RELEASE, "sourceRevision": INSTALLER.SOURCE_REVISION,
             "deploymentRevision": INSTALLER.DEPLOYMENT_REVISION,
+            "buildVersion": INSTALLER.BUILD_VERSION,
             "endpoint": "159.65.100.206:7777",
             "helpers": {name: {"url": INSTALLER.SOURCE_BASE + relative, "sha256": checksum}
                         for name, relative in INSTALLER.HELPER_PATHS.items()},
             "server": {
                 "archive": {"url": INSTALLER.RELEASE_BASE + "ascendance-linux-server-" + INSTALLER.RELEASE + ".zip", "sha256": checksum},
                 "manifest": {"url": INSTALLER.RELEASE_BASE + "linux-server-manifest.json", "sha256": checksum}},
+            "client": {"archive": {"url": INSTALLER.RELEASE_BASE + "ascendance-windows-" + INSTALLER.RELEASE + ".zip", "sha256": checksum}},
         }
         self.descriptor_path = self.folder / "descriptor.json"
         self.descriptor_path.write_text(json.dumps(self.data))
@@ -118,6 +120,8 @@ class OnHostInstaller(unittest.TestCase):
 
     def diagnosis(self):
         return {"format": "ascendance-readonly-hello-diagnostic-1", "readOnly": True,
+                "sourceCompatibility": {"managedAssemblyReviewed": True, "reportedBuildMatchesReviewedSource": True,
+                                        "expectedSourceBuildVersion": "0.10.2c", "targetBuildVersion": INSTALLER.BUILD_VERSION},
                 "hello": {"responseReceived": True, "accepted": True, "code": "HELLO",
                           "protocolVersion": 1, "serverBuildVersion": "0.10.2c",
                           "requestIdMatches": True, "snapshotRoomMatchesExpected": True}}
@@ -127,6 +131,7 @@ class OnHostInstaller(unittest.TestCase):
         routes = {INSTALLER.DESCRIPTOR_URL: descriptor_bytes}
         for entry in self.data["helpers"].values(): routes[entry["url"]] = self.payload
         for entry in self.data["server"].values(): routes[entry["url"]] = self.payload
+        routes[self.data["client"]["archive"]["url"]] = self.payload
         if bad_archive: routes[self.data["server"]["archive"]["url"]] = b"tampered server build"
         downloads = MemoryDownloads(routes)
         bootstrap = self.folder / "private-bootstrap"
@@ -144,7 +149,7 @@ class OnHostInstaller(unittest.TestCase):
     def test_staging_downloads_only_verified_server_inputs_before_delegation(self):
         code, child, downloads, bootstrap, output, errors = self.exercise(False)
         self.assertEqual(code, 0)
-        self.assertEqual(len(downloads.requests), 8)
+        self.assertEqual(len(downloads.requests), 10)
         command = child.call_args.args[0]
         self.assertEqual(Path(command[1]), bootstrap / "upgrade-existing.py")
         self.assertNotIn("--apply", command)
@@ -153,7 +158,8 @@ class OnHostInstaller(unittest.TestCase):
         self.assertEqual(json.loads(output)["status"], "STAGED_SECURE")
         self.assertIn("staging only", errors)
         self.assertEqual(bootstrap.stat().st_mode & 0o777, 0o700)
-        self.assertFalse(any("windows" in url.lower() or "invite" in url.lower() for url in downloads.requests))
+        self.assertIn(self.data["client"]["archive"]["url"], downloads.requests)
+        self.assertFalse(any("invite" in url.lower() for url in downloads.requests))
 
     @unittest.skipUnless(os.name == "posix", "The on-host bootstrap requires Linux filesystem paths")
     def test_activation_is_forwarded_only_when_explicitly_requested(self):
@@ -193,7 +199,7 @@ class OnHostInstaller(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertIn(key, INSTALLER.identity_blockers(report))
 
-    def test_observed_live_0102g_is_not_silently_downgraded_to_candidate_c(self):
+    def test_observed_live_0102g_without_reviewed_source_proof_is_not_accepted(self):
         report = json.loads((ROOT / "tests/fixtures/observed-0102g-hello-metadata.json").read_text())
         self.assertEqual(report["hello"]["serverBuildVersion"], "0.10.2g")
         self.assertTrue(report["hello"]["snapshotRoomMatchesExpected"])
@@ -201,12 +207,38 @@ class OnHostInstaller(unittest.TestCase):
         code, child, downloads, _, output, _ = self.exercise(True, diagnosis=report)
         result = json.loads(output)
         self.assertEqual(code, 1)
-        self.assertEqual(result["failedIdentityChecks"], ["serverBuildVersion"])
+        self.assertEqual(result["failedIdentityChecks"], ["reviewedSourceIdentity"])
         self.assertFalse(result["productionServiceChanged"])
         self.assertEqual(result["diagnostic"], report)
         self.assertEqual(child.call_count, 1)
         self.assertEqual(Path(child.call_args.args[0][1]).name, "diagnose-existing.py")
         self.assertFalse(any(url.endswith(".zip") for url in downloads.requests))
+
+    def test_reviewed_g_source_is_accepted_for_h_without_requiring_already_h(self):
+        report = self.diagnosis()
+        report["hello"].update(serverBuildVersion="0.10.2g", buildMatchesExpected=False)
+        report["sourceCompatibility"]["expectedSourceBuildVersion"] = "0.10.2g"
+        code, child, downloads, _, output, _ = self.exercise(True, diagnosis=report)
+        self.assertEqual(code, 0)
+        self.assertEqual(child.call_count, 2)
+        self.assertIn("--apply", child.call_args.args[0])
+        self.assertEqual(len(downloads.requests), 10)
+
+    def test_source_profile_flags_and_target_must_be_exactly_reviewed(self):
+        for name, value in [("managedAssemblyReviewed", False), ("managedAssemblyReviewed", 1),
+                            ("reportedBuildMatchesReviewedSource", False),
+                            ("expectedSourceBuildVersion", "0.10.9"), ("targetBuildVersion", "0.10.2c")]:
+            report = self.diagnosis()
+            report["sourceCompatibility"][name] = value
+            with self.subTest(name=name, value=value):
+                self.assertIn("reviewedSourceIdentity", INSTALLER.identity_blockers(report))
+
+    def test_client_archive_tampering_refuses_before_upgrader(self):
+        self.data["client"]["archive"]["sha256"] = "0" * 64
+        code, child, _, _, output, _ = self.exercise(True)
+        self.assertEqual(code, 1)
+        self.assertEqual(child.call_count, 1)
+        self.assertIn("checksum mismatch", json.loads(output)["message"])
 
     def test_unavailable_plaintext_probe_defers_to_authenticated_upgrader(self):
         report = {"readOnly": True, "format": "ascendance-readonly-hello-diagnostic-1",
