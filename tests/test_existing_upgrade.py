@@ -7,10 +7,12 @@ import os
 from pathlib import Path
 import stat
 import shutil
+import socket
 import ssl
 import struct
 import subprocess
 import tempfile
+import threading
 from types import SimpleNamespace
 import unittest
 from unittest import mock
@@ -30,6 +32,44 @@ def load(name):
 UPGRADE = load("upgrade-existing") if os.name == "posix" else None
 RELEASE = load("release") if os.name == "posix" else None
 INSPECTOR = load("inspect-existing") if os.name == "posix" else None
+
+
+class OneFrameServer:
+    """Real loopback HELLO fixture, not compiled Unity/server gameplay proof."""
+    def __init__(self, snapshot, build="0.10.2c"):
+        self.snapshot, self.build, self.request, self.errors = snapshot, build, None, []
+
+    def __enter__(self):
+        self.listener = socket.socket()
+        self.listener.settimeout(4)
+        self.listener.bind(("127.0.0.1", 0))
+        self.listener.listen(1)
+        self.port = self.listener.getsockname()[1]
+        self.worker = threading.Thread(target=self.serve, daemon=True)
+        self.worker.start()
+        return self
+
+    def serve(self):
+        try:
+            with self.listener.accept()[0] as stream:
+                stream.settimeout(4)
+                size = struct.unpack("!I", UPGRADE.frame_read(stream, 4))[0]
+                if not 0 < size < 65536:
+                    raise ValueError("Unexpected fixture request size")
+                self.request = json.loads(UPGRADE.frame_read(stream, size))
+                response = {"ProtocolVersion": 1, "RequestId": self.request["RequestId"],
+                            "Accepted": True, "Code": "HELLO", "ServerBuildVersion": self.build,
+                            "Snapshot": self.snapshot}
+                body = json.dumps(response).encode()
+                stream.sendall(struct.pack("!I", len(body)) + body)
+        except Exception as error:
+            self.errors.append(type(error).__name__)
+
+    def __exit__(self, *args):
+        self.worker.join(5)
+        self.listener.close()
+        if self.worker.is_alive() or self.errors:
+            raise AssertionError("Single-frame loopback fixture did not finish cleanly")
 
 
 @unittest.skipUnless(os.name == "posix", "Linux deployment safeguards")
@@ -309,6 +349,106 @@ class UpgradeSafety(unittest.TestCase):
             snapshot["Transient"][name] = value
             with self.subTest(name=name), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
                 with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                    self.actual_durable_phase(self.plan, self.security)
+
+    def original_legacy_snapshot(self):
+        # Original main 7f3c598 DTO has MovingHeroIds but no HeroMovement. Its
+        # moving-ID predicate is identical to AscendanceSaveSystem.CanSave.
+        return {"RoomId": self.plan["process"]["room"],
+                "Transient": {"IsResolving": False, "HasPendingReactionWindow": False,
+                              "MovingHeroIds": [], "HasPendingRewardChoice": True,
+                              "HasPendingEncounterDeckControl": True}}
+
+    def test_original_c_plain_hello_with_absent_detail_list_proves_durable_phase(self):
+        snapshot = self.original_legacy_snapshot()
+        stream = HealthWireCompatibility.Stream({"Snapshot": snapshot})
+        with mock.patch.object(UPGRADE.socket, "create_connection", return_value=stream):
+            self.actual_durable_phase(self.plan, self.security)
+        self.assertEqual(stream.request["Operation"], "HELLO")
+        self.assertEqual(stream.request["RoomId"], "ASC-PRIMARY")
+
+    def test_original_dto_real_loopback_maintenance_enforces_build_and_moving_ids(self):
+        for case in ["clear-original-c", "unknown-g", "missing-moving-ids"]:
+            snapshot = self.original_legacy_snapshot()
+            if case == "missing-moving-ids":
+                del snapshot["Transient"]["MovingHeroIds"]
+            build = "0.10.2g" if case == "unknown-g" else "0.10.2c"
+            with self.subTest(case=case), OneFrameServer(snapshot, build) as peer:
+                plan = copy.deepcopy(self.plan)
+                plan["process"]["port"] = peer.port
+                if case == "clear-original-c":
+                    self.actual_durable_phase(plan, self.security)
+                else:
+                    message = "serverBuildVersion" if case == "unknown-g" else "unresolved"
+                    with self.assertRaisesRegex(UPGRADE.Refusal, message):
+                        self.actual_durable_phase(plan, self.security)
+            self.assertEqual(peer.request["Operation"], "HELLO")
+            self.assertEqual(peer.request["RoomId"], "ASC-PRIMARY")
+
+    def test_original_c_missing_detail_does_not_waive_resolution_or_reaction_flags(self):
+        for name in ["IsResolving", "HasPendingReactionWindow"]:
+            for value in [True, None, 0, "false", "absent"]:
+                snapshot = self.original_legacy_snapshot()
+                if value == "absent":
+                    del snapshot["Transient"][name]
+                else:
+                    snapshot["Transient"][name] = value
+                with self.subTest(name=name, value=value), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
+                    with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                        self.actual_durable_phase(self.plan, self.security)
+
+    def test_original_c_missing_detail_requires_unambiguous_empty_moving_ids(self):
+        for value in [None, {}, False, "", ["Aldric"], "absent"]:
+            snapshot = self.original_legacy_snapshot()
+            if value == "absent":
+                del snapshot["Transient"]["MovingHeroIds"]
+            else:
+                snapshot["Transient"]["MovingHeroIds"] = value
+            with self.subTest(value=value), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
+                with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                    self.actual_durable_phase(self.plan, self.security)
+
+    def test_present_legacy_detail_list_cannot_be_null_malformed_or_moving(self):
+        for value in [None, {}, False, "", [{"HeroId": "Aldric"}]]:
+            snapshot = self.original_legacy_snapshot()
+            snapshot["Transient"]["HeroMovement"] = value
+            with self.subTest(value=value), mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
+                with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                    self.actual_durable_phase(self.plan, self.security)
+
+    def test_secure_target_cannot_omit_newer_movement_detail_list(self):
+        plan = copy.deepcopy(self.plan)
+        plan["process"]["executable"] = str(self.release / "build" / "AscendanceServer.x86_64")
+        with mock.patch.object(UPGRADE, "hello", return_value=self.original_legacy_snapshot()) as secure, mock.patch.object(UPGRADE, "legacy_hello") as plain:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                self.actual_durable_phase(plan, self.security)
+            secure.assert_called_once()
+            plain.assert_not_called()
+
+    def test_original_c_missing_detail_still_requires_exact_save_filename_identity(self):
+        snapshot = self.original_legacy_snapshot()
+        snapshot["RoomId"] = "asc-primary"
+        with mock.patch.object(UPGRADE, "legacy_hello", return_value=snapshot):
+            with self.assertRaisesRegex(UPGRADE.Refusal, "capitalization differs"):
+                self.actual_durable_phase(self.plan, self.security)
+
+    def test_original_c_movement_started_during_backup_still_prevents_service_stop(self):
+        clear = self.original_legacy_snapshot()
+        moving = copy.deepcopy(clear)
+        moving["Transient"]["MovingHeroIds"] = ["Aldric"]
+        with self.mock_plan(), mock.patch.object(UPGRADE, "require_durable_phase", side_effect=self.actual_durable_phase), mock.patch.object(UPGRADE, "legacy_hello", side_effect=[clear, moving]) as health, mock.patch.object(UPGRADE, "connected_clients", return_value=0), mock.patch.object(UPGRADE, "backup_existing", side_effect=self.fixture_backup) as backup, mock.patch.object(UPGRADE, "run") as system:
+            with self.assertRaisesRegex(UPGRADE.Refusal, "unresolved"):
+                self.activate()
+            self.assertEqual(health.call_count, 2)
+            backup.assert_called_once()
+            system.assert_not_called()
+
+    def test_original_detail_omission_does_not_allow_unknown_legacy_build(self):
+        for version in ["0.10.2g", "0.10.2b"]:
+            stream = HealthWireCompatibility.Stream({"ServerBuildVersion": version,
+                                                   "Snapshot": self.original_legacy_snapshot()})
+            with self.subTest(version=version), mock.patch.object(UPGRADE.socket, "create_connection", return_value=stream):
+                with self.assertRaisesRegex(UPGRADE.Refusal, "serverBuildVersion"):
                     self.actual_durable_phase(self.plan, self.security)
 
     def test_pre_stop_guard_separates_exact_filename_identity_from_plain_and_tls_health(self):

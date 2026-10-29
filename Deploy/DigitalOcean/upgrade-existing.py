@@ -543,7 +543,8 @@ def legacy_hello(port, room):
 
 def require_durable_phase(plan, security):
     process = plan["process"]
-    if Path(process["executable"]).is_relative_to(ROOT / "releases"):
+    modern = Path(process["executable"]).is_relative_to(ROOT / "releases")
+    if modern:
         snapshot = hello(process["port"], process["room"], security["pin"], security["key"])
     else:
         snapshot = legacy_hello(process["port"], process["room"])
@@ -553,7 +554,17 @@ def require_durable_phase(plan, security):
     require(snapshot.get("RoomId") == process["room"],
             "Live room/save filename capitalization differs; activation not started; keep service running until the active save path is verified.")
     transient = snapshot.get("Transient") or {}
-    require(transient.get("IsResolving") is False and transient.get("HasPendingReactionWindow") is False and transient.get("MovingHeroIds") == [] and transient.get("HeroMovement") == [], "Game has an unresolved movement/reaction/resolution; finish it and save before activation")
+    moving_ids = transient.get("MovingHeroIds")
+    movement = transient.get("HeroMovement")
+    # The reviewed original 0.10.2c DTO has no HeroMovement field. Its
+    # MovingHeroIds comes from precisely the same ParticipatingHeroes.Moving
+    # predicate used by CanSave. Only the identity-verified legacy HELLO path
+    # may omit the newer detail list; explicit null or invalid values fail.
+    detail_clear = (type(movement) is list and not movement) or (
+        not modern and "HeroMovement" not in transient)
+    require(transient.get("IsResolving") is False and transient.get("HasPendingReactionWindow") is False
+            and type(moving_ids) is list and not moving_ids and detail_clear,
+            "Game has an unresolved movement/reaction/resolution; finish it and save before activation")
 
 
 def healthy(service, release, plan, security, inspector, timeout=60, expected_executable=None):

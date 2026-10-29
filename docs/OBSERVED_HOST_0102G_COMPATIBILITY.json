@@ -68,5 +68,6 @@
     "Version-specific maintenance and rollback checks; g omits HeroMovement",
     "Native isolated migration tests preserving the complete durable state"
   ],
-  "alternative": "User explicitly chose to keep the current campaign. Do not create a replacement fresh campaign or load existing g saves in the c runtime. Awaiting authoritative g source."
+  "alternative": "User explicitly chose to keep the current campaign. Do not create a replacement fresh campaign or load existing g saves in the c runtime. Awaiting authoritative g source.",
+  "latestUserReport": "User reports the live server was rolled back to 0.10.2c. Awaiting fresh installer verification. Continue updating the existing campaign; do not create a new campaign. Original c movement DTO compatibility is now handled by the revised deployment helper."
 }
