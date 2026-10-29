@@ -12,7 +12,7 @@ activation implementation. Progress goes to stderr and public result JSON goes
 to stdout. Without `--apply` it only stages and validates. The private invitation
 stays on the Droplet for a separate owner-only transfer after activation.
 
-The revised entrypoint uses `releases/release-deployment-ef41d18.json`; the
+The revised entrypoint uses `releases/release-deployment-930f369.json`; the
 original published `release.json` and game binaries remain unchanged. For an
 apply request it runs the pinned read-only service diagnostic before downloading
 the game archive or running the canary. Known build, protocol, correlation or
@@ -20,6 +20,15 @@ exact room/save identity mismatches return the precise failed checks and safe
 diagnostics immediately, without stopping the service. An unavailable plaintext
 probe defers to the upgrader's transport-aware checks. Later failures attach the
 diagnostic automatically; a separate diagnostic command is unnecessary.
+
+For the original verified plain 0.10.2c server, the authoritative
+`MovingHeroIds` list must be explicitly empty and resolution/reaction flags
+must be false. That source version has no supplemental `HeroMovement` field;
+its absence alone no longer blocks maintenance. A present null, malformed or
+nonempty detail field still fails. The secured target must supply its newer
+movement field. Version, protocol, room identity, client and backup guards are
+unchanged. The source-defined legacy contract passed 12 independent loopback
+TCP fixture checks; this is not execution of an original legacy Unity binary.
 
 Wire routing accepts ASCII room capitalization differences, but Linux save
 filenames and existing clients' reconnect storage do not. A capitalization

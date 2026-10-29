@@ -2,7 +2,7 @@
 """Fetch the pinned public release on its host and run the reviewed upgrader.
 
 Run from an ordinary interactive root SSH session. Without --apply this only
-stages and validates; the unchanged upgrader owns all canaries, maintenance
+stages and validates; the reviewed upgrader owns all canaries, maintenance
 guards, backups, activation and recovery. No player invite or key is printed.
 """
 import argparse
@@ -20,11 +20,11 @@ import urllib.request
 
 RELEASE = "unity-0.10.2c-multiplayer-eb51b22"
 SOURCE_REVISION = "eb51b2292cf433a2cbe5dabb4863f1fef993161a"
-DEPLOYMENT_REVISION = "ef41d18f1a21ffd81dcbebec5465fc6c707c4e58"
+DEPLOYMENT_REVISION = "930f3696845bf976e401a2337a6f3aa71417d180"
 RELEASE_BASE = "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/" + RELEASE + "/"
 SOURCE_BASE = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/" + DEPLOYMENT_REVISION + "/"
-DESCRIPTOR_URL = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/6eff0a0eb2bef9de7ad86acc8488285a44989297/Deploy/DigitalOcean/releases/release-deployment-ef41d18.json"
-DESCRIPTOR_SHA256 = "c147f9237dba9b6df4a1238d82faba60786eeff0558c522b5ead6f24d9a59222"
+DESCRIPTOR_URL = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/398a5b9038bfb3fdb305b989e9012614ea85e2dc/Deploy/DigitalOcean/releases/release-deployment-930f369.json"
+DESCRIPTOR_SHA256 = "6a3701d842c8d6dc500668f2b4ef459cbac8be86c78dc5ee02ab6384bfd3ba3a"
 HELPER_PATHS = {
     "upgrade-existing.py": "Deploy/DigitalOcean/upgrade-existing.py",
     "inspect-existing.py": "Deploy/DigitalOcean/inspect-existing.py",

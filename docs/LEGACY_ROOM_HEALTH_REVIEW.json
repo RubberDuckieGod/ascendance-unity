@@ -2,7 +2,7 @@
   "format": 1,
   "scope": "Isolated native server fixtures and deployment-tool tests; no production connection or save access",
   "upgradeUnitTests": {
-    "passed": 32,
+    "passed": 41,
     "failed": 0
   },
   "nativeWireHealth": {
@@ -94,12 +94,21 @@
   },
   "runtimeDefectStatus": "Unresolved malformed/aliased room-file capitalization case; deployment is refused before stop until the active save path is verified. Wire case compatibility alone does not make migration safe.",
   "productionRefusalCause": "Owner diagnostic establishes a live 0.10.2g server versus the 0.10.2c candidate. Room, protocol and correlation match; no room-case drift was observed. The live build omits HeroMovement. See OBSERVED_HOST_0102G_COMPATIBILITY.json. In-place compatibility is unverified and the source for g is unavailable in the linked repository.",
-  "releaseStatus": "Revised on-host installer uses a separately pinned deployment descriptor with ef41 helper guards and automatic read-only diagnostics. Original release.json and runtime source/binaries eb51 are unchanged. No production activation is verified.",
+  "releaseStatus": "Revised installer separately pins deployment helper 930f369 with original c movement schema support. Original runtime source and binaries eb51 are unchanged. Existing campaign remains the deployment target; activation is not yet verified.",
   "nativeCaseTransitionProof": {
     "status": "PASS",
     "passed": 30,
     "failed": 0,
     "report": "NATIVE_CASE_TRANSITION_PROOF.json",
     "limitations": "Actual isolated native processes only; no systemd or production migration proof; original launcher and active host identity remain unverified."
+  },
+  "originalCCompatibility": {
+    "status": "PASS",
+    "wireFixturePassed": 12,
+    "wireFixtureFailed": 0,
+    "proof": "ORIGINAL_C_MAINTENANCE_WIRE_PROOF.json",
+    "scope": "Known original plain c source-defined maintenance contract; no original compiled game execution claimed",
+    "acceptedOmission": "HeroMovement absent only; authoritative MovingHeroIds must be an empty list and flags strictly false",
+    "latestUserReport": "Server rolled back to 0.10.2c; fresh installer verification pending"
   }
 }
