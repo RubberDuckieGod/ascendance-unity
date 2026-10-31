@@ -1,6 +1,6 @@
 # Unity online campaigns
 
-New campaign setup requires the matching server and client update. Downloading a new client alone does not reset the server campaign. If the game says a server update is required, the owner must apply the reviewed server upgrade first. This guide does not confirm that the DigitalOcean server has already been updated.
+New campaign setup requires the matching server and client update. Downloading a new client alone does not reset the server campaign. If the game says a server update is required, the owner must apply the reviewed server upgrade first. The owner-applied DigitalOcean update and independent public connection check are recorded in the [verified rollout](FULL_ROSTER_ROLLOUT_0102H.md).
 
 The upgrade keeps the current campaign and retains a backup. That campaign remains active until the creator explicitly creates or loads another campaign.
 
