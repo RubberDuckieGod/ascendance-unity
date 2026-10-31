@@ -61,6 +61,12 @@ class RecoveryFailure(Refusal):
     pass
 
 
+class LiveStateMismatch(Refusal):
+    def __init__(self, message, paths):
+        super().__init__(message)
+        self.difference_field_paths = paths
+
+
 def require(ok, message):
     if not ok:
         raise Refusal(message)
@@ -791,28 +797,132 @@ def rooms_equivalent(expected, actual):
     return before == after and campaigns_equivalent(expected["DurableCampaign"], actual["DurableCampaign"])
 
 
+def valid_presentation_references(campaign):
+    """Validate both selections before accepting the reviewed h context drift."""
+    if not isinstance(campaign, dict):
+        return False
+    collections = []
+    for name in ("Heroes", "Enemies"):
+        values = campaign.get(name)
+        if not isinstance(values, list) or any(not isinstance(value, dict)
+                or not isinstance(value.get("Id"), str) or not value["Id"] for value in values):
+            return False
+        ids = [value["Id"].casefold() for value in values]
+        if len(ids) != len(set(ids)):
+            return False
+        collections.append(set(ids))
+    heroes, enemies = collections
+    party = campaign.get("PartyHeroIds")
+    if not isinstance(party, list) or not 1 <= len(party) <= 4 or any(not isinstance(value, str) or not value for value in party):
+        return False
+    party_ids = [value.casefold() for value in party]
+    selected_hero, selected_enemy = campaign.get("SelectedHeroId"), campaign.get("SelectedEnemyId")
+    return (len(party_ids) == len(set(party_ids)) and set(party_ids).issubset(heroes)
+            and isinstance(selected_hero, str) and selected_hero.casefold() in set(party_ids)
+            and (selected_enemy in (None, "")
+                 or isinstance(selected_enemy, str) and selected_enemy.casefold() in enemies))
+
+
+def reviewed_h_live_source(plan):
+    verification = plan.get("upgradeVerification", {})
+    identity = verification.get("sourceIdentity", {})
+    assembly = verification.get("code", {}).get("files", {}).get("AscendanceServer_Data/Managed/Assembly-CSharp.dll", {})
+    return (plan.get("process", {}).get("wireBuildVersion") == "0.10.2h"
+            and identity.get("buildVersion") == "0.10.2h"
+            and identity.get("managedAssemblySha256") == SOURCE_H_SHA256
+            and assembly.get("sha256") == SOURCE_H_SHA256)
+
+
+def ordered_live_campaign(campaign):
+    value = semantic_campaign(campaign)
+    # Preserve actual activation/tie-break order for this newly reviewed h
+    # preflight, even though the older g compatibility predicate sorts enemies.
+    value["Enemies"] = json.loads(json.dumps(campaign.get("Enemies")))
+    return value
+
+
+def live_campaigns_equivalent(plan, expected, actual):
+    """Narrow pre-stop comparison for the exact independently reviewed h binary.
+
+    Its command StateChanged can persist the temporary actor/target before the
+    finally block restores presentation selection. Actual native StartTurn and
+    attack reproductions prove only these two fields can differ at an otherwise
+    identical safe boundary. Saved-copy restoration keeps the strict predicate.
+    """
+    if not reviewed_h_live_source(plan):
+        return campaigns_equivalent(expected, actual)
+    if not (valid_presentation_references(expected) and valid_presentation_references(actual)):
+        return False
+    before, after = ordered_live_campaign(expected), ordered_live_campaign(actual)
+    for value in (before, after):
+        value["SelectedHeroId"] = None
+        value["SelectedEnemyId"] = None
+    return before == after
+
+
+def live_difference_paths(plan, expected, actual, schema, limit=64):
+    """Return declared field names and list indexes, never data or dynamic keys."""
+    declared = {name for fields in schema.get("types", {}).values() if isinstance(fields, dict)
+                for name in fields if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,127}", name)}
+    try:
+        normalize = ordered_live_campaign if reviewed_h_live_source(plan) else semantic_campaign
+        before, after = normalize(expected), normalize(actual)
+    except Refusal:
+        before, after = expected, actual
+    result = []
+    def visit(left, right, path, depth=0):
+        if len(result) >= limit:
+            return
+        if depth > 48 or type(left) is not type(right):
+            result.append(path)
+        elif isinstance(left, dict):
+            for key in sorted(set(left) | set(right)):
+                if key not in declared:
+                    if path not in result:
+                        result.append(path)
+                elif key not in left or key not in right:
+                    result.append(path + "." + key)
+                else:
+                    visit(left[key], right[key], path + "." + key, depth + 1)
+                if len(result) >= limit:
+                    return
+        elif isinstance(left, list):
+            if len(left) != len(right):
+                result.append(path)
+            for index, (a, b) in enumerate(zip(left, right)):
+                visit(a, b, path + "[" + str(index) + "]", depth + 1)
+                if len(result) >= limit:
+                    return
+        elif left != right:
+            result.append(path)
+    visit(before, after, "Campaign")
+    return result[:limit]
+
+
 def capture_migration_state(plan, snapshot, schema):
     room = read_private_room(plan, schema)
     if room["BuildVersion"] in ("0.10.2g", TARGET_BUILD):
         # The live process, not just the inspector's derived Unity identity,
         # must identify this exact data file and its creation identity. A new
         # process may legitimately still report FRESH_SERVER_PROCESS_STATE.
-        require(isinstance(snapshot, dict)
-                and snapshot.get("PersistencePath0102d") == str(room_path(plan))
-                and snapshot.get("RoomCreatedAtUtc0102d") == room["CreatedAtUtc"],
-                "Live persistence path or room creation identity differs; activation was not started")
-    require(isinstance(snapshot, dict) and snapshot.get("RoomId") == room["RoomId"]
-            and snapshot.get("BuildVersion") == room["BuildVersion"]
-            and snapshot.get("Revision") == room["Revision"]
-            and isinstance(snapshot.get("Campaign"), dict)
-            and campaigns_equivalent(room["DurableCampaign"], snapshot["Campaign"]),
-            "Live campaign and its exact persisted room differ; activation was not started")
+        identity_paths = ["Snapshot." + name for name, expected in (
+            ("PersistencePath0102d", str(room_path(plan))), ("RoomCreatedAtUtc0102d", room["CreatedAtUtc"]))
+            if not isinstance(snapshot, dict) or snapshot.get(name) != expected]
+        if identity_paths:
+            raise LiveStateMismatch("Live persistence path or room creation identity differs; activation was not started", identity_paths)
+    metadata_paths = ["Snapshot." + name for name in ("RoomId", "BuildVersion", "Revision")
+                      if not isinstance(snapshot, dict) or snapshot.get(name) != room[name]]
+    campaign = snapshot.get("Campaign") if isinstance(snapshot, dict) else None
+    if not isinstance(campaign, dict) or not live_campaigns_equivalent(plan, room["DurableCampaign"], campaign) or metadata_paths:
+        paths = metadata_paths + (live_difference_paths(plan, room["DurableCampaign"], campaign, schema)
+                                  if isinstance(campaign, dict) else ["Snapshot.Campaign"])
+        raise LiveStateMismatch("Live campaign and its exact persisted room differ; activation was not started", paths[:64])
     public_players = [{key: player.get(key) for key in ("PlayerId", "DisplayName", "HeroId")}
                       for player in room["Players"]]
     views = snapshot.get("Players")
-    require(isinstance(views, list) and all(isinstance(player, dict) for player in views)
-            and [{key: player.get(key) for key in ("PlayerId", "DisplayName", "HeroId")} for player in views] == public_players,
-            "Live and persisted player ownership differ; activation was not started")
+    if not (isinstance(views, list) and all(isinstance(player, dict) for player in views)
+            and [{key: player.get(key) for key in ("PlayerId", "DisplayName", "HeroId")} for player in views] == public_players):
+        raise LiveStateMismatch("Live and persisted player ownership differ; activation was not started", ["Snapshot.Players"])
     return room
 
 
@@ -1114,7 +1224,11 @@ def main():
                 print(json.dumps(result, indent=2))
         return 0
     except Exception as error:
-        print(json.dumps({"status": "RECOVERY_FAILED" if isinstance(error, RecoveryFailure) else "REFUSED", "error": type(error).__name__, "message": str(error) if isinstance(error, Refusal) else "Deployment could not complete; inspect the staged release and private backup. No success is assumed."}, indent=2))
+        result = {"status": "RECOVERY_FAILED" if isinstance(error, RecoveryFailure) else "REFUSED", "error": type(error).__name__, "message": str(error) if isinstance(error, Refusal) else "Deployment could not complete; inspect the staged release and private backup. No success is assumed."}
+        if isinstance(error, LiveStateMismatch):
+            result.update(differenceFieldPaths=error.difference_field_paths, valuesEmitted=False,
+                          productionServiceChanged=False, phase="read-only-preflight")
+        print(json.dumps(result, indent=2))
         return 1
 
 
