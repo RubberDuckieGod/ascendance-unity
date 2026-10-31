@@ -2058,7 +2058,7 @@ namespace Ascendance
         private int EnemyMovementAllowance(EnemyState enemy)
         {
             if(enemy==null||enemy.Defeated)return 0;
-            if(enemy.HasStatus("Time Stopped"))return 0;
+            if(enemy.HasStatus("Time Stopped")||enemy.HasStatus("Rooted"))return 0;
             int movement=QuestEnemyBaseMovement0830(enemy);
             if(enemy.Statuses.Any(s=>string.Equals(s.Name,"Fresh Tracks Movement -1",StringComparison.OrdinalIgnoreCase)))movement--;
             foreach(var status in enemy.Statuses.Where(s=>string.Equals(s.Name,"Encounter Movement +1",StringComparison.OrdinalIgnoreCase)))movement++;
@@ -2086,7 +2086,7 @@ namespace Ascendance
             int rangedReposition=TryRangedReposition0859(enemy);if(rangedReposition>0)return rangedReposition;
             if(ChooseEnemyAttackTarget(enemy)!=null)return 0;
             int budget=EnemyMovementAllowance(enemy),steps=0;
-            while(budget>0&&!HasQ001VillagerTarget0102(enemy)&&ChooseEnemyAttackTarget(enemy)==null)
+            while(budget>0&&!enemy.Defeated&&!HasQ001VillagerTarget0102(enemy)&&ChooseEnemyAttackTarget(enemy)==null)
             {
                 if(!Locations.TryGetValue(enemy.LocationId,out var current))break;
                 bool ignoresTerrain=WorldEventEnemyIgnoresDifficultTerrain0857(enemy)||EnemyIgnoresDifficultTerrain0859(enemy);

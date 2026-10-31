@@ -242,11 +242,67 @@ namespace Ascendance.EditorTools
                 Check(HeroHealth() < hp && gm.VillagersLost == 0 && raider.LocationId == remote.Id,
                     "A Goblin outside Stonebrook falls back to a local Hero instead of attacking remote Villagers.");
                 Reset(); remote = gm.DebugLocationByAuthored0858("L001"); remote.Revealed = true;
-                foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = remote.Id;
                 var archer = Spawn("E002", "L001"); archer.Attack = 20;
                 hp = HeroHealth(); yield return Activate(gm, archer);
-                Check(HeroHealth() < hp && gm.VillagersLost == 0,
-                    "A ranged Goblin outside Stonebrook also preserves the website's same-location Villager rule.");
+                Check(HeroHealth() < hp && gm.VillagersLost == 0 && archer.LocationId == remote.Id,
+                    "A ranged Goblin outside Stonebrook shoots Heroes in connected Stonebrook without attacking remote Villagers.");
+
+                Reset(); entry = StonebrookEntry();
+                foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
+                archer = Spawn("E002", entry.AuthoredLocationId); hp = HeroHealth();
+                yield return Activate(gm, archer);
+                Check(archer.LocationId == "L000" && archer.MovementStepsThisActivation0859 == 1 && archer.ActivatedThisRound
+                    && gm.VillagersLost == 1 && HeroHealth() == hp,
+                    "An untrapped Archer legitimately retreats into Stonebrook, then attacks one local Villager instead of a Hero.");
+                foreach (string condition in new[] { "Rooted", "Time Stopped" })
+                {
+                    Reset(); entry = StonebrookEntry();
+                    foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
+                    archer = Spawn("E002", entry.AuthoredLocationId); archer.Attack = 20;
+                    gm.AddStatus(archer, condition, 0, 0, "Villager regression", false, null, "until removed");
+                    hp = HeroHealth(); yield return Activate(gm, archer);
+                    Check(archer.LocationId == entry.Id && archer.MovementStepsThisActivation0859 == 0
+                        && archer.ActivatedThisRound && HeroHealth() < hp && gm.VillagersLost == 0,
+                        condition + " prevents ranged retreat while still allowing an actual Hero attack in place.");
+                }
+                Reset(); entry = StonebrookEntry();
+                foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
+                gm.DebugAddLocationTag(entry.Id, "Difficult Terrain", "Aldric", "Villager regression");
+                archer = Spawn("E002", entry.AuthoredLocationId); archer.Attack = 20;
+                hp = HeroHealth(); yield return Activate(gm, archer);
+                Check(archer.LocationId == entry.Id && archer.MovementStepsThisActivation0859 == 0
+                    && archer.ActivatedThisRound && HeroHealth() < hp && gm.VillagersLost == 0,
+                    "A one-Movement Archer cannot retreat out of Difficult Terrain costing two Movement, but can still attack in place.");
+
+                Reset(); entry = StonebrookEntry();
+                grantedCaltrops = gm.DebugGiveLoot0854("Aldric", "LT021");
+                placedCaltrops = gm.DebugUseLoot0854("Aldric", "LT021");
+                Check(grantedCaltrops && placedCaltrops && gm.HeroCreatedPieces.Any(p => p.Type == "Caltrops" && p.LocationId == "L000"),
+                    "The retreat fixture places actual consumable Caltrops in the Archer's legal retreat destination.");
+                foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
+                archer = Spawn("E002", entry.AuthoredLocationId); archer.Health = 1; archer.Attack = 20;
+                hp = HeroHealth(); yield return Activate(gm, archer);
+                Check(archer.Defeated && archer.LocationId == "L000" && archer.MovementStepsThisActivation0859 == 1
+                    && archer.ActivatedThisRound && !gm.HeroCreatedPieces.Any(p => p.Type == "Caltrops")
+                    && HeroHealth() == hp && gm.VillagersLost == 0 && !gm.HasPendingReactionWindow && !gm.IsResolving,
+                    "A ranged retreat triggers lethal Caltrops and consumes the trap without a dead Archer Hero/Villager attack or reaction lock.");
+
+                Reset();
+                gm.ApplyOnlineCampaignSlot0102(AscendanceGameManager.CreateFreshOnlineCampaign0102(new[] { "Mira", "Rowan" }));
+                gm.Enemies.Clear();
+                foreach (var hero in gm.ParticipatingHeroes) { hero.Hand.Clear(); hero.Actions = 0; }
+                entry = StonebrookEntry(); gm.Heroes["Mira"].LocationId = entry.Id;
+                placedMechanicalTrap = gm.DebugResolveHeroCardSpecial0860("Mira", "H010-010");
+                Check(placedMechanicalTrap && gm.Locations["L000"].TemporaryTags.Any(t => t.Tag == "Mira Trap" && t.SourceHeroId == "Mira"),
+                    "Mira's actual Mechanical Trap is placed in the ranged retreat destination.");
+                foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
+                archer = Spawn("E002", entry.AuthoredLocationId); archer.Health = 1; archer.Attack = 20;
+                hp = HeroHealth(); yield return Activate(gm, archer);
+                Check(archer.Defeated && archer.LocationId == "L000" && archer.MovementStepsThisActivation0859 == 1
+                    && archer.ActivatedThisRound && gm.Locations["L000"].TemporaryTags.All(t => t.Tag != "Mira Trap")
+                    && HeroHealth() == hp && gm.VillagersLost == 0 && !gm.HasPendingReactionWindow && !gm.IsResolving,
+                    "A ranged retreat triggers lethal Mechanical Trap damage and stops before any Hero or Villager attack.");
+
                 Reset(); raider = Spawn("E001", "L001");
                 foreach (var location in gm.Locations.Values) location.Connections.Clear();
                 hp = HeroHealth(); yield return Activate(gm, raider);
