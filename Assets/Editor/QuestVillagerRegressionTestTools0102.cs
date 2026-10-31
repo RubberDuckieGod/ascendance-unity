@@ -244,18 +244,27 @@ namespace Ascendance.EditorTools
                 { hero.LocationId = trapFar.Id; hero.Hand.Clear(); hero.Actions = 0; }
                 placedMechanicalTrap = gm.DebugResolveHeroCardSpecial0860("Mira", "H010-010");
                 raider = Spawn("E001", trapOrigin.AuthoredLocationId); raider.Attack = 20;
+                int trapEntryHealth = raider.Health;
+                int catalogRaiderHealth = SearchEncounterContent0820.EnemyTemplates["E001"].Health;
                 gm.AddStatus(raider, "Encounter Movement +1", 0, 0, "Villager regression", true, null, "until removed");
                 Check(trapOrigin.Connections.Contains(trapMiddle.Id) && trapMiddle.Connections.Contains(trapFar.Id)
                     && gm.GraphDistance(trapOrigin.Id, trapFar.Id) == 2 && gm.IsDifficultTerrain(trapOrigin.Id)
                     && !gm.IsDifficultTerrain(trapMiddle.Id) && gm.DebugEnemyMovement0859(raider.Id) == 3
-                    && raider.Health == 4 && placedMechanicalTrap && trapMiddle.TemporaryTags.Any(t => t.Tag == "Mira Trap" && t.SourceHeroId == "Mira"),
-                    "A real three-Location path has enough Movement to reach the far Heroes, with Mira's actual trap on its non-Difficult intermediate tile.");
+                    && catalogRaiderHealth > 2 && trapEntryHealth == catalogRaiderHealth && raider.MaxHealth == catalogRaiderHealth
+                    && placedMechanicalTrap && trapMiddle.TemporaryTags.Any(t => t.Tag == "Mira Trap" && t.SourceHeroId == "Mira"),
+                    "A real three-Location path has enough Movement to reach the far Heroes, with Mira's actual trap on its non-Difficult intermediate tile. "
+                    + $"Source={trapOrigin.Id}/{trapOrigin.AuthoredLocationId}; Middle={trapMiddle.Id}/{trapMiddle.AuthoredLocationId}; Far={trapFar.Id}/{trapFar.AuthoredLocationId}; "
+                    + $"Edges={trapOrigin.Connections.Contains(trapMiddle.Id)}/{trapMiddle.Connections.Contains(trapFar.Id)}; Distance={gm.GraphDistance(trapOrigin.Id, trapFar.Id)}; "
+                    + $"Difficult={gm.IsDifficultTerrain(trapOrigin.Id)}/{gm.IsDifficultTerrain(trapMiddle.Id)}; Movement={gm.DebugEnemyMovement0859(raider.Id)}; "
+                    + $"Health={trapEntryHealth}/{raider.MaxHealth}/Catalog{catalogRaiderHealth}; CardEffect={placedMechanicalTrap}; Trap={trapMiddle.TemporaryTags.Any(t => t.Tag == "Mira Trap" && t.SourceHeroId == "Mira")}");
                 hp = HeroHealth(); yield return Activate(gm, raider);
-                Check(!raider.Defeated && raider.Health == 2 && raider.LocationId == trapMiddle.Id
+                Check(!raider.Defeated && raider.Health == trapEntryHealth - 2 && raider.LocationId == trapMiddle.Id
                     && raider.MovementStepsThisActivation0859 == 1 && raider.ActivatedThisRound
                     && trapMiddle.TemporaryTags.All(t => t.Tag != "Mira Trap") && HeroHealth() == hp
                     && gm.VillagersLost == 0 && !gm.HasPendingReactionWindow && !gm.IsResolving,
-                    "Nonlethal Mechanical Trap damage Roots the pursuer on the intermediate tile and stops its remaining Movement before any Hero or Villager attack.");
+                    "Nonlethal Mechanical Trap damage Roots the pursuer on the intermediate tile and stops its remaining Movement before any Hero or Villager attack. "
+                    + $"Health={raider.Health}/{trapEntryHealth}; Location={raider.LocationId}/{trapMiddle.Id}; Steps={raider.MovementStepsThisActivation0859}; "
+                    + $"Activated={raider.ActivatedThisRound}; HeroHealth={HeroHealth()}/{hp}; Lost={gm.VillagersLost}; Reaction={gm.HasPendingReactionWindow}; Resolving={gm.IsResolving}");
 
                 // A deliberately high fixture Attack makes damage deterministic
                 // for every d6 while still executing real targeting, Armor and
