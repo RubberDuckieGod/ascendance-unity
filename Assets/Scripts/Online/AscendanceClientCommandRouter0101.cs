@@ -221,6 +221,19 @@ namespace Ascendance.Online
             bool endingTurn = gm.TurnHero != null;
             if (!endingTurn && !IsRemoteTcp) EnsureStartableHeroSelected0102g(gm.SelectedHeroId);
             string actor = endingTurn ? gm.TurnHeroId : gm.SelectedHeroId;
+            if (transport is AscendanceTcpCommandTransport0102 remote)
+            {
+                string ownedHero = remote.HeroId;
+                // Even a legacy direct-boot client must not claim the active
+                // Hero by pressing End Turn before it has joined its own Hero.
+                if (endingTurn && (string.IsNullOrWhiteSpace(ownedHero) ||
+                    !string.Equals(ownedHero, gm.TurnHeroId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Complete(LocalReject("OTHER_HERO_TURN", "Wait for the other Hero to finish their turn."));
+                    return false;
+                }
+                if (!endingTurn && !string.IsNullOrWhiteSpace(ownedHero)) actor = ownedHero;
+            }
             bool accepted = Accepted(Send(endingTurn ? ServerCommandType0100.EndTurn : ServerCommandType0100.StartTurn, actor));
             if (accepted && endingTurn && !IsRemoteTcp && gm.TurnHero == null) EnsureStartableHeroSelected0102g(actor);
             return accepted;

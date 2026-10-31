@@ -66,5 +66,5 @@ try {
     [Environment]::SetEnvironmentVariable('ASCENDANCE_ROOM_ACCESS_KEY', $previousAccessKey, 'Process')
 }
 Write-Host 'Ascendance launched with encrypted multiplayer settings.'
-Write-Host 'Choose NEW GAME, select an available Hero, then BEGIN ADVENTURE.'
+Write-Host 'Choose JOIN ONLINE CAMPAIGN, select one available Hero, then JOIN CAMPAIGN.'
 Write-Host 'Each player must choose a different Hero in the server party.'

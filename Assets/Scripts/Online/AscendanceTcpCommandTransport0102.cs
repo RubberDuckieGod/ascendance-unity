@@ -14,6 +14,16 @@ namespace Ascendance.Online
         ServerStateSnapshot0100 LatestSnapshot { get; }
     }
 
+    /// <summary>Public lobby outcome deliberately excludes reconnect credentials.</summary>
+    public sealed class AscendanceHeroClaimResult0102
+    {
+        public bool Accepted;
+        public string Code;
+        public string Message;
+        public string HeroId;
+        public ServerStateSnapshot0100 Snapshot;
+    }
+
     /// <summary>One persistent connection and one Hero session. Async entry points prepare
     /// credentials on Unity's thread and run socket I/O on workers.</summary>
     public sealed class AscendanceTcpCommandTransport0102 : IAscendanceCommandTransport0101, IAscendanceSnapshotSource0102, IDisposable
@@ -37,6 +47,7 @@ namespace Ascendance.Online
         private string playerId;
         private string heroId;
         private ServerStateSnapshot0100 lastSnapshot;
+        private volatile string lastConnectionError = string.Empty;
 
         public event Action<ServerStateSnapshot0100> SnapshotAvailable;
         public bool IsConnected => connected && !disposed;
@@ -47,6 +58,7 @@ namespace Ascendance.Online
         public string HeroId => heroId;
         public ServerStateSnapshot0100 LastSnapshot => lastSnapshot;
         public ServerStateSnapshot0100 LatestSnapshot => lastSnapshot;
+        public string LastConnectionError => lastConnectionError;
 
         public AscendanceTcpCommandTransport0102(string hostName, int serverPort, string requestedRoomId, string playerDisplayName, AscendanceClientTransportSecurity0102 transportSecurity = null)
         {
@@ -67,7 +79,7 @@ namespace Ascendance.Online
         {
             lock (sync)
             {
-                if (disposed) { message = "Transport is disposed."; return false; }
+                if (disposed) { message = lastConnectionError = "Transport is disposed."; return false; }
                 if (IsConnected) { message = "Already connected."; return true; }
                 CloseSocket();
                 try
@@ -87,18 +99,19 @@ namespace Ascendance.Online
                     var response = Exchange(NewRequest("HELLO"));
                     if (!response.Accepted)
                     {
-                        message = response.Message;
+                        message = lastConnectionError = response.Message;
                         CloseSocket();
                         return false;
                     }
                     CaptureSnapshot(response.Snapshot);
                     EnsurePolling();
+                    lastConnectionError = string.Empty;
                     message = $"Connected to {Endpoint} room {roomId} at revision {Revision}.";
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    message = ex.GetBaseException().Message;
+                    message = lastConnectionError = ex.GetBaseException().Message;
                     CloseSocket();
                     return false;
                 }
@@ -109,6 +122,7 @@ namespace Ascendance.Online
         private void PrepareHeroCredential(string requestedHeroId)
         {
             if (string.IsNullOrWhiteSpace(requestedHeroId) || credentials.ContainsKey(requestedHeroId)) return;
+            if (!string.IsNullOrWhiteSpace(heroId) && !string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase)) return;
             string key = ReconnectKey(requestedHeroId);
             string token = PlayerPrefs.GetString(key, string.Empty);
             if (!Guid.TryParseExact(token, "N", out _))
@@ -120,28 +134,74 @@ namespace Ascendance.Online
             credentials.TryAdd(requestedHeroId, token);
         }
 
+        // Main-thread only. This is an availability hint, not proof of ownership:
+        // the server must verify a saved credential again when the user claims.
+        public bool HasSavedHeroCredential(string requestedHeroId)
+        {
+            if (string.IsNullOrWhiteSpace(requestedHeroId)) return false;
+            if (credentials.TryGetValue(requestedHeroId, out var prepared))
+                return Guid.TryParseExact(prepared, "N", out _);
+            return Guid.TryParseExact(PlayerPrefs.GetString(ReconnectKey(requestedHeroId), string.Empty), "N", out _);
+        }
+
+        // Prepare/persist the credential on Unity's thread before dispatching I/O.
+        // Neither gameplay nor a new campaign is needed to acquire the Hero.
+        public Task<AscendanceHeroClaimResult0102> ClaimHeroAsync(string requestedHeroId)
+        {
+            PrepareHeroCredential(requestedHeroId);
+            return Task.Run(() =>
+            {
+                lock (sync)
+                {
+                    TryResolvePrepared(requestedHeroId, out _, out var result);
+                    return result;
+                }
+            });
+        }
+
         public bool TryResolvePlayerForHero(string requestedHeroId, out string resolvedPlayerId)
         {
             PrepareHeroCredential(requestedHeroId);
-            lock (sync) return TryResolvePrepared(requestedHeroId, out resolvedPlayerId);
+            lock (sync) return TryResolvePrepared(requestedHeroId, out resolvedPlayerId, out _);
         }
 
-        private bool TryResolvePrepared(string requestedHeroId, out string resolvedPlayerId)
+        private bool TryResolvePrepared(string requestedHeroId, out string resolvedPlayerId, out AscendanceHeroClaimResult0102 result)
         {
             resolvedPlayerId = null;
-            if (disposed || string.IsNullOrWhiteSpace(requestedHeroId)) return false;
+            result = ClaimResult(false, "TRANSPORT_OFFLINE", "The server connection is not available.", requestedHeroId);
+            if (disposed) return false;
+            if (string.IsNullOrWhiteSpace(requestedHeroId))
+            {
+                result = ClaimResult(false, "HERO_REQUIRED", "Choose a Hero before joining the campaign.", requestedHeroId);
+                return false;
+            }
+            // Keep the assigned Hero across socket reconnects. Another active
+            // Hero's turn must never silently change this connection's owner.
+            if (!string.IsNullOrWhiteSpace(heroId) && !string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase))
+            {
+                result = ClaimResult(false, "HERO_OWNERSHIP", "This player session already belongs to another Hero.", requestedHeroId);
+                return false;
+            }
             for (int attempt = 0; attempt < 2; attempt++)
             {
                 try
                 {
-                    if (!IsConnected && !TryConnect(out _)) return false;
+                    if (!IsConnected && !TryConnect(out var connectionMessage))
+                    {
+                        result = ClaimResult(false, "TRANSPORT_OFFLINE", connectionMessage, requestedHeroId);
+                        return false;
+                    }
                     if (!string.IsNullOrWhiteSpace(playerId))
                     {
-                        if (!string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase)) return false;
                         resolvedPlayerId = playerId;
+                        result = ClaimResult(true, "JOINED", "This Hero is ready to enter the campaign.", heroId);
                         return true;
                     }
-                    if (!credentials.TryGetValue(requestedHeroId, out var token)) return false;
+                    if (!credentials.TryGetValue(requestedHeroId, out var token))
+                    {
+                        result = ClaimResult(false, "PLAYER_SESSION_REQUIRED", "The local Hero credential could not be prepared.", requestedHeroId);
+                        return false;
+                    }
                     var rejoin = NewRequest("RECONNECT");
                     rejoin.HeroId = requestedHeroId;
                     rejoin.ReconnectToken = token;
@@ -155,22 +215,41 @@ namespace Ascendance.Online
                         response = Exchange(join);
                     }
                     CaptureSnapshot(response.Snapshot);
-                    if (!response.Accepted || response.Player == null ||
+                    if (!response.Accepted)
+                    {
+                        result = ClaimResult(false, response.Code ?? "JOIN_DENIED", response.Message ?? "The Hero could not be claimed.", requestedHeroId);
+                        return false;
+                    }
+                    if (response.Player == null || string.IsNullOrWhiteSpace(response.Player.PlayerId) ||
                         !string.Equals(response.Player.HeroId, requestedHeroId, StringComparison.OrdinalIgnoreCase) ||
-                        !string.Equals(response.Player.ReconnectToken, token, StringComparison.Ordinal)) return false;
+                        !string.Equals(response.Player.ReconnectToken, token, StringComparison.Ordinal))
+                    {
+                        result = ClaimResult(false, "INVALID_HERO_SESSION", "The server did not confirm the requested Hero session.", requestedHeroId);
+                        CloseSocket();
+                        return false;
+                    }
                     playerId = response.Player.PlayerId;
                     heroId = response.Player.HeroId;
                     resolvedPlayerId = playerId;
+                    result = ClaimResult(true, response.Code ?? "JOINED", response.Message, heroId);
                     return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    lastConnectionError = ex.GetBaseException().Message;
+                    result = ClaimResult(false, "TRANSPORT_ERROR", lastConnectionError, requestedHeroId);
                     CloseSocket();
                     if (attempt > 0) return false;
                 }
             }
             return false;
         }
+
+        private AscendanceHeroClaimResult0102 ClaimResult(bool accepted, string code, string message, string requestedHeroId) => new()
+        {
+            Accepted = accepted, Code = code, Message = message,
+            HeroId = requestedHeroId, Snapshot = lastSnapshot
+        };
 
         public Task<ServerCommandResult0100> SendAsync(ServerCommandEnvelope0100 command)
         {
@@ -197,8 +276,8 @@ namespace Ascendance.Online
                 {
                     try
                     {
-                        if (!TryResolvePrepared(command.ActorHeroId, out _))
-                            return Reject("PLAYER_SESSION_REQUIRED", "Unable to establish this Hero session.");
+                        if (!TryResolvePrepared(command.ActorHeroId, out _, out var claim))
+                            return Reject(claim.Code, claim.Message);
                         command.RoomId = roomId;
                         command.PlayerId = playerId;
                         if (!command.HasExpectedGameplayRevision && lastSnapshot != null)
@@ -217,7 +296,7 @@ namespace Ascendance.Online
                     }
                     catch (Exception ex)
                     {
-                        lastError = ex.GetBaseException().Message;
+                        lastError = lastConnectionError = ex.GetBaseException().Message;
                         CloseSocket();
                     }
                 }
@@ -237,11 +316,19 @@ namespace Ascendance.Online
                     {
                         if (disposed || (!IsConnected && !TryConnect(out _))) return null;
                         var response = Exchange(NewRequest("SNAPSHOT"));
+                        if (!response.Accepted)
+                        {
+                            lastConnectionError = response.Message ?? "The server refused the room snapshot.";
+                            CloseSocket();
+                            return response;
+                        }
+                        lastConnectionError = string.Empty;
                         CaptureSnapshot(response.Snapshot);
                         return response;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        lastConnectionError = ex.GetBaseException().Message;
                         CloseSocket();
                         if (attempt > 0) return null;
                     }
@@ -312,7 +399,7 @@ namespace Ascendance.Online
             stream = null;
             client = null;
             playerId = null;
-            heroId = null;
+            // heroId remains the assigned identity while its socket reconnects.
         }
 
         public void Dispose()
@@ -336,10 +423,12 @@ namespace Ascendance.Online
         public static bool TlsEnabled { get; private set; }
         public static string CertificateSha256 { get; private set; } = string.Empty;
         private static string RoomAccessKey = string.Empty;
+        private static AscendanceTcpCommandTransport0102 stagedTransport;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Parse()
         {
+            ClearStagedTransport();
             string[] args = Environment.GetCommandLineArgs() ?? Array.Empty<string>();
             string endpoint = Environment.GetEnvironmentVariable("ASCENDANCE_SERVER_ENDPOINT");
             RoomId = FirstNonBlank(Environment.GetEnvironmentVariable("ASCENDANCE_ROOM"), "LOCAL-ROOM");
@@ -376,11 +465,40 @@ namespace Ascendance.Online
         public static bool TryInstall(AscendanceClientCommandRouter0101 router, AscendanceGameManager gm)
         {
             if (!RemoteRequested || router == null) return false;
-            var remote = new AscendanceTcpCommandTransport0102(Host, Port, RoomId, DisplayName, new AscendanceClientTransportSecurity0102(TlsEnabled, CertificateSha256, RoomAccessKey));
+            var remote = stagedTransport ?? CreateLobbyTransport();
+            stagedTransport = null;
             router.SetTransport(remote);
             // The router consumes the initial snapshot on Unity's thread before remote input.
             _ = remote.ConnectAsync();
             return true;
+        }
+
+        public static AscendanceTcpCommandTransport0102 CreateLobbyTransport() => new(
+            Host, Port, RoomId, DisplayName,
+            new AscendanceClientTransportSecurity0102(TlsEnabled, CertificateSha256, RoomAccessKey));
+
+        // Stage only a server-confirmed session. The menu passes the same socket
+        // to Stonebrook so the claim cannot race another player's first action.
+        public static bool StageClaimedTransport(AscendanceTcpCommandTransport0102 transport)
+        {
+            if (transport == null || !transport.IsConnected || string.IsNullOrWhiteSpace(transport.PlayerId) || string.IsNullOrWhiteSpace(transport.HeroId)) return false;
+            var snapshot = transport.LatestSnapshot;
+            if (snapshot?.Campaign?.PartyHeroIds == null || snapshot.Players == null ||
+                !string.Equals(snapshot.RoomId, transport.RoomId, StringComparison.OrdinalIgnoreCase) ||
+                !snapshot.Campaign.PartyHeroIds.Exists(id => string.Equals(id, transport.HeroId, StringComparison.OrdinalIgnoreCase)) ||
+                !snapshot.Players.Exists(player => player != null && player.Connected &&
+                    string.Equals(player.PlayerId, transport.PlayerId, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(player.HeroId, transport.HeroId, StringComparison.OrdinalIgnoreCase))) return false;
+            if (!ReferenceEquals(stagedTransport, transport)) ClearStagedTransport();
+            stagedTransport = transport;
+            return true;
+        }
+
+        public static void ClearStagedTransport()
+        {
+            var previous = stagedTransport;
+            stagedTransport = null;
+            previous?.Dispose();
         }
 
         public static bool TryParseEndpoint(string endpoint, out string host, out int port)

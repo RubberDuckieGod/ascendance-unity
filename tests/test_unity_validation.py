@@ -41,7 +41,7 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(self.verify(fixture())['reason'], 'Synthetic helper fixture')
 
     def test_each_required_gate_is_mandatory(self):
-        for index in range(6):
+        for index in range(len(verdict.EXPECTED)):
             data = fixture(); del data['gates'][index]
             with self.subTest(index=index), self.assertRaises(ValueError): self.verify(data)
 

@@ -31,7 +31,8 @@ namespace Ascendance.EditorTools
             new Terminal("router", "[ASCENDANCE][0.10.2h ROUTER]", "Client Command Routing completed:", 29),
             new Terminal("network", "[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport completed:", 27),
             new Terminal("reliability", "[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability completed:", 22),
-            new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20)
+            new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20),
+            new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 23)
         };
 
         static AscendanceBatchValidation0102()
@@ -146,7 +147,12 @@ namespace Ascendance.EditorTools
                     SessionState.SetInt(Key + "stage", 2);
                     RemoteSnapshotRegressionTestTools0102.ValidateCurrentPlayMode();
                 }
-                else if (stage == 2 && Passed(5)) Finish(true, "Every required inherited, network reliability, and snapshot gate completed.");
+                else if (stage == 2 && Passed(5))
+                {
+                    SessionState.SetInt(Key + "stage", 3);
+                    OnlineLobbyRegressionTestTools0102.TestLobby();
+                }
+                else if (stage == 3 && Passed(6)) Finish(true, "Every required inherited, network reliability, snapshot, and online lobby gate completed.");
             }
             catch (Exception ex) { Finish(false, "Batch bridge failure: " + ex); }
         }
