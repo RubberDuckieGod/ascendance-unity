@@ -192,10 +192,17 @@ namespace Ascendance.EditorTools
                 while ((!lobby.IsConnected || lobby.IsBusy || lobby.Status.Contains("RETRY CONNECTION") || lobby.Status.Contains("Connection failed"))
                     && Time.realtimeSinceStartup < recovered) { lobby.Tick(); yield return null; }
                 lobby.Tick();
-                Check(showedDisconnect && listenerRestarted && lobby.IsConnected && !lobby.IsBusy && lobby.IsClaimed
-                    && lobby.LastClaimResult?.Accepted == true && !string.IsNullOrEmpty(finalPlayerId) && lobby.PlayerId == finalPlayerId
-                    && !lobby.Status.Contains("RETRY CONNECTION") && !lobby.Status.Contains("Connection failed") && Gameplay(gm) == before,
-                    "A real server disconnect after a successful claim shows Retry Connection, and automatic recovery clears that transient error while retaining the Hero identity and unchanged gameplay.");
+                bool clearedErrorBeforeReclaim = lobby.IsConnected && !lobby.IsBusy && !lobby.IsClaimed
+                    && lobby.LastClaimResult?.Accepted == true && lobby.ClaimedHeroId == "Elara"
+                    && !lobby.Status.Contains("RETRY CONNECTION") && !lobby.Status.Contains("Connection failed")
+                    && lobby.HeroChoices.Any(h => h.HeroId == "Elara" && h.CanChoose && h.HasSavedCredential);
+                bool selectedSavedHero = lobby.SelectHero("Elara");
+                var recoveredClaim = lobby.ClaimSelectedAsync(); yield return Await(recoveredClaim);
+                lobby.Tick();
+                Check(showedDisconnect && listenerRestarted && clearedErrorBeforeReclaim && selectedSavedHero
+                    && Completed(recoveredClaim)?.Accepted == true && lobby.IsClaimed
+                    && !string.IsNullOrEmpty(finalPlayerId) && lobby.PlayerId == finalPlayerId && Gameplay(gm) == before,
+                    "A real server disconnect shows Retry Connection; successful HELLO recovery clears that transient error before explicit saved-Hero reclaim restores the same identity with unchanged gameplay.");
             }
             finally
             {
