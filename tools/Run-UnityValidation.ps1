@@ -84,7 +84,7 @@ try {
         -DeadlineSeconds ($TimeoutSeconds + 90) -OutputLog (Join-Path $Artifacts 'editor-console.txt')
     $result = Get-Content -LiteralPath $resultsPath -Raw | ConvertFrom-Json
     if ($result.passed -ne $true -or $result.errorCount -ne 0 -or $result.editorVersion -ne '6000.6.5f1' -or $result.buildVersion -ne '0.10.2h') { throw 'Unity verdict is failed or has unexpected versions/errors.' }
-    $expected = @{ master=54; foundation=24; router=29; network=27; reliability=22; snapshot=20; lobby=32; campaign=41 }
+    $expected = @{ master=54; foundation=24; router=29; network=27; reliability=22; snapshot=20; lobby=32; campaign=42 }
     $seen = @{}
     foreach ($gate in $result.gates) {
         if (!$expected.ContainsKey($gate.name) -or $seen.ContainsKey($gate.name)) { throw 'Missing, duplicate or unknown Unity runtime gate.' }

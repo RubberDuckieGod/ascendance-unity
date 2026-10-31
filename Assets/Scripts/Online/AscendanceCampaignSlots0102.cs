@@ -18,7 +18,7 @@ namespace Ascendance.Online
 
     [Serializable] public sealed class ServerCampaignLobby0102
     {
-        public bool Supported = true, IsDraft, CanCreate, CanStart;
+        public bool Supported, IsDraft, CanCreate, CanStart;
         public string CreatorPlayerId, CampaignId, CampaignName;
         public List<string> AvailableHeroIds = new();
         public List<ServerCampaignSlotView0102> Slots = new();
@@ -117,6 +117,7 @@ namespace Ascendance.Online
             var own = (ownIds ?? Array.Empty<string>()).ToList();
             return new ServerCampaignLobby0102
             {
+                Supported = true,
                 IsDraft = Room.CampaignDraft0102,
                 CampaignId = AscendanceCampaignSlots0102.Id(Room), CampaignName = AscendanceCampaignSlots0102.Name(Room),
                 CreatorPlayerId = Room.CampaignCreatorPlayerId0102,

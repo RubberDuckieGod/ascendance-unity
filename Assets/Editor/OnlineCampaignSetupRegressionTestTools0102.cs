@@ -138,6 +138,11 @@ namespace Ascendance.EditorTools
                 gm.ApplySaveData(progressed);
                 for (int i = 0; i < 5; i++) yield return null;
                 authority = new AscendanceRoomAuthority0100(gm, room, true);
+                var legacySnapshot = JsonUtility.FromJson<ServerStateSnapshot0100>("{\"RoomId\":\"legacy-capability-fixture\"}");
+                Check(new ServerCampaignLobby0102().Supported == false
+                    && legacySnapshot.CampaignLobby?.Supported != true
+                    && authority.Snapshot().CampaignLobby?.Supported == true,
+                    "Campaign setup is supported only when the server explicitly advertises it; legacy or empty snapshots cannot enable the feature.");
                 listener = new GameObject("ASCENDANCE_CAMPAIGN_SETUP_SOCKET");
                 server = listener.AddComponent<AscendanceTcpServer0102>();
                 Check(server.Initialize(authority, 0) && server.BoundPort > 0, "A persistent isolated room opens a real ephemeral listener.");
