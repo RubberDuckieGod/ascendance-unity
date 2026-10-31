@@ -110,9 +110,15 @@ namespace Ascendance.EditorTools
             }
             void Finish()
             {
-                gm.DebugRevealQuestLocation0829("L006", "Aldric");
+                // L006 is the authored Goblin Lookout ID. Its runtime graph ID
+                // differs from that authored ID in the Stonebrook fixture.
+                var lookout = gm.DebugLocationByAuthored0858("L006");
+                if (lookout == null || !gm.DebugRevealQuestLocation0829(lookout.Id, "Aldric"))
+                    throw new InvalidOperationException(Prefix + " Authored Lookout fixture could not reveal.");
                 string captain = gm.DebugQuestEnemyId0829("E006");
-                if (captain == null) throw new InvalidOperationException(Prefix + " Captain fixture did not spawn.");
+                Check(lookout.AuthoredLocationId == "L006" && lookout.Revealed && gm.QuestRuntime0829.CaptainSpawned
+                    && captain != null && gm.Enemies[captain].LocationId == lookout.Id,
+                    "The actual authored Goblin Lookout reveal spawns the quest Captain at its mapped runtime Location.");
                 gm.DebugDefeatQuestEnemy0829(captain, "Aldric");
             }
             LocationState StonebrookEntry()
