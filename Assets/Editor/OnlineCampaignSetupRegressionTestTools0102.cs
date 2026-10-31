@@ -39,6 +39,32 @@ namespace Ascendance.EditorTools
             return JsonUtility.ToJson(copy);
         }
 
+        private static string GameplayDifferences(string expected, AscendanceSaveData actual)
+        {
+            var left = JsonUtility.FromJson<AscendanceSaveData>(expected);
+            var right = AscendanceSaveSystem.CloneForAuthority0100(actual);
+            right.SavedAtUtc = null;
+            var paths = new List<string>();
+            void Compare(object a, object b, string path)
+            {
+                if (paths.Count >= 64 || ReferenceEquals(a, b)) return;
+                if (a == null || b == null || a.GetType() != b.GetType()) { paths.Add(path); return; }
+                Type type = a.GetType();
+                if (type.IsPrimitive || type.IsEnum || a is string || a is decimal)
+                { if (!a.Equals(b)) paths.Add(path); return; }
+                if (a is IList aa && b is IList bb)
+                {
+                    if (aa.Count != bb.Count) paths.Add(path + ".Count");
+                    for (int i = 0; i < Math.Min(aa.Count, bb.Count); i++) Compare(aa[i], bb[i], path + "[" + i + "]");
+                    return;
+                }
+                foreach (var field in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public))
+                    Compare(field.GetValue(a), field.GetValue(b), path + "." + field.Name);
+            }
+            Compare(left, right, "Campaign");
+            return string.Join(", ", paths);
+        }
+
         private static IEnumerator Run(AscendanceGameManager gm)
         {
             int checks = 0;
@@ -192,7 +218,9 @@ namespace Ascendance.EditorTools
                 var connected = manager.ConnectAsync(); yield return Await(connected);
                 Check(connected.Result && manager.LatestSnapshot.CampaignLobby.Slots.Any(s => s.Id == "original"), "The creator can reopen saved campaigns after players return to menus.");
                 var loaded = manager.LoadCampaignAsync("original"); yield return Await(loaded);
-                Check(loaded.Result.Accepted && Gameplay(loaded.Result.Snapshot.Campaign) == before, "Loading the original restores exact HP, Gold, progression and ordered card state.");
+                Check(loaded.Result.Accepted && Gameplay(loaded.Result.Snapshot.Campaign) == before,
+                    "Loading the original restores exact HP, Gold, progression and ordered card state. Result=" + loaded.Result.Code
+                    + "; differing field paths=" + GameplayDifferences(before, loaded.Result.Snapshot.Campaign));
                 Check(authority.Room.Players.Any(p => p.PlayerId == oldAId && p.ReconnectToken == oldACredential) && authority.Room.Players.All(p => !p.Connected),
                     "Original player identities return disconnected and still require their private reconnect proof.");
                 var originalReturn = manager.ClaimHeroAsync("Aldric"); yield return Await(originalReturn);
