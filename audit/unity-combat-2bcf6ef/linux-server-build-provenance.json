@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "name": "unity-cli",
+    "version": "1.0.0-beta.15"
+  },
+  "outcome": "success",
+  "exitCode": 0,
+  "startedAt": "2026-10-31T19:50:46.791Z",
+  "endedAt": "2026-10-31T19:51:46.825Z",
+  "editor": {
+    "version": "6000.6.5f1",
+    "changeset": "3ff58d469c8a",
+    "architecture": "x86_64"
+  },
+  "build": {
+    "target": "StandaloneLinux64",
+    "executeMethod": "Ascendance.EditorTools.AscendanceDedicatedServerBuilder0100.BuildLinuxDedicatedServer0102",
+    "outputPath": "artifacts/combat/build-2bcf6ef/LinuxServer/AscendanceServer.x86_64",
+    "logFile": "artifacts/combat/build-2bcf6ef/build-linux-server.log"
+  },
+  "source": {
+    "vcs": "git",
+    "revision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+    "dirty": false
+  },
+  "packages": {
+    "source": "packages-lock.json",
+    "entries": {
+      "com.unity.sdk.linux-arm64": "1.1.0",
+      "com.unity.sdk.linux-x86_64": "1.1.0",
+      "com.unity.sysroot.base": "1.1.0",
+      "com.unity.toolchain.linux-x86_64-linux": "1.1.0",
+      "com.unity.toolchain.win-x86_64-linux": "1.1.0",
+      "com.unity.ugui": "2.6.0",
+      "com.unity.modules.ai": "1.0.0",
+      "com.unity.modules.animation": "1.0.0",
+      "com.unity.modules.audio": "1.0.0",
+      "com.unity.modules.imgui": "1.0.0",
+      "com.unity.modules.jsonserialize": "1.0.0",
+      "com.unity.modules.physics": "1.0.0",
+      "com.unity.modules.physics2d": "1.0.0",
+      "com.unity.modules.physicscore2d": "1.0.0",
+      "com.unity.modules.ui": "1.0.0"
+    }
+  }
+}

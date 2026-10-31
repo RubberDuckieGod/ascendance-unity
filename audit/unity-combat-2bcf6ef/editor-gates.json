@@ -1,0 +1,87 @@
+{
+    "passed": true,
+    "reason": "Every required inherited, network, lobby, campaign, reaction, combat HUD and Villager gate completed.",
+    "editorVersion": "6000.6.5f1",
+    "buildVersion": "0.10.2h",
+    "errorCount": 0,
+    "errors": [],
+    "gates": [
+        {
+            "name": "master",
+            "terminalMessage": "[ASCENDANCE][0.10.2h TEST] PASS — Master Save/Load + Full Regression completed: 54 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 54,
+            "observedChecks": 54
+        },
+        {
+            "name": "foundation",
+            "terminalMessage": "[ASCENDANCE][0.10.2h SERVER] PASS — Dedicated Server Authority Foundation completed: 24 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 24,
+            "observedChecks": 24
+        },
+        {
+            "name": "router",
+            "terminalMessage": "[ASCENDANCE][0.10.2h ROUTER] PASS — Client Command Routing completed: 30 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 30,
+            "observedChecks": 30
+        },
+        {
+            "name": "network",
+            "terminalMessage": "[ASCENDANCE][0.10.2h NETWORK] PASS — Real Network Transport completed: 27 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 27,
+            "observedChecks": 27
+        },
+        {
+            "name": "reliability",
+            "terminalMessage": "[ASCENDANCE][0.10.2h RELIABILITY] PASS — Network Reliability completed: 22 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 22,
+            "observedChecks": 22
+        },
+        {
+            "name": "snapshot",
+            "terminalMessage": "[ASCENDANCE TEST 0.10.2 SNAPSHOT] PASS — 20 checks.",
+            "passed": true,
+            "expectedChecks": 20,
+            "observedChecks": 20
+        },
+        {
+            "name": "lobby",
+            "terminalMessage": "[ASCENDANCE][ONLINE LOBBY] PASS — Online Hero Lobby completed: 32 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 32,
+            "observedChecks": 32
+        },
+        {
+            "name": "campaign",
+            "terminalMessage": "[ASCENDANCE][ONLINE CAMPAIGN] PASS — Online Campaign Setup completed: 42 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 42,
+            "observedChecks": 42
+        },
+        {
+            "name": "reaction",
+            "terminalMessage": "[ASCENDANCE][REACTION AUTHORITY] PASS — Reaction Authority completed: 30 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 30,
+            "observedChecks": 30
+        },
+        {
+            "name": "combatHud",
+            "terminalMessage": "[ASCENDANCE][COMBAT HUD] PASS — Combat HUD completed: 11 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 11,
+            "observedChecks": 11
+        },
+        {
+            "name": "villagers",
+            "terminalMessage": "[ASCENDANCE][Q001 VILLAGERS] PASS — Villager gameplay regression completed: 67 passed, 0 failed.",
+            "passed": true,
+            "expectedChecks": 67,
+            "observedChecks": 67
+        }
+    ]
+}

@@ -1,0 +1,123 @@
+{
+  "branch": "validation/unity-combat",
+  "deployed": false,
+  "format": "ascendance-native-combat-hosted-proof-1",
+  "helperRun": {
+    "conclusion": "success",
+    "id": 41238476273,
+    "skipped": 0,
+    "tests": 300,
+    "url": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41238476273"
+  },
+  "inventories": {
+    "reviewed-combat-native.json": "9ad8e5fe1490f5ff91d66d0476941da77774f9382a296ffdc1b3e782a131ee5c",
+    "reviewed-combat-upload.json": "783de9f301f053ebb907af025c30c9e1c2e443163ce6ae0200550c25f307b50a"
+  },
+  "licensedIntakeModified": false,
+  "nativeRun": {
+    "conclusion": "success",
+    "failedChecks": 0,
+    "id": 41238476385,
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "upload-reviewed-combat"
+      },
+      {
+        "conclusion": "success",
+        "name": "native-combat"
+      }
+    ],
+    "passedChecks": 92,
+    "reportSha256": "5166c53999f21549fd7cbf303c0348bf99e6500b2539feaaf6d0732453107764",
+    "url": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41238476385"
+  },
+  "productionServersModified": false,
+  "published": false,
+  "repository": "RubberDuckieGod/ascendance-unity",
+  "reviewedDraft": {
+    "assets": [
+      {
+        "digest": "sha256:5e63f87d1e11527f0eee273275534238f916d2e0a626a259e3f1a8803e2cf618",
+        "name": "ascendance-linux-client-combat-validation-2bcf6ef.zip",
+        "size": 65537184,
+        "state": "uploaded"
+      },
+      {
+        "digest": "sha256:2757666171772f5628d95e6e2043c87d838ae2866a3e80ed27f51635b4ba4eaf",
+        "name": "ascendance-linux-server-combat-validation-2bcf6ef.zip",
+        "size": 31942897,
+        "state": "uploaded"
+      },
+      {
+        "digest": "sha256:7a3e7204386bb306c35b4a3394f07eb86fb340bd2ff971b81d2c0ed7038a6ad3",
+        "name": "linux-client-manifest.json",
+        "size": 33674,
+        "state": "uploaded"
+      },
+      {
+        "digest": "sha256:af6a2b4cfad27ede8ad4d9e990b54a9a8cea464895dd2ec0dd0f9ca01858f76c",
+        "name": "linux-server-manifest.json",
+        "size": 20676,
+        "state": "uploaded"
+      }
+    ],
+    "draft": true,
+    "id": 430159712,
+    "prerelease": true,
+    "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+    "tag": "combat-validation-2bcf6ef"
+  },
+  "scenarios": [
+    {
+      "acceptedHudReactionResponses": 3,
+      "failed": false,
+      "heroes": [
+        {
+          "downed": false,
+          "health": 12,
+          "id": "Aldric"
+        },
+        {
+          "downed": true,
+          "health": 0,
+          "id": "Rowan"
+        }
+      ],
+      "name": "all villagers rescued, complete enemy phase and other-Hero reaction decline",
+      "round": 2,
+      "villagers": [
+        4,
+        0,
+        0
+      ]
+    },
+    {
+      "acceptedHudReactionResponses": 0,
+      "failed": true,
+      "heroes": [
+        {
+          "downed": false,
+          "health": 12,
+          "id": "Aldric"
+        },
+        {
+          "downed": false,
+          "health": 9,
+          "id": "Rowan"
+        }
+      ],
+      "name": "unprotected villagers consume three goblin attacks and fail Q001",
+      "round": 1,
+      "villagers": [
+        0,
+        1,
+        3
+      ]
+    }
+  ],
+  "sourceOnlyGuardCommit": "0601be070b62d16f9cfbbbe940340c9d380b5876",
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "validationRevision": "1ef615ba98cc274f32145511f6be8b00a99c0b10",
+  "verifiedAtUtc": "2026-10-31T20:23:43.672644+00:00"
+}

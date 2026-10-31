@@ -1,0 +1,76 @@
+{
+  "format": "ascendance-combat-proof-index-1",
+  "runtimeSourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "runtimeBuildVersion": "0.10.2h",
+  "editorChecks": 359,
+  "localTwoGraphicalClientChecks": 92,
+  "hostedTwoGraphicalClientChecks": 92,
+  "hostedHelperTests": 300,
+  "hostedHelperSkips": 0,
+  "nativeFullRosterChecks": 47,
+  "current597PreservationChecks": 47,
+  "plainNativeServerChecks": 73,
+  "tlsNativeServerChecks": 80,
+  "windowsPlayerRuntimeExecuted": false,
+  "audioFunctionalityCertified": false,
+  "unityProductionUpdated": false,
+  "productionCampaignReads": 0,
+  "productionGameplayCommands": 0,
+  "newLicensedAssetPackagesImportedInCloud": 0,
+  "locationArtImplemented": 0,
+  "authoredLocationCount": 236,
+  "files": {
+    "editor-gates.json": {
+      "sha256": "90ebf87befeab500ed2e5d66afb47f6bdd4ee0555c2f910169e90361192a5862",
+      "bytes": 3263
+    },
+    "historical-gui-attempt-01.json": {
+      "sha256": "85f338a42cae27496615837171677e39412be85a85eaf6f42e14b3515f2db06f",
+      "bytes": 870
+    },
+    "historical-gui-attempt-02.json": {
+      "sha256": "e777667fc906c21ea45b7a5003b867b5125ce23f69d827f8c403b465a2e77c6b",
+      "bytes": 976
+    },
+    "hosted-ci-proof.json": {
+      "sha256": "b0a2fd7a926d39e28cb914f70e664f29a6689231811d93588f6f48c70d2c8b0f",
+      "bytes": 3491
+    },
+    "hosted-native-combat.json": {
+      "sha256": "5166c53999f21549fd7cbf303c0348bf99e6500b2539feaaf6d0732453107764",
+      "bytes": 101486
+    },
+    "linux-client-build-provenance.json": {
+      "sha256": "57fe071e025e2f3a807e5777638a9f27a6e8ab01308078444c1c36213229b8f4",
+      "bytes": 1516
+    },
+    "linux-server-build-provenance.json": {
+      "sha256": "c97461880c5e5917adc364010648460fc47d8446da787ffa11c5bb300f8171d2",
+      "bytes": 1532
+    },
+    "native-current-campaign-restore.json": {
+      "sha256": "99f517116c2951ee9d15208928e8b309210048fa741d87442b9d68b5e691099a",
+      "bytes": 9426
+    },
+    "native-full-campaign-tls.json": {
+      "sha256": "8d7b32294d07beffc587f3af8987feddbe25757f6750db4faf4998d44b448e02",
+      "bytes": 343121
+    },
+    "native-server-plain.json": {
+      "sha256": "bca9d9e886eb80ec7fee7f014eeac487f1f6d9526752af3ff02115471aaefbad",
+      "bytes": 67228
+    },
+    "native-server-tls.json": {
+      "sha256": "d1fd6481e59cae5fe8cb32a227c5a2fa229c2e0a989f730621e62b7fd9c747d4",
+      "bytes": 68990
+    },
+    "native-two-player-combat-tls.json": {
+      "sha256": "31a168ffce3fd7104661caa24559d8e0a64b25a7234bbcb1f8dc3a579038739a",
+      "bytes": 100955
+    },
+    "windows-build-provenance.json": {
+      "sha256": "a116f28fc25c0fb29eeb13fd97c04448fdacc634be76db8b07317c2d0fbbb5f8",
+      "bytes": 1500
+    }
+  }
+}

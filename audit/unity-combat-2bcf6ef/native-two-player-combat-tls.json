@@ -1,0 +1,4313 @@
+{
+  "kind": "native-two-Unity-HUD-complete-enemy-phases",
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "transport": "pinned TLS and private invitation",
+  "noProductionConnection": true,
+  "checks": [
+    {
+      "name": "Native test server protocol/build",
+      "expected": [
+        true,
+        1,
+        "0.10.2h"
+      ],
+      "actual": [
+        true,
+        1,
+        "0.10.2h"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric uses an independent native graphical player",
+      "expected": [
+        false,
+        true,
+        true
+      ],
+      "actual": [
+        false,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-create  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan uses an independent native graphical player",
+      "expected": [
+        false,
+        true,
+        true
+      ],
+      "actual": [
+        false,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-ready  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan campaign-ready  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-start  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Two clients plus native server are separate OS processes",
+      "expected": 3,
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "name": "Native clients own separate authenticated Hero sessions",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "fresh campaign Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "fresh campaign Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric actual HUD Start Turn grants three Actions",
+      "expected": 3,
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button Rescue accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric accepted rescue has exact Action/token effects",
+      "expected": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "actual": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric native authority records exact rescue cost and token conservation",
+      "expected": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "actual": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric replica observes Aldric exact rescue outcome",
+      "expected": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "actual": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan replica observes Aldric exact rescue outcome",
+      "expected": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "actual": [
+        2,
+        1,
+        3,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button Rescue accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric accepted rescue has exact Action/token effects",
+      "expected": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "actual": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric native authority records exact rescue cost and token conservation",
+      "expected": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "actual": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric replica observes Aldric exact rescue outcome",
+      "expected": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "actual": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan replica observes Aldric exact rescue outcome",
+      "expected": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "actual": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric two rescues committed before End Turn Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          2,
+          2,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          2,
+          2,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Aldric two rescues committed before End Turn Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          2,
+          2,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          2,
+          2,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Aldric spends two Actions rescuing two actual tokens",
+      "expected": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "actual": [
+        1,
+        2,
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan actual HUD Start Turn grants three Actions",
+      "expected": 3,
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button Rescue accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan accepted rescue has exact Action/token effects",
+      "expected": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "actual": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan native authority records exact rescue cost and token conservation",
+      "expected": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "actual": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric replica observes Rowan exact rescue outcome",
+      "expected": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "actual": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan replica observes Rowan exact rescue outcome",
+      "expected": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "actual": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button Rescue accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan accepted rescue has exact Action/token effects",
+      "expected": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan native authority records exact rescue cost and token conservation",
+      "expected": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric replica observes Rowan exact rescue outcome",
+      "expected": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan replica observes Rowan exact rescue outcome",
+      "expected": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan two rescues committed before End Turn Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Rowan two rescues committed before End Turn Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 1,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Rowan spends two Actions rescuing two actual tokens",
+      "expected": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        1,
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric select-view Rowan accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric inspects other Hero during reaction",
+      "expected": "Rowan",
+      "actual": "Rowan",
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button ResolveReaction accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan select-view Aldric accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan inspects other Hero during reaction",
+      "expected": "Aldric",
+      "actual": "Aldric",
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button ResolveReaction accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric select-view Rowan accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric inspects other Hero during reaction",
+      "expected": "Rowan",
+      "actual": "Rowan",
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button ResolveReaction accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "complete enemy phase Aldric replica equals native authority",
+      "expected": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "complete enemy phase Rowan replica equals native authority",
+      "expected": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Enemy phase reaches an explicit terminal state",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rescued villagers remain safe while Goblins attack Heroes",
+      "expected": [
+        4,
+        0,
+        0
+      ],
+      "actual": [
+        4,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Two-player enemy phase returns to Round 2 Hero Phase",
+      "expected": [
+        2,
+        false
+      ],
+      "actual": [
+        2,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "Enemy attacks cause actual authoritative Hero damage",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "At least one genuine reaction uses the other-Hero HUD inspection path",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan reconnect  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Server restart uses a new authority identity",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Restarted graphical client keeps its authenticated Hero",
+      "expected": "968e4baeaa0f4b7fb47891dde741a9b1",
+      "actual": "968e4baeaa0f4b7fb47891dde741a9b1",
+      "passed": true
+    },
+    {
+      "name": "post-combat restart Aldric replica equals native authority",
+      "expected": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "post-combat restart Rowan replica equals native authority",
+      "expected": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Persisted combat outcome survives server and player restart",
+      "expected": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Native test server protocol/build",
+      "expected": [
+        true,
+        1,
+        "0.10.2h"
+      ],
+      "actual": [
+        true,
+        1,
+        "0.10.2h"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric uses an independent native graphical player",
+      "expected": [
+        false,
+        true,
+        true
+      ],
+      "actual": [
+        false,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-create  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan uses an independent native graphical player",
+      "expected": [
+        false,
+        true,
+        true
+      ],
+      "actual": [
+        false,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-ready  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan campaign-ready  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric campaign-start  accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Two clients plus native server are separate OS processes",
+      "expected": 3,
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "name": "Native clients own separate authenticated Hero sessions",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "fresh campaign Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "fresh campaign Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          0,
+          4,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Aldric hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Rowan hud-button EndTurn accepted",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "complete enemy phase Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "complete enemy phase Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Enemy phase reaches an explicit terminal state",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Three unprotected villagers are lost and Q001 fails",
+      "expected": [
+        true,
+        1,
+        [
+          0,
+          1,
+          3
+        ]
+      ],
+      "actual": [
+        true,
+        1,
+        [
+          0,
+          1,
+          3
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "Goblins consume their attacks on villagers instead of Heroes",
+      "expected": {
+        "Aldric": 12,
+        "Rowan": 9
+      },
+      "actual": {
+        "Aldric": 12,
+        "Rowan": 9
+      },
+      "passed": true
+    },
+    {
+      "name": "failed quest quiescent Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "failed quest quiescent Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "failed quest remains quiescent Aldric replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "failed quest remains quiescent Rowan replica equals native authority",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "LocationId": "L000",
+            "Health": 6,
+            "Armor": 1
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "LocationId": "L000",
+            "Health": 5,
+            "Armor": 0
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Failed quest does not keep spawning or attacking",
+      "expected": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "actual": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "passed": true
+    },
+    {
+      "name": "Aldric reports no managed runtime errors",
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "name": "Rowan reports no managed runtime errors",
+      "expected": [],
+      "actual": [],
+      "passed": true
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "all villagers rescued, complete enemy phase and other-Hero reaction decline",
+      "outcome": {
+        "round": 2,
+        "failed": false,
+        "complete": false,
+        "villagers": [
+          4,
+          0,
+          0
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 0,
+            "Actions": 0,
+            "LocationId": "L000",
+            "TurnCompleted": false,
+            "Downed": true,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": true,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0004",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "acceptedHudReactionResponses": 3
+    },
+    {
+      "name": "unprotected villagers consume three goblin attacks and fail Q001",
+      "outcome": {
+        "round": 1,
+        "failed": true,
+        "complete": false,
+        "villagers": [
+          0,
+          1,
+          3
+        ],
+        "heroes": [
+          {
+            "Id": "Aldric",
+            "Health": 12,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          },
+          {
+            "Id": "Rowan",
+            "Health": 9,
+            "Actions": 3,
+            "LocationId": "L000",
+            "TurnCompleted": true,
+            "Downed": false,
+            "Dead": false
+          }
+        ],
+        "objects": [
+          {
+            "Id": "Q001_VILLAGER_1",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_2",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_3",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": true
+          },
+          {
+            "Id": "Q001_VILLAGER_4",
+            "Type": "Villager",
+            "LocationId": "L000",
+            "Rescued": false,
+            "Destroyed": false
+          }
+        ],
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E001_0002",
+            "Health": 6,
+            "Armor": 1,
+            "LocationId": "L000"
+          },
+          {
+            "Id": "QST_Q001_E002_0003",
+            "Health": 5,
+            "Armor": 0,
+            "LocationId": "L000"
+          }
+        ],
+        "pendingReaction": false,
+        "isResolving": false
+      },
+      "acceptedHudReactionResponses": 0
+    }
+  ],
+  "boundaries": [
+    "Actual Linux development players; Windows shipping binary is not executed by this suite.",
+    "Combat controls invoke the real HUD Button.onClick including production ownership wrappers.",
+    "Temporary fresh campaigns only; existing player saves are not loaded or edited.",
+    "Dice and dealt starting hands use the production game RNG."
+  ],
+  "passed": true,
+  "passedChecks": 92,
+  "failedChecks": 0
+}
