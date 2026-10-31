@@ -66,6 +66,16 @@ class CampaignPublication(unittest.TestCase):
                    'windows-build-provenance.json':(build.windows/'Ascendance.provenance.json').read_bytes(),
                    'linux-development-build-provenance.json':package.canonical({'schemaVersion':1,'outcome':'success','exitCode':0,
                        'source':{'vcs':'git','revision':self.revision,'dirty':False},'build':{'target':'StandaloneLinux64'}})}
+        if self.tag.endswith('-r2'):
+            def actual_checks(count):return {'passed':count,'failed':0,'status':'PASS','checks':[
+                {'name':'synthetic reviewed check '+str(i),'expected':i,'actual':i,'passed':True} for i in range(count)]}
+            reports['native-original-h-live-preflight.json']=package.canonical({**actual_checks(17),
+                'kind':'actual-original-h-reviewed-live-preflight','sourceAssemblySha256':publish.OLD_H_DLL,
+                'upgradeHelperSha256':descriptor['helpers']['upgrade-existing.py']['sha256'],
+                'noProductionConnection':True,'noExistingSaveRead':True})
+            reports['native-original-h-direct-restoration.json']=package.canonical({**actual_checks(8),
+                'kind':'actual-never-restarted-source-h-direct-restore','noProductionConnection':True,
+                'noExistingSaveRead':True,'gameplayCommandsSubmittedToCopiedRoom':0})
         with zipfile.ZipFile(self.assets/publish.REPORTS,'x') as archive:
             for name,data in reports.items(): package.add_zip(archive,name,data)
         self.inventory = {'format':1,'releaseId':123,'release':self.tag,'sourceRevision':self.revision,'deploymentRevision':self.tooling,
@@ -73,6 +83,7 @@ class CampaignPublication(unittest.TestCase):
                           'acceptance':{'editorGates':{'fixture':1},'helperChecks':1,'graphicalChecks':1,'migrationChecks':1,
                                         'plainServerChecks':1,'tlsServerChecks':1},
                           'reports':{name:{'sha256':publish.digest(data),'bytes':len(data)} for name,data in reports.items()}}
+        if self.tag.endswith('-r2'):self.inventory['acceptance'].update(livePreflightChecks=17,directRestoreChecks=8)
         self.write_inventory()
         self.root_patch = patch.object(publish,'ROOT',self.root)
         self.root_patch.start(); self.addCleanup(self.root_patch.stop)

@@ -88,7 +88,7 @@ def checks_passed(report, expected, label):
             label + " does not contain the complete reviewed successful semantic checks")
 
 
-def verify_reports(reports, inventory, revision, windows_proof):
+def verify_reports(reports, inventory, revision, windows_proof, upgrade_helper_sha):
     proofs = inventory.get("reports", {})
     require(proofs and set(reports) == set(proofs), "Public reports differ from the exact reviewed allowlist")
     for name, data in reports.items():
@@ -139,6 +139,22 @@ def verify_reports(reports, inventory, revision, windows_proof):
             and linux.get("source") == {"vcs": "git", "revision": revision, "dirty": False}
             and linux.get("build", {}).get("target") == "StandaloneLinux64",
             "Graphical Linux acceptance player has wrong source or target")
+    if inventory['release'].endswith('-r2'):
+        require(expected.get('livePreflightChecks') == 17 and expected.get('directRestoreChecks') == 8,
+                'Revised helper acceptance counts differ')
+        live = document(reports['native-original-h-live-preflight.json'])
+        checks_passed(live, 17, 'Actual original-h live preflight')
+        require(live.get('kind') == 'actual-original-h-reviewed-live-preflight'
+                and live.get('status') == 'PASS' and live.get('sourceAssemblySha256') == OLD_H_DLL
+                and live.get('upgradeHelperSha256') == upgrade_helper_sha
+                and live.get('noProductionConnection') is True and live.get('noExistingSaveRead') is True,
+                'Revised helper proof does not bind this exact upgrader and isolated original h')
+        direct = document(reports['native-original-h-direct-restoration.json'])
+        checks_passed(direct, 8, 'Actual never-restarted original-h direct restore')
+        require(direct.get('kind') == 'actual-never-restarted-source-h-direct-restore'
+                and direct.get('status') == 'PASS' and direct.get('noProductionConnection') is True
+                and direct.get('noExistingSaveRead') is True and direct.get('gameplayCommandsSubmittedToCopiedRoom') == 0,
+                'Direct original-h restoration proof differs')
 
 
 def verify():
@@ -232,7 +248,8 @@ def verify():
             and any(n.startswith("Windows/Ascendance_Data/") for n in windows), "Complete Windows player is missing")
     require(digest(windows.get("Windows/Play-AscendanceMultiplayer.ps1", b"")) == inventory.get("launcherSha256")
             and windows.get("Windows/CONNECTION_README.txt") == payload["CONNECTION_README.txt"], "Reviewed launcher/instructions differ")
-    verify_reports(zip_files(assets / REPORTS, public), inventory, revision, windows["Windows/Ascendance.provenance.json"])
+    verify_reports(zip_files(assets / REPORTS, public), inventory, revision, windows["Windows/Ascendance.provenance.json"],
+                   descriptor['helpers']['upgrade-existing.py']['sha256'])
     print(json.dumps({"status": "VERIFIED_FROZEN_FULL_RELEASE", "release": tag, "sourceRevision": revision,
                       "releaseId": release_id, "assets": len(expected), "published": False, "deployed": False}))
     return inventory, assets
