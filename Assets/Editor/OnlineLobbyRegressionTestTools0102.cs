@@ -138,7 +138,7 @@ namespace Ascendance.EditorTools
                 lobby = new AscendanceOnlineLobby0102();
                 lobby.Open(observer);
                 float ready = Time.realtimeSinceStartup + 15f;
-                while (!lobby.IsConnected && Time.realtimeSinceStartup < ready) { lobby.Tick(); yield return null; }
+                while ((!lobby.IsConnected || lobby.IsBusy || lobby.Snapshot == null || lobby.HeroChoices.Count != 4) && Time.realtimeSinceStartup < ready) { lobby.Tick(); yield return null; }
                 lobby.Tick();
                 Check(lobby.IsConnected && lobby.HeroChoices.Count == 4, "Production lobby model exposes only the four authoritative party Heroes.");
                 Check(lobby.HeroChoices.Any(h => h.HeroId == "Garruk" && h.CanChoose) && !lobby.HeroChoices.Any(h => h.HeroId == "Rowan"),
@@ -150,6 +150,31 @@ namespace Ascendance.EditorTools
                 Check(!lobby.SelectHero("Rowan") && lobby.SelectedHeroId == "Elara", "Selection refuses a Hero outside the saved online party.");
                 Check(Gameplay(gm) == before && authority.Room.GameplayRevision == gameplayRevision,
                     "Lobby inspection and selection remain read-only for gameplay.");
+
+                // The controller deliberately keeps its last rendered choices while a
+                // different client wins a claim. Joining that stale choice must return
+                // the real refusal and disable only the now-owned Hero.
+                Check(lobby.SelectHero("Garruk"), "An available Hero can be selected before a competing claim wins.");
+                var winner = Client("Race winner");
+                var won = winner.ClaimHeroAsync("Garruk");
+                yield return Await(won);
+                Check(Completed(won)?.Accepted == true, "A competing real socket claims the selected Hero first.");
+                string winnerCredential = PlayerPrefs.GetString(Key("Garruk"));
+                PlayerPrefs.DeleteKey(Key("Garruk"));
+                var lostRace = lobby.ClaimSelectedAsync();
+                PlayerPrefs.SetString(Key("Garruk"), winnerCredential);
+                yield return Await(lostRace);
+                lobby.Tick();
+                Check(lobby.LastClaimResult?.Accepted == false && lobby.LastClaimResult.Code == "HERO_CLAIMED",
+                    "Stale menu claim retains the exact authoritative HERO_CLAIMED result.");
+                Check(!lobby.IsClaimed && string.IsNullOrEmpty(observer.PlayerId) && string.IsNullOrEmpty(lobby.SelectedHeroId),
+                    "Losing the race creates no session and clears the invalid selection.");
+                Check(lobby.HeroChoices.Any(h => h.HeroId == "Garruk" && !h.CanChoose && !h.Status.Contains("try reconnect")),
+                    "Rejected Hero is disabled instead of advertising its failed credential as a reconnect.");
+                Check(lobby.Status.Contains("another player"), "The useful claim-refusal message remains visible after refreshed snapshots.");
+                Check(lobby.SelectHero("Elara") && lobby.SelectedHeroId == "Elara", "Losing a claim still permits choosing another available Hero.");
+                Check(Gameplay(gm) == before && authority.Room.GameplayRevision == gameplayRevision && authority.Room.Players.Count == 3,
+                    "Claim race changes only the winner's player record and leaves gameplay unchanged.");
             }
             finally
             {

@@ -137,17 +137,17 @@ namespace Ascendance
                 button.name="OnlineHeroSlot_"+i;
                 var title=button.GetComponentInChildren<UnityEngine.UI.Text>();
                 title.rectTransform.anchorMin=new Vector2(0.03f,0.48f);title.rectTransform.anchorMax=new Vector2(0.97f,0.96f);
-                title.alignment=TextAnchor.MiddleLeft;title.fontSize=24;title.resizeTextForBestFit=true;title.resizeTextMinSize=14;title.resizeTextMaxSize=24;title.raycastTarget=false;
+                title.alignment=TextAnchor.MiddleLeft;title.fontSize=24;title.resizeTextForBestFit=true;title.resizeTextMinSize=14;title.resizeTextMaxSize=24;title.raycastTarget=false;title.supportRichText=false;
                 var detail=ShellUIFactory.TextRect(button.transform,"",16,TextAnchor.MiddleLeft,new Vector2(0.03f,0.04f),new Vector2(0.97f,0.48f));
-                detail.resizeTextForBestFit=true;detail.resizeTextMinSize=12;detail.resizeTextMaxSize=16;detail.raycastTarget=false;
+                detail.resizeTextForBestFit=true;detail.resizeTextMinSize=12;detail.resizeTextMaxSize=16;detail.raycastTarget=false;detail.supportRichText=false;
                 onlineHeroButtons.Add(button);onlineHeroNames.Add(title);onlineHeroStatuses.Add(detail);
             }
             heroDetail=ShellUIFactory.TextRect(heroPanel.transform,"",20,TextAnchor.UpperLeft,new Vector2(0.63f,0.47f),new Vector2(0.965f,0.84f));
-            heroDetail.raycastTarget=false;
+            heroDetail.raycastTarget=false;heroDetail.supportRichText=false;
             partySummary=ShellUIFactory.TextRect(heroPanel.transform,"",17,TextAnchor.UpperLeft,new Vector2(0.63f,0.265f),new Vector2(0.965f,0.44f),ShellUIFactory.Gold);
-            partySummary.resizeTextForBestFit=true;partySummary.resizeTextMinSize=12;partySummary.resizeTextMaxSize=17;partySummary.raycastTarget=false;
+            partySummary.resizeTextForBestFit=true;partySummary.resizeTextMinSize=12;partySummary.resizeTextMaxSize=17;partySummary.raycastTarget=false;partySummary.supportRichText=false;
             onlineRoomSummary=ShellUIFactory.TextRect(heroPanel.transform,"",14,TextAnchor.MiddleLeft,new Vector2(0.035f,0.14f),new Vector2(0.585f,0.18f));
-            onlineRoomSummary.raycastTarget=false;
+            onlineRoomSummary.raycastTarget=false;onlineRoomSummary.supportRichText=false;
             beginButton=ShellUIFactory.ButtonRect(heroPanel.transform,"CHOOSE A HERO",new Vector2(0.63f,0.12f),new Vector2(0.965f,0.23f),BeginAdventure);
             beginButton.name="OnlineClaimHeroButton";
             var beginLabel=beginButton.GetComponentInChildren<UnityEngine.UI.Text>();beginLabel.fontSize=20;beginLabel.resizeTextForBestFit=true;beginLabel.resizeTextMinSize=13;beginLabel.resizeTextMaxSize=20;

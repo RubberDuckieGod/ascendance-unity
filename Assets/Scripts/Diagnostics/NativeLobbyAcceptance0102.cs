@@ -97,7 +97,7 @@ namespace Ascendance.Diagnostics
                 case "open": Click(request, "Button_JOIN_ONLINE_CAMPAIGN"); return;
                 case "select": Click(request, "OnlineHero_" + request.HeroId); return;
                 case "claim": Click(request, "OnlineClaimHeroButton"); return;
-                case "back": Click(request, "OnlineBackButton"); return;
+                case "back": Click(request, "Button_BACK"); return;
                 case "menu": AscendanceSession.ReturnToMainMenu(); Respond(request, true, "MENU", "Normal session return to menu requested."); return;
                 case "turn":
                     var router = AscendanceClientCommandRouter0101.Instance;

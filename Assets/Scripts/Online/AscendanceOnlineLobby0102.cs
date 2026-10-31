@@ -23,6 +23,7 @@ namespace Ascendance.Online
     public sealed class AscendanceOnlineLobby0102 : IDisposable
     {
         private readonly List<AscendanceOnlineHeroChoice0102> choices = new();
+        private readonly Dictionary<string, string> rejectedCredentialOwners = new(StringComparer.OrdinalIgnoreCase);
         private AscendanceTcpCommandTransport0102 transport;
         private Task<bool> connecting;
         private Task<AscendanceHeroClaimResult0102> claiming;
@@ -77,6 +78,14 @@ namespace Ascendance.Online
                 try { LastClaimResult = claiming.GetAwaiter().GetResult(); }
                 catch { LastClaimResult = Failure("CONNECTION_ERROR", "Unable to confirm this Hero. Retry the connection."); }
                 claiming = null;
+                if (LastClaimResult?.Accepted == false && LastClaimResult.Code == "HERO_CLAIMED")
+                {
+                    string requestedHero = LastClaimResult.HeroId ?? selectedHeroId;
+                    var owner = (LastClaimResult.Snapshot ?? transport.LatestSnapshot)?.Players?.FirstOrDefault(p =>
+                        p != null && string.Equals(p.HeroId, requestedHero, StringComparison.OrdinalIgnoreCase));
+                    if (!string.IsNullOrWhiteSpace(requestedHero) && owner != null)
+                        rejectedCredentialOwners[requestedHero] = owner.PlayerId ?? string.Empty;
+                }
                 IsClaimed = LastClaimResult?.Accepted == true && transport.IsConnected &&
                     string.Equals(transport.HeroId, selectedHeroId, StringComparison.OrdinalIgnoreCase);
                 status = IsClaimed ? "Hero confirmed. Joining your campaign…" :
@@ -88,6 +97,9 @@ namespace Ascendance.Online
             {
                 wasConnected = IsConnected;
                 if (!wasConnected && connecting == null && claiming == null) status = ConnectionFailure();
+                else if (wasConnected && connecting == null && claiming == null && !IsClaimed &&
+                    (LastClaimResult == null || LastClaimResult.Code == "TRANSPORT_ERROR" || LastClaimResult.Code == "CONNECTION_ERROR"))
+                    status = "Connected. Choose one Hero. Your friends choose their own Heroes.";
                 changed = true;
             }
             var current = transport.LatestSnapshot;
@@ -158,15 +170,19 @@ namespace Ascendance.Online
                 var owner = snapshot.Players?.FirstOrDefault(p => p != null && string.Equals(p.HeroId, id, StringComparison.OrdinalIgnoreCase));
                 bool saved = transport?.HasSavedHeroCredential(id) == true;
                 bool available = owner == null;
+                if (rejectedCredentialOwners.TryGetValue(id, out string rejectedOwner) &&
+                    (available || !string.Equals(rejectedOwner, owner.PlayerId ?? string.Empty, StringComparison.Ordinal)))
+                    rejectedCredentialOwners.Remove(id);
+                bool credentialRejected = owner != null && rejectedCredentialOwners.ContainsKey(id);
                 string ownerName = owner == null ? null : string.IsNullOrWhiteSpace(owner.DisplayName) ? "another player" : owner.DisplayName;
                 string rowStatus = available ? "AVAILABLE" : (owner.Connected ? "PLAYING — " : "RESERVED — ") + ownerName;
-                if (!available && saved) rowStatus += "\nSaved login found · try reconnect";
+                if (!available && saved && !credentialRejected) rowStatus += "\nSaved login found · try reconnect";
                 choices.Add(new AscendanceOnlineHeroChoice0102
                 {
                     HeroId = id, DisplayName = HeroDatabase.GetHero(id)?.displayName ?? id,
                     ClaimedBy = ownerName, Connected = owner?.Connected == true,
                     HasSavedCredential = saved, Status = rowStatus,
-                    CanChoose = IsConnected && !IsBusy && !IsClaimed && (available || saved)
+                    CanChoose = IsConnected && !IsBusy && !IsClaimed && (available || (saved && !credentialRejected))
                 });
             }
             if (!IsBusy && !IsClaimed && !choices.Any(c => c.CanChoose && string.Equals(c.HeroId, selectedHeroId, StringComparison.OrdinalIgnoreCase)))
@@ -189,6 +205,7 @@ namespace Ascendance.Online
             snapshot = null;
             selectedHeroId = null;
             choices.Clear();
+            rejectedCredentialOwners.Clear();
             IsClaimed = false;
             wasConnected = false;
             LastClaimResult = null;
