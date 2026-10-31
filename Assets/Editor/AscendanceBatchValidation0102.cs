@@ -32,8 +32,8 @@ namespace Ascendance.EditorTools
             new Terminal("network", "[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport completed:", 27),
             new Terminal("reliability", "[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability completed:", 22),
             new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20),
-            new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 31),
-            new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 38)
+            new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 32),
+            new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 41)
         };
 
         static AscendanceBatchValidation0102()

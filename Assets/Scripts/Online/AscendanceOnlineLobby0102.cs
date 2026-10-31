@@ -37,6 +37,8 @@ namespace Ascendance.Online
         private string campaignActionName;
         private string selectedHeroId;
         private string status = "Join the online campaign to choose your Hero.";
+        private bool showingConnectionFailure;
+        private string requestErrorBeforeDisconnect;
 
         public event Action Changed;
         public event Action Claimed;
@@ -93,7 +95,9 @@ namespace Ascendance.Online
                 try { connected = connecting.GetAwaiter().GetResult(); }
                 catch { /* Only the transport's sanitized connection message is shown. */ }
                 connecting = null;
-                status = connected ? "Choose one Hero. Your friends choose their own Heroes." : ConnectionFailure();
+                if (!connected) ShowConnectionFailure();
+                else if (showingConnectionFailure) RestoreConnectedStatus();
+                else status = "Choose one Hero. Your friends choose their own Heroes.";
                 changed = true;
             }
             if (claiming?.IsCompleted == true)
@@ -109,6 +113,8 @@ namespace Ascendance.Online
                     if (!string.IsNullOrWhiteSpace(requested) && owner != null)
                         rejectedCredentialOwners[requested] = owner.PlayerId ?? string.Empty;
                 }
+                showingConnectionFailure = LastClaimResult?.Accepted == false && !IsConnected && TransientConnectionCode(LastClaimResult.Code);
+                requestErrorBeforeDisconnect = null;
                 status = LastClaimResult?.Accepted == true ? "Hero confirmed." :
                     LastClaimResult?.Message ?? "The Hero could not be claimed. Choose another Hero or retry.";
                 changed = true;
@@ -118,6 +124,8 @@ namespace Ascendance.Online
                 try { LastCampaignResult = campaignAction.GetAwaiter().GetResult(); }
                 catch { LastCampaignResult = CampaignFailure("CONNECTION_ERROR", "The campaign request could not be confirmed. Retry the connection."); }
                 campaignAction = null;
+                showingConnectionFailure = LastCampaignResult?.Accepted == false && !IsConnected && TransientConnectionCode(LastCampaignResult.Code);
+                requestErrorBeforeDisconnect = null;
                 if (LastCampaignResult?.Accepted == true)
                 {
                     status = campaignActionName == "create" ? "New campaign lobby created. Choose from all 16 Heroes." :
@@ -138,7 +146,8 @@ namespace Ascendance.Online
             if (wasConnected != IsConnected)
             {
                 wasConnected = IsConnected;
-                if (!wasConnected && !IsBusy) status = ConnectionFailure();
+                if (!wasConnected && !IsBusy) ShowConnectionFailure();
+                else if (wasConnected && !IsBusy && showingConnectionFailure) RestoreConnectedStatus();
                 else if (wasConnected && !IsBusy && LastClaimResult == null && LastCampaignResult == null)
                     status = "Connected. Choose one Hero. Your friends choose their own Heroes.";
                 changed = true;
@@ -174,6 +183,7 @@ namespace Ascendance.Online
             var choice = choices.FirstOrDefault(h => string.Equals(h.HeroId, heroId, StringComparison.OrdinalIgnoreCase));
             if (choice == null || !choice.CanChoose) return false;
             selectedHeroId = choice.HeroId;
+            showingConnectionFailure = false; requestErrorBeforeDisconnect = null;
             status = choice.IsOwnClaim ? "This is your Hero. Mark READY when your choice is final." :
                 choice.HasSavedCredential && !string.IsNullOrWhiteSpace(choice.ClaimedBy) ?
                 "Saved login found. The server will verify your reconnect." : "Ready to claim " + choice.DisplayName + ".";
@@ -229,6 +239,7 @@ namespace Ascendance.Online
         private Task<AscendanceCampaignActionResult0102> BeginCampaignAction(Task<AscendanceCampaignActionResult0102> request, string name, string message)
         {
             campaignAction = request;
+            showingConnectionFailure = false; requestErrorBeforeDisconnect = null;
             campaignActionName = name;
             status = message;
             RebuildChoices();
@@ -239,6 +250,7 @@ namespace Ascendance.Online
         private Task<AscendanceCampaignActionResult0102> RefuseCampaign(string code, string message)
         {
             LastCampaignResult = CampaignFailure(code, message);
+            showingConnectionFailure = false; requestErrorBeforeDisconnect = null;
             status = message;
             Changed?.Invoke();
             return Task.FromResult(LastCampaignResult);
@@ -290,6 +302,29 @@ namespace Ascendance.Online
                 selectedHeroId = null;
         }
 
+        private static bool TransientConnectionCode(string code) => code == "TRANSPORT_ERROR" || code == "TRANSPORT_OFFLINE" || code == "CONNECTION_ERROR";
+
+        private void ShowConnectionFailure()
+        {
+            if (!showingConnectionFailure)
+            {
+                // Remember only a currently displayed real refusal. A previous
+                // refusal that the user has already dismissed by selecting again
+                // must not be resurrected after a network interruption.
+                requestErrorBeforeDisconnect = LastClaimResult?.Accepted == false && !TransientConnectionCode(LastClaimResult.Code) && status == LastClaimResult.Message
+                    ? status : LastCampaignResult?.Accepted == false && !TransientConnectionCode(LastCampaignResult.Code) && status == LastCampaignResult.Message ? status : null;
+            }
+            showingConnectionFailure = true;
+            status = ConnectionFailure();
+        }
+
+        private void RestoreConnectedStatus()
+        {
+            status = requestErrorBeforeDisconnect ?? "Connection restored. Choose or reconnect to your Hero.";
+            showingConnectionFailure = false;
+            requestErrorBeforeDisconnect = null;
+        }
+
         private string ConnectionFailure() => string.IsNullOrWhiteSpace(transport?.LastConnectionError)
             ? "The server connection is unavailable. Select RETRY CONNECTION."
             : "Connection failed: " + transport.LastConnectionError + " Select RETRY CONNECTION.";
@@ -312,6 +347,7 @@ namespace Ascendance.Online
             entryRaised = false;
             createWhenConnected = false;
             campaignActionName = null;
+            showingConnectionFailure = false; requestErrorBeforeDisconnect = null;
             LastClaimResult = null;
             LastCampaignResult = null;
             status = "Join the online campaign to choose your Hero.";

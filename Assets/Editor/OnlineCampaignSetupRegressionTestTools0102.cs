@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Ascendance.Online;
 using UnityEditor;
@@ -82,6 +83,7 @@ namespace Ascendance.EditorTools
             GameObject listener = null;
             AscendanceTcpServer0102 server = null;
             AscendanceRoomAuthority0100 authority = null;
+            TcpClient rawClient = null;
             string slotFolder = Path.Combine(AscendanceServerRoomPersistence0100.RootPath, "CampaignSlots", room);
             string savePath = AscendanceServerRoomPersistence0100.PathFor(room);
             string ReconnectKey(string hero) => $"ASCENDANCE_0102_RECONNECT_127.0.0.1_{port}_{room}_{hero}";
@@ -91,6 +93,16 @@ namespace Ascendance.EditorTools
                 transports.Add(value);
                 return value;
             }
+            Task<AscendanceNetworkResponse0102> Raw(string operation, string hero = null, string credential = null, string player = null) => Task.Run(() =>
+            {
+                var request = new AscendanceNetworkRequest0102 { RequestId = Guid.NewGuid().ToString("N"), Operation = operation,
+                    RoomId = room, DisplayName = "Raw protocol isolation fixture", HeroId = hero, ReconnectToken = credential, PlayerId = player };
+                var stream = rawClient.GetStream();
+                AscendanceNetworkCodec0102.WriteFrame(stream, AscendanceNetworkCodec0102.SerializeRequest(request));
+                var response = AscendanceNetworkCodec0102.DeserializeResponse(AscendanceNetworkCodec0102.ReadFrame(stream));
+                if (response == null || response.RequestId != request.RequestId) throw new InvalidDataException("Raw draft response correlation failed.");
+                return response;
+            });
             try
             {
                 float deadline = Time.realtimeSinceStartup + 20f;
@@ -172,6 +184,28 @@ namespace Ascendance.EditorTools
                     "The creator token is durable locally and absent from the public creation result.");
                 var notReady = a.StartCampaignAsync(); yield return Await(notReady);
                 Check(!notReady.Result.Accepted && notReady.Result.Code == "CAMPAIGN_NOT_READY", "An empty unready draft cannot start.");
+                rawClient = new TcpClient(); rawClient.ReceiveTimeout = 15000; rawClient.SendTimeout = 15000;
+                yield return Await(rawClient.ConnectAsync("127.0.0.1", port));
+                string rawCredential = Guid.NewGuid().ToString("N");
+                var firstRaw = Raw("JOIN", "Lyra", rawCredential); yield return Await(firstRaw);
+                var secondRaw = Raw("JOIN", "Elara", Guid.NewGuid().ToString("N")); yield return Await(secondRaw);
+                Check(firstRaw.Result.Accepted && !secondRaw.Result.Accepted && secondRaw.Result.Code == "DRAFT_PLAYER_ALREADY_BOUND"
+                    && authority.Room.Players.Count == 1 && authority.Room.Players.Single().HeroId == "Lyra",
+                    "A hostile raw JOIN cannot bind a second draft Hero to its already claimed socket.");
+                string rawPlayerId = firstRaw.Result.Player.PlayerId;
+                var repeatRaw = Raw("JOIN", "Lyra", rawCredential); yield return Await(repeatRaw);
+                var reconnectRaw = Raw("RECONNECT", "Lyra", rawCredential); yield return Await(reconnectRaw);
+                Check(repeatRaw.Result.Accepted && reconnectRaw.Result.Accepted
+                    && repeatRaw.Result.Player.PlayerId == rawPlayerId && reconnectRaw.Result.Player.PlayerId == rawPlayerId
+                    && authority.Room.Players.Count == 1,
+                    "Same-session raw JOIN and RECONNECT remain idempotent on the one existing draft claim.");
+                var swapRaw = Raw("CHANGE_HERO", "Asha", Guid.NewGuid().ToString("N"), rawPlayerId); yield return Await(swapRaw);
+                bool oneSwappedClaim = swapRaw.Result.Accepted && swapRaw.Result.Player.PlayerId == rawPlayerId
+                    && authority.Room.Players.Count == 1 && authority.Room.Players.Single().HeroId == "Asha";
+                var leaveRaw = Raw("LEAVE_DRAFT", player: rawPlayerId); yield return Await(leaveRaw);
+                Check(oneSwappedClaim && leaveRaw.Result.Accepted && authority.Room.Players.Count == 0,
+                    "The intended CHANGE_HERO keeps one draft identity and explicit LEAVE_DRAFT releases its choice.");
+                rawClient.Close(); rawClient = null;
                 var claims = new[] { a.ClaimHeroAsync("Vaelis"), b.ClaimHeroAsync("Mira"), c.ClaimHeroAsync("Thorne"), d.ClaimHeroAsync("Cassian") };
                 yield return Await(Task.WhenAll(claims));
                 Check(claims.All(t => t.Result.Accepted), "Four different full-roster Heroes outside the old default party can be claimed.");
@@ -239,6 +273,7 @@ namespace Ascendance.EditorTools
             finally
             {
                 foreach (var transport in transports) transport.Dispose();
+                rawClient?.Close();
                 server?.StopServer(); authority?.Dispose();
                 if (listener != null) UnityEngine.Object.Destroy(listener);
                 foreach (var pair in prefs) { if (pair.Value == null) PlayerPrefs.DeleteKey(pair.Key); else PlayerPrefs.SetString(pair.Key, pair.Value); }

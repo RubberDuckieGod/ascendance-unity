@@ -235,6 +235,8 @@ namespace Ascendance.Online
 
                 case "JOIN":
                 {
+                    if (WouldMultiplyDraftClaims0102(connection, request.HeroId, request.ReconnectToken, false))
+                        return RejectNetwork(request, "DRAFT_PLAYER_ALREADY_BOUND", "This connection already owns a draft Hero. Change that selection instead of claiming another Hero.");
                     var join = authority.Join(request.DisplayName, request.HeroId, request.ReconnectToken);
                     if (join.Accepted && join.Player != null)
                     {
@@ -256,6 +258,8 @@ namespace Ascendance.Online
 
                 case "RECONNECT":
                 {
+                    if (WouldMultiplyDraftClaims0102(connection, request.HeroId, request.ReconnectToken, true))
+                        return RejectNetwork(request, "DRAFT_PLAYER_ALREADY_BOUND", "This connection already owns a draft Hero. Change that selection instead of claiming another Hero.");
                     var join = authority.Reconnect(request.ReconnectToken, request.HeroId);
                     if (join.Accepted && join.Player != null)
                     {
@@ -351,6 +355,17 @@ namespace Ascendance.Online
 
         private bool BoundPlayer0102(ConnectionContext connection, string playerId) => !string.IsNullOrEmpty(playerId)
             && playerConnections.TryGetValue(playerId, out var owner) && ReferenceEquals(owner, connection);
+
+        private bool WouldMultiplyDraftClaims0102(ConnectionContext connection, string heroId, string credential, bool allowOmittedHero)
+        {
+            if (!authority.IsCampaignDraft0102) return false;
+            // A retried JOIN/RECONNECT may prove the same session. A different
+            // Hero must use CHANGE_HERO so one socket cannot reserve the party.
+            return authority.Room.Players.Any(player => player != null && BoundPlayer0102(connection, player.PlayerId)
+                && !(string.Equals(player.ReconnectToken, credential, StringComparison.Ordinal)
+                    && ((allowOmittedHero && string.IsNullOrWhiteSpace(heroId))
+                        || string.Equals(player.HeroId, heroId, StringComparison.OrdinalIgnoreCase))));
+        }
 
         private void ClearTrackedPlayers0102()
         {

@@ -175,6 +175,27 @@ namespace Ascendance.EditorTools
                 Check(lobby.SelectHero("Elara") && lobby.SelectedHeroId == "Elara", "Losing a claim still permits choosing another available Hero.");
                 Check(Gameplay(gm) == before && authority.Room.GameplayRevision == gameplayRevision && authority.Room.Players.Count == 3,
                     "Claim race changes only the winner's player record and leaves gameplay unchanged.");
+                var finalClaim = lobby.ClaimSelectedAsync();
+                yield return Await(finalClaim);
+                lobby.Tick();
+                string finalPlayerId = lobby.PlayerId;
+                server.StopServer();
+                float disconnected = Time.realtimeSinceStartup + 18f;
+                while ((lobby.IsConnected || !lobby.Status.Contains("RETRY CONNECTION")) && Time.realtimeSinceStartup < disconnected)
+                { lobby.Tick(); yield return null; }
+                lobby.Tick();
+                bool showedDisconnect = Completed(finalClaim)?.Accepted == true && lobby.LastClaimResult?.Accepted == true
+                    && !lobby.IsConnected && !lobby.IsClaimed && lobby.Status.Contains("RETRY CONNECTION")
+                    && lobby.HeroChoices.All(h => !h.CanChoose) && !lobby.CanStartCampaign && !lobby.CanCreateCampaign;
+                bool listenerRestarted = server.Initialize(authority, port);
+                float recovered = Time.realtimeSinceStartup + 18f;
+                while ((!lobby.IsConnected || lobby.IsBusy || lobby.Status.Contains("RETRY CONNECTION") || lobby.Status.Contains("Connection failed"))
+                    && Time.realtimeSinceStartup < recovered) { lobby.Tick(); yield return null; }
+                lobby.Tick();
+                Check(showedDisconnect && listenerRestarted && lobby.IsConnected && !lobby.IsBusy && lobby.IsClaimed
+                    && lobby.LastClaimResult?.Accepted == true && !string.IsNullOrEmpty(finalPlayerId) && lobby.PlayerId == finalPlayerId
+                    && !lobby.Status.Contains("RETRY CONNECTION") && !lobby.Status.Contains("Connection failed") && Gameplay(gm) == before,
+                    "A real server disconnect after a successful claim shows Retry Connection, and automatic recovery clears that transient error while retaining the Hero identity and unchanged gameplay.");
             }
             finally
             {

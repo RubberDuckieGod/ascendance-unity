@@ -153,6 +153,21 @@ def main():
         check("A fresh draft has no inherited player claims", 0, len(snapshot()["Players"]))
         unfocus_and_arrange(display, authority, [a.process.pid, b.process.pid]); frames([a, b], True)
         capture("campaign-full-sixteen-roster.png")
+        raw_credential = uuid.uuid4().hex
+        raw_first = observer.exchange("JOIN", DisplayName="Raw draft isolation fixture", HeroId="Lyra", ReconnectToken=raw_credential)
+        raw_extra = observer.exchange("JOIN", DisplayName="Raw extra claim", HeroId="Elara", ReconnectToken=uuid.uuid4().hex)
+        check("A hostile second raw JOIN cannot give one connection two draft Heroes", [True, False, "DRAFT_PLAYER_ALREADY_BOUND", ["Lyra"]],
+              [raw_first["Accepted"], raw_extra["Accepted"], raw_extra["Code"], [p["HeroId"] for p in snapshot()["Players"]]])
+        raw_id = raw_first["Player"]["PlayerId"]
+        raw_same = observer.exchange("JOIN", HeroId="Lyra", ReconnectToken=raw_credential)
+        raw_reconnect = observer.exchange("RECONNECT", HeroId="Lyra", ReconnectToken=raw_credential)
+        check("Raw idempotent JOIN and RECONNECT preserve the one original draft identity", [True, True, raw_id, raw_id, 1],
+              [raw_same["Accepted"], raw_reconnect["Accepted"], raw_same["Player"]["PlayerId"], raw_reconnect["Player"]["PlayerId"], len(snapshot()["Players"])])
+        raw_swap = observer.exchange("CHANGE_HERO", PlayerId=raw_id, HeroId="Asha", ReconnectToken=uuid.uuid4().hex)
+        swapped = snapshot()["Players"]
+        raw_leave = observer.exchange("LEAVE_DRAFT", PlayerId=raw_id)
+        check("The intended raw Hero swap preserves one player and explicit leave releases it", [True, [[raw_id, "Asha"]], True, 0],
+              [raw_swap["Accepted"], [[p["PlayerId"], p["HeroId"]] for p in swapped], raw_leave["Accepted"], len(snapshot()["Players"])])
         chosen_a = a.claim_draft("Vaelis"); chosen_b = b.claim_draft("Mira")
         check("Each client claims one non-default Hero without entering gameplay", ["Vaelis", "Mira", False, False],
               [chosen_a["ClaimedHeroId"], chosen_b["ClaimedHeroId"], chosen_a["GameReady"], chosen_b["GameReady"]])
