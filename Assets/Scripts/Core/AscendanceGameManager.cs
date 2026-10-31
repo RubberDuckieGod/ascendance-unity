@@ -2086,7 +2086,7 @@ namespace Ascendance
             int rangedReposition=TryRangedReposition0859(enemy);if(rangedReposition>0)return rangedReposition;
             if(ChooseEnemyAttackTarget(enemy)!=null)return 0;
             int budget=EnemyMovementAllowance(enemy),steps=0;
-            while(budget>0&&!enemy.Defeated&&!HasQ001VillagerTarget0102(enemy)&&ChooseEnemyAttackTarget(enemy)==null)
+            while(budget>0&&!enemy.Defeated&&EnemyMovementAllowance(enemy)>0&&!HasQ001VillagerTarget0102(enemy)&&ChooseEnemyAttackTarget(enemy)==null)
             {
                 if(!Locations.TryGetValue(enemy.LocationId,out var current))break;
                 bool ignoresTerrain=WorldEventEnemyIgnoresDifficultTerrain0857(enemy)||EnemyIgnoresDifficultTerrain0859(enemy);

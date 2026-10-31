@@ -36,7 +36,7 @@ namespace Ascendance.EditorTools
             new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 42),
             new Terminal("reaction", "[ASCENDANCE][REACTION AUTHORITY]", "Reaction Authority completed:", 30),
             new Terminal("combatHud", "[ASCENDANCE][COMBAT HUD]", "Combat HUD completed:", 11),
-            new Terminal("villagers", "[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression completed:", 65)
+            new Terminal("villagers", "[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression completed:", 67)
         };
 
         static AscendanceBatchValidation0102()
