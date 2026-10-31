@@ -11,7 +11,7 @@ namespace Ascendance.Online
     /// campaign state, validates Hero ownership and optimistic revisions, de-duplicates
     /// commands, and keeps a durable safe-boundary campaign snapshot.
     /// </summary>
-    public sealed class AscendanceRoomAuthority0100 : IDisposable
+    public sealed partial class AscendanceRoomAuthority0100 : IDisposable
     {
         private readonly AscendanceGameManager gm;
         private readonly bool persistenceEnabled;
@@ -23,7 +23,7 @@ namespace Ascendance.Online
         private string committedGameplayFingerprint;
 
         public PersistedServerRoom0100 Room { get; private set; }
-        public string ServerInstanceId { get; } = Guid.NewGuid().ToString("N");
+        public string ServerInstanceId { get; private set; } = Guid.NewGuid().ToString("N");
         public bool RestoredFromPersistence0102d { get; }
         public string PersistencePath0102d => AscendanceServerRoomPersistence0100.PathFor(Room?.RoomId);
 
@@ -85,7 +85,7 @@ namespace Ascendance.Online
                     return new ServerJoinResult0100 { Accepted = true, Code = "JOINED", Message = "Returning the existing Hero session.", Player = ClonePlayer(previous), Snapshot = Snapshot() };
                 }
             }
-            if (!gm.Heroes.TryGetValue(heroId ?? string.Empty, out var hero) || !hero.Participating)
+            if (!gm.Heroes.TryGetValue(heroId ?? string.Empty, out var hero) || (!Room.CampaignDraft0102 && !hero.Participating))
                 return JoinReject("HERO_UNAVAILABLE", "That Hero is not part of this room's active party.");
             if (Room.Players.Any(p => p != null && string.Equals(p.HeroId, hero.Id, StringComparison.OrdinalIgnoreCase)))
                 return JoinReject("HERO_CLAIMED", "That Hero already belongs to another player session.");
@@ -135,6 +135,7 @@ namespace Ascendance.Online
         public ServerCommandResult0100 Execute(ServerCommandEnvelope0100 command)
         {
             if (command == null) return Reject("BAD_COMMAND", "Command payload is missing.");
+            if (Room.CampaignDraft0102) return Reject("CAMPAIGN_NOT_STARTED", "Choose your Heroes and let the creator start the campaign first.");
             if (!string.IsNullOrWhiteSpace(command.ExpectedServerInstanceId) && !string.Equals(command.ExpectedServerInstanceId, ServerInstanceId, StringComparison.Ordinal))
                 return Reject("SERVER_RESTARTED", "Server restarted; review the current state before issuing a new command.");
             string commandKey = (command.PlayerId ?? string.Empty) + ":" + (command.CommandId ?? string.Empty);
@@ -217,7 +218,8 @@ namespace Ascendance.Online
                 PersistencePath0102d = PersistencePath0102d,
                 Campaign = AscendanceSaveSystem.CloneForAuthority0100(campaign),
                 Transient = BuildTransient(),
-                Players = Room.Players.Where(p => p != null).Select(p => new ServerPlayerView0100 { PlayerId = p.PlayerId, DisplayName = p.DisplayName, HeroId = p.HeroId, Connected = p.Connected }).ToList()
+                Players = Room.Players.Where(p => p != null).Select(p => new ServerPlayerView0100 { PlayerId = p.PlayerId, DisplayName = p.DisplayName, HeroId = p.HeroId, Connected = p.Connected, Ready = p.ReadyForCampaign0102 }).ToList(),
+                CampaignLobby = CampaignLobbySnapshot0102(null, null)
             };
         }
 

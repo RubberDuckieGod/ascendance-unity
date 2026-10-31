@@ -1,12 +1,24 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Ascendance.Online
 {
     public static class AscendanceServerRoomPersistence0100
     {
+        [DllImport("libc", SetLastError = true, EntryPoint = "chmod")]
+        private static extern int Chmod0102(string path, uint mode);
+
+        private static void ProtectUnix0102(string path, bool directory)
+        {
+            if (Application.platform != RuntimePlatform.LinuxPlayer && Application.platform != RuntimePlatform.LinuxEditor
+                && Application.platform != RuntimePlatform.OSXPlayer && Application.platform != RuntimePlatform.OSXEditor) return;
+            if (Chmod0102(path, directory ? 448u : 384u) != 0) // 0700 / 0600
+                throw new IOException("Private campaign storage permissions could not be established.");
+        }
         public static string RootPath => Path.Combine(AscendanceStoragePaths0102.PersistentDataPath, "AscendanceServerRooms0100");
 
         public static string PathFor(string roomId)
@@ -37,9 +49,8 @@ namespace Ascendance.Online
                     message = "Server room save must be a regular file.";
                     return false;
                 }
-                Directory.CreateDirectory(RootPath);
                 room.UpdatedAtUtc = DateTime.UtcNow.ToString("O");
-                File.WriteAllText(path, JsonUtility.ToJson(room, true));
+                if (!SaveFileAtomic0102(path, JsonUtility.ToJson(room, true), out message)) return false;
                 message = "Server room saved.";
                 return true;
             }
@@ -49,6 +60,47 @@ namespace Ascendance.Online
                 message = "Server room save failed: " + ex.Message;
                 return false;
             }
+        }
+
+        public static void RequireRegularPath0102(string path)
+        {
+            var item = new FileInfo(Path.GetFullPath(path));
+            FileSystemInfo component = item.Exists ? item : (FileSystemInfo)new DirectoryInfo(Path.GetFullPath(path));
+            while (component != null)
+            {
+                if (component.Exists && (component.Attributes & FileAttributes.ReparsePoint) != 0)
+                    throw new IOException("Campaign storage refuses symbolic links.");
+                component = component is FileInfo file ? file.Directory : ((DirectoryInfo)component).Parent;
+            }
+        }
+
+        public static bool SaveFileAtomic0102(string path, string json, out string message)
+        {
+            string temporary = null;
+            try
+            {
+                RequireRegularPath0102(path);
+                if (Directory.Exists(path)) throw new IOException("Campaign storage requires a regular file.");
+                string folder = Path.GetDirectoryName(Path.GetFullPath(path));
+                Directory.CreateDirectory(folder);
+                RequireRegularPath0102(folder);
+                ProtectUnix0102(RootPath, true);
+                ProtectUnix0102(folder, true);
+                temporary = path + ".tmp-" + Guid.NewGuid().ToString("N");
+                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                {
+                    ProtectUnix0102(temporary, false);
+                    byte[] bytes = new UTF8Encoding(false).GetBytes(json);
+                    stream.Write(bytes, 0, bytes.Length);
+                    stream.Flush(true);
+                }
+                if (File.Exists(path)) File.Replace(temporary, path, null); else File.Move(temporary, path);
+                temporary = null;
+                message = "Campaign saved atomically.";
+                return true;
+            }
+            catch { message = "Campaign save failed. The previous file was retained."; return false; }
+            finally { if (temporary != null) { try { File.Delete(temporary); } catch { } } }
         }
 
         public static bool TryLoad(string roomId, out PersistedServerRoom0100 room, out string message)

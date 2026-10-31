@@ -83,6 +83,7 @@ namespace Ascendance.Online
         public string PlayerId;
         public string DisplayName;
         public string HeroId;
+        public bool ReadyForCampaign0102;
         public string ReconnectToken;
         public bool Connected;
         public string JoinedAtUtc;
@@ -95,6 +96,7 @@ namespace Ascendance.Online
         public string PlayerId;
         public string DisplayName;
         public string HeroId;
+        public bool Ready;
         public bool Connected;
     }
 
@@ -142,6 +144,7 @@ namespace Ascendance.Online
         public AscendanceSaveData Campaign;
         public ServerTransientState0100 Transient;
         public List<ServerPlayerView0100> Players = new();
+        public ServerCampaignLobby0102 CampaignLobby;
     }
 
     [Serializable]
@@ -155,6 +158,13 @@ namespace Ascendance.Online
         public string UpdatedAtUtc;
         public AscendanceSaveData DurableCampaign;
         public List<ServerPlayerSession0100> Players = new();
+        public string CampaignId0102;
+        public string CampaignName0102;
+        public bool CampaignDraft0102;
+        public string CampaignOwnerToken0102;
+        public string CampaignCreatorPlayerId0102;
+        public string LastCampaignActionId0102;
+        public string LastCampaignActionCode0102;
     }
 
     public sealed class ServerJoinResult0100

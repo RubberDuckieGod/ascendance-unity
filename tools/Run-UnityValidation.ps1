@@ -84,7 +84,7 @@ try {
         -DeadlineSeconds ($TimeoutSeconds + 90) -OutputLog (Join-Path $Artifacts 'editor-console.txt')
     $result = Get-Content -LiteralPath $resultsPath -Raw | ConvertFrom-Json
     if ($result.passed -ne $true -or $result.errorCount -ne 0 -or $result.editorVersion -ne '6000.6.5f1' -or $result.buildVersion -ne '0.10.2h') { throw 'Unity verdict is failed or has unexpected versions/errors.' }
-    $expected = @{ master=54; foundation=24; router=29; network=27; reliability=22; snapshot=20; lobby=31 }
+    $expected = @{ master=54; foundation=24; router=29; network=27; reliability=22; snapshot=20; lobby=31; campaign=36 }
     $seen = @{}
     foreach ($gate in $result.gates) {
         if (!$expected.ContainsKey($gate.name) -or $seen.ContainsKey($gate.name)) { throw 'Missing, duplicate or unknown Unity runtime gate.' }
@@ -92,7 +92,7 @@ try {
         if ($gate.passed -ne $true -or $gate.expectedChecks -ne $expected[$gate.name] -or $gate.observedChecks -ne $expected[$gate.name] -or !$gate.terminalMessage) { throw "Unity gate did not complete: $($gate.name)" }
     }
     if ($seen.Count -ne $expected.Count) { throw 'Unity verdict omitted a required runtime gate.' }
-    Write-Host 'All seven Unity runtime gates completed successfully.'
+    Write-Host 'All eight Unity runtime gates completed successfully.'
     function Build-Player([string]$Target, [string]$Method, [string]$Output, [string]$Label) {
         Invoke-Editor -EditorArguments @('-batchmode','-nographics','-quit','-projectPath',$projectDir,'-buildTarget',$Target,
             '-executeMethod',$Method,'-buildOutput',$Output,'-logFile',(Join-Path $Artifacts "build-$Label.log")) `

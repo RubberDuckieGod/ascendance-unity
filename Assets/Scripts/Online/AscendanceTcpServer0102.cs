@@ -203,6 +203,8 @@ namespace Ascendance.Online
                 var response = pending.Connection.Closed
                     ? RejectNetwork(request, "CONNECTION_CLOSED", "Connection closed before its request was processed.")
                     : HandleRequest(request, pending.Connection);
+                if (response?.Snapshot != null)
+                    response.Snapshot.CampaignLobby = authority.CampaignLobbySnapshot0102(request.CampaignOwnerToken, pending.Connection.PlayerIds);
                 pending.ResponseJson = AscendanceNetworkCodec0102.SerializeResponse(response);
             }
             catch (Exception ex)
@@ -234,7 +236,12 @@ namespace Ascendance.Online
                 case "JOIN":
                 {
                     var join = authority.Join(request.DisplayName, request.HeroId, request.ReconnectToken);
-                    if (join.Accepted && join.Player != null) TrackPlayer(connection, join.Player.PlayerId);
+                    if (join.Accepted && join.Player != null)
+                    {
+                        TrackPlayer(connection, join.Player.PlayerId);
+                        authority.IdentifyCampaignCreator0102(request.CampaignOwnerToken, join.Player.PlayerId);
+                        join.Snapshot = authority.Snapshot();
+                    }
                     return new AscendanceNetworkResponse0102
                     {
                         RequestId = request.RequestId,
@@ -250,7 +257,12 @@ namespace Ascendance.Online
                 case "RECONNECT":
                 {
                     var join = authority.Reconnect(request.ReconnectToken, request.HeroId);
-                    if (join.Accepted && join.Player != null) TrackPlayer(connection, join.Player.PlayerId);
+                    if (join.Accepted && join.Player != null)
+                    {
+                        TrackPlayer(connection, join.Player.PlayerId);
+                        authority.IdentifyCampaignCreator0102(request.CampaignOwnerToken, join.Player.PlayerId);
+                        join.Snapshot = authority.Snapshot();
+                    }
                     return new AscendanceNetworkResponse0102
                     {
                         RequestId = request.RequestId,
@@ -263,6 +275,43 @@ namespace Ascendance.Online
                     };
                 }
 
+                case "CREATE_CAMPAIGN":
+                case "LOAD_CAMPAIGN":
+                case "START_CAMPAIGN":
+                {
+                    AscendanceCampaignActionResult0102 result;
+                    string previousInstance = authority.ServerInstanceId;
+                    if (op == "CREATE_CAMPAIGN") result = authority.CreateCampaign0102(request.CampaignOwnerToken, request.RequestId, connection.PlayerIds);
+                    else if (op == "LOAD_CAMPAIGN") result = authority.LoadCampaign0102(request.CampaignOwnerToken, request.RequestId, request.CampaignSlotId, connection.PlayerIds);
+                    else result = authority.StartCampaign0102(request.CampaignOwnerToken, request.RequestId, connection.PlayerIds);
+                    if (result.Accepted && op != "START_CAMPAIGN" && previousInstance != authority.ServerInstanceId) ClearTrackedPlayers0102();
+                    return new AscendanceNetworkResponse0102
+                    {
+                        RequestId = request.RequestId, Accepted = result.Accepted, Code = result.Code,
+                        Message = result.Message, Snapshot = result.Snapshot, ServerBuildVersion = AscendanceGameManager.BuildVersion
+                    };
+                }
+                case "SET_READY":
+                case "LEAVE_DRAFT":
+                {
+                    if (!BoundPlayer0102(connection, request.PlayerId)) return RejectNetwork(request, "PLAYER_NOT_BOUND", "Join this draft on this connection first.");
+                    var result = op == "LEAVE_DRAFT" ? authority.LeaveDraft0102(request.PlayerId) : authority.SetDraftReady0102(request.PlayerId, request.Ready);
+                    if (result.Accepted && op == "LEAVE_DRAFT")
+                    {
+                        playerConnections.Remove(request.PlayerId);
+                        lock (connection.Sync) connection.PlayerIds.Remove(request.PlayerId);
+                    }
+                    return new AscendanceNetworkResponse0102 { RequestId = request.RequestId, Accepted = result.Accepted,
+                        Code = result.Code, Message = result.Message, Snapshot = result.Snapshot, ServerBuildVersion = AscendanceGameManager.BuildVersion };
+                }
+                case "CHANGE_HERO":
+                {
+                    if (!BoundPlayer0102(connection, request.PlayerId)) return RejectNetwork(request, "PLAYER_NOT_BOUND", "Join this draft on this connection first.");
+                    var result = authority.ChangeDraftHero0102(request.PlayerId, request.HeroId, request.ReconnectToken);
+                    return new AscendanceNetworkResponse0102 { RequestId = request.RequestId, Accepted = result.Accepted,
+                        Code = result.Code, Message = result.Message, Player = result.Player, Snapshot = result.Snapshot,
+                        ServerBuildVersion = AscendanceGameManager.BuildVersion };
+                }
                 case "COMMAND":
                 {
                     if (request.Command == null) return RejectNetwork(request, "BAD_COMMAND", "COMMAND request contains no command envelope.");
@@ -298,6 +347,16 @@ namespace Ascendance.Online
             }
             playerConnections[playerId] = connection;
             lock (connection.Sync) connection.PlayerIds.Add(playerId);
+        }
+
+        private bool BoundPlayer0102(ConnectionContext connection, string playerId) => !string.IsNullOrEmpty(playerId)
+            && playerConnections.TryGetValue(playerId, out var owner) && ReferenceEquals(owner, connection);
+
+        private void ClearTrackedPlayers0102()
+        {
+            foreach (var connection in playerConnections.Values.Distinct())
+                lock (connection.Sync) connection.PlayerIds.Clear();
+            playerConnections.Clear();
         }
 
         private static AscendanceNetworkResponse0102 AcceptNetwork(AscendanceNetworkRequest0102 request, string code, string message, ServerStateSnapshot0100 snapshot) => new()

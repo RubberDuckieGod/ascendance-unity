@@ -32,7 +32,8 @@ namespace Ascendance.EditorTools
             new Terminal("network", "[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport completed:", 27),
             new Terminal("reliability", "[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability completed:", 22),
             new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20),
-            new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 31)
+            new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 31),
+            new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 36)
         };
 
         static AscendanceBatchValidation0102()
@@ -152,7 +153,12 @@ namespace Ascendance.EditorTools
                     SessionState.SetInt(Key + "stage", 3);
                     OnlineLobbyRegressionTestTools0102.TestLobby();
                 }
-                else if (stage == 3 && Passed(6)) Finish(true, "Every required inherited, network reliability, snapshot, and online lobby gate completed.");
+                else if (stage == 3 && Passed(6))
+                {
+                    SessionState.SetInt(Key + "stage", 4);
+                    OnlineCampaignSetupRegressionTestTools0102.TestCampaignSetup();
+                }
+                else if (stage == 4 && Passed(7)) Finish(true, "Every required inherited, network, lobby, and campaign setup gate completed.");
             }
             catch (Exception ex) { Finish(false, "Batch bridge failure: " + ex); }
         }

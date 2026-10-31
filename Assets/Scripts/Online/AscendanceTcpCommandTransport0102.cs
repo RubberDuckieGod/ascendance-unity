@@ -48,6 +48,7 @@ namespace Ascendance.Online
         private string heroId;
         private ServerStateSnapshot0100 lastSnapshot;
         private volatile string lastConnectionError = string.Empty;
+        private string campaignOwnerToken;
 
         public event Action<ServerStateSnapshot0100> SnapshotAvailable;
         public bool IsConnected => connected && !disposed;
@@ -67,6 +68,10 @@ namespace Ascendance.Online
             roomId = string.IsNullOrWhiteSpace(requestedRoomId) ? "LOCAL-ROOM" : requestedRoomId.Trim();
             displayName = string.IsNullOrWhiteSpace(playerDisplayName) ? "Player" : playerDisplayName.Trim();
             security = transportSecurity ?? new AscendanceClientTransportSecurity0102();
+            // Transport construction is on Unity's thread. Creator identity is
+            // local player data, never part of the shared room invitation.
+            string savedOwner = PlayerPrefs.GetString(CampaignOwnerKey0102(), string.Empty);
+            campaignOwnerToken = Guid.TryParseExact(savedOwner, "N", out _) ? savedOwner : string.Empty;
         }
 
         public Task<bool> ConnectAsync()
@@ -122,7 +127,8 @@ namespace Ascendance.Online
         private void PrepareHeroCredential(string requestedHeroId)
         {
             if (string.IsNullOrWhiteSpace(requestedHeroId) || credentials.ContainsKey(requestedHeroId)) return;
-            if (!string.IsNullOrWhiteSpace(heroId) && !string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase)) return;
+            if (!string.IsNullOrWhiteSpace(heroId) && !string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase)
+                && lastSnapshot?.CampaignLobby?.IsDraft != true) return;
             string key = ReconnectKey(requestedHeroId);
             string token = PlayerPrefs.GetString(key, string.Empty);
             if (!Guid.TryParseExact(token, "N", out _))
@@ -153,11 +159,92 @@ namespace Ascendance.Online
             {
                 lock (sync)
                 {
+                    if (lastSnapshot?.CampaignLobby?.IsDraft == true && !string.IsNullOrEmpty(playerId)
+                        && !string.Equals(heroId, requestedHeroId, StringComparison.OrdinalIgnoreCase))
+                        return ChangeDraftHeroPrepared0102(requestedHeroId);
                     TryResolvePrepared(requestedHeroId, out _, out var result);
                     return result;
                 }
             });
         }
+
+        private AscendanceHeroClaimResult0102 ChangeDraftHeroPrepared0102(string requestedHeroId)
+        {
+            if (!credentials.TryGetValue(requestedHeroId, out string credential))
+                return ClaimResult(false, "PLAYER_SESSION_REQUIRED", "The local Hero credential could not be prepared.", requestedHeroId);
+            try
+            {
+                var request = NewRequest("CHANGE_HERO"); request.PlayerId = playerId;
+                request.HeroId = requestedHeroId; request.ReconnectToken = credential;
+                var response = Exchange(request); CaptureSnapshot(response.Snapshot);
+                if (!response.Accepted) return ClaimResult(false, response.Code, response.Message, requestedHeroId);
+                if (response.Player == null || response.Player.PlayerId != playerId || response.Player.HeroId != requestedHeroId
+                    || response.Player.ReconnectToken != credential)
+                    return ClaimResult(false, "INVALID_HERO_SESSION", "The server did not confirm the new Hero selection.", requestedHeroId);
+                heroId = response.Player.HeroId;
+                return ClaimResult(true, response.Code, response.Message, heroId);
+            }
+            catch { CloseSocket(); return ClaimResult(false, "TRANSPORT_ERROR", "Hero selection was interrupted. Reconnect to confirm your current Hero.", requestedHeroId); }
+        }
+
+        private string CampaignOwnerKey0102() => $"ASCENDANCE_0102_CAMPAIGN_OWNER_{host}_{port}_{roomId}";
+
+        public Task<AscendanceCampaignActionResult0102> CreateCampaignAsync()
+        {
+            if (!Guid.TryParseExact(campaignOwnerToken, "N", out _))
+            {
+                campaignOwnerToken = Guid.NewGuid().ToString("N");
+                PlayerPrefs.SetString(CampaignOwnerKey0102(), campaignOwnerToken);
+                PlayerPrefs.Save();
+            }
+            return CampaignActionAsync0102("CREATE_CAMPAIGN");
+        }
+        public Task<AscendanceCampaignActionResult0102> StartCampaignAsync() => CampaignActionAsync0102("START_CAMPAIGN");
+        public Task<AscendanceCampaignActionResult0102> LoadCampaignAsync(string slotId) => CampaignActionAsync0102("LOAD_CAMPAIGN", slotId);
+        public Task<AscendanceCampaignActionResult0102> SetReadyAsync(bool ready) => CampaignActionAsync0102("SET_READY", null, ready);
+
+        private Task<AscendanceCampaignActionResult0102> CampaignActionAsync0102(string operation, string slotId = null, bool ready = false)
+        {
+            // Capture a single id before dispatch so a lost response retries
+            // the same operation rather than creating another campaign slot.
+            var request = NewRequest(operation); request.CampaignSlotId = slotId;
+            request.PlayerId = playerId; request.Ready = ready;
+            return Task.Run(() =>
+            {
+                lock (sync)
+                {
+                    for (int attempt = 0; attempt < 2; attempt++)
+                    {
+                        try
+                        {
+                            if (!IsConnected && !TryConnect(out _))
+                                return CampaignActionFailure0102("TRANSPORT_OFFLINE", lastConnectionError);
+                            if (operation == "SET_READY" && string.IsNullOrEmpty(playerId) && !string.IsNullOrEmpty(heroId))
+                            {
+                                if (!TryResolvePrepared(heroId, out _, out var claim)) return CampaignActionFailure0102(claim.Code, claim.Message);
+                                request.PlayerId = playerId;
+                            }
+                            var response = Exchange(request); CaptureSnapshot(response.Snapshot);
+                            if (response.Accepted && (operation == "CREATE_CAMPAIGN" || operation == "LOAD_CAMPAIGN"))
+                            { playerId = null; heroId = null; }
+                            if (response.Accepted && operation == "START_CAMPAIGN" && string.IsNullOrEmpty(playerId) && !string.IsNullOrEmpty(heroId))
+                                TryResolvePrepared(heroId, out _, out _);
+                            return new AscendanceCampaignActionResult0102 { Accepted = response.Accepted, Code = response.Code,
+                                Message = response.Message, Snapshot = lastSnapshot };
+                        }
+                        catch
+                        {
+                            CloseSocket();
+                            if (attempt == 1) return CampaignActionFailure0102("TRANSPORT_ERROR", "Campaign request was interrupted. Reconnect to review the current server state.");
+                        }
+                    }
+                    return CampaignActionFailure0102("TRANSPORT_ERROR", "Campaign request did not complete.");
+                }
+            });
+        }
+
+        private AscendanceCampaignActionResult0102 CampaignActionFailure0102(string code, string message) => new()
+        { Accepted = false, Code = code, Message = message, Snapshot = lastSnapshot };
 
         public bool TryResolvePlayerForHero(string requestedHeroId, out string resolvedPlayerId)
         {
@@ -356,7 +443,8 @@ namespace Ascendance.Online
 
         private AscendanceNetworkRequest0102 NewRequest(string operation) => new()
         {
-            RequestId = Guid.NewGuid().ToString("N"), Operation = operation, RoomId = roomId, RoomAccessKey = security.RoomAccessKey
+            RequestId = Guid.NewGuid().ToString("N"), Operation = operation, RoomId = roomId, RoomAccessKey = security.RoomAccessKey,
+            CampaignOwnerToken = campaignOwnerToken
         };
 
         private AscendanceNetworkResponse0102 Exchange(AscendanceNetworkRequest0102 request)
@@ -404,8 +492,32 @@ namespace Ascendance.Online
 
         public void Dispose()
         {
+            if (disposed) return;
             disposed = true;
             lifetime.Cancel();
+            if (lastSnapshot?.CampaignLobby?.IsDraft == true)
+            {
+                // Intentional Back releases a draft choice, unlike accidental
+                // network loss. Run bounded socket cleanup off Unity's thread.
+                _ = Task.Run(() =>
+                {
+                    lock (sync)
+                    {
+                        try
+                        {
+                            if (connected && stream != null && !string.IsNullOrEmpty(playerId))
+                            {
+                                var leave = NewRequest("LEAVE_DRAFT"); leave.PlayerId = playerId;
+                                AscendanceNetworkCodec0102.WriteFrame(stream, AscendanceNetworkCodec0102.SerializeRequest(leave));
+                                AscendanceNetworkCodec0102.ReadFrame(stream);
+                            }
+                        }
+                        catch { }
+                        finally { CloseSocket(); }
+                    }
+                });
+                return;
+            }
             // Interrupt worker I/O without waiting for its lock from Unity's OnDestroy.
             try { stream?.Close(); } catch { }
             try { client?.Close(); } catch { }

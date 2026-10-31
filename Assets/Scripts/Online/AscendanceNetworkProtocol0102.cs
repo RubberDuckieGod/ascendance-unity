@@ -16,6 +16,10 @@ namespace Ascendance.Online
         public string HeroId;
         public string ReconnectToken;
         public string RoomAccessKey;
+        public string CampaignOwnerToken;
+        public string CampaignSlotId;
+        public string PlayerId;
+        public bool Ready;
         public ServerCommandEnvelope0100 Command;
     }
 
