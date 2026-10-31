@@ -151,9 +151,10 @@ def verify():
     inventory = document(raw)
     tag, revision, tooling = [inventory.get(key, "") for key in ["release", "sourceRevision", "deploymentRevision"]]
     require(inventory.get("format") == 1 and inventory.get("clientOnly") is False
-            and re.fullmatch(r"unity-0\.10\.2h-online-campaigns-[0-9a-f]{7}", tag)
+            and re.fullmatch(r"unity-0\.10\.2h-online-campaigns-[0-9a-f]{7}(?:-r2)?", tag)
             and re.fullmatch(r"[0-9a-f]{40}", revision) and re.fullmatch(r"[0-9a-f]{40}", tooling)
-            and tag.endswith(revision[:7]), "Reviewed full release identity differs")
+            and tag in {"unity-0.10.2h-online-campaigns-" + revision[:7],
+                        "unity-0.10.2h-online-campaigns-" + revision[:7] + "-r2"}, "Reviewed full release identity differs")
     release_id = inventory.get("releaseId")
     require(type(release_id) is int and release_id > 0, "Missing exact reviewed new draft ID")
     linux_name, windows_name = "ascendance-linux-server-" + tag + ".zip", "ascendance-windows-" + tag + ".zip"
