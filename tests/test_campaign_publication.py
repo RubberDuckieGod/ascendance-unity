@@ -50,7 +50,7 @@ class CampaignPublication(unittest.TestCase):
                                        'sha256':publish.digest((self.root/relative).read_bytes())} for name,relative in publish.HELPERS.items()}}
         (self.assets/'release.json').write_bytes(package.canonical(descriptor))
         check = {'name':'synthetic fixture only','expected':1,'actual':1,'passed':True}
-        native = {'checks':[check],'passed':1,'failed':0,'transport':'pinned-TLS-and-room-key'}
+        native = {'kind':'actual-native-full-roster-online-campaign','checks':[check],'passed':1,'failed':0,'transport':'pinned-TLS-and-room-key'}
         migration = {**native,'originalManagedAssemblySha256':publish.OLD_H_DLL,'sourceBuildVersion':'0.10.2h',
                      'candidateSourceRevision':self.revision,'gameplayCommandsSubmittedToCopiedRoom':0}
         summary = {'format':'ascendance-full-roster-campaign-acceptance-1','runtimeSourceRevision':self.revision,
@@ -63,7 +63,9 @@ class CampaignPublication(unittest.TestCase):
                   'gates':[{'name':'fixture','passed':True,'expectedChecks':1,'observedChecks':1}]}
         reports = {'acceptance-summary.json':package.canonical(summary),'editor-gates.json':package.canonical(editor),
                    'native-full-campaign-tls.json':package.canonical(native),'native-h-campaign-restore.json':package.canonical(migration),
-                   'windows-build-provenance.json':(build.windows/'Ascendance.provenance.json').read_bytes()}
+                   'windows-build-provenance.json':(build.windows/'Ascendance.provenance.json').read_bytes(),
+                   'linux-development-build-provenance.json':package.canonical({'schemaVersion':1,'outcome':'success','exitCode':0,
+                       'source':{'vcs':'git','revision':self.revision,'dirty':False},'build':{'target':'StandaloneLinux64'}})}
         with zipfile.ZipFile(self.assets/publish.REPORTS,'x') as archive:
             for name,data in reports.items(): package.add_zip(archive,name,data)
         self.inventory = {'format':1,'releaseId':123,'release':self.tag,'sourceRevision':self.revision,'deploymentRevision':self.tooling,

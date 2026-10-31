@@ -12,7 +12,8 @@ Package LinuxServer + Windows with `tools/package_multiplayer_release.py`.
 Add a `release.json` pinned to the real runtime and deployment-tooling commits,
 then an allowlisted `full-campaign-validation-reports.zip`. Reports must include
 `acceptance-summary.json`, `editor-gates.json`, `native-full-campaign-tls.json`,
-`native-h-campaign-restore.json`, and `windows-build-provenance.json`. No campaign
+`native-h-campaign-restore.json`, `windows-build-provenance.json`, and
+`linux-development-build-provenance.json`. No campaign
 save, private invite, room key, creator token, TLS key, or license belongs in any
 asset or report. Update `SHA256SUMS` to cover the other nine assets.
 
