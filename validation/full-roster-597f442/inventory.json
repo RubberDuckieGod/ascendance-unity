@@ -1,0 +1,25 @@
+{
+  "expectedChecks": 47,
+  "files": {
+    "linux-development-client.zip": {
+      "bytes": 65532413,
+      "sha256": "72bab54457ce77afdfe6bfeed0c43021b4a9549388707b922f536d55205a93ac"
+    },
+    "linux-development-manifest.json": {
+      "bytes": 33674,
+      "sha256": "62d629d0c263af17df2255fd864a3ec2f736117a69135ba245eb76c3661e84d8"
+    },
+    "linux-server-manifest.json": {
+      "bytes": 20676,
+      "sha256": "9d3012517ca7fdca999641683c9ec5c8530db58f195205fb15ce0b43a5b8a95f"
+    },
+    "linux-server.zip": {
+      "bytes": 31940518,
+      "sha256": "4ae8b53871b6394a9fd884b092edb44206fd34712cabf7a4ab13e7f18c1daeeb"
+    }
+  },
+  "format": 1,
+  "privateDataIncluded": false,
+  "sourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+  "toolingRevision": "d9bb9fd87aa370dd3514902f867174d53498e3e0"
+}

@@ -1,0 +1,54 @@
+name: Validate full-roster online campaigns with actual native players
+
+on:
+  push:
+    branches:
+      - validation/unity-full-roster-597f442
+
+permissions:
+  contents: read
+
+env:
+  REVIEWED_VALIDATION_INVENTORY_SHA256: c130f8fc846b55f0c3a24b341d5c5fb9b7b40e1dbcda8386be20c6db28782130
+
+jobs:
+  native-campaign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install native software rendering and capture dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb imagemagick libgl1 libgl1-mesa-dri libglu1-mesa libx11-6 libxcursor1 libxrandr2 libxi6 libxinerama1 libxss1 libasound2t64
+      - name: Verify pinned archives and extract exact clean runtime privately
+        run: python3 -B .github/scripts/validate_campaign_native.py --prepare "$RUNNER_TEMP/full-campaign-input"
+      - name: Exercise actual two-client campaign creation, claims, readiness, start and archive restore
+        id: actual
+        continue-on-error: true
+        env:
+          LP_NUM_THREADS: '2'
+        run: python3 -B tools/native_campaign_setup.py --server-build-dir "$RUNNER_TEMP/full-campaign-input/LinuxServer" --client-executable "$RUNNER_TEMP/full-campaign-input/LinuxClient/AscendanceClient.x86_64" --xvfb /usr/bin/Xvfb --secure --output "$RUNNER_TEMP/full-campaign-private-results"
+      - name: Collect only allowlisted public results and screenshots
+        if: always() && steps.actual.outcome != 'skipped'
+        run: python3 -B .github/scripts/validate_campaign_native.py --collect "$RUNNER_TEMP/full-campaign-private-results" --public-output "$RUNNER_TEMP/full-campaign-public-results"
+      - name: Retain only semantic JSON and the three actual UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: actual-full-campaign-597f442
+          path: |
+            ${{ runner.temp }}/full-campaign-public-results/results.json
+            ${{ runner.temp }}/full-campaign-public-results/campaign-full-sixteen-roster.png
+            ${{ runner.temp }}/full-campaign-public-results/campaign-two-ready-nondefault-heroes.png
+            ${{ runner.temp }}/full-campaign-public-results/campaign-fresh-two-nondefault-worlds.png
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Require all 47 semantic checks and all actual UI captures
+        if: always() && steps.actual.outcome != 'skipped'
+        run: python3 -B .github/scripts/validate_campaign_native.py --verify-result "$RUNNER_TEMP/full-campaign-public-results"
+      - name: Remove isolated campaign, profiles, keys and server/player state
+        if: always()
+        run: rm -rf -- "$RUNNER_TEMP/full-campaign-private-results" "$RUNNER_TEMP/full-campaign-input"
