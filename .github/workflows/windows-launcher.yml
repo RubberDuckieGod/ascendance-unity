@@ -1,0 +1,54 @@
+name: Windows multiplayer launcher
+
+on:
+  push:
+    branches: [fix/digitalocean-multiplayer, verification/windows-launcher-h]
+    paths:
+      - tools/Play-AscendanceMultiplayer.ps1
+      - tools/Play-AscendanceMultiplayer.cmd
+      - tests/windows/Test-MultiplayerLauncher.ps1
+      - .github/workflows/windows-launcher.yml
+  pull_request:
+    paths:
+      - tools/Play-AscendanceMultiplayer.ps1
+      - tools/Play-AscendanceMultiplayer.cmd
+      - tests/windows/Test-MultiplayerLauncher.ps1
+      - .github/workflows/windows-launcher.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-powershell-51-entrypoint:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reproduce the original empty-root binding failure
+        shell: powershell
+        run: |
+          git fetch --no-tags --depth=1 origin 5b16c4c090a28258f6591de7c1b2db04e190872a
+          if ($LASTEXITCODE -ne 0) { throw 'Could not retrieve fixed baseline.' }
+          $baseline = Join-Path $env:RUNNER_TEMP 'baseline-launcher'
+          New-Item -ItemType Directory -Path $baseline | Out-Null
+          git show 5b16c4c090a28258f6591de7c1b2db04e190872a:tools/Play-AscendanceMultiplayer.ps1 | Set-Content -LiteralPath (Join-Path $baseline 'Play-AscendanceMultiplayer.ps1') -Encoding Ascii
+          Copy-Item .\tools\Play-AscendanceMultiplayer.cmd (Join-Path $baseline 'Play-AscendanceMultiplayer.cmd')
+          & .\tests\windows\Test-MultiplayerLauncher.ps1 -LauncherPath (Join-Path $baseline 'Play-AscendanceMultiplayer.ps1') -ObserveBaseline -ResultDirectory "$env:RUNNER_TEMP\baseline-results"
+      - name: Execute actual script and cmd entrypoints with synthetic native child
+        shell: powershell
+        run: |
+          & .\tests\windows\Test-MultiplayerLauncher.ps1 -ResultDirectory "$env:RUNNER_TEMP\launcher-results"
+      - name: Preserve assertion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-powershell-51-launcher
+          path: |
+            ${{ runner.temp }}/baseline-results/result.json
+            ${{ runner.temp }}/launcher-results/result.json
+            ${{ runner.temp }}/launcher-results/cmd-stdout.txt
+            ${{ runner.temp }}/launcher-results/cmd-stderr.txt
+          if-no-files-found: error

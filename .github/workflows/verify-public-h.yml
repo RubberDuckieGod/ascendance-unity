@@ -1,0 +1,31 @@
+name: Verify activated public Unity h TLS endpoint
+
+on:
+  push:
+    branches: [verification/unity-h-public-r2]
+
+permissions:
+  contents: read
+
+jobs:
+  public-readonly-hello:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify probe's protocol and privacy refusal guards
+        run: python -B -m unittest discover -s tests -p 'test_public_h_probe.py' -v
+      - name: Check fixed owner-pinned endpoint using one HELLO without a room key
+        run: python -B tools/verify_public_h_server.py --output "${{ runner.temp }}/public-h-readonly-result.json"
+      - name: Preserve public verification booleans
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-h-readonly-verification
+          path: ${{ runner.temp }}/public-h-readonly-result.json
+          if-no-files-found: error

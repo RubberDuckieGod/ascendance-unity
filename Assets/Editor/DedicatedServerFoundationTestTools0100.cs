@@ -11,9 +11,9 @@ namespace Ascendance.EditorTools
 {
     public static class DedicatedServerFoundationTestTools0100
     {
-        private const string Prefix = "[ASCENDANCE][0.10.2c SERVER]";
+        private const string Prefix = "[ASCENDANCE][0.10.2h SERVER]";
 
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Dedicated Server Authority Foundation (Inherited Play Mode Gate)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Dedicated Server Authority Foundation (Inherited Play Mode Gate)")]
         public static void Test0100()
         {
             if (!Application.isPlaying) { Debug.LogError(Prefix + " Enter Play Mode first."); return; }
@@ -31,7 +31,7 @@ namespace Ascendance.EditorTools
                 else { fail++; Debug.LogError(Prefix + " FAIL — " + label); }
             }
 
-            Check(AscendanceGameManager.BuildVersion == "0.10.2c", "BuildVersion identifies the Dedicated Server Authority Foundation milestone.");
+            Check(AscendanceGameManager.BuildVersion == "0.10.2h", "BuildVersion identifies the Dedicated Server Authority Foundation milestone.");
             Check(AscendanceServerAuthority0100.Instance != null && AscendanceServerAuthority0100.Instance.Authority != null,
                 "Stonebrook installs a server-owned authority even when running local presentation.");
             Check(AscendanceServerAuthority0100.Instance != null && !string.IsNullOrWhiteSpace(AscendanceServerAuthority0100.Instance.RoomId),
@@ -48,7 +48,7 @@ namespace Ascendance.EditorTools
                 if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) masterErrors++;
                 if (string.IsNullOrEmpty(condition) || !condition.Contains("Master Save/Load + Full Regression completed:")) return;
                 masterFinished = true;
-                masterPassed = condition.Contains("[ASCENDANCE][0.10.2c TEST] PASS") && condition.Contains("54 passed, 0 failed");
+                masterPassed = condition.Contains("[ASCENDANCE][0.10.2h TEST] PASS") && condition.Contains("54 passed, 0 failed");
             }
             Application.logMessageReceived += OnMasterLog;
             try
@@ -58,7 +58,7 @@ namespace Ascendance.EditorTools
                 while (!masterFinished && frames++ < 90000) yield return null;
             }
             finally { Application.logMessageReceived -= OnMasterLog; }
-            Check(masterFinished && masterPassed, "Locked Core Game Complete master regression remains 54 passed / 0 failed under 0.10.2c.");
+            Check(masterFinished && masterPassed, "Locked Core Game Complete master regression remains 54 passed / 0 failed under 0.10.2h.");
             Check(masterErrors == 0, "Core master regression emits zero Unity Error/Exception/Assert entries under the server foundation.");
 
             var restore = AscendanceSaveSystem.CaptureForAuthority0100(gm);
@@ -131,7 +131,7 @@ namespace Ascendance.EditorTools
                     "Reconnect token restores the same persistent player and Hero assignment.");
 
                 var snapshot = authority.Snapshot();
-                Check(snapshot != null && snapshot.Campaign != null && snapshot.Campaign.Version == "0.10.2c" && snapshot.Revision == authority.Room.Revision,
+                Check(snapshot != null && snapshot.Campaign != null && snapshot.Campaign.Version == "0.10.2h" && snapshot.Revision == authority.Room.Revision,
                     "Server snapshot carries authoritative campaign state and current room revision.");
                 Check(snapshot.Players.Count == 2 && snapshot.Players.All(x => !string.IsNullOrWhiteSpace(x.HeroId)) && typeof(ServerPlayerView0100).GetField("ReconnectToken") == null,
                     "Client-facing snapshot exposes player/Hero presence without reconnect-token fields.");
@@ -149,7 +149,7 @@ namespace Ascendance.EditorTools
                     Check(pp.Accepted && persistent.ForceDurableSave(out _), "Server authority can durably persist a safe-boundary room snapshot.");
                 }
                 bool loaded = AscendanceServerRoomPersistence0100.TryLoad(testRoomId, out var loadedRoom, out _);
-                Check(loaded && loadedRoom.DurableCampaign != null && loadedRoom.DurableCampaign.Version == "0.10.2c" && loadedRoom.Players.Count == 1,
+                Check(loaded && loadedRoom.DurableCampaign != null && loadedRoom.DurableCampaign.Version == "0.10.2h" && loadedRoom.Players.Count == 1,
                     "Persisted room reload preserves campaign state and persistent Hero ownership metadata.");
             }
             finally

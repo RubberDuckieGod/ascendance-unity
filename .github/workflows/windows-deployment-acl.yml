@@ -1,0 +1,51 @@
+name: Windows deployment ACL
+
+on:
+  push:
+    branches: [fix/digitalocean-multiplayer]
+    paths:
+      - tools/windows-deploy-multiplayer.ps1
+      - tools/windows-install-client.ps1
+      - tests/windows/**
+      - .github/workflows/windows-deployment-acl.yml
+  pull_request:
+    paths:
+      - tools/windows-deploy-multiplayer.ps1
+      - tools/windows-install-client.ps1
+      - tests/windows/**
+      - .github/workflows/windows-deployment-acl.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ordinary-user-powershell-51:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exercise ACL helpers as a real nonadministrator
+        shell: powershell
+        run: |
+          & .\tests\windows\Test-DeploymentAcl.ps1 -ResultDirectory "$env:RUNNER_TEMP\deployment-acl-results"
+      - name: Exercise client-only ACL helpers as a real nonadministrator
+        shell: powershell
+        run: |
+          & .\tests\windows\Test-ClientOnlyAcl.ps1 -ResultDirectory "$env:RUNNER_TEMP\client-only-acl-results"
+      - name: Preserve actual token and ACL results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-powershell-51-deployment-acl
+          path: ${{ runner.temp }}/deployment-acl-results/
+          if-no-files-found: error
+      - name: Preserve client-only token and ACL results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-powershell-51-client-only-acl
+          path: ${{ runner.temp }}/client-only-acl-results/
+          if-no-files-found: error

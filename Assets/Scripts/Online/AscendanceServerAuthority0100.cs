@@ -18,13 +18,34 @@ namespace Ascendance.Online
         {
             if (Authority != null || gm == null) return;
             string roomId = AscendanceDedicatedServerBootstrap0100.RequestedRoomId;
-            PersistedServerRoom0100 restored = null;
-            if (IsDedicatedServerProcess && AscendanceServerRoomPersistence0100.TryLoad(roomId, out var loaded, out _))
+            try
             {
-                restored = loaded;
-                if (loaded.DurableCampaign != null) gm.ApplySaveData(loaded.DurableCampaign);
+                PersistedServerRoom0100 restored = null;
+                if (IsDedicatedServerProcess)
+                {
+                    bool existingSave = AscendanceServerRoomPersistence0100.SavePathExists(roomId);
+                    if (AscendanceServerRoomPersistence0100.TryLoad(roomId, out var loaded, out _))
+                    {
+                        restored = loaded;
+                    }
+                    else if (existingSave || AscendanceServerRoomPersistence0100.SavePathExists(roomId))
+                    {
+                        throw new InvalidOperationException("Existing room save could not be restored; refusing to create or overwrite campaign state.");
+                    }
+                }
+                Authority = new AscendanceRoomAuthority0100(gm, roomId, IsDedicatedServerProcess, restored);
             }
-            Authority = new AscendanceRoomAuthority0100(gm, roomId, IsDedicatedServerProcess, restored);
+            catch
+            {
+                // BootStonebrook must not continue into listener initialization
+                // with a replacement fresh room after any restore rejection.
+                if (IsDedicatedServerProcess)
+                {
+                    Debug.LogError("[ASCENDANCE][SERVER] ROOM_RESTORE_REFUSED: startup did not accept the requested room state.");
+                    if (!Application.isEditor) Application.Quit(4);
+                }
+                throw;
+            }
             gm.AddLog($"SERVER AUTHORITY — room {Authority.Room.RoomId} owns campaign state at revision {Authority.Room.Revision}. No player-host authority is used.");
             if (IsDedicatedServerProcess) Debug.Log($"[ASCENDANCE][SERVER] Dedicated authority online. Room={Authority.Room.RoomId} Build={AscendanceGameManager.BuildVersion}");
         }
@@ -47,7 +68,15 @@ namespace Ascendance.Online
         private static void Install()
         {
             string[] args = Environment.GetCommandLineArgs() ?? Array.Empty<string>();
-            IsDedicatedServerProcess = Application.isBatchMode || args.Any(a => string.Equals(a, "-ascendance-server", StringComparison.OrdinalIgnoreCase));
+            // Batch-mode Editors still need the normal presentation fixture for validation.
+            // Dedicated player builds identify themselves even without a -batchmode flag.
+#if UNITY_SERVER
+            const bool dedicatedBuild = true;
+#else
+            const bool dedicatedBuild = false;
+#endif
+            IsDedicatedServerProcess = dedicatedBuild || (!Application.isEditor && Application.isBatchMode)
+                || args.Any(a => string.Equals(a, "-ascendance-server", StringComparison.OrdinalIgnoreCase));
             string envPort = Environment.GetEnvironmentVariable("ASCENDANCE_PORT");
             if (int.TryParse(envPort, out var parsedEnvPort)) RequestedPort = Mathf.Clamp(parsedEnvPort, 1, 65535);
             for (int i = 0; i < args.Length - 1; i++)

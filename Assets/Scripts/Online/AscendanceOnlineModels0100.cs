@@ -51,6 +51,10 @@ namespace Ascendance.Online
         public string RoomId;
         public string PlayerId;
         public long ExpectedRevision;
+        // Presence changes do not invalidate gameplay decisions made from the same game state.
+        public bool HasExpectedGameplayRevision;
+        public long ExpectedGameplayRevision;
+        public string ExpectedServerInstanceId;
         public ServerCommandType0100 Type;
         public string ActorHeroId;
         public string TargetId;
@@ -79,6 +83,7 @@ namespace Ascendance.Online
         public string PlayerId;
         public string DisplayName;
         public string HeroId;
+        public bool ReadyForCampaign0102;
         public string ReconnectToken;
         public bool Connected;
         public string JoinedAtUtc;
@@ -91,7 +96,15 @@ namespace Ascendance.Online
         public string PlayerId;
         public string DisplayName;
         public string HeroId;
+        public bool Ready;
         public bool Connected;
+    }
+
+    [Serializable]
+    public sealed class ServerHeroMovement0102
+    {
+        public string HeroId;
+        public string PendingLocationId;
     }
 
     [Serializable]
@@ -112,6 +125,7 @@ namespace Ascendance.Online
         public string PendingEncounterDeckControlText;
         public List<string> EncounterDeckControlOptions = new();
         public List<string> MovingHeroIds = new();
+        public List<ServerHeroMovement0102> HeroMovement = new();
         public List<string> RecentLog = new();
     }
 
@@ -121,10 +135,16 @@ namespace Ascendance.Online
         public string RoomId;
         public string BuildVersion;
         public long Revision;
+        public long GameplayRevision;
         public string ServerInstanceId;
+        public string RoomStateOrigin0102d;
+        public string RoomCreatedAtUtc0102d;
+        public string RoomUpdatedAtUtc0102d;
+        public string PersistencePath0102d;
         public AscendanceSaveData Campaign;
         public ServerTransientState0100 Transient;
         public List<ServerPlayerView0100> Players = new();
+        public ServerCampaignLobby0102 CampaignLobby;
     }
 
     [Serializable]
@@ -133,10 +153,18 @@ namespace Ascendance.Online
         public string RoomId;
         public string BuildVersion;
         public long Revision;
+        public long GameplayRevision;
         public string CreatedAtUtc;
         public string UpdatedAtUtc;
         public AscendanceSaveData DurableCampaign;
         public List<ServerPlayerSession0100> Players = new();
+        public string CampaignId0102;
+        public string CampaignName0102;
+        public bool CampaignDraft0102;
+        public string CampaignOwnerToken0102;
+        public string CampaignCreatorPlayerId0102;
+        public string LastCampaignActionId0102;
+        public string LastCampaignActionCode0102;
     }
 
     public sealed class ServerJoinResult0100

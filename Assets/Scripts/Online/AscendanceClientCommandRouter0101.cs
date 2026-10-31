@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Ascendance.Online
@@ -88,18 +91,35 @@ namespace Ascendance.Online
 
         private AscendanceGameManager gm;
         private IAscendanceCommandTransport0101 transport;
+        private IAscendanceSnapshotSource0102 snapshotSource;
+        private Action<ServerStateSnapshot0100> snapshotHandler;
+        private readonly ConcurrentQueue<Action> mainThreadWork = new();
+        private readonly HashSet<string> retiredServerInstances = new(StringComparer.Ordinal);
+        private int transportGeneration;
+        private int mainThreadId;
+        private ServerStateSnapshot0100 lastSnapshot;
 
         public IAscendanceCommandTransport0101 Transport => transport;
-        public bool IsReady => gm != null && transport != null && transport.IsConnected;
+        public bool IsReady => gm != null && transport != null && transport.IsConnected && (snapshotSource == null || HasAuthoritativeSnapshot);
         public bool IsLoopback => transport is AscendanceLoopbackTransport0101;
         public bool IsRemoteTcp => transport is AscendanceTcpCommandTransport0102;
         public long CommandsSent { get; private set; }
         public long CommandsAccepted { get; private set; }
         public ServerCommandResult0100 LastResult { get; private set; }
-        public ServerStateSnapshot0100 LastSnapshot => LastResult?.Snapshot;
+        public ServerStateSnapshot0100 LastSnapshot => lastSnapshot;
+        public bool HasAuthoritativeSnapshot { get; private set; }
+        public event Action<ServerStateSnapshot0100> SnapshotApplied;
         public event Action<ServerCommandResult0100> CommandCompleted;
 
-        private void Awake() => Instance = this;
+        private void Awake() { Instance = this; mainThreadId = Thread.CurrentThread.ManagedThreadId; }
+
+        private void Update() => PumpRemoteSnapshots0102();
+
+        public void PumpRemoteSnapshots0102()
+        {
+            RequireMainThread0102();
+            while (mainThreadWork.TryDequeue(out var work)) work();
+        }
 
         public void Initialize(AscendanceGameManager manager, AscendanceServerAuthority0100 localAuthority)
         {
@@ -111,8 +131,27 @@ namespace Ascendance.Online
         /// <summary>0.10.2 installs either loopback or the persistent remote TCP transport through this method.</summary>
         public void SetTransport(IAscendanceCommandTransport0101 next)
         {
+            RequireMainThread0102();
+            if (snapshotSource != null && snapshotHandler != null) snapshotSource.SnapshotAvailable -= snapshotHandler;
+            if (!ReferenceEquals(transport, next) && transport is IDisposable previous) previous.Dispose();
+            int generation = ++transportGeneration;
             transport = next;
             LastResult = null;
+            lastSnapshot = null;
+            HasAuthoritativeSnapshot = false;
+            retiredServerInstances.Clear();
+            snapshotSource = next as IAscendanceSnapshotSource0102;
+            if (snapshotSource != null)
+            {
+                gm?.EnterRemotePresentation0102();
+                snapshotHandler = snapshot => mainThreadWork.Enqueue(() =>
+                {
+                    if (generation == transportGeneration) ApplyRemoteSnapshot0102(snapshot);
+                });
+                snapshotSource.SnapshotAvailable += snapshotHandler;
+                ApplyRemoteSnapshot0102(snapshotSource.LatestSnapshot);
+            }
+            else gm?.ClearRemotePresentation0102();
         }
 
         public ServerCommandResult0100 Send(ServerCommandType0100 type, string actorHeroId = null, string targetId = null,
@@ -121,11 +160,14 @@ namespace Ascendance.Online
         {
             if (gm == null || transport == null)
                 return Complete(LocalReject("TRANSPORT_OFFLINE", "Client command transport is not installed."));
+            if (snapshotSource != null && !IsReady)
+                return Complete(LocalReject("SNAPSHOT_REQUIRED", "Waiting for the initial authoritative room snapshot."));
 
             string actor = ResolveActor(actorHeroId);
             if (string.IsNullOrWhiteSpace(actor))
                 return Complete(LocalReject("ACTOR_REQUIRED", "No participating Hero is available for this command."));
-            if (!transport.TryResolvePlayerForHero(actor, out var playerId) || string.IsNullOrWhiteSpace(playerId))
+            string playerId = null;
+            if (!IsRemoteTcp && (!transport.TryResolvePlayerForHero(actor, out playerId) || string.IsNullOrWhiteSpace(playerId)))
                 return Complete(LocalReject("PLAYER_SESSION_REQUIRED", "No client player session owns the requested Hero."));
 
             var command = new ServerCommandEnvelope0100
@@ -133,7 +175,10 @@ namespace Ascendance.Online
                 CommandId = Guid.NewGuid().ToString("N"),
                 RoomId = transport.RoomId,
                 PlayerId = playerId,
-                ExpectedRevision = transport.Revision,
+                ExpectedRevision = IsRemoteTcp ? LastSnapshot?.Revision ?? 0 : transport.Revision,
+                HasExpectedGameplayRevision = IsRemoteTcp && LastSnapshot != null,
+                ExpectedGameplayRevision = LastSnapshot?.GameplayRevision ?? 0,
+                ExpectedServerInstanceId = IsRemoteTcp ? LastSnapshot?.ServerInstanceId : null,
                 Type = type,
                 ActorHeroId = actor,
                 TargetId = targetId,
@@ -146,16 +191,67 @@ namespace Ascendance.Online
             };
 
             CommandsSent++;
+            if (transport is AscendanceTcpCommandTransport0102 remote)
+            {
+                int generation = transportGeneration;
+                _ = CompleteRemoteAsync0102(remote, command, generation);
+                return new ServerCommandResult0100 { Accepted = false, Code = "COMMAND_PENDING", Message = "Command submitted; awaiting the authoritative result.", Revision = command.ExpectedRevision, Snapshot = LastSnapshot };
+            }
             var result = transport.Send(command) ?? LocalReject("NO_RESULT", "Command transport returned no authoritative result.");
             if (result.Accepted) CommandsAccepted++;
             return Complete(result);
         }
 
+        private async Task CompleteRemoteAsync0102(AscendanceTcpCommandTransport0102 remote, ServerCommandEnvelope0100 command, int generation)
+        {
+            ServerCommandResult0100 result;
+            try { result = await remote.SendAsync(command).ConfigureAwait(false); }
+            catch (Exception ex) { result = new ServerCommandResult0100 { Accepted = false, Code = "TRANSPORT_ERROR", Message = ex.Message }; }
+            mainThreadWork.Enqueue(() =>
+            {
+                if (generation != transportGeneration) return;
+                if (result?.Accepted == true) CommandsAccepted++;
+                Complete(result ?? LocalReject("NO_RESULT", "Command transport returned no authoritative result."));
+            });
+        }
+
         public bool RequestStartOrEndTurn()
         {
             if (gm == null) return false;
-            string actor = gm.TurnHeroId ?? gm.SelectedHeroId;
-            return Accepted(Send(gm.TurnHero == null ? ServerCommandType0100.StartTurn : ServerCommandType0100.EndTurn, actor));
+            bool endingTurn = gm.TurnHero != null;
+            if (!endingTurn && !IsRemoteTcp) EnsureStartableHeroSelected0102g(gm.SelectedHeroId);
+            string actor = endingTurn ? gm.TurnHeroId : gm.SelectedHeroId;
+            if (transport is AscendanceTcpCommandTransport0102 remote)
+            {
+                string ownedHero = remote.HeroId;
+                // Even a legacy direct-boot client must not claim the active
+                // Hero by pressing End Turn before it has joined its own Hero.
+                if (endingTurn && (string.IsNullOrWhiteSpace(ownedHero) ||
+                    !string.Equals(ownedHero, gm.TurnHeroId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Complete(LocalReject("OTHER_HERO_TURN", "Wait for the other Hero to finish their turn."));
+                    return false;
+                }
+                if (!endingTurn && !string.IsNullOrWhiteSpace(ownedHero)) actor = ownedHero;
+            }
+            bool accepted = Accepted(Send(endingTurn ? ServerCommandType0100.EndTurn : ServerCommandType0100.StartTurn, actor));
+            if (accepted && endingTurn && !IsRemoteTcp && gm.TurnHero == null) EnsureStartableHeroSelected0102g(actor);
+            return accepted;
+        }
+
+        private bool EnsureStartableHeroSelected0102g(string afterHeroId)
+        {
+            // Local hot-seat play can hand control to the next eligible Hero.
+            // Remote clients keep their selected/owned actor and server ownership checks.
+            if (gm == null || gm.TurnHero != null || IsRemoteTcp) return false;
+            if (gm.CanStartHeroTurn(gm.SelectedHero)) return true;
+            var eligible = gm.ParticipatingHeroes.Where(gm.CanStartHeroTurn).OrderBy(h => h.PartyIndex).ToList();
+            if (eligible.Count == 0) return false;
+            int afterIndex = !string.IsNullOrWhiteSpace(afterHeroId) && gm.Heroes.TryGetValue(afterHeroId, out var previous)
+                ? previous.PartyIndex : -1;
+            var next = eligible.FirstOrDefault(h => h.PartyIndex > afterIndex) ?? eligible[0];
+            if (!string.Equals(gm.SelectedHeroId, next.Id, StringComparison.OrdinalIgnoreCase)) gm.SelectHero(next.Id);
+            return true;
         }
 
         public bool RequestMove(string locationId) => Accepted(Send(ServerCommandType0100.Move, gm?.TurnHeroId ?? gm?.SelectedHeroId, targetId: locationId));
@@ -226,6 +322,7 @@ namespace Ascendance.Online
         {
             if (gm == null) return null;
             if (!string.IsNullOrWhiteSpace(requested) && gm.Heroes.TryGetValue(requested, out var explicitHero) && explicitHero.Participating) return explicitHero.Id;
+            if (transport is AscendanceTcpCommandTransport0102 remote && !string.IsNullOrWhiteSpace(remote.HeroId) && gm.Heroes.TryGetValue(remote.HeroId, out var owned) && owned.Participating) return owned.Id;
             if (!string.IsNullOrWhiteSpace(gm.TurnHeroId) && gm.Heroes.TryGetValue(gm.TurnHeroId, out var turn) && turn.Participating) return turn.Id;
             if (!string.IsNullOrWhiteSpace(gm.SelectedHeroId) && gm.Heroes.TryGetValue(gm.SelectedHeroId, out var selected) && selected.Participating) return selected.Id;
             return gm.ParticipatingHeroes.FirstOrDefault()?.Id;
@@ -243,7 +340,8 @@ namespace Ascendance.Online
         private ServerCommandResult0100 Complete(ServerCommandResult0100 result)
         {
             LastResult = result;
-            if (IsRemoteTcp && result?.Snapshot?.Campaign != null) ApplyRemoteSnapshot0102(result.Snapshot);
+            if (snapshotSource != null && result?.Snapshot?.Campaign != null) ApplyRemoteSnapshot0102(result.Snapshot);
+            else if (result?.Snapshot != null) lastSnapshot = result.Snapshot;
             CommandCompleted?.Invoke(result);
             if (result != null && !result.Accepted)
                 Debug.LogWarning($"[ASCENDANCE][CLIENT ROUTER] SERVER REJECTED — {result.Code}: {result.Message}");
@@ -252,19 +350,40 @@ namespace Ascendance.Online
 
         private void ApplyRemoteSnapshot0102(ServerStateSnapshot0100 snapshot)
         {
-            if (gm == null || snapshot?.Campaign == null) return;
-            string localHero = gm.SelectedHeroId;
-            string localEnemy = gm.SelectedEnemyId;
-            var campaign = AscendanceSaveSystem.CloneForAuthority0100(snapshot.Campaign);
-            if (campaign == null) return;
-            gm.ApplySaveData(campaign);
-            gm.SetAuthorityCommandContext0100(localHero, localEnemy);
+            RequireMainThread0102();
+            if (gm == null || snapshot?.Campaign == null || snapshot.Transient == null || transport == null) return;
+            if (!string.Equals(snapshot.RoomId, transport.RoomId, StringComparison.OrdinalIgnoreCase)) return;
+            string instance = snapshot.ServerInstanceId ?? string.Empty;
+            if (retiredServerInstances.Contains(instance)) return;
+            if (lastSnapshot != null)
+            {
+                string previousInstance = lastSnapshot.ServerInstanceId ?? string.Empty;
+                if (string.Equals(instance, previousInstance, StringComparison.Ordinal))
+                {
+                    if (snapshot.Revision <= lastSnapshot.Revision) return;
+                }
+                else retiredServerInstances.Add(previousInstance);
+            }
+            // The transport owns wire objects. Keep a private snapshot for revision/ownership view state.
+            var applied = JsonUtility.FromJson<ServerStateSnapshot0100>(JsonUtility.ToJson(snapshot));
+            gm.ApplyAuthoritativeSnapshot0102(applied);
+            lastSnapshot = applied;
+            HasAuthoritativeSnapshot = true;
+            SnapshotApplied?.Invoke(applied);
+        }
+
+        private void RequireMainThread0102()
+        {
+            if (mainThreadId != 0 && Thread.CurrentThread.ManagedThreadId != mainThreadId)
+                throw new InvalidOperationException("Client presentation snapshots must be applied on the Unity main thread.");
         }
 
         private static bool Accepted(ServerCommandResult0100 result) => result != null && result.Accepted;
 
         private void OnDestroy()
         {
+            transportGeneration++;
+            if (snapshotSource != null && snapshotHandler != null) snapshotSource.SnapshotAvailable -= snapshotHandler;
             if (transport is IDisposable disposable) disposable.Dispose();
             if (ReferenceEquals(Instance, this)) Instance = null;
         }

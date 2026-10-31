@@ -1,0 +1,136 @@
+{
+  "format": "ascendance-windows-launcher-repair-1",
+  "runtimeBuildVersion": "0.10.2h",
+  "gameplaySourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5",
+  "correctedLauncherSourceRevision": "900ef329c3fbe4dda7df8fdd3a47f08116453f99",
+  "correctedLauncherSha256": "a4fed209aef94cde891a528b5d6d29601892b39a9b440635982fb7fab50591e1",
+  "workflow": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40807452940",
+  "baselineReproduction": {
+    "format": "ascendance-windows-launcher-1",
+    "powershellVersion": "5.1.26100.33648",
+    "baselineObservation": true,
+    "passed": 4,
+    "failed": 0,
+    "scope": "Synthetic invitation and executable; no game, server, credentials, deployment or network",
+    "checks": [
+      {
+        "name": "Original actual .cmd fails with exact empty-root binding error",
+        "passed": true
+      },
+      {
+        "name": "Original actual .cmd never launches native child",
+        "passed": true
+      },
+      {
+        "name": "Outer parent environment unchanged after actual .cmd",
+        "passed": true
+      },
+      {
+        "name": "Launcher output does not expose synthetic access key",
+        "passed": true
+      }
+    ],
+    "baselineErrorId": "ParameterArgumentValidationErrorEmptyStringNotAllowed"
+  },
+  "correctedLauncher": {
+    "format": "ascendance-windows-launcher-1",
+    "powershellVersion": "5.1.26100.33648",
+    "baselineObservation": false,
+    "passed": 20,
+    "failed": 0,
+    "scope": "Synthetic invitation and executable; no game, server, credentials, deployment or network",
+    "checks": [
+      {
+        "name": "successful launch: reached Start-Process with default sibling paths",
+        "passed": true
+      },
+      {
+        "name": "successful launch: parent access-key environment restored",
+        "passed": true
+      },
+      {
+        "name": "successful launch: expected success/failure",
+        "passed": true
+      },
+      {
+        "name": "successful launch: exact executable and working directory",
+        "passed": true
+      },
+      {
+        "name": "successful launch: invitation key only in launch environment",
+        "passed": true
+      },
+      {
+        "name": "successful launch: TLS pin endpoint room and spaced player arguments",
+        "passed": true
+      },
+      {
+        "name": "failed launch: reached Start-Process with default sibling paths",
+        "passed": true
+      },
+      {
+        "name": "failed launch: parent access-key environment restored",
+        "passed": true
+      },
+      {
+        "name": "failed launch: expected success/failure",
+        "passed": true
+      },
+      {
+        "name": "failed launch: exact executable and working directory",
+        "passed": true
+      },
+      {
+        "name": "failed launch: invitation key only in launch environment",
+        "passed": true
+      },
+      {
+        "name": "failed launch: TLS pin endpoint room and spaced player arguments",
+        "passed": true
+      },
+      {
+        "name": "Actual .cmd entrypoint exits successfully",
+        "passed": true
+      },
+      {
+        "name": "Actual .cmd launches native fixture",
+        "passed": true
+      },
+      {
+        "name": "Actual native child inherited private key",
+        "passed": true
+      },
+      {
+        "name": "Actual child working directory preserves spaces",
+        "passed": true
+      },
+      {
+        "name": "Actual child argv preserves player name TLS pin endpoint and room",
+        "passed": true
+      },
+      {
+        "name": "Native child receives no access key in argv",
+        "passed": true
+      },
+      {
+        "name": "Outer parent environment unchanged after actual .cmd",
+        "passed": true
+      },
+      {
+        "name": "Launcher output does not expose synthetic access key",
+        "passed": true
+      }
+    ]
+  },
+  "localFixtures": {
+    "launcherValidation": 10,
+    "clientInstaller": 15,
+    "failed": 0,
+    "scope": "Synthetic data and mocked downloads; no production invitation or gameplay"
+  },
+  "knownLimitations": [
+    "Windows PowerShell 5.1 Start-Process WorkingDirectory can reject paths with square brackets; such paths failed separate exploratory run40807326108 and are not certified. Use the default generated client folder or a path without brackets.",
+    "Real Windows game rendering and authenticated remote gameplay/friend sessions remain unobserved."
+  ],
+  "deploymentChanges": false
+}

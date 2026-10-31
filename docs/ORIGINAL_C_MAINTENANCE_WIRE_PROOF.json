@@ -1,0 +1,107 @@
+{
+  "scope": "Source-defined original c DTO represented by synthetic framed peer on actual loopback TCP",
+  "notCompiledOriginalNativeProof": true,
+  "noProductionConnection": true,
+  "noSaveReadsOrWrites": true,
+  "checks": [
+    {
+      "name": "Original c absent HeroMovement / durable choices allowed",
+      "expectedAccepted": true,
+      "actualAccepted": true,
+      "passed": true,
+      "refusal": null,
+      "peerErrors": []
+    },
+    {
+      "name": "Current c explicit empty movement accepted",
+      "expectedAccepted": true,
+      "actualAccepted": true,
+      "passed": true,
+      "refusal": null,
+      "peerErrors": []
+    },
+    {
+      "name": "Movement active in original authoritative list refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Resolution active refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Reaction active refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Missing authoritative movement list refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Explicit null supplemental movement refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Nonempty supplemental movement refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Game has an unresolved movement/reaction/resolution; finish it and save before activation",
+      "peerErrors": []
+    },
+    {
+      "name": "Case variant room filename identity refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Live room/save filename capitalization differs; activation not started; keep service running until the active save path is verified.",
+      "peerErrors": []
+    },
+    {
+      "name": "Different g build still refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Read-only legacy HELLO identity verification failed: {\"accepted\": true, \"code\": \"HELLO\", \"protocolVersion\": 1, \"requestIdMatches\": true, \"roomExactMatches\": true, \"roomMatches\": true, \"serverBuildVersion\": \"0.10.2g\"}",
+      "peerErrors": []
+    },
+    {
+      "name": "Wrong correlation still refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Read-only legacy HELLO identity verification failed: {\"accepted\": true, \"code\": \"HELLO\", \"protocolVersion\": 1, \"requestIdMatches\": false, \"roomExactMatches\": true, \"roomMatches\": true, \"serverBuildVersion\": \"0.10.2c\"}",
+      "peerErrors": []
+    },
+    {
+      "name": "Wrong protocol still refused",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "passed": true,
+      "refusal": "Read-only legacy HELLO identity verification failed: {\"accepted\": true, \"code\": \"HELLO\", \"protocolVersion\": 2, \"requestIdMatches\": true, \"roomExactMatches\": true, \"roomMatches\": true, \"serverBuildVersion\": \"0.10.2c\"}",
+      "peerErrors": []
+    }
+  ],
+  "passed": 12,
+  "failed": 0,
+  "status": "PASS"
+}

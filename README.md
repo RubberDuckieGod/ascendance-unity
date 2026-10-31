@@ -1,84 +1,102 @@
-# Ascendance Unity 0.10.2c — Real Network Transport + Linux Dedicated Server
+# Ascendance Unity — online Hero selection
 
-**Locked parent:** 0.10.1a Client Presentation Context Hotfix.
+The [new client-only download](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-online-lobby-8c143b7) adds **JOIN ONLINE CAMPAIGN → choose one Hero → JOIN CAMPAIGN**. It shows the existing server party, live player claims and reserved reconnects, and confirms your Hero before gameplay. It includes the corrected Windows launcher. Copy your existing private invitation into the new extracted Windows folder; the server and campaign require no update.
 
-0.10.2c replaces the loopback-only deployment ceiling with a real persistent TCP transport. Dedicated Linux/Windows builds expose the room-owned authority on a configurable TCP port; clients can swap the existing command router to a remote server with `-ascendance-connect HOST:PORT`.
+[Playing instructions, validation and limits](docs/ONLINE_HERO_LOBBY_0102H.md). Actual acceptance: 207 Unity checks, 196 helper tests and 41 two-player graphical/TLS checks against the unchanged h server. Windows gameplay/audio remain unvalidated.
 
-Run in Play Mode:
+## Earlier h server compatibility update
 
-**Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**
+This candidate preserves the reviewed 0.10.2g pending-choice schema and original Hero reconnect credentials while adding pinned TLS, private room access, background synchronization and stable cameras. Solo hot-seat play retains g’s next-Hero handoff; multiplayer clients retain ownership restrictions.
 
-For DigitalOcean deployment, see `Deploy/DigitalOcean/README.md`.
+The existing-service installer first validates the exact original managed assembly and save fields. It restores a private copied campaign with the new server on loopback and compares complete state before stopping the live service. Invalid, unsupported, unreadable or unwritable saves are refused; the target never replaces a rejected existing campaign with a fresh room.
 
-Expected 0.10.2c Play Mode totals: master **54/0**, server foundation **24/0**, client routing **29/0**, real network transport **25/0**. The network gate includes stable-idle and stable-start preconditions plus the real localhost TCP HELLO and START TURN socket command.
+Clean runtime source: `55d25c03a3279a8396d5b8954e73180e08f7a0c5`. [Matching candidate release](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-multiplayer-55d25c0). Deployment helpers have separate immutable pins. The owner activated h on DigitalOcean with the existing campaign restored. The public TLS endpoint and its certificate pin passed an independent read-only check; see [live activation evidence](docs/DIGITALOCEAN_H_ACTIVATION.json). Owner Windows gameplay and friend connections remain pending.
 
-# Ascendance Unity 0.10.1a — Client Presentation Context Hotfix
+Validation: 176 Editor checks; native plain/TLS 73/80; two independent Linux GUI clients 77; actual legacy-code migration/refusal checks 166; copied-room restoration API 13; helper fixtures 175; Windows client ACL helpers 34 on a real ordinary account. [Evidence and limitations](docs/MULTIPLAYER_ACCEPTANCE_0102H.json). Windows gameplay/audio, complete original host asset equivalence and every authored interaction are not certified.
 
-**Locked core baseline:** 0.9.0 Core Game Complete.  
-**Networking parent:** 0.10.1 Client Command Routing.
+Use the pinned on-host entrypoint described in [the existing-server guide](Deploy/DigitalOcean/UPGRADE_EXISTING.md). After verified activation, `tools/windows-install-client.ps1` installs the matching client in private LocalAppData and retrieves the invitation through ordinary interactive SCP. It also applies the separately pinned [Windows launcher repair](docs/WINDOWS_LAUNCHER_REPAIR_0102H.md); the original h ZIP requires that launcher correction before use. No merge or production deployment runs automatically.
 
-0.10.1a fixes the remaining local hot-seat routing regression in the 0.10.1 command boundary. Server execution may temporarily select the authoritative actor/target, but that execution context is now restored after every accepted or rejected command so it cannot overwrite the client's local Hero presentation selection.
+## Recovered project baseline (historical 0.10.2c)
 
-Run in Play Mode:
+This checkout contains the recovered Unity project: the uploaded Assets baseline has 156 C# scripts, MainMenu and Stonebrook scenes, four authored JSON catalogs, art, and original asset metadata. Packages and ProjectSettings pin **Unity 6000.6.5f1**. New validation and deployment helpers are maintained alongside that baseline.
 
-**Ascendance → Validation → Test 0.10.1a - Client Command Routing (Play Mode)**
+The recovered baseline was **0.10.2c**; the current reviewed runtime is **0.10.2h** as described above. Identify reliability revisions by Git commit and the build's SHA-256 manifest. The source destination is the public [RubberDuckieGod/ascendance-unity](https://github.com/RubberDuckieGod/ascendance-unity) repository; the owner explicitly authorized public publication.
 
-Expected final routing result: `28 passed, 0 failed`, after the inherited 54/0 master and 24/0 server foundation gates.
+## Earlier c candidate validation (superseded by h)
 
-# Ascendance Unity 0.10.1 — Client Command Routing
+**Historical c candidate; not the currently deployed build.** Source `eb51b2292cf433a2cbe5dabb4863f1fef993161a` passed all **176 Editor checks**, **91 helper tests** with no skips, **73 plain / 80 TLS native-server checks**, and **77 independent native Unity GUI checks**. Matching Linux server, Linux GUI development client and Windows client builds succeeded. Both GUI windows passed actual world/Hero visibility review after idle and restart. The [matching prerelease](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2c-multiplayer-eb51b22) now includes complete client/server downloads, checksums and detailed validation reports. See the [acceptance summary](docs/MULTIPLAYER_ACCEPTANCE_EB51B22.json). That c candidate was superseded by the compatible h release.
 
-0.10.1 moves player-facing gameplay requests behind a transport-agnostic client command router. Local play uses an in-process loopback transport to the same server-owned room authority; the next milestone can replace loopback with a real DigitalOcean/Linux network transport without rewriting gameplay UI call sites.
+The original service and save-path inspection preceded the h activation recorded above. Render hosts a separate JavaScript game. Windows was compiled here; the independent graphical acceptance uses Linux players. Audio output is unvalidated.
 
-# Ascendance Unity 0.10.0 — Dedicated Server Authority Foundation
+The review branch adds encrypted transport, a private invite launcher, native restart repairs, and a staged upgrade for the existing DigitalOcean service. See [validation status](docs/VALIDATION_STATUS.md) and [multiplayer review](docs/MULTIPLAYER_REVIEW.md) for the evidence and remaining gates.
 
-**Locked parent baseline:** 0.9.0 Core Game Complete.
+## Playing with friends after activation
 
-0.10.0 introduces the server-owned authority boundary without changing the proven core gameplay rules. Dedicated server processes can run headless, players retain Hero ownership across disconnect/reconnect, commands are revisioned/idempotent, and room campaign state can be persisted independently of the local campaign save.
+Players need the complete matching **0.10.2h Windows game ZIP**, not Unity or the Unity Editor. The server is active; the owner can retrieve its private invite with the client-only installer:
 
-# Ascendance Unity 0.9.0 — Core Game Complete
+1. Extract the entire Windows ZIP to a new folder. Keep `Ascendance.exe`, `Ascendance_Data`, `UnityPlayer.dll`, the other libraries, and both `Play-AscendanceMultiplayer` launcher files together.
+2. Obtain `Ascendance.invite.json` privately from the server owner. Put it beside `Play-AscendanceMultiplayer.cmd`, or supply its full path when the launcher asks. The invite contains the endpoint, room, pinned certificate and private access key; never upload it to GitHub or paste it into chat.
+3. Run **Play-AscendanceMultiplayer.cmd** and enter your own player name. Every friend uses a distinct name. Keep that name and the same Windows user profile for later reconnects.
+4. In the new client, choose **JOIN ONLINE CAMPAIGN**, select one available Hero from the server's existing party, then choose **JOIN CAMPAIGN**. Each player must control a different Hero. Local party selection does not replace the server campaign or add Heroes to its party.
 
-0.9.0 promotes the runtime-verified 0.8.62b baseline into the first Core Game Complete release candidate. This milestone intentionally adds no new gameplay mechanics. It locks the complete authored core game and adds a production-readiness gate around the already-verified runtime.
+The room supports at most **four player sessions**. A fresh default party is Garruk, Rowan, Aldric and Elara; an existing campaign may have a different party. If a Hero is already claimed, use your original session to reconnect or select an unclaimed Hero. Do not delete reconnect data to work around ownership checks. Friends use the same private invite and matching client build; a Render URL or browser room code cannot connect this Unity client.
 
-## Locked core scope
-- 16 authored Heroes
-- 323 Hero-card definitions
-- 30-card personal deck for every Hero
-- 190 Loot
-- 144 Equipment
-- 100 Search cards
-- 105 Encounters
-- 125 Enemies
-- 236 Locations
-- 200 Crafting Recipes
-- 72 Quests
-- 24 World Events
-- 6 runtime-playable campaigns
-- full campaign save/load, retry, archive, World Event, downtime, and terminal-campaign persistence
+## Setup and local checks
 
-## 0.9.0 promotion work
-- Promotes `AscendanceGameManager.BuildVersion` to `0.9.0`.
-- Promotes project PlayerSettings to `Ascendance` / bundle version `0.9.0`.
-- Keeps MainMenu -> Stonebrook as the production build scene order.
-- Re-runs the full 54-check master regression under the 0.9.0 identity.
-- Adds a Core Game Complete release gate that checks production identity, build scenes, required Resources data, catalog counts/IDs, 30-card Hero decks, six-campaign structure, Windows build tooling, zero nested Unity errors, and zero CONTENT PENDING leakage.
+Open this directory with a licensed Unity 6000.6.5f1 Editor. Install the matching Linux Dedicated Server build support for server builds and Windows standalone support for Windows clients. Unity restores the pinned packages and regenerates Library on first import; the uploaded Library cache is unnecessary.
 
-## Unity validation
-Enter Play Mode and run:
+From the project root, use Python 3.11+ for these independent checks:
 
-**Ascendance → Validation → Test 0.9.0 - Core Game Complete Gate (Play Mode)**
+```bash
+python3 -B tools/project_intake.py --require-source --report docs/INTAKE_STATUS.json
+python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+```
 
-The gate first runs the complete master regression. Expected master line:
+The intake checker verifies metadata, package-lock consistency, minimum source/data presence, and asset GUIDs. It parses historical Python verifiers without executing them. Fixture tests check the new helper behavior. These checks do not run Unity or certify gameplay. See [validation status](docs/VALIDATION_STATUS.md) and the [machine-readable intake report](docs/INTAKE_STATUS.json).
 
-`[ASCENDANCE][0.9.0 TEST] PASS — Master Save/Load + Full Regression completed: 54 passed, 0 failed.`
+## Unity validation and builds
 
-Expected final release line:
+On your Windows computer, close this project in the Editor, then run from its root in PowerShell:
 
-`[ASCENDANCE][0.9.0 RELEASE] PASS — Core Game Complete Gate completed: 16 passed, 0 failed.`
+```powershell
+& .\tools\Run-UnityValidation.ps1 -Editor 'C:\Program Files\Unity\Hub\Editor\6000.6.5f1\Editor\Unity.exe' -BuildLinuxServer -BuildWindows
+```
 
-0.9.0 is a candidate until Unity reports both lines with 0 failed and the release gate reports zero nested Unity Error/Exception/Assert entries.
+Adjust the Editor path if Unity Hub installed it elsewhere. No cloud Unity license is required when running with your existing local licensed Editor. Install the matching **Linux Dedicated Server** and **Windows Build Support** modules in Hub before requesting those builds. A compiler/toolchain may also be required by your configured scripting backend.
 
-After 0.9.0 is locked, major new work should branch from this baseline rather than altering the verified core ruleset.
+With a licensed Linux Editor available, the equivalent validation wrapper is:
 
-## 0.10.2c live-network hotfix
+```bash
+bash tools/run_unity_validation.sh \
+  --editor /absolute/path/to/6000.6.5f1/Editor/Unity
+```
 
-0.10.2c removes the 35-second server receive timeout that disconnected live clients while players were thinking. Accepted server sockets now remain persistent, TCP keepalive is enabled, and the remote client reconnects/rejoins and retries one idempotent command after a stale socket is detected.
+Add `--build-linux-server` to request the Linux server build after validation. Keep the full build output, including its data directory and UnityPlayer library. The wrapper records logs and results under `artifacts/unity-validation/`.
+
+The wrappers create isolated test-save directories and run all six gates: **master 54/0, server foundation 24/0, routing 29/0, transport 27/0, reliability 22/0, snapshot 20/0**. All six passed for clean source `eb51b2292cf433a2cbe5dabb4863f1fef993161a` with zero nested errors, using licensed Unity 6000.6.5f1. Logs and results are retained under `artifacts/unity-validation/release-eb51b22-20261025T233739Z/`. These Editor checks are separate from independent native-client acceptance. The [2026-10-24 report](docs/RUNTIME_RESULTS_20261024.json) remains evidence for the earlier `9792d16` revision only. The inherited Play Mode menu is **Ascendance → Validation → Test 0.10.2c - Real Network Transport (Play Mode)**; it requires the same explicit isolated-data environment as batch validation. Use the wrapper for the full chain.
+
+The automatic **Source intake** GitHub Action runs static/helper checks. **Licensed Unity validation** is a separate manual workflow for a Windows self-hosted runner labeled `unity-6000.6.5f1`, with an existing licensed Editor and build modules. Configure a protected `unity-validation` environment and its `UNITY_EDITOR_PATH` variable. Review the selected commit before dispatching it; public pull requests never automatically execute on that machine. This workflow becomes dispatchable after it is present on the default branch. Neither workflow deploys a server.
+
+The manual **Native multiplayer release acceptance** workflow verifies reviewed release hashes and source provenance, then runs the compiled Linux server's plain/TLS protocol suites in isolated data on a hosted Linux runner. It does not build Unity, run graphical clients or deploy. The current native runtime evidence was produced locally, not by that hosted workflow.
+
+Windows clients build through **Ascendance → Build → Build Windows Standalone 0.10.2c**. Server builds use **Build Linux Dedicated Server 0.10.2c**. The final builds used clean source `eb51b2292cf433a2cbe5dabb4863f1fef993161a`; build provenance and application-input hashes confirm that the source stayed unchanged. The development test driver is absent from the shipping Windows player and dedicated server. Later documentation-only commits do not change the runtime revision embedded in these artifacts. Native server/protocol checks, two independent Unity GUI clients, Windows compilation and DigitalOcean activation are separate acceptance gates.
+
+## Multiplayer and DigitalOcean
+
+Clients send length-prefixed UTF-8 JSON over persistent custom TCP connections, normally port **7777**. The dedicated Unity process owns room authority and executes queued gameplay commands on Unity's main thread. Local play uses the same command boundary through a loopback transport. Online clients keep processing in the background so an unfocused window can receive authoritative updates.
+
+TLS is optional in the transport for trusted local tests, and **required by the DigitalOcean upgrade**. Secure clients use TLS 1.2, require the exact SHA-256 certificate pin, and check the certificate's hostname and validity period. A 64-character hexadecimal room access key accompanies every RPC, including the initial HELLO, SNAPSHOT and PING. A failed secure connection never retries as plaintext. The shared room key controls access; it is not an individual player-account system. Socket-bound Hero ownership and reconnect credentials remain separate checks.
+
+Use the private-invite launcher for online play. It passes the access key only through the child process environment, never through command-line arguments, public launchers or URLs. Server TLS requires all three private file settings together: `ASCENDANCE_TLS_PFX_PATH`, `ASCENDANCE_TLS_PFX_PASSWORD_FILE` and `ASCENDANCE_ROOM_ACCESS_KEY_FILE`; partial configuration fails closed. With all three absent, trusted local fixtures retain plain TCP.
+
+The inspected existing target is `159.65.100.206:7777`, room `ASC-PRIMARY`, service `ascendance`. Its persistent Unity data is `/var/lib/ascendance/.config/unity3d/Ascendance/Ascendance`, including `AscendanceServerRooms0100`. The upgrade preserves that identity and data path, stages immutable code separately, and verifies an isolated TLS native-server canary before stopping the existing service. It checks that players have disconnected, creates verified code/configuration/data backups and a consistent data backup after a graceful stop, then activates and checks the secured service. Recovery restores prior code/configuration; it does not silently replace campaign saves.
+
+This cloud workspace cannot carry SSH through its network proxy; the owner's Windows SSH connection works. One pinned owner-side PowerShell command will download and verify the matching client and server, stage the release, run the private canary, back up and activate it through that existing SSH connection. It retrieves the private invite using SCP and applies a Windows ACL restricted to the owner. SSH private keys, passphrases, TLS private material, access keys and private invites stay out of Git and chat. Share the game ZIP and the private invite with trusted friends privately.
+
+Public inbound **TCP 7777** is opened only after verified secure activation. SSH remains restricted to the owner's home address; no UDP port is needed. Any later rollback to the old plaintext server must first restrict public game access. See the [deployment tools](Deploy/DigitalOcean/README.md) for the underlying artifact helpers. A staged artifact, helper fixture pass or successful port connection does not prove a production upgrade or correct gameplay.
+
+## Source and history
+
+[Source provenance](docs/SOURCE_PROVENANCE.md) identifies both archives used to recover this project. The [uploaded README](docs/history/README_uploaded.md) is preserved verbatim as historical material. Existing changelogs, validation reports, and historical Python verifiers remain in place; their saved PASS lines are not current test results.
+
+Commit source and original `.meta` files. Keep generated Library/Logs/UserSettings, personal launchers, hardcoded updaters, runtime saves, reconnect tokens, licenses, and credentials outside Git. The ignore rules cover these common paths; inspect staged content before sharing.

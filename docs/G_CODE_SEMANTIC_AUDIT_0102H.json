@@ -1,0 +1,170 @@
+{
+  "scope": "Data-only normalized IL and decompiler AST member audit of the uploaded live-server assembly against the previous 979 c native assembly. No target game assembly execution was performed by this audit.",
+  "uploadedAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
+  "baselineAssemblySha256": "f2064d8a89cdb7120d2e013ec70a87e7381792bb36cc0bbc4c7e4e6c1626d997",
+  "criticalTypesCompared": 12,
+  "baselineNamedMembers": 1402,
+  "candidateNamedMembers": 1405,
+  "identicalDecompiledMembersAfterKnownVersionLiteralNormalization": 1342,
+  "changedMembers": 78,
+  "gameManagerChangedMembers": [
+    {
+      "afterCharacters": 181,
+      "beforeCharacters": 226,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::AddLog(string)"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::ApplyAuthoritativeSnapshot0102(ServerStateSnapshot0100)",
+      "change": "removed"
+    },
+    {
+      "afterCharacters": 15646,
+      "beforeCharacters": 15403,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::ApplySaveData(AscendanceSaveData)"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::ClearRemotePresentation0102()",
+      "change": "removed"
+    },
+    {
+      "afterCharacters": 117,
+      "beforeCharacters": 214,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::EncounterDeckControlOptions()"
+    },
+    {
+      "afterCharacters": 4122,
+      "beforeCharacters": 4030,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::EndHeroTurn()"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::EnterRemotePresentation0102()",
+      "change": "removed"
+    },
+    {
+      "afterCharacters": 83,
+      "beforeCharacters": 143,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::HasPendingEncounterDeckControl()"
+    },
+    {
+      "afterCharacters": 67,
+      "beforeCharacters": 119,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::HasPendingRewardChoice()"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::HasPersistableEncounterDeckControl0102e()",
+      "change": "added"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::HasPersistableRewardChoice0102e()",
+      "change": "added"
+    },
+    {
+      "afterCharacters": 1219,
+      "beforeCharacters": 1213,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::Initialize()"
+    },
+    {
+      "afterCharacters": 409,
+      "beforeCharacters": 538,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::PendingEncounterDeckControlText()"
+    },
+    {
+      "afterCharacters": 916,
+      "beforeCharacters": 1030,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::PendingReactionText()"
+    },
+    {
+      "afterCharacters": 239,
+      "beforeCharacters": 360,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::PendingRewardChoiceText()"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::ReconcileRemoteAvatars0102(Dictionary<string, string>,HashSet<string>,Dictionary<string, bool>,Dictionary<string, bool>)",
+      "change": "removed"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::ReplaceRemoteDeck0102(List<string>,List<string>)",
+      "change": "removed"
+    },
+    {
+      "afterCharacters": 2268,
+      "beforeCharacters": 2310,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::RestoreActiveEncounterState(AscendanceSaveData)"
+    },
+    {
+      "afterCharacters": 1388,
+      "beforeCharacters": 1429,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::RestoreSearchEncounterDeckState(AscendanceSaveData)"
+    },
+    {
+      "afterCharacters": 93,
+      "beforeCharacters": 192,
+      "change": "changed",
+      "member": "Ascendance.AscendanceGameManager::RewardChoiceOptions()"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::SanitizeRestoredEncounterDeckControl0102e()",
+      "change": "added"
+    },
+    {
+      "member": "Ascendance.AscendanceGameManager::SanitizeRestoredRewardChoice0102e()",
+      "change": "added"
+    }
+  ],
+  "retainedGBehavior": [
+    "Explicit pending-state schema and presence flags, g meaningful payload predicates and validation: implemented by the separate persistence owner.",
+    "Remote server owns SaveCurrent persistence and SaveWithFeedback does not report a stale local save timestamp.",
+    "Ending a Hero turn selects the next unfinished participating nondefeated Hero when the selection became ineligible.",
+    "Local hot-seat routing skips a stale completed Hero before Start Turn and selects another eligible Hero after an accepted End Turn."
+  ],
+  "candidateFixesToKeepRatherThanRevert": [
+    "Remote snapshot application suppresses local gameplay effects and deck reconstruction.",
+    "Presentation creation waits for the authoritative snapshot, and remote startup skips local campaign resume/autosave.",
+    "Character presentation cancels old gameplay callbacks during remote state replacement.",
+    "Socket-bound ownership, reconnect proof, separate gameplay revisions, TLS and room access keys."
+  ],
+  "additionalUiFindings": {
+    "session": "g adds LaunchIntent and state-provenance logs; existing Continue/local bootstrap branching remains the same.",
+    "mainMenu": "g adds diagnostics and the version label only.",
+    "hud": "Only the displayed version differs.",
+    "saveFeedback": "Functional remote-server-owned save feedback guard is required."
+  },
+  "reconnectCompatibility": {
+    "samePreferenceKey": true,
+    "storedTokenFormat": "32-hex GUID token in both g and candidate",
+    "requiresPreservation": [
+      "Company/product identity",
+      "Endpoint host and port",
+      "Exact room spelling",
+      "Hero identity"
+    ]
+  },
+  "handoffImplementation": {
+    "files": [
+      "Assets/Scripts/Core/AscendanceGameManager.cs",
+      "Assets/Scripts/Online/AscendanceClientCommandRouter0101.cs",
+      "Assets/Editor/ClientCommandRoutingTestTools0101.cs"
+    ],
+    "onlineScope": "Router auto-selection disabled for remote TCP clients; existing actor/ownership semantics remain enforced.",
+    "regression": "Existing 29-count router gate deliberately reselects completed Aldric, then requires Lyra selected/active, exactly 3 Actions and distinct persistent ownership session. Previous presentation-selection assertion remains.",
+    "validation": "git diff --check passed. Unity compilation and runtime gate execution are delegated to the root builder; this audit does not claim them."
+  },
+  "limitations": [
+    "AST text equality and normalized fingerprints are evidence for compared code, not a formal behavior-equivalence proof.",
+    "Only twelve critical runtime classes were decompiled member by member; separate metadata audit covers serialized types.",
+    "Installed host assets, scenes, prefabs, content catalogs and configuration were not supplied or certified.",
+    "No production deployment, account access or save read/write occurred."
+  ]
+}

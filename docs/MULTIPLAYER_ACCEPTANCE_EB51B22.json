@@ -1,0 +1,82 @@
+{
+  "format": 1,
+  "runtimeSourceRevision": "eb51b2292cf433a2cbe5dabb4863f1fef993161a",
+  "editor": "6000.6.5f1",
+  "suites": {
+    "editor": {
+      "passed": 176,
+      "failed": 0,
+      "gates": {
+        "master": 54,
+        "foundation": 24,
+        "router": 29,
+        "network": 27,
+        "reliability": 22,
+        "snapshot": 20
+      }
+    },
+    "nativePlain": {
+      "passed": 73,
+      "failed": 0
+    },
+    "nativePinnedTls": {
+      "passed": 80,
+      "failed": 0
+    },
+    "independentUnityGui": {
+      "passed": 77,
+      "failed": 0,
+      "unfocusedIdleSeconds": 36.000442161996034,
+      "cameraDrift": {
+        "Aldric": 0.0,
+        "Rowan": 0.0
+      }
+    },
+    "helperAndPackaging": {
+      "passed": 91,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "builds": [
+    "Linux dedicated server",
+    "Linux development acceptance player",
+    "Windows release player"
+  ],
+  "sourceIntakeActions": [
+    "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40245643391",
+    "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/40245638779"
+  ],
+  "digitalOcean": {
+    "activation": "NOT_PERFORMED",
+    "firewall": "Unchanged; owner-only game and SSH access",
+    "existingDataPath": "/var/lib/ascendance/.config/unity3d/Ascendance/Ascendance"
+  },
+  "notValidated": [
+    "Execution on Windows",
+    "Audio device output",
+    "Public DigitalOcean client route",
+    "Every authored Hero/card/item/equipment/loot/quest interaction"
+  ],
+  "fixedDefects": [
+    {
+      "name": "Native save/restart blocks turns",
+      "reproduce": "Save a native room with no pending choices, restart, then StartTurn. JsonUtility materialized null choices as empty DTOs.",
+      "expected": "No pending choice; turn may start.",
+      "change": "Normalize only wholly empty optional DTOs, preserving all nonempty partial choice data."
+    },
+    {
+      "name": "Partial pending choice with null Mode crashes",
+      "reproduce": "Restore a meaningful pending reward/deck choice whose Mode is null, then build choice options.",
+      "expected": "Preserve choice without a null dereference.",
+      "change": "Guard null/empty Mode in two search choice readers; ten preservation cases pass."
+    },
+    {
+      "name": "Unfocused camera pans world out of view",
+      "reproduce": "Run an online client in background with pointer outside/at a window edge for 36 seconds.",
+      "expected": "Camera stays still while networking continues.",
+      "change": "Ignore camera input without application focus and edge scrolling outside window bounds; measured zero drift and visible terrain/Heroes."
+    }
+  ],
+  "security": "DigitalOcean upgrade requires pinned TLS and private room access key; trusted isolated legacy fixtures retain plain TCP."
+}

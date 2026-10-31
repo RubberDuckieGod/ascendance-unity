@@ -1,12 +1,57 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-UserSettings/
-MemoryCaptures/
+# Unity regenerates these local caches and outputs. Keep Assets and its .meta files.
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/UserSettings/
+/MemoryCaptures/
+/artifacts/
+*.log
+
+# Generated editor and Python files.
 .vs/
 .idea/
 *.csproj
 *.sln
+*.suo
+*.user
+*.userprefs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Uploaded personal launch/deployment wrappers stay in the original archives.
+/Launch-Ascendance-*.bat
+/Deploy-Ascendance-*.ps1
+/*.zip
+/*.7z
+
+# Runtime campaign state and generated release manifests are local artifacts.
+/AscendanceServerRooms0100/
+/campaign_q001.json
+/PlayerPrefs*
+/reconnect-tokens*.json
+/linux-server-manifest*.json
+
+# Local accounts, licenses, and credentials. Review staged files before sharing.
+/.unity-cli/
+/.unity-config/
+/.ssh/
+.env
+.env.*
+!.env.example
+!.env.template
+*.ulf
+*.alf
+*.pem
+*.key
+*.p12
+*.pfx
+/credentials*.json
+/secrets*.json
+/github-token*
+/digitalocean-token*

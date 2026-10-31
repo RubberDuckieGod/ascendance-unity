@@ -57,6 +57,11 @@ namespace Ascendance
         public List<string> CraftingSpecialResults0855 = new();
         public List<string> CraftingUnlockFlags0855 = new();
         public List<string> DefeatedEnemyTemplateIds0855 = new();
+        // 0.10.2f/g presence flags distinguish an absent choice from JsonUtility's default DTO.
+        // Schema 0 remains the lossless bridge for meaningful older/extension payloads.
+        public int PendingStateSchema0102f;
+        public bool HasPendingEncounterDeckControl0102f;
+        public bool HasPendingRewardChoice0102f;
         public EncounterDeckControlSaveData PendingEncounterDeckControl;
         public RewardChoiceSaveData PendingRewardChoice;
         public int EncounterSpawnSerial;

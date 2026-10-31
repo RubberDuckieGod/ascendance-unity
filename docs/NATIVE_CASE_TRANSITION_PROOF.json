@@ -1,0 +1,297 @@
+{
+  "scope": "Verified compiled Linux servers with isolated synthetic saves and loopback clients",
+  "noProductionConnection": true,
+  "noExistingDataRead": true,
+  "checks": [
+    {
+      "name": "exact case: old native bootstrap succeeds",
+      "expected": [
+        true,
+        "HELLO",
+        "0.10.2c"
+      ],
+      "actual": [
+        true,
+        "HELLO",
+        "0.10.2c"
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: malformed fixture restores live authority spelling",
+      "expected": "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+      "actual": "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+      "passed": true
+    },
+    {
+      "name": "exact case: restored native gold sentinel",
+      "expected": 111,
+      "actual": 111,
+      "passed": true
+    },
+    {
+      "name": "exact case: synthetic player joins real authority",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "exact case: real native reward command accepted",
+      "expected": [
+        true,
+        136
+      ],
+      "actual": [
+        true,
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: real native deck control clears pending encounter",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: current active file contains real awarded gold",
+      "expected": 136,
+      "actual": 136,
+      "passed": true
+    },
+    {
+      "name": "exact case: active file exact room/build/revisions match HELLO",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "exact case: graceful stop preserves active progress",
+      "expected": [
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "actual": [
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: new native build using exact active room preserves progress",
+      "expected": [
+        true,
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "actual": [
+        true,
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: new native runtime persists to same exact active file",
+      "expected": [
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "actual": [
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: old native rollback with exact active room preserves newest progress",
+      "expected": [
+        true,
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "actual": [
+        true,
+        "CASE-UPGRADE-5B886519A21A4EB4B42F64F5B8BB4690",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact case: rollback still persists awarded gold",
+      "expected": 136,
+      "actual": 136,
+      "passed": true
+    },
+    {
+      "name": "case drift: old native bootstrap succeeds",
+      "expected": [
+        true,
+        "HELLO",
+        "0.10.2c"
+      ],
+      "actual": [
+        true,
+        "HELLO",
+        "0.10.2c"
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: malformed fixture restores live authority spelling",
+      "expected": "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+      "actual": "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+      "passed": true
+    },
+    {
+      "name": "case drift: restored native gold sentinel",
+      "expected": 111,
+      "actual": 111,
+      "passed": true
+    },
+    {
+      "name": "case drift: synthetic player joins real authority",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "case drift: real native reward command accepted",
+      "expected": [
+        true,
+        136
+      ],
+      "actual": [
+        true,
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: real native deck control clears pending encounter",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: current active file contains real awarded gold",
+      "expected": 136,
+      "actual": 136,
+      "passed": true
+    },
+    {
+      "name": "case drift: active file exact room/build/revisions match HELLO",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "case drift: original CLI alias remains stale",
+      "expected": 111,
+      "actual": 111,
+      "passed": true
+    },
+    {
+      "name": "case drift: original stale file is byte-for-byte untouched",
+      "expected": "b4fc276cb9f7870e2ee753933bdf80e0c8ba8a8887c34504fed40a1dd45b416b",
+      "actual": "b4fc276cb9f7870e2ee753933bdf80e0c8ba8a8887c34504fed40a1dd45b416b",
+      "passed": true
+    },
+    {
+      "name": "case drift: graceful stop preserves active progress",
+      "expected": [
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "actual": [
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: new native build using exact active room preserves progress",
+      "expected": [
+        true,
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "actual": [
+        true,
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: new native runtime persists to same exact active file",
+      "expected": [
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "actual": [
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: old native rollback with exact active room preserves newest progress",
+      "expected": [
+        true,
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "actual": [
+        true,
+        "case-upgrade-cc3c824877844e1bae6f781c33082d1b",
+        136
+      ],
+      "passed": true
+    },
+    {
+      "name": "case drift: rollback still persists awarded gold",
+      "expected": 136,
+      "actual": 136,
+      "passed": true
+    },
+    {
+      "name": "case drift: upgrade and rollback never rewrite stale alias",
+      "expected": "b4fc276cb9f7870e2ee753933bdf80e0c8ba8a8887c34504fed40a1dd45b416b",
+      "actual": "b4fc276cb9f7870e2ee753933bdf80e0c8ba8a8887c34504fed40a1dd45b416b",
+      "passed": true
+    },
+    {
+      "name": "case drift: stale alias never replaces current authoritative progress",
+      "expected": [
+        111,
+        136
+      ],
+      "actual": [
+        111,
+        136
+      ],
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "No systemd, DigitalOcean, Windows player, graphical, or audio acceptance is claimed.",
+    "The malformed saved-room casing defect remains in the native runtime; this proves the supported exact active-room launch plan."
+  ],
+  "passed": 30,
+  "failed": 0,
+  "status": "PASS",
+  "durationSeconds": 6.417
+}

@@ -12,9 +12,9 @@ namespace Ascendance.EditorTools
 {
     public static class ClientCommandRoutingTestTools0101
     {
-        private const string Prefix = "[ASCENDANCE][0.10.2c ROUTER]";
+        private const string Prefix = "[ASCENDANCE][0.10.2h ROUTER]";
 
-        [MenuItem("Ascendance/Validation/Test 0.10.2c - Client Command Routing (Inherited Play Mode Gate)")]
+        [MenuItem("Ascendance/Validation/Test 0.10.2h - Client Command Routing (Inherited Play Mode Gate)")]
         public static void Test0101()
         {
             if (!Application.isPlaying) { Debug.LogError(Prefix + " Enter Play Mode first."); return; }
@@ -33,7 +33,7 @@ namespace Ascendance.EditorTools
             }
 
             var router = AscendanceClientCommandRouter0101.Instance;
-            Check(AscendanceGameManager.BuildVersion == "0.10.2c", "BuildVersion identifies the Client Command Routing milestone.");
+            Check(AscendanceGameManager.BuildVersion == "0.10.2h", "BuildVersion identifies the Client Command Routing milestone.");
             Check(router != null && router.IsReady, "Stonebrook installs an active client gameplay command router.");
             Check(router != null && router.IsLoopback, "Local presentation uses loopback transport through the server authority instead of bypassing it.");
             Check(typeof(IAscendanceCommandTransport0101).IsInterface && typeof(AscendanceLoopbackTransport0101).GetInterfaces().Contains(typeof(IAscendanceCommandTransport0101)),
@@ -84,7 +84,7 @@ namespace Ascendance.EditorTools
                 if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) foundationErrors++;
                 if (string.IsNullOrEmpty(condition) || !condition.Contains("Dedicated Server Authority Foundation completed:")) return;
                 foundationFinished = true;
-                foundationPassed = condition.Contains("[ASCENDANCE][0.10.2c SERVER] PASS") && condition.Contains("24 passed, 0 failed");
+                foundationPassed = condition.Contains("[ASCENDANCE][0.10.2h SERVER] PASS") && condition.Contains("24 passed, 0 failed");
             }
             Application.logMessageReceived += OnFoundationLog;
             try
@@ -95,7 +95,7 @@ namespace Ascendance.EditorTools
             }
             finally { Application.logMessageReceived -= OnFoundationLog; }
             Check(foundationFinished && foundationPassed, "Dedicated Server Authority Foundation remains 24 passed / 0 failed under client routing.");
-            Check(foundationErrors == 0, "Inherited server/core regression emits zero Unity Error/Exception/Assert entries under 0.10.2c.");
+            Check(foundationErrors == 0, "Inherited server/core regression emits zero Unity Error/Exception/Assert entries under 0.10.2h.");
 
             var restore = AscendanceSaveSystem.CaptureForAuthority0100(gm);
             var previousTransport = router?.Transport;
@@ -115,8 +115,8 @@ namespace Ascendance.EditorTools
                     "START TURN travels UI/client -> router -> loopback transport -> server authority -> rules engine.");
                 Check(isolated.Room.Players.Count == 1 && isolated.Room.Players[0].HeroId == "Aldric" && isolated.Room.Players[0].Connected,
                     "Loopback creates a persistent player/Hero ownership session before the first routed command.");
-                Check(router.LastSnapshot != null && router.LastSnapshot.BuildVersion == "0.10.2c" && router.LastSnapshot.Revision == isolated.Room.Revision,
-                    "Accepted client command returns an authoritative 0.10.2c snapshot at the committed room revision.");
+                Check(router.LastSnapshot != null && router.LastSnapshot.BuildVersion == "0.10.2h" && router.LastSnapshot.Revision == isolated.Room.Revision,
+                    "Accepted client command returns an authoritative 0.10.2h snapshot at the committed room revision.");
 
                 long sentBeforeSelection = router.CommandsSent;
                 gm.SelectHero("Lyra");
@@ -127,9 +127,11 @@ namespace Ascendance.EditorTools
                 Check(endedAldric && gm.TurnHeroId == null, "END TURN uses authoritative TurnHero ownership even while the client is viewing another Hero.");
                 Check(gm.SelectedHeroId == "Lyra",
                     "Successful authoritative commands restore the client's local Hero presentation selection after temporary server execution context.");
+                gm.SelectHero("Aldric"); // Completed selection must not block the next local hot-seat Hero.
                 bool startedLyra = router.RequestStartOrEndTurn();
-                Check(startedLyra && gm.TurnHeroId == "Lyra" && isolated.Room.Players.Count == 2 && isolated.Room.Players.Any(p => p.HeroId == "Lyra"),
-                    "Local hot-seat compatibility routes a second Hero through a distinct server-owned player session.");
+                Check(startedLyra && gm.TurnHeroId == "Lyra" && gm.SelectedHeroId == "Lyra" && gm.Heroes["Lyra"].Actions == 3
+                    && isolated.Room.Players.Count == 2 && isolated.Room.Players.Any(p => p.HeroId == "Lyra"),
+                    "Local hot-seat handoff skips a completed Hero selection and grants the next Hero 3 Actions through a distinct server-owned session.");
                 int roundBeforeWorldPhase = gm.Round;
                 bool endedLyra = router.RequestStartOrEndTurn();
                 Check(endedLyra && gm.TurnHeroId == null, "Second Hero END TURN is committed through the same authoritative boundary.");
