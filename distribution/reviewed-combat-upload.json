@@ -1,0 +1,73 @@
+{
+  "assets": {
+    "ascendance-linux-client-combat-validation-2bcf6ef.zip": {
+      "bytes": 65537184,
+      "chunks": [
+        {
+          "bytes": 16777216,
+          "path": "distribution/combat-native-2bcf6ef/asset2-part00.bin",
+          "sha256": "9a5410c9896d0f59ce7290b7ae79ce5f1310e658ce2d6b4e8be43d41483c6a42"
+        },
+        {
+          "bytes": 16777216,
+          "path": "distribution/combat-native-2bcf6ef/asset2-part01.bin",
+          "sha256": "e4fa6d8ac4bfa16fe44ec388dc3d3cad7b784a0da590e444d97ad9db2b30f06c"
+        },
+        {
+          "bytes": 16777216,
+          "path": "distribution/combat-native-2bcf6ef/asset2-part02.bin",
+          "sha256": "285386ff27d13ddc622e5d3488639dc0697d8219e20749a56d87d647336af384"
+        },
+        {
+          "bytes": 15205536,
+          "path": "distribution/combat-native-2bcf6ef/asset2-part03.bin",
+          "sha256": "2ea9587c2e1031cb7d8a3b019323649215b97f782aed596476a7dc450d474bf9"
+        }
+      ],
+      "sha256": "5e63f87d1e11527f0eee273275534238f916d2e0a626a259e3f1a8803e2cf618"
+    },
+    "ascendance-linux-server-combat-validation-2bcf6ef.zip": {
+      "bytes": 31942897,
+      "chunks": [
+        {
+          "bytes": 16777216,
+          "path": "distribution/combat-native-2bcf6ef/asset0-part00.bin",
+          "sha256": "c799a7d347f9962760f32038cf387877a5107eac9475b7164da595f3d39b9121"
+        },
+        {
+          "bytes": 15165681,
+          "path": "distribution/combat-native-2bcf6ef/asset0-part01.bin",
+          "sha256": "87ce3e6afe3ed22091657433253d3332c739c5fecff86e0395192522ae48024b"
+        }
+      ],
+      "sha256": "2757666171772f5628d95e6e2043c87d838ae2866a3e80ed27f51635b4ba4eaf"
+    },
+    "linux-client-manifest.json": {
+      "bytes": 33674,
+      "chunks": [
+        {
+          "bytes": 33674,
+          "path": "distribution/combat-native-2bcf6ef/asset3-part00.bin",
+          "sha256": "7a3e7204386bb306c35b4a3394f07eb86fb340bd2ff971b81d2c0ed7038a6ad3"
+        }
+      ],
+      "sha256": "7a3e7204386bb306c35b4a3394f07eb86fb340bd2ff971b81d2c0ed7038a6ad3"
+    },
+    "linux-server-manifest.json": {
+      "bytes": 20676,
+      "chunks": [
+        {
+          "bytes": 20676,
+          "path": "distribution/combat-native-2bcf6ef/asset1-part00.bin",
+          "sha256": "af6a2b4cfad27ede8ad4d9e990b54a9a8cea464895dd2ec0dd0f9ca01858f76c"
+        }
+      ],
+      "sha256": "af6a2b4cfad27ede8ad4d9e990b54a9a8cea464895dd2ec0dd0f9ca01858f76c"
+    }
+  },
+  "format": "ascendance-reviewed-combat-upload-1",
+  "releaseId": 430159712,
+  "releaseTag": "combat-validation-2bcf6ef",
+  "repository": "RubberDuckieGod/ascendance-unity",
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585"
+}

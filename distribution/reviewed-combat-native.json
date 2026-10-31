@@ -1,0 +1,8 @@
+{
+  "client_archive_sha256": "5e63f87d1e11527f0eee273275534238f916d2e0a626a259e3f1a8803e2cf618",
+  "client_manifest_sha256": "7a3e7204386bb306c35b4a3394f07eb86fb340bd2ff971b81d2c0ed7038a6ad3",
+  "release_tag": "combat-validation-2bcf6ef",
+  "server_archive_sha256": "2757666171772f5628d95e6e2043c87d838ae2866a3e80ed27f51635b4ba4eaf",
+  "server_manifest_sha256": "af6a2b4cfad27ede8ad4d9e990b54a9a8cea464895dd2ec0dd0f9ca01858f76c",
+  "source_revision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585"
+}

@@ -34,7 +34,42 @@ permissions:
   contents: read
 
 jobs:
+  upload-reviewed-combat:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      REVIEWED_COMBAT_UPLOAD_SHA256: '783de9f301f053ebb907af025c30c9e1c2e443163ce6ae0200550c25f307b50a'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: RubberDuckieGod/ascendance-unity
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify the four frozen builds and fill only their existing private test draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          python3 -B tools/upload_reviewed_combat_assets.py --inventory distribution/reviewed-combat-upload.json --sha256 "$REVIEWED_COMBAT_UPLOAD_SHA256" --output "$RUNNER_TEMP/ascendance-combat-reviewed" --upload
+      - name: Transfer only verified public build files to the read-only native job
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-combat-native-input
+          path: |
+            ${{ runner.temp }}/ascendance-combat-reviewed/ascendance-linux-server-combat-validation-2bcf6ef.zip
+            ${{ runner.temp }}/ascendance-combat-reviewed/linux-server-manifest.json
+            ${{ runner.temp }}/ascendance-combat-reviewed/ascendance-linux-client-combat-validation-2bcf6ef.zip
+            ${{ runner.temp }}/ascendance-combat-reviewed/linux-client-manifest.json
+          if-no-files-found: error
+          retention-days: 2
   native-combat:
+    needs: upload-reviewed-combat
+    if: always() && (github.event_name == 'workflow_dispatch' || needs.upload-reviewed-combat.result == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -44,9 +79,8 @@ jobs:
       SERVER_MANIFEST_SHA256: ${{ inputs.server_manifest_sha256 }}
       CLIENT_ARCHIVE_SHA256: ${{ inputs.client_archive_sha256 }}
       CLIENT_MANIFEST_SHA256: ${{ inputs.client_manifest_sha256 }}
-      # Filled with the exact reviewed distribution/reviewed-combat-native.json
-      # hash once both clean build artifacts have been packaged. Empty refuses.
-      REVIEWED_COMBAT_INPUT_SHA256: ''
+      # The dedicated validation branch freezes exactly six reviewed inputs.
+      REVIEWED_COMBAT_INPUT_SHA256: '9ad8e5fe1490f5ff91d66d0476941da77774f9382a296ffdc1b3e782a131ee5c'
       LP_NUM_THREADS: '2'
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
@@ -77,6 +111,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install --yes --no-install-recommends xvfb libgl1-mesa-dri libglx-mesa0 libxrandr2 libxcursor1 libxi6 libxinerama1 libasound2t64
       - name: Download exact assets from the reviewed repository release
+        if: github.event_name == 'workflow_dispatch'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -84,8 +119,13 @@ jobs:
           set -euo pipefail
           umask 077
           mkdir "$RUNNER_TEMP/ascendance-combat-input"
-          mkdir "$RUNNER_TEMP/ascendance-combat-reports"
           gh release download "$RELEASE_TAG" --repo RubberDuckieGod/ascendance-unity --dir "$RUNNER_TEMP/ascendance-combat-input" --pattern "ascendance-linux-server-$RELEASE_TAG.zip" --pattern linux-server-manifest.json --pattern "ascendance-linux-client-$RELEASE_TAG.zip" --pattern linux-client-manifest.json
+      - name: Receive the exact verified builds without release write permissions
+        if: github.event_name == 'push'
+        uses: actions/download-artifact@v4
+        with:
+          name: reviewed-combat-native-input
+          path: ${{ runner.temp }}/ascendance-combat-input
       - name: Verify hashes, full file manifests, safe archives and clean build provenance
         shell: bash
         run: |
