@@ -28,7 +28,7 @@ class CampaignPublication(unittest.TestCase):
         self.root.mkdir()
         self.revision = build.sha
         self.tooling = 'b'*40
-        self.tag = 'unity-0.10.2h-online-campaigns-' + self.revision[:7]
+        self.tag = 'unity-0.10.2h-online-campaigns-' + self.revision[:7] + getattr(self,'tag_suffix','')
         self.assets = self.root/'distribution'/self.tag
         self.assets.parent.mkdir()
         build.args.output = self.assets
@@ -102,6 +102,15 @@ class CampaignPublication(unittest.TestCase):
         self.assertEqual(assets,self.assets)
         self.assertEqual(before,{p.name:p.read_bytes() for p in self.assets.iterdir()})
         self.assertEqual(self.git_mock.call_count,len(publish.HELPERS))
+
+    def test_second_helper_revision_retains_exact_runtime_and_full_package_checks(self):
+        fixture=CampaignPublication('test_complete_full_release_is_verified_without_network_or_mutation')
+        fixture.tag_suffix='-r2'
+        fixture.setUp();self.addCleanup(fixture.doCleanups)
+        inventory,assets=publish.verify()
+        self.assertEqual(inventory['sourceRevision'],fixture.revision)
+        self.assertTrue(inventory['release'].endswith('-r2'))
+        self.assertEqual(assets,fixture.assets)
 
     def test_missing_freeze_or_changed_inventory_refused(self):
         for checksum in ['', '0'*64]:
