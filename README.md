@@ -1,4 +1,10 @@
-# Ascendance Unity 0.10.2h — reviewed g campaign compatibility and secure multiplayer
+# Ascendance Unity — online Hero selection
+
+The [new client-only download](https://github.com/RubberDuckieGod/ascendance-unity/releases/tag/unity-0.10.2h-online-lobby-8c143b7) adds **JOIN ONLINE CAMPAIGN → choose one Hero → JOIN CAMPAIGN**. It shows the existing server party, live player claims and reserved reconnects, and confirms your Hero before gameplay. It includes the corrected Windows launcher. Copy your existing private invitation into the new extracted Windows folder; the server and campaign require no update.
+
+[Playing instructions, validation and limits](docs/ONLINE_HERO_LOBBY_0102H.md). Actual acceptance: 207 Unity checks, 196 helper tests and 41 two-player graphical/TLS checks against the unchanged h server. Windows gameplay/audio remain unvalidated.
+
+## Earlier h server compatibility update
 
 This candidate preserves the reviewed 0.10.2g pending-choice schema and original Hero reconnect credentials while adding pinned TLS, private room access, background synchronization and stable cameras. Solo hot-seat play retains g’s next-Hero handoff; multiplayer clients retain ownership restrictions.
 
@@ -31,7 +37,7 @@ Players need the complete matching **0.10.2h Windows game ZIP**, not Unity or th
 1. Extract the entire Windows ZIP to a new folder. Keep `Ascendance.exe`, `Ascendance_Data`, `UnityPlayer.dll`, the other libraries, and both `Play-AscendanceMultiplayer` launcher files together.
 2. Obtain `Ascendance.invite.json` privately from the server owner. Put it beside `Play-AscendanceMultiplayer.cmd`, or supply its full path when the launcher asks. The invite contains the endpoint, room, pinned certificate and private access key; never upload it to GitHub or paste it into chat.
 3. Run **Play-AscendanceMultiplayer.cmd** and enter your own player name. Every friend uses a distinct name. Keep that name and the same Windows user profile for later reconnects.
-4. In the game, choose **NEW GAME**, select a Hero that is available in the server's existing party, then choose **BEGIN ADVENTURE**. Each player must control a different Hero. Local party selection does not replace the server campaign or add Heroes to its party.
+4. In the new client, choose **JOIN ONLINE CAMPAIGN**, select one available Hero from the server's existing party, then choose **JOIN CAMPAIGN**. Each player must control a different Hero. Local party selection does not replace the server campaign or add Heroes to its party.
 
 The room supports at most **four player sessions**. A fresh default party is Garruk, Rowan, Aldric and Elara; an existing campaign may have a different party. If a Hero is already claimed, use your original session to reconnect or select an unclaimed Hero. Do not delete reconnect data to work around ownership checks. Friends use the same private invite and matching client build; a Render URL or browser room code cannot connect this Unity client.
 

@@ -1,0 +1,55 @@
+{
+  "format": "ascendance-online-hero-lobby-acceptance-1",
+  "runtimeBuildVersion": "0.10.2h",
+  "runtimeSourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860",
+  "clientOnly": true,
+  "compatibleServerSourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5",
+  "serverDeploymentRequired": false,
+  "editor": {
+    "passed": 207,
+    "failed": 0,
+    "errors": 0,
+    "lobbyChecks": 31
+  },
+  "pythonHelperFixtures": {
+    "passed": 196,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actualGraphicalClients": {
+    "passed": 41,
+    "failed": 0,
+    "transport": "pinned-TLS-and-room-key",
+    "players": "Independent Linux development players with actual uGUI button callbacks",
+    "screenshotsVisuallyReviewed": true,
+    "framesAdvancedBeforeCapture": 15
+  },
+  "builds": {
+    "windowsShipping": "SUCCEEDED",
+    "linuxDevelopment": "SUCCEEDED",
+    "cleanSource": true,
+    "windowsDevelopmentDriversPresent": false
+  },
+  "actualWindowsWorkflows": {
+    "launcher": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41149037799",
+    "acl": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41149037801",
+    "source": "https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41149037913"
+  },
+  "verifiedBehavior": [
+    "Server party shown instead of local four-Hero solo setup.",
+    "Single Hero selection, explicit server-confirmed claim before gameplay and same-connection scene handoff.",
+    "Two different Heroes, live claim labels, reserved disconnected Heroes and original-credential reconnect.",
+    "Exact HERO_CLAIMED race refusal, persistent useful error and another Hero remains selectable.",
+    "A friend joins during the peer turn without claiming or ending the wrong Hero.",
+    "Claims and reconnect preserve complete campaign state and gameplay revision.",
+    "Local save sentinel bytes remain unchanged on all three test profiles."
+  ],
+  "scopeLimits": [
+    "Graphical gameplay acceptance ran Linux development clients, not Windows gameplay.",
+    "Actual uGUI button callbacks were exercised; OS pointer/raycast clicks were not automated.",
+    "Audio output is not certified; the host emits FMOD output-device initialization errors before managed driver capture, visible in development screenshots. These errors were not filtered from logs.",
+    "Windows installation paths containing square brackets remain unsupported.",
+    "Live user/friend sessions with the new download have not yet been observed; all gameplay tests use isolated generated data."
+  ],
+  "privateDataPublished": false
+}

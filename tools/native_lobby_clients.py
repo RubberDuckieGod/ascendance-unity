@@ -18,7 +18,7 @@ import traceback
 import uuid
 
 from native_server_acceptance import NativeServer, WireClient
-from native_unity_clients import Client, await_value, read_json, unfocus_and_arrange
+from native_unity_clients import Client, SecureWireClient, await_value, read_json, tls_fixture, unfocus_and_arrange
 
 
 class LobbyClient(Client):
@@ -49,7 +49,7 @@ class LobbyClient(Client):
             env={**inherited, "DISPLAY": self.display, "XAUTHORITY": str(self.authority),
                  "ASCENDANCE_NATIVE_LOBBY_ACCEPTANCE": "1", "XDG_CONFIG_HOME": str(self.output / "config"),
                  "XDG_DATA_HOME": str(self.output / "data"), "XDG_CACHE_HOME": str(self.output / "cache"),
-                 "TMPDIR": str(self.output / "tmp"), "LIBGL_ALWAYS_SOFTWARE": "1"},
+                 "TMPDIR": str(self.output / "tmp"), "LIBGL_ALWAYS_SOFTWARE": "1", **self.security},
             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         return self.wait("real main menu", lambda s: s.get("Scene") == "MainMenu" and any(b["Name"] == "Button_JOIN_ONLINE_CAMPAIGN" for b in s.get("Buttons", [])), 50)
 
@@ -86,12 +86,16 @@ def main():
     parser.add_argument("--client-executable", type=Path, required=True)
     parser.add_argument("--xvfb", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--secure", action="store_true", help="Use actual pinned TLS and a private room access key for all clients")
     args = parser.parse_args()
     output = args.output.resolve(); output.mkdir(mode=0o700)
     room = "NATIVE-LOBBY-" + uuid.uuid4().hex
     server_root = output / "server"; server_root.mkdir()
-    server = NativeServer(args.server_build_dir.resolve(), server_root, room)
-    report = {"kind": "actual-native-online-hero-lobby", "checks": [], "screenshots": [],
+    server_security, client_security, certificate = {}, {}, None
+    if args.secure: server_security, client_security, certificate = tls_fixture(output)
+    factory = (lambda port, requested_room: SecureWireClient(port, requested_room, certificate, client_security["ASCENDANCE_ROOM_ACCESS_KEY"])) if args.secure else WireClient
+    server = NativeServer(args.server_build_dir.resolve(), server_root, room, environment=server_security, client_factory=factory)
+    report = {"kind": "actual-native-online-hero-lobby", "transport": "pinned-TLS-and-room-key" if args.secure else "plain-loopback", "checks": [], "screenshots": [],
               "boundaries": ["Fresh isolated loopback fixture; no production accounts or saves.",
                              "Actual uGUI button callbacks, production lobby model and transport, native server and independent graphical players.",
                              "No audio-output certification; native host FMOD initialization can precede managed error capture."]}
@@ -105,6 +109,18 @@ def main():
         response = observer.exchange("SNAPSHOT")
         if not response["Accepted"]: raise AssertionError("Read-only observer snapshot rejected")
         return response["Snapshot"]
+    def settle_rendered_frames(players, *, lobby):
+        # Driver state is written in Update, before that frame is rendered. A
+        # just-loaded world can therefore report Ready while the window still
+        # displays the previous menu. Observe fresh frames after arranging both
+        # actual windows before capturing their visible result.
+        frames = {player: player.state()["Frame"] for player in players}
+        for player in players:
+            player.wait("fresh rendered lobby" if lobby else "fresh rendered world",
+                        lambda state, player=player: state.get("Frame", 0) >= frames[player] + 15
+                        and (state.get("LobbyVisible") and not state.get("IsBusy") if lobby
+                             else state.get("GameReady") and state.get("HasHud")), timeout=15)
+
     def capture(name):
         subprocess.run(["import", "-display", display, "-window", "root", str(output / name)],
                        env={**os.environ, "XAUTHORITY": str(authority)}, check=True, timeout=15,
@@ -127,7 +143,7 @@ def main():
         with (output / "xvfb.log").open("wb") as log:
             xvfb = subprocess.Popen([str(args.xvfb.resolve()), display, "-screen", "0", "1600x900x24", "-nolisten", "tcp", "-noreset", "-auth", str(authority)], stdout=log, stderr=subprocess.STDOUT)
         await_value("private X display", lambda: Path("/tmp/.X11-unix/X" + str(display_number)).exists(), timeout=10)
-        a, b = [LobbyClient(args.client_executable.resolve(), output / name.lower(), name, server.port, room, display, authority) for name in ["Alice", "Bob"]]
+        a, b = [LobbyClient(args.client_executable.resolve(), output / name.lower(), name, server.port, room, display, authority, security=client_security) for name in ["Alice", "Bob"]]
         clients.extend([a, b])
         for client in [a, b]:
             initial = client.start()
@@ -140,6 +156,7 @@ def main():
         check("Opening both real menus claims no player", 0, len(snapshot()["Players"]))
         check("Opening both real menus leaves campaign unchanged", baseline, canonical(snapshot()))
         unfocus_and_arrange(display, authority, [a.process.pid, b.process.pid])
+        settle_rendered_frames([a, b], lobby=True)
         capture("online-lobby-before-claims.png")
         a.choose("Aldric"); a.choose("Rowan")
         selected = a.choose("Aldric")
@@ -171,7 +188,7 @@ def main():
         stable = canonical(snapshot())
         a.stop()
         await_value("disconnected Hero remains reserved", snapshot, lambda s: any(p["HeroId"] == "Aldric" and not p["Connected"] for p in s["Players"]))
-        c = LobbyClient(args.client_executable.resolve(), output / "newcomputer", "NewComputer", server.port, room, display, authority); clients.append(c)
+        c = LobbyClient(args.client_executable.resolve(), output / "newcomputer", "NewComputer", server.port, room, display, authority, security=client_security); clients.append(c)
         c.start(); sc = c.open()
         check("New computer cannot take disconnected owner's reserved Hero", [False, False], [choice(sc, "Aldric")["CanChoose"], choice(sc, "Aldric")["HasSavedCredential"]])
         check("New computer sees reservation owner", "Lobby Alice", choice(sc, "Aldric")["ClaimedBy"])
@@ -191,6 +208,7 @@ def main():
             state = client.state() if client.process else read_json(client.output / "state.json")
             check(client.hero + " emits no managed Unity errors", [], state.get("Errors", []))
         unfocus_and_arrange(display, authority, [a.process.pid, b.process.pid])
+        settle_rendered_frames([a, b], lobby=False)
         capture("online-lobby-world-two-owners.png")
         report["passed"] = len(report["checks"]); report["failed"] = 0
     except Exception as error:
