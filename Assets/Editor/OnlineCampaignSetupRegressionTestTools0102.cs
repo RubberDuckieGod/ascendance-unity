@@ -69,6 +69,28 @@ namespace Ascendance.EditorTools
             {
                 float deadline = Time.realtimeSinceStartup + 20f;
                 while ((gm.IsResolving || gm.HasPendingReactionWindow || gm.ParticipatingHeroes.Any(h => h.Moving)) && Time.realtimeSinceStartup < deadline) yield return null;
+                string factoryOriginal = Gameplay(AscendanceSaveSystem.CaptureForAuthority0100(gm));
+                var factoryFailures = new List<string>();
+                var definitions = HeroDatabase.Heroes.OrderBy(h => h.id).ToArray();
+                foreach (var definition in definitions)
+                {
+                    var candidate = AscendanceGameManager.CreateFreshOnlineCampaign0102(new[] { definition.id });
+                    var hero = candidate.Heroes.SingleOrDefault(h => h.Id == definition.id);
+                    var authoredDeck = HeroDatabase.BuildPhysicalDeck(definition.id);
+                    var authoredGear = definition.startingEquipment.SelectMany(e => Enumerable.Repeat(e.id, Mathf.Max(1, e.copies))).OrderBy(x => x).ToArray();
+                    bool legal = candidate.PartyHeroIds.SequenceEqual(new[] { definition.id }) && candidate.Heroes.Count == 1
+                        && candidate.QuestId == "Q001" && candidate.Round == 1 && candidate.PartyGold == 0
+                        && hero != null && hero.Level == 1 && hero.XP == 0 && hero.Health == definition.maxHealth
+                        && hero.Health > 0 && !hero.Dead && !hero.Downed && hero.Actions == 0 && hero.LocationId == "L000"
+                        && hero.HandIds.Count == 5 && authoredDeck.Count == 30
+                        && hero.HandIds.Concat(hero.DeckIds).Concat(hero.DiscardIds).OrderBy(x => x).SequenceEqual(authoredDeck.OrderBy(x => x))
+                        && authoredGear.Length > 0 && hero.EquippedEquipmentIds.OrderBy(x => x).SequenceEqual(authoredGear);
+                    if (!legal) factoryFailures.Add(definition.id + " (authored deck " + authoredDeck.Count + ", fresh Level " + hero?.Level + ", hand " + hero?.HandIds.Count + ")");
+                }
+                Check(definitions.Length == 16 && factoryFailures.Count == 0,
+                    "All sixteen actual fresh Hero factories produce Level1/XP0/authored maximum HP, exact personal decks and authored starting gear. " + string.Join(", ", factoryFailures));
+                Check(ReferenceEquals(AscendanceGameManager.Instance, gm) && Gameplay(AscendanceSaveSystem.CaptureForAuthority0100(gm)) == factoryOriginal,
+                    "Constructing all sixteen fresh parties preserves the original manager identity and complete original game.");
                 gm.Initialize(); gm.SetParty(new[] { "Aldric", "Rowan" }, "Aldric");
                 gm.DebugResetCampaignProgress0833();
                 var progressed = AscendanceSaveSystem.CaptureForAuthority0100(gm);

@@ -275,7 +275,7 @@ namespace Ascendance
             OnlineAnchors0102(onlineRoomSummary,new Vector2(0.035f,0.14f),new Vector2(draft?0.70f:0.585f,draft?0.235f:0.20f));
             var selectedChoice=onlineLobby.HeroChoices.FirstOrDefault(h=>string.Equals(h.HeroId,onlineLobby.SelectedHeroId,System.StringComparison.OrdinalIgnoreCase));
             if(selectedChoice==null)
-                heroDetail.text=draft?"ALL 16 HEROES\n\nEach player chooses and claims one Hero. Up to four players can join the party.\n\nMark READY when your choice is final. The creator then starts at Level 1.":
+                heroDetail.text=draft?"ALL 16 HEROES\n\nEach player chooses and claims one Hero. Up to four players can join the party.\n\nMark READY when your choice is final. Everyone begins at Level 1 when the creator starts the campaign.":
                     "ONE HERO PER PLAYER\n\nChoose an available Hero from your campaign.\n\nYour friends use the same invitation and choose their own Heroes.";
             else
             {

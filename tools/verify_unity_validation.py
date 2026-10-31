@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 
-EXPECTED = {"master": 54, "foundation": 24, "router": 29, "network": 27, "reliability": 22, "snapshot": 20, "lobby": 31, "campaign": 36}
+EXPECTED = {"master": 54, "foundation": 24, "router": 29, "network": 27, "reliability": 22, "snapshot": 20, "lobby": 31, "campaign": 38}
 TERMINALS = {
     "master": ("[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression"),
     "foundation": ("[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation"),
