@@ -1,0 +1,25 @@
+{
+  "status": "ACTIVATED_SECURE",
+  "release": "unity-0.10.2h-online-campaigns-597f442-r2",
+  "sourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+  "endpoint": "159.65.100.206:7777",
+  "room": "ASC-PRIMARY",
+  "certificateSha256": "7f9987d3848887b028e52e2e8f9077035cedca0e038711212c2ba7c86fb7a6a9",
+  "secureTransportVerified": true,
+  "existingDataPathPreserved": true,
+  "existingCampaignRestored": true,
+  "buildVersion": "0.10.2h",
+  "proofSource": "Owner-provided on-host installer result",
+  "privateRestoreInspection": {
+    "verified": true,
+    "loopbackOnly": true,
+    "gameplayCommandsSubmitted": 0,
+    "sourceBuildVersion": "0.10.2h",
+    "targetBuildVersion": "0.10.2h"
+  },
+  "canary": {
+    "passed": 80,
+    "failed": 0
+  },
+  "productionGameCommandsSubmittedByAssistant": 0
+}

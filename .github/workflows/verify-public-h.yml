@@ -2,7 +2,7 @@ name: Verify activated public Unity h TLS endpoint
 
 on:
   push:
-    branches: [verification/unity-h-public]
+    branches: [verification/unity-h-public-r2]
 
 permissions:
   contents: read
