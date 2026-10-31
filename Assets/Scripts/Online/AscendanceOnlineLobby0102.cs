@@ -50,7 +50,9 @@ namespace Ascendance.Online
         public string PlayerId => transport?.PlayerId;
         public string Status => status;
         public bool IsBusy => connecting != null || claiming != null || campaignAction != null;
-        public bool IsConnected => transport?.IsConnected == true;
+        // A recovering socket is not ready for UI controls until its HELLO
+        // succeeds and clears the previous connection error.
+        public bool IsConnected => transport?.IsConnected == true && string.IsNullOrWhiteSpace(transport.LastConnectionError);
         public bool IsDraft => CampaignLobby?.IsDraft == true;
         public bool SupportsCampaignSetup => CampaignLobby?.Supported == true;
         public bool CanCreateCampaign => IsConnected && !IsBusy && CampaignLobby?.CanCreate == true;
