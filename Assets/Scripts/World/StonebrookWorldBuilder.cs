@@ -13,6 +13,8 @@ namespace Ascendance
         private RuntimeNavMeshBaker navMeshBaker0862;
         private bool navigationReady0862;
         private bool presentationSpawnReady0862;
+        private LocationArtPresenter0103 locationArt0103;
+        private readonly List<LocationArtLegacyRendererGroup0103> legacyHouseArt0103 = new();
 
         public bool NavigationReady0862 => navigationReady0862;
         public bool PresentationSpawnReady0862 => presentationSpawnReady0862;
@@ -21,6 +23,7 @@ namespace Ascendance
         {
             navigationReady0862 = false;
             presentationSpawnReady0862 = false;
+            legacyHouseArt0103.Clear();
             worldRoot = new GameObject("Stonebrook_World").transform;
             BuildLightingAndAtmosphere();
             BuildTerrain();
@@ -53,6 +56,7 @@ namespace Ascendance
             yield return null;
 
             SpawnLocationMarkers();
+            locationArt0103 = LocationArtPresenter0103.Install(AscendanceGameManager.Instance, worldRoot, legacyHouseArt0103);
             SpawnHeroes();
             SpawnEnemies();
             yield return null;
@@ -216,6 +220,7 @@ namespace Ascendance
                 root.AddComponent<LocationMarker>().Initialize(state.Id,marker.GetComponent<Renderer>(),marker.GetComponent<Collider>());
                 WorldBillboardLabel.Create(root.transform,state.Name,new Vector3(0f,0.48f,0f),new Color(0.78f,0.88f,1f),26);
             }
+            locationArt0103?.Reconcile();
         }
 
         private void SpawnHeroes()
@@ -425,39 +430,53 @@ namespace Ascendance
 
         private void CreateHouse(Vector3 position, Vector3 scale, Color wallColor)
         {
-            Vector3 productionScale = new Vector3(
-                Mathf.Max(0.70f, scale.x / 4.2f),
-                Mathf.Max(0.80f, scale.y / 2.2f),
-                Mathf.Max(0.75f, scale.z / 3.5f));
-            if (ProductionAssetResolver.TrySpawnEnvironment("House", worldRoot, new Vector3(position.x, 0f, position.z), Quaternion.identity, productionScale, out var productionHouse))
+            // Capture only renderers produced by this house call. Procedural
+            // roofs/windows are siblings, so a subtree name search is unsafe.
+            var before = new HashSet<Renderer>(worldRoot.GetComponentsInChildren<Renderer>(true));
+            try
             {
-                // Production visuals never participate directly in runtime NavMesh baking.
-                // A cheap blocker proxy preserves the authored footprint without requiring
-                // Read/Write access on the imported render mesh.
-                AddBoxObstacle("House Navigation Blocker", new Vector3(position.x, scale.y * 0.5f, position.z), new Vector3(scale.x * 0.94f, Mathf.Max(2.0f, scale.y), scale.z * 0.94f));
-                return;
+                Vector3 productionScale = new Vector3(
+                    Mathf.Max(0.70f, scale.x / 4.2f),
+                    Mathf.Max(0.80f, scale.y / 2.2f),
+                    Mathf.Max(0.75f, scale.z / 3.5f));
+                if (ProductionAssetResolver.TrySpawnEnvironment("House", worldRoot, new Vector3(position.x, 0f, position.z), Quaternion.identity, productionScale, out var productionHouse))
+                {
+                    // Production visuals never participate directly in runtime NavMesh baking.
+                    // A cheap blocker proxy preserves the authored footprint without requiring
+                    // Read/Write access on the imported render mesh.
+                    AddBoxObstacle("House Navigation Blocker", new Vector3(position.x, scale.y * 0.5f, position.z), new Vector3(scale.x * 0.94f, Mathf.Max(2.0f, scale.y), scale.z * 0.94f));
+                    return;
+                }
+
+                var house = CreatePrimitive("Timber House", PrimitiveType.Cube, position, scale, wallColor, true);
+                AddObstacleTo(house);
+
+                Color beam = new Color(0.18f, 0.09f, 0.035f);
+                float y = position.y + scale.y * 0.36f;
+                for (int x = -1; x <= 1; x += 2)
+                {
+                    CreatePrimitive("Timber Beam", PrimitiveType.Cube, new Vector3(position.x + x * scale.x * 0.43f, y, position.z - scale.z * 0.51f), new Vector3(0.14f, scale.y * 0.88f, 0.10f), beam, true);
+                }
+                CreatePrimitive("Cross Beam", PrimitiveType.Cube, new Vector3(position.x, y, position.z - scale.z * 0.51f), new Vector3(scale.x * 0.92f, 0.12f, 0.10f), beam, true);
+
+                Color roofColor = new Color(0.16f, 0.055f, 0.032f);
+                var roofLeft = CreatePrimitive("Roof Left", PrimitiveType.Cube, position + Vector3.up * (scale.y * 0.70f) + Vector3.left * (scale.x * 0.22f), new Vector3(scale.x * 0.62f, 0.24f, scale.z * 1.12f), roofColor, true);
+                roofLeft.transform.rotation = Quaternion.Euler(0f, 0f, -31f);
+                var roofRight = CreatePrimitive("Roof Right", PrimitiveType.Cube, position + Vector3.up * (scale.y * 0.70f) + Vector3.right * (scale.x * 0.22f), new Vector3(scale.x * 0.62f, 0.24f, scale.z * 1.12f), roofColor, true);
+                roofRight.transform.rotation = Quaternion.Euler(0f, 0f, 31f);
+
+                CreatePrimitive("Door", PrimitiveType.Cube, new Vector3(position.x, 0.78f, position.z - scale.z * 0.52f), new Vector3(0.72f, 1.45f, 0.10f), new Color(0.20f, 0.10f, 0.04f), false);
+                CreateWindow(new Vector3(position.x - scale.x * 0.28f, 1.35f, position.z - scale.z * 0.525f));
+                CreateWindow(new Vector3(position.x + scale.x * 0.28f, 1.35f, position.z - scale.z * 0.525f));
             }
-
-            var house = CreatePrimitive("Timber House", PrimitiveType.Cube, position, scale, wallColor, true);
-            AddObstacleTo(house);
-
-            Color beam = new Color(0.18f, 0.09f, 0.035f);
-            float y = position.y + scale.y * 0.36f;
-            for (int x = -1; x <= 1; x += 2)
+            finally
             {
-                CreatePrimitive("Timber Beam", PrimitiveType.Cube, new Vector3(position.x + x * scale.x * 0.43f, y, position.z - scale.z * 0.51f), new Vector3(0.14f, scale.y * 0.88f, 0.10f), beam, true);
+                var houseRenderers = new List<Renderer>();
+                foreach (var renderer in worldRoot.GetComponentsInChildren<Renderer>(true))
+                    if (!before.Contains(renderer) && renderer.gameObject.name != "House Navigation Blocker") houseRenderers.Add(renderer);
+                legacyHouseArt0103.Add(new LocationArtLegacyRendererGroup0103("stonebrook-house-" + legacyHouseArt0103.Count,
+                    new Bounds(position, scale), houseRenderers));
             }
-            CreatePrimitive("Cross Beam", PrimitiveType.Cube, new Vector3(position.x, y, position.z - scale.z * 0.51f), new Vector3(scale.x * 0.92f, 0.12f, 0.10f), beam, true);
-
-            Color roofColor = new Color(0.16f, 0.055f, 0.032f);
-            var roofLeft = CreatePrimitive("Roof Left", PrimitiveType.Cube, position + Vector3.up * (scale.y * 0.70f) + Vector3.left * (scale.x * 0.22f), new Vector3(scale.x * 0.62f, 0.24f, scale.z * 1.12f), roofColor, true);
-            roofLeft.transform.rotation = Quaternion.Euler(0f, 0f, -31f);
-            var roofRight = CreatePrimitive("Roof Right", PrimitiveType.Cube, position + Vector3.up * (scale.y * 0.70f) + Vector3.right * (scale.x * 0.22f), new Vector3(scale.x * 0.62f, 0.24f, scale.z * 1.12f), roofColor, true);
-            roofRight.transform.rotation = Quaternion.Euler(0f, 0f, 31f);
-
-            CreatePrimitive("Door", PrimitiveType.Cube, new Vector3(position.x, 0.78f, position.z - scale.z * 0.52f), new Vector3(0.72f, 1.45f, 0.10f), new Color(0.20f, 0.10f, 0.04f), false);
-            CreateWindow(new Vector3(position.x - scale.x * 0.28f, 1.35f, position.z - scale.z * 0.525f));
-            CreateWindow(new Vector3(position.x + scale.x * 0.28f, 1.35f, position.z - scale.z * 0.525f));
         }
 
         private void CreateWindow(Vector3 position)

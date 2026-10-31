@@ -1,0 +1,491 @@
+{
+  "format": "ascendance-cc0-environment-prototypes-1",
+  "downloadedAtUtc": "2026-10-31T20:43:49.901180+00:00",
+  "budgetUsedUsd": "0.00",
+  "provider": "Poly Haven",
+  "license": "CC0-1.0",
+  "licenseSource": "https://polyhaven.com/license",
+  "sourceArchivesPrivate": true,
+  "assets": [
+    {
+      "id": "rock_face_01",
+      "name": "Rock Face 01",
+      "polycountReported": 20174,
+      "sourcePage": "https://polyhaven.com/a/rock_face_01",
+      "infoApi": "https://api.polyhaven.com/info/rock_face_01",
+      "filesApi": "https://api.polyhaven.com/files/rock_face_01",
+      "format": "FBX",
+      "textureResolutionChoice": "1k",
+      "authors": {
+        "Dario Barresi": "All"
+      },
+      "description": "Free 8K model of a weathered rock face with layered sedimentary strata, rugged cracks, lichen patches and subtle blue-red mineral tones.",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "files": [
+        {
+          "relativePath": "rock_face_01_1k.fbx",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/1k/rock_face_01/rock_face_01_1k.fbx",
+          "bytes": 764220,
+          "officialMd5": "13fcd96a88130e584ce883463b231891",
+          "sha256": "00a9aab19a5adcabf1257906b5da6ccaf7cc7bbc1ec4619ee3e83e653b49d4a0"
+        },
+        {
+          "relativePath": "textures/rock_face_01_nor_gl_1k.exr",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/rock_face_01/rock_face_01_nor_gl_1k.exr",
+          "bytes": 2166418,
+          "officialMd5": "43f1fe72543d392e1b93ba30fb93ca25",
+          "sha256": "d34488b8d29d95e8f15f84b9bc4bb8fbdc5b0c8acaa7a2d8a924cc7169e8fc3e"
+        },
+        {
+          "relativePath": "textures/rock_face_01_rough_1k.exr",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/rock_face_01/rock_face_01_rough_1k.exr",
+          "bytes": 379887,
+          "officialMd5": "a7c404efd5ffcd787d58f5d220d9c0fc",
+          "sha256": "b976a89e9b6913c69f3bdce6a36c6e64a5071c41278c63837339391a8ab7376d"
+        },
+        {
+          "relativePath": "textures/rock_face_01_diff_1k.jpg",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/rock_face_01/rock_face_01_diff_1k.jpg",
+          "bytes": 853749,
+          "officialMd5": "98ee9f024a6383d7e6cab44ed41e1f15",
+          "sha256": "41bd26ed2db1332b1ebb4b1326fd8af4d21f0f0eb57b8ea385033115c722cfdb"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "fern_02",
+      "name": "Fern 02",
+      "polycountReported": 6232,
+      "sourcePage": "https://polyhaven.com/a/fern_02",
+      "infoApi": "https://api.polyhaven.com/info/fern_02",
+      "filesApi": "https://api.polyhaven.com/files/fern_02",
+      "format": "FBX",
+      "textureResolutionChoice": "1k",
+      "authors": {
+        "Rob Tuytel": "scanning",
+        "Rico Cilliers": "modeling"
+      },
+      "description": "Free 8K model of four realistic fern clumps featuring detailed serrated fronds, varied silhouettes and rich dappled green foliage.",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "files": [
+        {
+          "relativePath": "fern_02_1k.fbx",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/1k/fern_02/fern_02_1k.fbx",
+          "bytes": 223596,
+          "officialMd5": "65fd395dca9867cfa5e4d91e3fcc38df",
+          "sha256": "6d8238b9cc1bbb5f5766396c2db26f2219c0d0e5ca226fb81dcc44bdb35045e8"
+        },
+        {
+          "relativePath": "textures/fern_02_rough_1k.exr",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/fern_02/fern_02_rough_1k.exr",
+          "bytes": 267009,
+          "officialMd5": "1e937f3f3db87e520601f8e94363a5dc",
+          "sha256": "6bde0113a818f78ebcce524fe417b9617a8aadf2873a1948fdbb200cc27eaf3c"
+        },
+        {
+          "relativePath": "textures/fern_02_alpha_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/fern_02/fern_02_alpha_1k.png",
+          "bytes": 114589,
+          "officialMd5": "1421e5e36946c23a7ddcc907de89025c",
+          "sha256": "ea3c64284c7ebdeedf484d2d816eae92825ec526140c3bb83859ddc7a64001f9"
+        },
+        {
+          "relativePath": "textures/fern_02_nor_gl_1k.exr",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/fern_02/fern_02_nor_gl_1k.exr",
+          "bytes": 801563,
+          "officialMd5": "c4c2dc925e3ecdb86a6a123a21acfc5b",
+          "sha256": "318209d70836a9b078c395a2df26bcc732dae3df248ecd5d827005da7c8ff174"
+        },
+        {
+          "relativePath": "textures/fern_02_diff_1k.jpg",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fern_02/fern_02_diff_1k.jpg",
+          "bytes": 315705,
+          "officialMd5": "82c18a6cfd5ae91c37c0e078f591181c",
+          "sha256": "a828a6e7b4c01c826911e2eac4b3afc7457dab7b3b392a31c681ed88b7d50029"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "modular_fort_01",
+      "name": "Modular Fort 01",
+      "polycountReported": 28218,
+      "sourcePage": "https://polyhaven.com/a/modular_fort_01",
+      "infoApi": "https://api.polyhaven.com/info/modular_fort_01",
+      "filesApi": "https://api.polyhaven.com/files/modular_fort_01",
+      "format": "FBX",
+      "textureResolutionChoice": "1k",
+      "authors": {
+        "Rico Cilliers": "All"
+      },
+      "description": "Free 8K modular fort model - weathered colonial stone blocks, battlements, towers, ramparts and an arched gate with mossy, aged surface detail.",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "files": [
+        {
+          "relativePath": "modular_fort_01_1k.fbx",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/1k/modular_fort_01/modular_fort_01_1k.fbx",
+          "bytes": 1383932,
+          "officialMd5": "4f0429ef44265aa6789c7dffaa1f0cff",
+          "sha256": "267369dc754afd545a91f302ef1819893bf8a907100010c097b58a2c576eb281"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_trim_diff_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_trim_diff_1k.png",
+          "bytes": 5765229,
+          "officialMd5": "a004a447a5340588223680a8680da29c",
+          "sha256": "02d4788dd2031b89dda4a8aefe7ec8a08e774b172ebba7222be098c70e957743"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_wall_diff_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_wall_diff_1k.png",
+          "bytes": 5823991,
+          "officialMd5": "59dea3b2313c8f7d672aa4625d922ace",
+          "sha256": "66e05c621512f693e9a60179737117845da09fac5ece8f4397d7df58729eedf6"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_unique_mask_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_unique_mask_1k.png",
+          "bytes": 2496838,
+          "officialMd5": "8a9921b3b2d413054fc5877354034d8a",
+          "sha256": "e37317ebfa39c49ba6bfa0d197a2f21e97b5bda18f5b16b3d580b2da9ec9d379"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_plaster_rough_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_plaster_rough_1k.png",
+          "bytes": 1902554,
+          "officialMd5": "723f3abb7439a4c048f23ea45b614a52",
+          "sha256": "aedd9474d99b2591627f397125d96678025ab878a6dcac24206212176e1cd05a"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_trim_nor_gl_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_trim_nor_gl_1k.png",
+          "bytes": 5775959,
+          "officialMd5": "084044b1606548c186f4e667f4c5d6c7",
+          "sha256": "e52ddf1c2f9ba79ad395b3a0d5cfebae9611f375bc89cc3aa58a80ad2ea0c083"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_plaster_diff_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_plaster_diff_1k.png",
+          "bytes": 5872263,
+          "officialMd5": "2c6061ae400c2fba8130455b40819440",
+          "sha256": "04ecede0b5823cf730cb195becce1717eaa9db6a8b9c294f97677e6a8806d529"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_wall_nor_gl_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_wall_nor_gl_1k.png",
+          "bytes": 5797524,
+          "officialMd5": "d635d16e286d79d3cc0eb26913d8df6e",
+          "sha256": "05589060fcd19134b404a40f7336d945eb51f00460fcac1ccd8c22a810ff392d"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_wall_rough_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_wall_rough_1k.png",
+          "bytes": 1886582,
+          "officialMd5": "adcadc5a5767884a26faa1f18587df12",
+          "sha256": "59117314f90cb9825e1e84a919096b014a4aaf54a1ce1be47c986ff1a77df2c4"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_plaster_nor_gl_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_plaster_nor_gl_1k.png",
+          "bytes": 6116523,
+          "officialMd5": "f3b4acd68380487a8cc0757c2e14500d",
+          "sha256": "50078f1e7cc3990ba07687580170275b4ed722cb8ae335e891da676bcf9f5ffb"
+        },
+        {
+          "relativePath": "textures/modular_fort_01_trim_rough_1k.png",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_fort_01/modular_fort_01_trim_rough_1k.png",
+          "bytes": 1866774,
+          "officialMd5": "437f7cacd435532d0090862861a71d89",
+          "sha256": "43faa17e127fbb686d36d17c5b713e5aa5307e10c26483b6a650cdc92c36ec35"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    }
+  ],
+  "allOfficialMd5Verified": true,
+  "downloadedBytes": 50574905,
+  "currentUnityEditorImportRun": true,
+  "knownIntegrationWork": [
+    "Scale/orientation/UV/material verification in Built-in onUnity6000.6.5f1.",
+    "Normal maps must be imported as normals;OpenGLnormalmaphandlingneedsvisualcheck.",
+    "Roughness is not UnityStandard smoothness: materialadaptermustinvert/packappropriately.",
+    "Fern alpha needs cutout and double-sided presentation;default importedmaterialmaynotmatch.",
+    "Choosefortsubmeshes/prefabparts,LOD/collisionandtexturebudgets;donotinstantiateallgeometryperlocation.",
+    "Noneofthesethreeassetsrepresents236completedlocationcompositions."
+  ],
+  "sourceDirectoryEnvironmentVariable": "ASCENDANCE_CC0_ASSET_ROOT",
+  "materialCandidates": [
+    {
+      "id": "aerial_sand",
+      "name": "Aerial Sand",
+      "sourcePage": "https://polyhaven.com/a/aerial_sand",
+      "provider": "Poly Haven",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "textureResolutionChoice": "1k",
+      "maps": [
+        {
+          "mapType": "baseColor",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_sand/aerial_sand_diff_1k.jpg",
+          "expectedBytes": 490916,
+          "officialMd5": "717c892f44895790e6a39ced994e1598",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "d5195c44aec087d2a30d3ca3a3fa3458a1898986e0572e9a8043f8245598557a"
+        },
+        {
+          "mapType": "normalOpenGL",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_sand/aerial_sand_nor_gl_1k.jpg",
+          "expectedBytes": 665488,
+          "officialMd5": "094ef18a596f9b1de34264cd21f8c9d2",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "cba74d670a681dfcdd72db72afbcb9879c7ec9f5854adae24cac8da2c432ad99"
+        },
+        {
+          "mapType": "roughness",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_sand/aerial_sand_rough_1k.jpg",
+          "expectedBytes": 205159,
+          "officialMd5": "2812f58e6f8b966d969bb2c2092c3484",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "7cccecb1d8d35a5404e1006688e3bd2b6675abe3c95ff26312a872a41d792897"
+        },
+        {
+          "mapType": "ambientOcclusion",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_sand/aerial_sand_ao_1k.jpg",
+          "expectedBytes": 470122,
+          "officialMd5": "5fd7816c7e11bb629b8da0b7359f038c",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "b3d67546680a0ec2ee9feca32240c0bd3347c8f41353e12f6c98c3520a941814"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "snow_02",
+      "name": "Snow 02",
+      "sourcePage": "https://polyhaven.com/a/snow_02",
+      "provider": "Poly Haven",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "textureResolutionChoice": "1k",
+      "maps": [
+        {
+          "mapType": "baseColor",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/snow_02/snow_02_diff_1k.jpg",
+          "expectedBytes": 325497,
+          "officialMd5": "fc54766c6b36ff298699115a619d440b",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "523a4e69c90b96d787dd69b897f29a2b3761a017024405c60aa630d1e8e9009a"
+        },
+        {
+          "mapType": "normalOpenGL",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/snow_02/snow_02_nor_gl_1k.jpg",
+          "expectedBytes": 1081858,
+          "officialMd5": "f16b5701f9ad521cdd6af10c1d6d2b48",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "9495ec680616b8340e2cbecbd151bff84c690cfad4209e90cc98d2d0ba81f810"
+        },
+        {
+          "mapType": "roughness",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/snow_02/snow_02_rough_1k.jpg",
+          "expectedBytes": 146089,
+          "officialMd5": "1dbae0269e53dbf80d4fd1c4335f25a2",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "b6dea8039ac2a5beaed6fd41834fb55540cc76b492edd1d48ba2da2f30f1cb75"
+        },
+        {
+          "mapType": "ambientOcclusion",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/snow_02/snow_02_ao_1k.jpg",
+          "expectedBytes": 289832,
+          "officialMd5": "c3cbf062262bc7ac6ecc9099ac81b4a3",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "1be6441229c6db11ca39068e46eb4275e33d9c99f8e15d7a5b53d95c47e10ff6"
+        },
+        {
+          "mapType": "specular",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/snow_02/snow_02_spec_1k.jpg",
+          "expectedBytes": 300524,
+          "officialMd5": "cb9ba0e588b74908dcce8c5465fe14f0",
+          "downloadStatus": "NOT_DOWNLOADED"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "brown_mud",
+      "name": "Brown Mud",
+      "sourcePage": "https://polyhaven.com/a/brown_mud",
+      "provider": "Poly Haven",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "textureResolutionChoice": "1k",
+      "maps": [
+        {
+          "mapType": "baseColor",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_diff_1k.jpg",
+          "expectedBytes": 501955,
+          "officialMd5": "b141af27b413db140818d0a4998c394c",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "df3f135c899f10a3b018738343b222cbc67d13e7c76c5d8da834a3d34c984417"
+        },
+        {
+          "mapType": "normalOpenGL",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_nor_gl_1k.jpg",
+          "expectedBytes": 1011780,
+          "officialMd5": "62df05266fa5a0adc7733a7184a15dea",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "ac517ca39eb507ae0f27e2b3db431c60888f9b5c3c52bec49d2c0775da0920cb"
+        },
+        {
+          "mapType": "roughness",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_rough_1k.jpg",
+          "expectedBytes": 340815,
+          "officialMd5": "fb4d5d8ef98ebee6a402955b99103a3a",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "ae9fb57c1173ccb4579f40edf8321a30bdca815042ffd72015a2a707c7e2e7ba"
+        },
+        {
+          "mapType": "ambientOcclusion",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_ao_1k.jpg",
+          "expectedBytes": 450903,
+          "officialMd5": "75d5ae2a706a982ed578616ebe7e9692",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "2c93b70c163ab249740bc203f1125a0eccb2a5d8dfd5400c7d67b2d234d61be8"
+        },
+        {
+          "mapType": "specular",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_spec_1k.jpg",
+          "expectedBytes": 370977,
+          "officialMd5": "056f2132964e2f2458a3095e1c7c7bfa",
+          "downloadStatus": "NOT_DOWNLOADED"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "castle_brick_01",
+      "name": "Castle Brick 01",
+      "sourcePage": "https://polyhaven.com/a/castle_brick_01",
+      "provider": "Poly Haven",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "textureResolutionChoice": "1k",
+      "maps": [
+        {
+          "mapType": "baseColor",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/castle_brick_01/castle_brick_01_diff_1k.jpg",
+          "expectedBytes": 693571,
+          "officialMd5": "d3d6194b814cbda8a17dc5ebe407a41e",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "3823fdc4bcb37cc7b26fd7e3b2a80e82f5a23354d22d84eb0ca277909f923b2c"
+        },
+        {
+          "mapType": "normalOpenGL",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/castle_brick_01/castle_brick_01_nor_gl_1k.jpg",
+          "expectedBytes": 1069379,
+          "officialMd5": "6e187b440caae18cd2edf5925edf6b7b",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "f3c4c0538fd5c3f9e1aabcb0169fbbc3ac2883ed5544f05d9008d2736a2899de"
+        },
+        {
+          "mapType": "roughness",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/castle_brick_01/castle_brick_01_rough_1k.jpg",
+          "expectedBytes": 263291,
+          "officialMd5": "5707e3fd1088d9602dd57b19175bc4a1",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "0958bde6010e2b7e4098b2737e94cff53c0c41c865e09a69b1a1e39ba7973985"
+        },
+        {
+          "mapType": "ambientOcclusion",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/castle_brick_01/castle_brick_01_ao_1k.jpg",
+          "expectedBytes": 490998,
+          "officialMd5": "54553702e6811421910020392a4cf37f",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "bb9147751d992042a08e0f2a8dfdaf17d69f7bc111d0f7aa00dbd7c0ada4612f"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "rusty_metal",
+      "name": "Rusty Metal",
+      "sourcePage": "https://polyhaven.com/a/rusty_metal",
+      "provider": "Poly Haven",
+      "license": "CC0-1.0",
+      "licenseSource": "https://polyhaven.com/license",
+      "textureResolutionChoice": "1k",
+      "maps": [
+        {
+          "mapType": "baseColor",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal/rusty_metal_diff_1k.jpg",
+          "expectedBytes": 577389,
+          "officialMd5": "ba829f953270d3ad87d8e86d840f71d6",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "b532f22a08a9c36b5adf785373e213cd635a2d3769cb61196bbf5404cce7cd43"
+        },
+        {
+          "mapType": "normalOpenGL",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal/rusty_metal_nor_gl_1k.jpg",
+          "expectedBytes": 420984,
+          "officialMd5": "6133cf0df6fd63d0c484ca1669f90935",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "cf7c8d72c7b5e1923321762d47f91d59b5233cb5b3c456823c54a2403109ff6a"
+        },
+        {
+          "mapType": "roughness",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal/rusty_metal_rough_1k.jpg",
+          "expectedBytes": 214991,
+          "officialMd5": "ec93adbfb6e4d8562a0272be937719dc",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "a1b382605b896f2ef591e58527747d3ea7f3f73b8c24d3cdd934dcd4111edfe7"
+        },
+        {
+          "mapType": "ambientOcclusion",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal/rusty_metal_ao_1k.jpg",
+          "expectedBytes": 324255,
+          "officialMd5": "02ce61a3860a83e403010be59dcb3a73",
+          "downloadStatus": "DOWNLOADED_VERIFIED",
+          "sha256": "e2d8cc9a8648d724bbdb014b2ec98eda2599f7ea848e831d1d8923609e9b1300"
+        },
+        {
+          "mapType": "specular",
+          "sourceUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal/rusty_metal_spec_1k.jpg",
+          "expectedBytes": 338966,
+          "officialMd5": "4b319f04908c0281f0b0e3a0d92e2ccb",
+          "downloadStatus": "NOT_DOWNLOADED"
+        }
+      ],
+      "unityImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    }
+  ],
+  "licenseLegalcode": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.en",
+  "licenseLegalcodeArchivedSha256": "b43732f4c1463b087cf10d4daf8d8766514b2bf8f21bc5ef50905f95be227726",
+  "downloadedAdditionalMaterialBytes": 10035272,
+  "totalDownloadedSourceBytes": 60610177,
+  "privateEditorPreparationTool": "CC0AssetPreparation0103.BuildLinux",
+  "sourceCopiesSha256Verified": 40,
+  "preparedBundleLicenseCaveat": "Private prepared fern and open-rock materials use the owner-provided Knight Standard Double Sided shader. The prepared bundle is not licensed wholly CC0; original Poly Haven model and texture files remain CC0.",
+  "privateEditorPreparationStatus": "PASSED_GEOMETRY_MATERIAL_BOUNDS_AND_BUNDLE_RELOAD",
+  "privateCuratedParts": 29,
+  "privateBuiltPlatform": "StandaloneLinux64",
+  "privateBundleHashes": [
+    {
+      "id": "cc0-environment",
+      "sha256": "57471d129b889a4d15e951448f26b73866bf9d14240a39d672bdb27cab622ea5",
+      "bytes": 39565156
+    }
+  ],
+  "visualReviewStatus": "ROCK_RERENDER_PENDING_AFTER_OPAQUE_DOUBLE_SIDED_FIX",
+  "all236RuntimePresentationStatus": "PENDING_COORDINATED_VALIDATION"
+}

@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "editorVersion": "6000.6.5f1",
+  "paidPurchasesMade": 0,
+  "originalArchiveCount": 5,
+  "rawAssetsPublished": false,
+  "importScopeIsNotGameplayCertification": true,
+  "assets": [
+    {
+      "assetStoreId": "276754",
+      "name": "Modular Fantasy knight character",
+      "receipt": {
+        "bytes": 286919615,
+        "sha256": "b7342f0d33eb7b1100aabdb4bb0c063223a16f1db4683441247857b44ccb3f45",
+        "filename": "Modular.Fantasy.knight.character.unitypackage"
+      },
+      "rawAssetsPublic": false,
+      "importScope": "Reviewed data-only Built-in subset; installer/demo code excluded",
+      "importPathsVerified": true,
+      "gameplayCertification": false
+    },
+    {
+      "assetStoreId": "374316",
+      "name": "Free Medieval Village Pack Vol.1",
+      "receipt": {
+        "bytes": 839299115,
+        "sha256": "bac4a5430aee7bec0958fe6eb9ba2681b7968585c0f6dc51fd14536800d3cc2c",
+        "filename": "Free.Medieval.Village.Pack.Vol1.unitypackage"
+      },
+      "rawAssetsPublic": false,
+      "importScope": "Reviewed data-only Built-in subset; installer/demo code excluded",
+      "importPathsVerified": true,
+      "gameplayCertification": false
+    },
+    {
+      "assetStoreId": "142076",
+      "name": "Conifers [BOTD]",
+      "receipt": {
+        "filename": "Conifers.BOTD.unitypackage",
+        "bytes": 116704013,
+        "sha256": "3d04b06d42fecf23c3690cfd6aad58b3bc2638461d58be69cf0bffcfcec849c7"
+      },
+      "rawAssetsPublic": false,
+      "importScope": "Reviewed data-only Built-in subset; installer/demo code excluded",
+      "importPathsVerified": true,
+      "gameplayCertification": false
+    },
+    {
+      "assetStoreId": "247933",
+      "name": "Magic Effects FREE",
+      "receipt": {
+        "bytes": 38212995,
+        "sha256": "2228de7ba7f19934be8b58c96e1d8ce50f20ac51777fcdaa7b4478ea64d0b44d",
+        "filename": "Magic.Effects.FREE.unitypackage"
+      },
+      "rawAssetsPublic": false,
+      "importScope": "Reviewed data-only Built-in subset; installer/demo code excluded",
+      "importPathsVerified": true,
+      "gameplayCertification": false
+    },
+    {
+      "assetStoreId": "215058",
+      "name": "FREE - 32 RPG Animations",
+      "receipt": {
+        "filename": "FREE.-.32.RPG.Animations.unitypackage",
+        "bytes": 7858427,
+        "sha256": "7c50d7fe73d2470ce47969d2f78550d252527f31ddc4fb797d8c41d2c76c3d74"
+      },
+      "rawAssetsPublic": false,
+      "importScope": "Reviewed data-only Built-in subset; installer/demo code excluded",
+      "importPathsVerified": true,
+      "gameplayCertification": false
+    }
+  ],
+  "initialFilteredImport": {
+    "packages": 4,
+    "verifiedPaths": 874
+  },
+  "additionalFilteredImport": {
+    "packages": 2,
+    "verifiedPaths": 106
+  }
+}

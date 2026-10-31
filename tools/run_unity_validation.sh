@@ -8,6 +8,10 @@ artifacts_dir=""
 validation_timeout=1800
 build_linux=false
 build_windows=false
+require_installed_art=false
+require_all_location_art=false
+art_editor_args=()
+art_verify_args=()
 
 usage() {
     cat <<'USAGE'
@@ -16,6 +20,8 @@ Usage: tools/run_unity_validation.sh --editor /absolute/path/to/Unity [options]
   --timeout SECONDS      Runtime deadline, 60-7200 (default: 1800)
   --build-linux-server   Build Linux Dedicated Server after all runtime gates pass
   --build-windows        Build Windows player after all runtime gates pass
+  --require-installed-art  Require actual private client bundles via ASCENDANCE_ART_MANIFEST
+  --require-all-location-art  Exercise actual bindings for all 236 Locations (implies installed)
 UNITY_EDITOR_PATH can replace --editor. Requires a licensed Unity 6000.6.5f1,
 Python 3, and GNU timeout. This script never installs or activates Unity.
 USAGE
@@ -33,6 +39,8 @@ while (($#)); do
             shift 2 ;;
         --build-linux-server) build_linux=true; shift ;;
         --build-windows) build_windows=true; shift ;;
+        --require-installed-art) require_installed_art=true; shift ;;
+        --require-all-location-art) require_all_location_art=true; require_installed_art=true; shift ;;
         --help|-h) usage; exit 0 ;;
         *) printf 'Unknown option: %s\n' "$1" >&2; usage >&2; exit 2 ;;
     esac
@@ -48,6 +56,23 @@ if [[ ! "$validation_timeout" =~ ^[0-9]+$ ]] || ((validation_timeout < 60 || val
 fi
 command -v python3 >/dev/null || { printf 'Python 3 is required to verify runtime results.\n' >&2; exit 2; }
 command -v timeout >/dev/null || { printf 'GNU timeout is required (on macOS install coreutils and expose gtimeout as timeout).\n' >&2; exit 2; }
+if $require_installed_art; then
+    asc_art_manifest_hash=$(python3 - "$project_dir" <<'PY'
+import os, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]) / 'tools'))
+from verify_unity_validation import manifest_hash
+print(manifest_hash(os.environ.get('ASCENDANCE_ART_MANIFEST')))
+PY
+    )
+    export ASCENDANCE_ART_EXPECTED_MANIFEST_SHA256="$asc_art_manifest_hash"
+    art_editor_args+=( -ascendance-require-installed-art )
+    art_verify_args+=( --require-installed-art --art-manifest "$ASCENDANCE_ART_MANIFEST" --expected-art-manifest-sha256 "$asc_art_manifest_hash" )
+fi
+if $require_all_location_art; then
+    art_editor_args+=( -ascendance-require-all-location-art )
+    art_verify_args+=( --require-all-location-art )
+fi
 required_version="$(sed -n 's/^m_EditorVersion: //p' "$project_dir/ProjectSettings/ProjectVersion.txt" | tr -d '\r')"
 if [[ "$required_version" != '6000.6.5f1' ]]; then
     printf 'Expected ProjectVersion.txt to pin 6000.6.5f1, found %s.\n' "$required_version" >&2
@@ -90,8 +115,9 @@ if timeout --signal=TERM --kill-after=15s "$((validation_timeout + 90))s" "$edit
     -batchmode -nographics -projectPath "$project_dir" \
     -executeMethod Ascendance.EditorTools.AscendanceBatchValidation0102.Run \
     -ascendance-results "$artifacts_dir/validation-results.json" \
+    "${art_editor_args[@]}" \
     -ascendance-timeout "$validation_timeout" -logFile "$artifacts_dir/validation.log"; then
-    python3 "$project_dir/tools/verify_unity_validation.py" "$artifacts_dir/validation-results.json"
+    python3 "$project_dir/tools/verify_unity_validation.py" "$artifacts_dir/validation-results.json" "${art_verify_args[@]}"
 else
     status=$?
     printf 'Unity runtime validation failed (exit %s); inspect %s.\n' "$status" "$artifacts_dir/validation.log" >&2

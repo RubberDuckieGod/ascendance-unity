@@ -44,12 +44,17 @@
           "__typename": "SRP"
         }
       ],
-      "ownerAccountOwnership": "NOT_ENUMERATED",
-      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
-      "archiveSha256": null,
-      "currentEditorImportStatus": "NOT_RUN",
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "archiveSha256": "bac4a5430aee7bec0958fe6eb9ba2681b7968585c0f6dc51fd14536800d3cc2c",
+      "currentEditorImportStatus": "SEE_ISOLATED_EVALUATION_REPORT",
       "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY",
+      "sourceArchiveReceipt": {
+        "bytes": 839299115,
+        "sha256": "bac4a5430aee7bec0958fe6eb9ba2681b7968585c0f6dc51fd14536800d3cc2c",
+        "filename": "Free.Medieval.Village.Pack.Vol1.unitypackage"
+      }
     },
     {
       "assetStoreId": "142076",
@@ -131,12 +136,17 @@
           "__typename": "SRP"
         }
       ],
-      "ownerAccountOwnership": "NOT_ENUMERATED",
-      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
-      "archiveSha256": null,
-      "currentEditorImportStatus": "NOT_RUN",
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "archiveSha256": "2228de7ba7f19934be8b58c96e1d8ce50f20ac51777fcdaa7b4478ea64d0b44d",
+      "currentEditorImportStatus": "SEE_ISOLATED_EVALUATION_REPORT",
       "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY",
+      "sourceArchiveReceipt": {
+        "bytes": 38212995,
+        "sha256": "2228de7ba7f19934be8b58c96e1d8ce50f20ac51777fcdaa7b4478ea64d0b44d",
+        "filename": "Magic.Effects.FREE.unitypackage"
+      }
     },
     {
       "assetStoreId": "282498",
@@ -541,5 +551,6 @@
     "requiredOwnerAction": "Download owned/free selectedpacks inUnityEditorPackageManager; upload the resulting .unitypackage files or oneZIPcontaining them. A dedicated empty evaluationproject avoids touching the active game. No freshsigninrequested becauseCLIhasno supported Storedownloadroute."
   },
   "rawAssetSourcePublicRedistribution": false,
-  "productionChanged": false
+  "productionChanged": false,
+  "latestArchiveReceiptNote": "OwnerprovidedVillage,KnightandMagicarchives;filteredBuiltinevaluationiscoordinatedseparately. OtherStorearchivesremainunavailable."
 }

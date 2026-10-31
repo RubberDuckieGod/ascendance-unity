@@ -52,6 +52,20 @@ namespace Ascendance.Diagnostics
             public string Name, Label;
             public bool Active, Interactable;
         }
+        [Serializable] public sealed class LocationArtView
+        {
+            public string RuntimeLocationId, AuthoredLocationId, ProfileId, EffectiveCoverage;
+            public int PartsInstantiated, PartsMissing, EnabledRenderers, VisibleRenderers;
+            public bool RootActive, InteractionCenterClear, DecorativeCollidersDisabled;
+            public string[] Failures, MissingLandmarks;
+        }
+        [Serializable] public sealed class ArtView
+        {
+            public bool PresenterInstalled;
+            public int ActiveLocations, SuppressedLegacyHouses;
+            public string BindingFailure;
+            public LocationArtView[] Locations;
+        }
         [Serializable] public sealed class State
         {
             public string HeroId, PlayerId, SelectedHeroId, TurnHeroId, ServerInstanceId, RoomId, Build, PersistentDataPath, ConnectionError;
@@ -66,6 +80,7 @@ namespace Ascendance.Diagnostics
             public QuestObjectView[] QuestObjects;
             public ButtonView[] Buttons;
             public string[] Errors;
+            public ArtView Art;
         }
         [Serializable] public sealed class Reply
         {
@@ -304,7 +319,41 @@ namespace Ascendance.Diagnostics
                 QuestObjects=gm?.QuestObjects0829.Select(o=>new QuestObjectView{Id=o.ObjectId,Type=o.Type,LocationId=o.LocationId,Rescued=o.Rescued,Destroyed=o.Destroyed}).ToArray()??Array.Empty<QuestObjectView>(),
                 Buttons=new[]{"EndTurn","ResolveReaction","Rescue"}.Select(name=>
                 {var button=FindHudButton(name);return new ButtonView{Name=name,Active=button!=null&&button.gameObject.activeInHierarchy,Interactable=button!=null&&button.IsInteractable(),Label=button?.GetComponentInChildren<UnityEngine.UI.Text>()?.text};}).ToArray(),
+                Art = ObserveArt(world, gm),
                 Errors = errors.ToArray()
+            };
+        }
+
+        // Read-only diagnostics, compiled only into explicitly opted-in Editor
+        // and development players. An installed component is not a full art review.
+        private static ArtView ObserveArt(GameObject world, AscendanceGameManager game)
+        {
+            var presenter = world == null ? null : world.GetComponent<LocationArtPresenter0103>();
+            return new ArtView
+            {
+                PresenterInstalled = presenter != null,
+                ActiveLocations = presenter?.ActiveLocationCount ?? 0,
+                SuppressedLegacyHouses = presenter?.SuppressedLegacyHouseCount ?? 0,
+                BindingFailure = presenter?.BindingFailure,
+                Locations = presenter == null ? Array.Empty<LocationArtView>() : presenter.BindingAttempts.Select(view =>
+                {
+                    var root = presenter.RootForRuntimeLocation(view.RuntimeLocationId);
+                    bool hasAnchor = game != null && game.Locations.TryGetValue(view.RuntimeLocationId, out _);
+                    var anchor = hasAnchor ? game.Locations[view.RuntimeLocationId].Position : Vector3.zero;
+                    var renderers = root == null ? Array.Empty<Renderer>() : root.GetComponentsInChildren<Renderer>(true);
+                    return new LocationArtView
+                    {
+                        RuntimeLocationId = view.RuntimeLocationId, AuthoredLocationId = view.AuthoredLocationId,
+                        ProfileId = view.ProfileId, EffectiveCoverage = view.EffectiveCoverage,
+                        PartsInstantiated = view.PartsInstantiated, PartsMissing = view.PartsMissing,
+                        EnabledRenderers = renderers.Count(r => r.enabled && !r.forceRenderingOff && r.gameObject.activeInHierarchy),
+                        VisibleRenderers = renderers.Count(r => r.enabled && !r.forceRenderingOff && r.gameObject.activeInHierarchy && r.isVisible),
+                        RootActive = root != null && root.activeInHierarchy,
+                        InteractionCenterClear = root != null && hasAnchor && LocationArtPresenter0103.LeavesInteractionCenterClear(root, anchor),
+                        DecorativeCollidersDisabled = root != null && root.GetComponentsInChildren<Collider>(true).All(c => !c.enabled),
+                        Failures = view.Failures ?? Array.Empty<string>(), MissingLandmarks = view.MissingLandmarks ?? Array.Empty<string>()
+                    };
+                }).ToArray()
             };
         }
 

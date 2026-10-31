@@ -26,12 +26,20 @@
           "__typename": "SRP"
         }
       ],
-      "acquisitionStatus": "NOT_ACQUIRED",
-      "archiveSha256": null,
+      "acquisitionStatus": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveSha256": "b7342f0d33eb7b1100aabdb4bb0c063223a16f1db4683441247857b44ccb3f45",
       "packagePath": null,
-      "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "candidateGroup": "core_environment_and_first_hero"
+      "targetEditorImportStatus": "PASS_REVIEWED_BUILTIN_SUBSET_IMPORT",
+      "gameIntegrationStatus": "ACTUAL_GAMEPLAY_AND_VISUAL_VALIDATION_PENDING",
+      "candidateGroup": "core_environment_and_first_hero",
+      "sourceArchiveReceipt": {
+        "bytes": 286919615,
+        "sha256": "b7342f0d33eb7b1100aabdb4bb0c063223a16f1db4683441247857b44ccb3f45",
+        "filename": "Modular.Fantasy.knight.character.unitypackage"
+      },
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "currentEditorImportStatus": "REVIEWED_FILTERED_SUBSET_IMPORTED_AND_PATHS_VERIFIED"
     },
     {
       "assetStoreId": "374316",
@@ -53,12 +61,20 @@
           "__typename": "SRP"
         }
       ],
-      "acquisitionStatus": "NOT_ACQUIRED",
-      "archiveSha256": null,
+      "acquisitionStatus": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveSha256": "bac4a5430aee7bec0958fe6eb9ba2681b7968585c0f6dc51fd14536800d3cc2c",
       "packagePath": null,
-      "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "candidateGroup": "core_environment_and_first_hero"
+      "targetEditorImportStatus": "PASS_REVIEWED_BUILTIN_SUBSET_IMPORT",
+      "gameIntegrationStatus": "ACTUAL_GAMEPLAY_AND_VISUAL_VALIDATION_PENDING",
+      "candidateGroup": "core_environment_and_first_hero",
+      "sourceArchiveReceipt": {
+        "bytes": 839299115,
+        "sha256": "bac4a5430aee7bec0958fe6eb9ba2681b7968585c0f6dc51fd14536800d3cc2c",
+        "filename": "Free.Medieval.Village.Pack.Vol1.unitypackage"
+      },
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "currentEditorImportStatus": "REVIEWED_FILTERED_SUBSET_IMPORTED_AND_PATHS_VERIFIED"
     },
     {
       "assetStoreId": "142076",
@@ -97,12 +113,20 @@
           "__typename": "SRP"
         }
       ],
-      "acquisitionStatus": "NOT_ACQUIRED",
-      "archiveSha256": null,
+      "acquisitionStatus": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveSha256": "3d04b06d42fecf23c3690cfd6aad58b3bc2638461d58be69cf0bffcfcec849c7",
       "packagePath": null,
-      "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "candidateGroup": "core_environment_and_first_hero"
+      "targetEditorImportStatus": "PASS_REVIEWED_BUILTIN_SUBSET_IMPORT",
+      "gameIntegrationStatus": "ACTUAL_GAMEPLAY_AND_VISUAL_VALIDATION_PENDING",
+      "candidateGroup": "core_environment_and_first_hero",
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "sourceArchiveReceipt": {
+        "filename": "Conifers.BOTD.unitypackage",
+        "bytes": 116704013,
+        "sha256": "3d04b06d42fecf23c3690cfd6aad58b3bc2638461d58be69cf0bffcfcec849c7"
+      },
+      "currentEditorImportStatus": "REVIEWED_FILTERED_SUBSET_IMPORTED_AND_PATHS_VERIFIED"
     },
     {
       "assetStoreId": "247933",
@@ -134,12 +158,20 @@
           "__typename": "SRP"
         }
       ],
-      "acquisitionStatus": "NOT_ACQUIRED",
-      "archiveSha256": null,
+      "acquisitionStatus": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveSha256": "2228de7ba7f19934be8b58c96e1d8ce50f20ac51777fcdaa7b4478ea64d0b44d",
       "packagePath": null,
-      "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED",
-      "candidateGroup": "core_environment_and_first_hero"
+      "targetEditorImportStatus": "PASS_REVIEWED_BUILTIN_SUBSET_IMPORT",
+      "gameIntegrationStatus": "ACTUAL_GAMEPLAY_AND_VISUAL_VALIDATION_PENDING",
+      "candidateGroup": "core_environment_and_first_hero",
+      "sourceArchiveReceipt": {
+        "bytes": 38212995,
+        "sha256": "2228de7ba7f19934be8b58c96e1d8ce50f20ac51777fcdaa7b4478ea64d0b44d",
+        "filename": "Magic.Effects.FREE.unitypackage"
+      },
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "currentEditorImportStatus": "REVIEWED_FILTERED_SUBSET_IMPORTED_AND_PATHS_VERIFIED"
     },
     {
       "assetStoreId": "215058",
@@ -166,11 +198,19 @@
         }
       ],
       "standardAssetStoreEula": true,
-      "acquisitionStatus": "NOT_ACQUIRED",
-      "archiveSha256": null,
+      "acquisitionStatus": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveSha256": "7c50d7fe73d2470ce47969d2f78550d252527f31ddc4fb797d8c41d2c76c3d74",
       "packagePath": null,
-      "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+      "targetEditorImportStatus": "PASS_REVIEWED_BUILTIN_SUBSET_IMPORT",
+      "gameIntegrationStatus": "ACTUAL_GAMEPLAY_AND_VISUAL_VALIDATION_PENDING",
+      "ownerAccountOwnership": "OWNER_PROVIDED_LICENSED_ARCHIVE",
+      "archiveStatus": "AVAILABLE_PRIVATELY_IN_ENVIRONMENT",
+      "sourceArchiveReceipt": {
+        "filename": "FREE.-.32.RPG.Animations.unitypackage",
+        "bytes": 7858427,
+        "sha256": "7c50d7fe73d2470ce47969d2f78550d252527f31ddc4fb797d8c41d2c76c3d74"
+      },
+      "currentEditorImportStatus": "REVIEWED_FILTERED_SUBSET_IMPORTED_AND_PATHS_VERIFIED"
     },
     {
       "assetStoreId": "154271",
@@ -392,5 +432,6 @@
     "All current6000.6.5f1 imports,retargeting,performance and game integration remain unverified."
   ],
   "currentPriority": "LOCATION_ENVIRONMENTS_BEFORE_PAID_CHARACTERS",
-  "currentEnvironmentPlan": "distribution/location-asset-acquisition.json"
+  "currentEnvironmentPlan": "distribution/location-asset-acquisition.json",
+  "latestArchiveReceiptNote": "OwnerprovidedVillage,KnightandMagicarchives;filteredBuiltinevaluationiscoordinatedseparately. OtherStorearchivesremainunavailable."
 }

@@ -4,6 +4,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Ascendance.Online;
 using UnityEditor;
@@ -24,7 +26,7 @@ namespace Ascendance.EditorTools
         private const string Prefix = "[ASCENDANCE][BATCH VALIDATION]";
         private static readonly ConcurrentQueue<LogEntry> PendingLogs = new ConcurrentQueue<LogEntry>();
         private static readonly List<string> Errors = new List<string>();
-        private static readonly Terminal[] Required =
+        private static readonly Terminal[] Baseline =
         {
             new Terminal("master", "[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression completed:", 54),
             new Terminal("foundation", "[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation completed:", 24),
@@ -36,8 +38,19 @@ namespace Ascendance.EditorTools
             new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 42),
             new Terminal("reaction", "[ASCENDANCE][REACTION AUTHORITY]", "Reaction Authority completed:", 30),
             new Terminal("combatHud", "[ASCENDANCE][COMBAT HUD]", "Combat HUD completed:", 11),
-            new Terminal("villagers", "[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression completed:", 67)
+            new Terminal("villagers", "[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression completed:", 67),
+            new Terminal("locationArt", "[ASCENDANCE][LOCATION ART]", "Location Art Framework completed:", 47)
         };
+        private static Terminal[] Required
+        {
+            get
+            {
+                var gates = new List<Terminal>(Baseline);
+                if (SessionState.GetBool(Key + "installedArt", false)) gates.Add(new Terminal("installedArt", "[ASCENDANCE][LOCATION ART]", "Installed Location Art Bundle completed:", 10));
+                if (SessionState.GetBool(Key + "allArt", false)) gates.Add(new Terminal("allLocationArt", "[ASCENDANCE][LOCATION ART]", "All Location Art Bindings completed:", 236));
+                return gates.ToArray();
+            }
+        }
 
         static AscendanceBatchValidation0102()
         {
@@ -60,6 +73,23 @@ namespace Ascendance.EditorTools
             // Fail closed before opening a scene or running any save-corruption checks.
             // Editor authentication/configuration is deliberately left in place.
             string dataRoot = AscendanceStoragePaths0102.RequireIsolatedValidationDirectory();
+            bool allArt = args.Contains("-ascendance-require-all-location-art", StringComparer.OrdinalIgnoreCase);
+            bool installedArt = allArt || args.Contains("-ascendance-require-installed-art", StringComparer.OrdinalIgnoreCase);
+            string artPath = "", artHash = "";
+            if (installedArt)
+            {
+                artPath = Environment.GetEnvironmentVariable("ASCENDANCE_ART_MANIFEST");
+                if (string.IsNullOrWhiteSpace(artPath) || !Path.IsPathRooted(artPath)) throw new ArgumentException("Strict installed-art validation requires an absolute ASCENDANCE_ART_MANIFEST.");
+                artPath = Path.GetFullPath(artPath);
+                if (!LocationArtBundleLibrary0103.TryOpen(artPath, out var art, out var artFailure)) throw new InvalidOperationException("Required installed-art manifest was refused: " + artFailure);
+                art.Dispose(); artHash = ArtManifestHash(artPath);
+                string expectedArtHash = Environment.GetEnvironmentVariable("ASCENDANCE_ART_EXPECTED_MANIFEST_SHA256");
+                if (!string.IsNullOrEmpty(expectedArtHash) && expectedArtHash != artHash) throw new InvalidDataException("The required art manifest changed before Unity began validation.");
+            }
+            SessionState.SetBool(Key + "installedArt", installedArt);
+            SessionState.SetBool(Key + "allArt", allArt);
+            SessionState.SetString(Key + "artPath", artPath);
+            SessionState.SetString(Key + "artHash", artHash);
 
             SessionState.SetString(Key + "results", Path.GetFullPath(results));
             SessionState.SetString(Key + "storage", Path.GetFullPath(dataRoot));
@@ -176,7 +206,22 @@ namespace Ascendance.EditorTools
                     SessionState.SetInt(Key + "stage", 7);
                     QuestVillagerRegressionTestTools0102.TestVillagers();
                 }
-                else if (stage == 7 && Passed(10)) Finish(true, "Every required inherited, network, lobby, campaign, reaction, combat HUD and Villager gate completed.");
+                else if (stage == 7 && Passed(10))
+                {
+                    SessionState.SetInt(Key + "stage", 8);
+                    LocationArtRegressionTestTools0103.TestFramework();
+                }
+                else if (stage == 8 && Passed(11))
+                {
+                    if (!SessionState.GetBool(Key + "installedArt", false)) Finish(true, "Core and art-framework gates passed; installed-art checks were not requested.");
+                    else { SessionState.SetInt(Key + "stage", 9); LocationArtRegressionTestTools0103.TestInstalledBundle(); }
+                }
+                else if (stage == 9 && Passed(12))
+                {
+                    if (!SessionState.GetBool(Key + "allArt", false)) Finish(true, "Core, art-framework and installed-bundle gates passed; all-Location binding exercise was not requested.");
+                    else { SessionState.SetInt(Key + "stage", 10); LocationArtRegressionTestTools0103.TestAllInstalledBindings(); }
+                }
+                else if (stage == 10 && Passed(13)) Finish(true, "All required core, art-framework, installed-bundle and 236-Location binding gates completed. Landmark completeness remains separately reported.");
             }
             catch (Exception ex) { Finish(false, "Batch bridge failure: " + ex); }
         }
@@ -213,6 +258,15 @@ namespace Ascendance.EditorTools
         private static void Finish(bool passed, string reason)
         {
             if (!SessionState.GetBool(Key + "active", false)) return;
+            if (passed && SessionState.GetBool(Key + "installedArt", false))
+            {
+                try
+                {
+                    if (ArtManifestHash(SessionState.GetString(Key + "artPath", "")) != SessionState.GetString(Key + "artHash", ""))
+                        throw new InvalidDataException("The required art manifest changed during validation.");
+                }
+                catch (Exception ex) { passed = false; reason = ex.Message; Errors.Add(ex.Message); SessionState.SetInt(Key + "errors", SessionState.GetInt(Key + "errors", 0) + 1); }
+            }
             SessionState.SetBool(Key + "active", false);
             Application.logMessageReceivedThreaded -= OnLog;
             EditorApplication.update -= Tick;
@@ -223,6 +277,11 @@ namespace Ascendance.EditorTools
                 reason = reason,
                 editorVersion = Application.unityVersion,
                 buildVersion = AscendanceGameManager.BuildVersion,
+                requireInstalledArt = SessionState.GetBool(Key + "installedArt", false),
+                requireAllLocationArt = SessionState.GetBool(Key + "allArt", false),
+                artManifestSha256 = SessionState.GetString(Key + "artHash", ""),
+                installedArtStatus = SessionState.GetBool(Key + "installedArt", false) ? (Passed(12) ? "passed" : "failed") : "not-requested",
+                allLocationArtStatus = SessionState.GetBool(Key + "allArt", false) ? (Passed(13) ? "passed" : "failed") : "not-requested",
                 errorCount = SessionState.GetInt(Key + "errors", 0),
                 errors = Errors.ToArray()
             };
@@ -257,6 +316,11 @@ namespace Ascendance.EditorTools
                 if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase)) return args[i + 1];
             return null;
         }
+        private static string ArtManifestHash(string path)
+        {
+            LocationArtBundleLibrary0103.RequireRegularPath(path);
+            using (var stream = File.OpenRead(path)) using (var sha = SHA256.Create()) return BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
+        }
 
         private sealed class Terminal
         {
@@ -269,6 +333,8 @@ namespace Ascendance.EditorTools
         [Serializable] private sealed class Verdict
         {
             public bool passed;
+            public bool requireInstalledArt, requireAllLocationArt;
+            public string artManifestSha256, installedArtStatus, allLocationArtStatus;
             public string reason, editorVersion, buildVersion;
             public int errorCount;
             public string[] errors;

@@ -65,16 +65,18 @@ excluded from the current 3D Built-in plan.
 
 Publisher pipeline compatibility claims are recorded in
 `distribution/free-realistic-asset-acquisition.json`. They are not import or
-gameplay test results. None of these packages has been downloaded, imported or
-integrated into Ascendance yet. No purchases or production changes were made.
+gameplay test results. The owner has since supplied the Village, Knight and
+Magic Effects archives; their checksums are recorded and filtered Built-in
+evaluation is coordinated separately. Other Store archives remain unavailable.
+No purchases or production changes were made for this research.
 
 ## Acquisition
 
-No `.unitypackage` archives were found in the workspace or the usual Unity Asset
-Store cache locations. The installed Unity CLI can inspect/import a local
-archive; it does not offer a Store acquisition/download command. Its Store-capable
-account sign-in was not available when checked. Existing Editor build licensing
-is separate and was not modified.
+The initial cache search found no `.unitypackage` archives. The owner subsequently
+provided the three archives described above. The installed Unity CLI can
+inspect/import a local archive; it does not offer a Store acquisition/download
+command. Its account sign-in was not available when checked. Existing Editor
+build licensing is separate and was not modified.
 
 The remaining owner action is to add the five starter products to **My Assets** in
 the Unity Asset Store, then use **Unity Editor → Window → Package Manager → My
