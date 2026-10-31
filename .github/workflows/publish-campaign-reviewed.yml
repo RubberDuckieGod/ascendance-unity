@@ -1,0 +1,114 @@
+name: Verify and upload reviewed full multiplayer campaign release
+
+on:
+  push:
+    branches:
+      - distribution/unity-online-campaigns
+
+permissions:
+  contents: read
+
+env:
+  # Freeze only after actual builds, graphical acceptance, old-h restoration,
+  # all public bytes and the exact prerelease draft ID have been reviewed.
+  REVIEWED_INVENTORY_SHA256: ''
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify complete client/server archives, deployment helpers and reports
+        run: python3 -B .github/scripts/publish_campaign_draft.py
+
+  native:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Reverify and extract the exact reviewed complete server
+        run: python3 -B .github/scripts/publish_campaign_draft.py --prepare-native "$RUNNER_TEMP/campaign-native-input"
+      - name: Prepare isolated TLS fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          asc_private="$RUNNER_TEMP/campaign-native-private"
+          mkdir -m 700 "$asc_private"
+          mkdir "$RUNNER_TEMP/campaign-native-reports"
+          openssl rand -hex 32 > "$asc_private/pfx-password"
+          openssl rand -hex 32 > "$asc_private/room-access-key"
+          openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 1 -keyout "$asc_private/server.key" -out "$asc_private/server.crt" -subj '/CN=Ascendance CI isolated campaign acceptance' -addext 'subjectAltName=IP:127.0.0.1' -addext 'basicConstraints=critical,CA:FALSE' -addext 'keyUsage=critical,digitalSignature,keyEncipherment' -addext 'extendedKeyUsage=serverAuth' 2>/dev/null
+          openssl pkcs12 -export -inkey "$asc_private/server.key" -in "$asc_private/server.crt" -out "$asc_private/server.pfx" -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1 -passout "file:$asc_private/pfx-password"
+          openssl x509 -in "$asc_private/server.crt" -outform DER -out "$asc_private/server.der"
+      - name: Native plain gameplay, synchronization and persistence acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          asc_source=$(cat "$RUNNER_TEMP/campaign-native-input/source-revision.txt")
+          python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/campaign-native-input/build" --manifest "$RUNNER_TEMP/campaign-native-input/linux-server-manifest.json" --source-revision "$asc_source" --output "$RUNNER_TEMP/campaign-native-reports/plain.json"
+      - name: Native pinned TLS and room-key acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          asc_source=$(cat "$RUNNER_TEMP/campaign-native-input/source-revision.txt")
+          asc_private="$RUNNER_TEMP/campaign-native-private"
+          asc_pin=$(sha256sum "$asc_private/server.der" | cut -d ' ' -f 1)
+          ASCENDANCE_TLS_PFX_PATH="$asc_private/server.pfx" ASCENDANCE_TLS_PFX_PASSWORD_FILE="$asc_private/pfx-password" python3 -B tools/native_server_acceptance.py --build-dir "$RUNNER_TEMP/campaign-native-input/build" --manifest "$RUNNER_TEMP/campaign-native-input/linux-server-manifest.json" --source-revision "$asc_source" --tls-cert-sha256 "$asc_pin" --access-key-file "$asc_private/room-access-key" --output "$RUNNER_TEMP/campaign-native-reports/tls.json"
+      - name: Verify native semantic results
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import importlib.util, json, os
+          from pathlib import Path
+          path = Path('.github/scripts/publish_campaign_draft.py')
+          spec = importlib.util.spec_from_file_location('campaign_publish', path)
+          module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+          inventory, _ = module.verify()
+          for name, field in [('plain', 'plainServerChecks'), ('tls', 'tlsServerChecks')]:
+              report = json.loads((Path(os.environ['RUNNER_TEMP']) / 'campaign-native-reports' / (name + '.json')).read_text())
+              module.require(report.get('status') == 'PASS' and report.get('sourceRevision') == inventory['sourceRevision'], 'CI native runtime identity or status differs')
+              module.checks_passed(report, inventory['acceptance'][field], 'CI ' + name)
+          PY
+      - name: Retain only public semantic reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campaign-native-semantic-reports
+          path: |
+            ${{ runner.temp }}/campaign-native-reports/plain.json
+            ${{ runner.temp }}/campaign-native-reports/tls.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Remove isolated private TLS files
+        if: always()
+        shell: bash
+        run: rm -rf -- "$RUNNER_TEMP/campaign-native-private"
+
+  upload:
+    needs: [verify, native]
+    if: needs.verify.result == 'success' && needs.native.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: ascendance-full-campaign-reviewed-draft-upload
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Upload only the exact reviewed new draft and verify remote digests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B .github/scripts/publish_campaign_draft.py --upload

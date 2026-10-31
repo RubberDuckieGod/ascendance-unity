@@ -16,23 +16,34 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 README = """Ascendance multiplayer — Windows
 
-1. Extract the complete Windows ZIP. Keep Ascendance.exe, Ascendance_Data,
+1. Extract the complete Windows ZIP into a folder whose path has no square
+   brackets. Keep Ascendance.exe, Ascendance_Data,
    UnityPlayer.dll and both Play-AscendanceMultiplayer files together.
-2. Get the private Ascendance.invite.json from the server owner. Put it beside
+2. Keep your existing private Ascendance.invite.json, or get it from the server
+   owner. Put it beside
    Play-AscendanceMultiplayer.cmd, or enter its full path when prompted.
 3. Double-click Play-AscendanceMultiplayer.cmd and enter your player name.
-4. Choose NEW GAME, select a different available Hero from the server party,
-   then BEGIN ADVENTURE. Every friend uses the same invite and a different Hero.
+4. Choose JOIN ONLINE CAMPAIGN. For an existing campaign, choose an available
+   Hero from that saved party. Every friend uses the same invite and their own
+   player name and Hero.
+5. To begin a separate adventure, the campaign creator chooses NEW ONLINE
+   CAMPAIGN and confirms. The previous campaign is saved in its own slot.
+   The new draft shows all 16 Heroes. Each of 1-4 players claims a different
+   Hero and chooses READY. The creator then chooses START CAMPAIGN.
+6. Use SAVED CAMPAIGNS to restore a previous adventure. Have other players
+   return to the menu before switching campaigns, then join the selected one.
 
 The owner must first deploy and verify the matching Linux server. This download
 contains no private invite or server credentials. Send the invite privately;
 never attach it to a public release. If the owner rotates it, obtain a fresh copy.
-Keep your local player data to retain your reconnect identity.
+The matching server update is required for the new campaign setup. Updating
+the software alone keeps the existing campaign active. Keep your local player
+data to retain your reconnect and campaign-creator identity.
 """
 PRIVATE_EXTENSIONS = {".pfx", ".p12", ".pem", ".key", ".cer", ".crt", ".der", ".ulf", ".lic", ".env", ".keystore", ".jks"}
 PRIVATE_NAMES = {"authorized_keys", "known_hosts", ".env", "credentials", "credentials.json", "room-access-key", "pfx-password"}
 PRIVATE_DIRECTORIES = {".ssh", ".aws", ".codex", "ascendanceserverrooms0100"}
-PRIVATE_FIELDS = {"accesskey", "roomaccesskey", "reconnecttoken", "password", "passwd", "privatekey", "clientsecret", "refreshtoken"}
+PRIVATE_FIELDS = {"accesskey", "roomaccesskey", "reconnecttoken", "password", "passwd", "privatekey", "clientsecret", "refreshtoken", "campaignownertoken0102"}
 
 
 class Refusal(Exception):

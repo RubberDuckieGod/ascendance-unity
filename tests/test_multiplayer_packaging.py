@@ -54,6 +54,11 @@ class MultiplayerPackaging(unittest.TestCase):
             for name in ['Ascendance.exe','UnityPlayer.dll','Play-AscendanceMultiplayer.ps1','Play-AscendanceMultiplayer.cmd','CONNECTION_README.txt']:
                 self.assertIn('Windows/'+name,archive.namelist())
             self.assertFalse(any('invite.json' in name.lower() for name in archive.namelist()))
+            instructions = archive.read('Windows/CONNECTION_README.txt').decode()
+            self.assertEqual(instructions, (self.args.output/'CONNECTION_README.txt').read_text())
+            for step in ['JOIN ONLINE CAMPAIGN', 'NEW ONLINE', 'all 16 Heroes', 'READY', 'START CAMPAIGN', 'SAVED CAMPAIGNS']:
+                self.assertIn(step, instructions)
+            self.assertIn('Updating\nthe software alone keeps the existing campaign active', instructions)
         proof=json.loads((self.args.output/'RuntimeSourceRevision.json').read_text())
         self.assertEqual(proof['RuntimeSourceRevision'],self.sha)
         self.assertEqual(package.extract_validated_server(serverzip,self.manifest,self.root/'extracted',self.sha),self.root/'extracted')
@@ -69,7 +74,7 @@ class MultiplayerPackaging(unittest.TestCase):
                 self.assertFalse(self.args.output.exists())
 
     def test_private_filename_nested_credentials_duplicate_json_and_private_key_refused(self):
-        cases=[('Ascendance.invite.json',b'{}'),('server.pfx',b'private binary fixture'),('settings.json',b'{"nested":{"accessKey":"private-fixture"}}'),('settings.json',b'{"password":"private-fixture","password":""}'),('notes.txt',b'-----BEGIN PRIVATE KEY-----\nprivate fixture')]
+        cases=[('Ascendance.invite.json',b'{}'),('server.pfx',b'private binary fixture'),('settings.json',b'{"nested":{"accessKey":"private-fixture"}}'),('settings.json',b'{"CampaignOwnerToken0102":"private-fixture"}'),('settings.json',b'{"password":"private-fixture","password":""}'),('notes.txt',b'-----BEGIN PRIVATE KEY-----\nprivate fixture')]
         for name,content in cases:
             with self.subTest(name=name,content=content[:20]):
                 path=self.windows/name;path.write_bytes(content)
