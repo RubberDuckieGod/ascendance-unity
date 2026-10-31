@@ -115,6 +115,11 @@ def combat_view(state):
     }
 
 
+def rescue_effect(view, hero_id):
+    actor = next(hero for hero in view["heroes"] if hero["Id"] == hero_id)
+    return [actor["Actions"], *view["villagers"]]
+
+
 def native_campaign_view(snapshot):
     campaign = snapshot["Campaign"]
     objects = campaign["QuestRuntime0829"]["Objects"]
@@ -169,6 +174,25 @@ class Acceptance:
             client.wait(label + " authoritative outcome", lambda s: combat_view(s) == actual)
             self.check(label + " " + client.hero + " replica equals native authority", actual, combat_view(client.state()))
         return actual
+
+    def verify_rescue_commit(self, client, response_state, expected_actions, expected_rescued):
+        expected = [expected_actions, expected_rescued, 4-expected_rescued, 0]
+        revision = response_state["GameplayRevision"]
+        self.check(client.hero + " accepted rescue has exact Action/token effects", expected,
+                   rescue_effect(combat_view(response_state), client.hero))
+
+        def authority_observation():
+            snapshot = self.observer.snapshot()
+            return {"revision": snapshot["GameplayRevision"], "effects": rescue_effect(native_campaign_view(snapshot), client.hero)}
+
+        authority = await_value(client.hero + " rescue authoritative commit", authority_observation,
+                                lambda s: s["revision"] >= revision and s["effects"] == expected)
+        self.check(client.hero + " native authority records exact rescue cost and token conservation", expected, authority["effects"])
+        for peer in self.clients:
+            state = peer.wait(client.hero + " rescue reaches replica at or beyond accepted revision",
+                              lambda s: s["GameplayRevision"] >= revision and rescue_effect(combat_view(s), client.hero) == expected)
+            self.check(peer.hero + " replica observes " + client.hero + " exact rescue outcome", expected,
+                       rescue_effect(combat_view(state), client.hero))
 
     def private_display(self):
         number = next(n for n in range(191, 240) if not Path("/tmp/.X" + str(n) + "-lock").exists())
@@ -245,8 +269,8 @@ class Acceptance:
             # Exercise the exact bug: the responding player inspects their
             # friend's Hero, then clicks the actual shared decline button.
             other = b.hero if responder is a else a.hero
-            self.request(responder, "select-view", TargetId=other)
-            self.check(responder.hero + " inspects other Hero during reaction", other, responder.state()["SelectedHeroId"])
+            viewed = self.request(responder, "select-view", TargetId=other)
+            self.check(responder.hero + " inspects other Hero during reaction", other, viewed["SelectedHeroId"])
             # Snapshot polling and a queued resolution can finish the entire
             # phase while the UI request is in flight. Observe completion as a
             # valid outcome, rather than waiting for a button that has vanished.
@@ -293,10 +317,15 @@ class Acceptance:
             self.start_campaign(self.output / "rescued-fallback")
             a, b = self.clients
             before_health = {h["Id"]: h["Health"] for h in a.state()["Heroes"]}
-            for client in self.clients:
-                self.click(client, "EndTurn")  # START TURN on the same real HUD control.
-                for _ in range(2): self.click(client, "Rescue")
-                self.check(client.hero + " spends two Actions rescuing two actual tokens", 1, body(client.state(), client.hero)["Actions"])
+            for index, client in enumerate(self.clients):
+                started = self.click(client, "EndTurn")  # START TURN on the same real HUD control.
+                self.check(client.hero + " actual HUD Start Turn grants three Actions", 3, body(started, client.hero)["Actions"])
+                for rescue_number in range(2):
+                    response = self.click(client, "Rescue")
+                    self.verify_rescue_commit(client, response, 2-rescue_number, index*2+rescue_number+1)
+                committed = self.synced(client.hero + " two rescues committed before End Turn")
+                self.check(client.hero + " spends two Actions rescuing two actual tokens", [1, (index+1)*2, 4-(index+1)*2, 0],
+                           rescue_effect(committed, client.hero))
                 self.click(client, "EndTurn")
             final, reactions = self.finish_phase(before_health)
             self.report["scenarios"].append({"name": "all villagers rescued, complete enemy phase and other-Hero reaction decline",

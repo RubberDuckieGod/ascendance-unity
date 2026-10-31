@@ -38,6 +38,15 @@ class NativeCombatObservationTests(unittest.TestCase):
         self.assertEqual(COMBAT.native_campaign_view(snapshot), COMBAT.combat_view(state))
         self.assertEqual(COMBAT.native_campaign_view(snapshot)["villagers"], [1, 2, 1])
 
+    def test_rescue_effect_projection_requires_exact_action_cost_and_all_token_counts(self):
+        _, state = self.fixture()
+        view = COMBAT.combat_view(state)
+        self.assertEqual(COMBAT.rescue_effect(view, "Aldric"), [0, 1, 2, 1])
+        for mutate in [lambda s: s["Heroes"][0].update(Actions=1), lambda s: s.update(VillagersRescued=2),
+                       lambda s: s.update(VillagersAvailable=3), lambda s: s.update(VillagersLost=0)]:
+            candidate = copy.deepcopy(state); mutate(candidate)
+            self.assertNotEqual(COMBAT.rescue_effect(COMBAT.combat_view(candidate), "Aldric"), [0, 1, 2, 1])
+
     def test_peer_damage_and_villager_loss_cannot_be_hidden_by_projection(self):
         snapshot, state = self.fixture()
         expected = COMBAT.native_campaign_view(snapshot)
