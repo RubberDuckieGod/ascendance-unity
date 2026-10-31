@@ -11,7 +11,7 @@ permissions:
 env:
   # Freeze only after actual builds, graphical acceptance, old-h restoration,
   # all public bytes and the exact prerelease draft ID have been reviewed.
-  REVIEWED_INVENTORY_SHA256: ''
+  REVIEWED_INVENTORY_SHA256: 6e94a6ccb615131235d269cda5da80109c43fa38fe6836027992c8203c9e7d93
 
 jobs:
   verify:

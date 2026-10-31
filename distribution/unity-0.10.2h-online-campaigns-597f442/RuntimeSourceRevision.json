@@ -1,0 +1,23 @@
+{
+  "RuntimeSourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+  "builds": {
+    "linux": {
+      "file": "AscendanceServer.provenance.json",
+      "fileManifestSha256": "9d3012517ca7fdca999641683c9ec5c8530db58f195205fb15ce0b43a5b8a95f",
+      "sha256": "7dbaa41d685227a64271d23f0de9a1c4f79ad87fab905020e4bccfe2a152eac4",
+      "sourceDirty": false,
+      "sourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+      "target": "StandaloneLinux64"
+    },
+    "windows": {
+      "file": "Ascendance.provenance.json",
+      "fileManifestSha256": "3399d28f4ac400a2c84b63c18b6b9da382dcc622dae8994331a3b998c8677663",
+      "sha256": "725541ef3c7d89f53f44e50ada95b25cf79c28267568345207c310b1f2987e83",
+      "sourceDirty": false,
+      "sourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+      "target": "StandaloneWindows64"
+    }
+  },
+  "format": 1,
+  "release": "unity-0.10.2h-online-campaigns-597f442"
+}

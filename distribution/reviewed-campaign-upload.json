@@ -1,0 +1,126 @@
+{
+  "acceptance": {
+    "editorGates": {
+      "campaign": 42,
+      "foundation": 24,
+      "lobby": 32,
+      "master": 54,
+      "network": 27,
+      "reliability": 22,
+      "router": 29,
+      "snapshot": 20
+    },
+    "graphicalChecks": 47,
+    "helperChecks": 211,
+    "migrationChecks": 34,
+    "plainServerChecks": 73,
+    "tlsServerChecks": 80
+  },
+  "assets": {
+    "CONNECTION_README.txt": {
+      "bytes": 1569,
+      "sha256": "20b8347e7ce0d015b77e3c1eb2ce539f56635f0afa0c2537dcba2b76987b2dc2"
+    },
+    "RuntimeSourceRevision.json": {
+      "bytes": 928,
+      "sha256": "65c81110fd91aac7184df0bc0edb3a0143ebf13ca807e65178303ad5afcea160"
+    },
+    "SHA256SUMS": {
+      "bytes": 908,
+      "sha256": "b9b62d7d4d6e1c0d98a1f2602b09acf6cdfc5c296c59b9c4ec91e7a0c05d988a"
+    },
+    "ascendance-linux-server-unity-0.10.2h-online-campaigns-597f442.zip": {
+      "bytes": 31940518,
+      "sha256": "4ae8b53871b6394a9fd884b092edb44206fd34712cabf7a4ab13e7f18c1daeeb"
+    },
+    "ascendance-windows-unity-0.10.2h-online-campaigns-597f442.zip": {
+      "bytes": 38132116,
+      "sha256": "c310bb7abfc08403150393b7b869feacf76a1664458b1f59a66448c7cc35a4fb"
+    },
+    "full-campaign-validation-reports.zip": {
+      "bytes": 806309,
+      "sha256": "7410b3cd506f76caadaff670461ec4c2aa3a352f5ae65da0dafb10638e06b60a"
+    },
+    "linux-server-manifest.json": {
+      "bytes": 20676,
+      "sha256": "9d3012517ca7fdca999641683c9ec5c8530db58f195205fb15ce0b43a5b8a95f"
+    },
+    "release-package-manifest.json": {
+      "bytes": 783,
+      "sha256": "daddfe9ffaf3d8faf7b4e4d4e89613771d8863386020aa7bce304d4f596c6b32"
+    },
+    "release.json": {
+      "bytes": 3131,
+      "sha256": "c6ddf1028a738b1648673a38467a12989631c431c58a3a331dba3648a3b5a722"
+    },
+    "windows-client-manifest.json": {
+      "bytes": 20785,
+      "sha256": "3399d28f4ac400a2c84b63c18b6b9da382dcc622dae8994331a3b998c8677663"
+    }
+  },
+  "clientOnly": false,
+  "deploymentRevision": "fb1a96260437288b85a60fd5249c429a9b1aa7e8",
+  "format": 1,
+  "launcherSha256": "f0fcafc81b03a9b879011c8e8307c8822387d78764e4dd141abbc8aa55b37ca6",
+  "release": "unity-0.10.2h-online-campaigns-597f442",
+  "releaseId": 429645367,
+  "reports": {
+    "acceptance-summary.json": {
+      "bytes": 3089,
+      "sha256": "2417c96beab3858bb058b495674ea267c7102f8a3f058d114d17a2bb26c32315"
+    },
+    "build-verification.json": {
+      "bytes": 1067,
+      "sha256": "80f5a83d619923e6457724587705d166a4d8fb79a9050cca040930313b4569ae"
+    },
+    "campaign-fresh-two-nondefault-worlds.png": {
+      "bytes": 534247,
+      "sha256": "0ff87136a50989e3a9aac74d2780d67c0c254c23d80d20e5e54572687d4f22ae"
+    },
+    "campaign-full-sixteen-roster.png": {
+      "bytes": 114426,
+      "sha256": "f0ae3fb847e554d9597bb5da4b42c73d32b2f8a00d640a177b1ed8df8295b43c"
+    },
+    "campaign-two-ready-nondefault-heroes.png": {
+      "bytes": 116111,
+      "sha256": "0c8fd02d008de52512152b2cd11e67f0388099163bae8d6efb8cecf07eaa2587"
+    },
+    "editor-gates.json": {
+      "bytes": 2126,
+      "sha256": "370b36d30f350ce6b721b237c215b1adc184798dc358c4833ddbd41528cf4180"
+    },
+    "linux-development-build-provenance.json": {
+      "bytes": 1526,
+      "sha256": "a9d5dcc3908dc2e1fb8bb73404eb62dc02e9466d20cbfa4ccde0b27d8f18b9db"
+    },
+    "linux-server-build-provenance.json": {
+      "bytes": 1542,
+      "sha256": "7dbaa41d685227a64271d23f0de9a1c4f79ad87fab905020e4bccfe2a152eac4"
+    },
+    "native-full-campaign-tls.json": {
+      "bytes": 326593,
+      "sha256": "8cec0b3102f3cf15b1fcc550bf688b03783c667c41b4a14fe5b7f362b9a22bcd"
+    },
+    "native-h-campaign-restore.json": {
+      "bytes": 7115,
+      "sha256": "bc15d1a533d2f0b577fa616b9e37b7970c010fcfdaf03b162de5b5e88ad374f3"
+    },
+    "native-server-plain.json": {
+      "bytes": 67228,
+      "sha256": "cf803a8f17413d5acf0d8bad3a4cb9bf173f92aeda5f29f1bae27e5cb8309de8"
+    },
+    "native-server-tls.json": {
+      "bytes": 68991,
+      "sha256": "34bd3c05b8fbacb73e48ffd8bc8cf076e16008727f0fb13fcba84f75772d8167"
+    },
+    "python-helper-fixtures.json": {
+      "bytes": 308,
+      "sha256": "a38b9d009edd4f3f3d4f6f2d3d4ff5deb64cb9ca1b0fe29254c7e2a18be7e941"
+    },
+    "windows-build-provenance.json": {
+      "bytes": 1510,
+      "sha256": "725541ef3c7d89f53f44e50ada95b25cf79c28267568345207c310b1f2987e83"
+    }
+  },
+  "sourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7"
+}
