@@ -121,7 +121,8 @@ def verify_reports(reports, inventory, revision, windows_proof):
             "Python helper fixture acceptance is incomplete")
     graphical = document(reports["native-full-campaign-tls.json"])
     checks_passed(graphical, expected.get("graphicalChecks"), "Actual graphical campaign acceptance")
-    require(graphical.get("transport") == "pinned-TLS-and-room-key"
+    require(graphical.get("kind") == "actual-native-full-roster-online-campaign"
+            and graphical.get("transport") == "pinned-TLS-and-room-key"
             and summary.get("screenshotsVisuallyReviewed") is True
             and type(summary.get("framesAdvancedBeforeCapture")) is int and summary["framesAdvancedBeforeCapture"] >= 15,
             "Actual graphical TLS and visual review were not proven")
@@ -133,6 +134,11 @@ def verify_reports(reports, inventory, revision, windows_proof):
             "Copied campaign restoration is not from the exact deployed original h build")
     require(reports["windows-build-provenance.json"] == windows_proof,
             "Published Windows build proof differs from the shipped player")
+    linux = document(reports["linux-development-build-provenance.json"])
+    require(linux.get("schemaVersion") == 1 and linux.get("outcome") == "success" and linux.get("exitCode") == 0
+            and linux.get("source") == {"vcs": "git", "revision": revision, "dirty": False}
+            and linux.get("build", {}).get("target") == "StandaloneLinux64",
+            "Graphical Linux acceptance player has wrong source or target")
 
 
 def verify():
