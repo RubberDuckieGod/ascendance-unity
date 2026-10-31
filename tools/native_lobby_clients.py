@@ -56,7 +56,7 @@ class LobbyClient(Client):
     def open(self):
         reply = self.request("open")
         if not reply["Accepted"]: raise AssertionError(reply)
-        return self.wait("live online Hero roster", lambda s: s.get("LobbyVisible") and s.get("IsConnected") and len(s.get("Choices", [])) == 2)
+        return self.wait("live online Hero roster", lambda s: s.get("LobbyVisible") and s.get("IsConnected") and not s.get("IsBusy") and len(s.get("Choices", [])) == 2)
 
     def choose(self, hero):
         reply = self.request("select", HeroId=hero)

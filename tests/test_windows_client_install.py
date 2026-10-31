@@ -89,7 +89,7 @@ class ClientOnlyHandoff(unittest.TestCase):
         script = ROOT / "tools/Play-AscendanceMultiplayer.ps1"
         result = self.ps(
             "function global:Invoke-WebRequest { param($Uri,$OutFile,[switch]$UseBasicParsing); "
-            "if($Uri -cne 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/900ef329c3fbe4dda7df8fdd3a47f08116453f99/tools/Play-AscendanceMultiplayer.ps1'){throw 'Unexpected URL'}; "
+            "if($Uri -cne 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860/tools/Play-AscendanceMultiplayer.ps1'){throw 'Unexpected URL'}; "
             "Copy-Item -LiteralPath " + quote(script) + " -Destination $OutFile }; "
             "Install-AscendanceReviewedLauncher " + quote(self.game) + " " + quote(self.staging) + "; 'installed'")
         self.assertEqual(result.returncode, 0, result.stderr)

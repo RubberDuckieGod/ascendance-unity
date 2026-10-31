@@ -6,6 +6,7 @@ param(
     [string]$ExpectedSourceRevision = '55d25c03a3279a8396d5b8954e73180e08f7a0c5',
     [string]$ExpectedRoom = 'ASC-PRIMARY',
     [string]$ExpectedCertificateSha256,
+    [string]$ExistingInvitePath,
     [string]$OutputDirectory
 )
 $ErrorActionPreference = 'Stop'
@@ -181,8 +182,8 @@ function Install-AscendanceReviewedLauncher {
     if ($item -isnot [IO.FileInfo]) { throw 'The extracted launcher is not a regular file.' }
     $download = Join-Path $DownloadDirectory 'Play-AscendanceMultiplayer.reviewed.ps1'
     if (Test-Path -LiteralPath $download) { throw 'The reviewed launcher download path already exists.' }
-    $url = 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/900ef329c3fbe4dda7df8fdd3a47f08116453f99/tools/Play-AscendanceMultiplayer.ps1'
-    $sha256 = 'a4fed209aef94cde891a528b5d6d29601892b39a9b440635982fb7fab50591e1'
+    $url = 'https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860/tools/Play-AscendanceMultiplayer.ps1'
+    $sha256 = 'f0fcafc81b03a9b879011c8e8307c8822387d78764e4dd141abbc8aa55b37ca6'
     Get-AscendanceVerifiedFile $url $sha256 $download
     [void](Get-AscendanceRegularPath $download)
     Copy-Item -LiteralPath $download -Destination $target -Force
@@ -208,6 +209,35 @@ function Read-AscendanceClientProfile {
         throw 'The private connection profile does not match the verified activation certificate.'
     }
     return $profile
+}
+
+function Install-AscendanceConnectionProfile {
+    param([string]$DestinationPath, [string]$Endpoint, [string]$Room,
+          [string]$CertificateSha256, [string]$ExistingInvitePath, [string]$IdentityFile)
+    $sourceHash = $null
+    if (-not [string]::IsNullOrWhiteSpace($ExistingInvitePath)) {
+        $source = Get-AscendanceRegularPath $ExistingInvitePath
+        if ($source -isnot [IO.FileInfo]) { throw 'The existing invitation must be a regular file.' }
+        # Validate before creating the destination. Do not change the original
+        # invitation, its permissions, player preferences or the previous game.
+        $null = Read-AscendanceClientProfile $source.FullName $Endpoint $Room $CertificateSha256
+        $sourceHash = (Get-FileHash -LiteralPath $source.FullName -Algorithm SHA256).Hash
+    }
+    New-AscendanceOwnerFile $DestinationPath
+    if ($null -ne $sourceHash) {
+        Write-Host 'Reusing your existing private invitation in the new protected client folder.'
+        Copy-Item -LiteralPath $source.FullName -Destination $DestinationPath -Force
+        if ((Get-FileHash -LiteralPath $DestinationPath -Algorithm SHA256).Hash -ne $sourceHash) {
+            throw 'The private invitation changed while being copied.'
+        }
+    } else {
+        Write-Host 'Copying the private connection profile with your existing Windows SSH key. Enter its passphrase only in this terminal.'
+        # Ordinary interactive SCP, without stdin pipes or a remote command.
+        & scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -i $IdentityFile 'root@159.65.100.206:/etc/ascendance-secure/owner-connection.json' $DestinationPath
+        if ($LASTEXITCODE -ne 0) { throw 'The private profile could not be copied. The server was not changed by this client-only installer.' }
+    }
+    Protect-AscendanceOwnerPath $DestinationPath
+    $null = Read-AscendanceClientProfile $DestinationPath $Endpoint $Room $CertificateSha256
 }
 
 function Assert-AscendanceClientStorage {
@@ -249,9 +279,15 @@ if ($ExpectedRoom -notmatch '^[A-Za-z0-9_-]{1,128}$') { throw 'Invalid expected 
 if (-not [string]::IsNullOrWhiteSpace($ExpectedCertificateSha256) -and $ExpectedCertificateSha256 -notmatch '^[A-Fa-f0-9]{64}$') {
     throw 'Invalid expected activation certificate.'
 }
-if (-not (Get-Command scp -CommandType Application -ErrorAction SilentlyContinue)) { throw 'Windows OpenSSH scp is required.' }
-$identityFile = Join-Path $env:USERPROFILE '.ssh\id_ed25519'
-if (-not (Test-Path -LiteralPath $identityFile -PathType Leaf)) { throw 'The existing Windows SSH identity file was not found.' }
+$identityFile = $null
+if ([string]::IsNullOrWhiteSpace($ExistingInvitePath)) {
+    if (-not (Get-Command scp -CommandType Application -ErrorAction SilentlyContinue)) { throw 'Windows OpenSSH scp is required.' }
+    $identityFile = Join-Path $env:USERPROFILE '.ssh\id_ed25519'
+    if (-not (Test-Path -LiteralPath $identityFile -PathType Leaf)) { throw 'The existing Windows SSH identity file was not found.' }
+} else {
+    $sourceInvite = Get-AscendanceRegularPath $ExistingInvitePath
+    if ($sourceInvite -isnot [IO.FileInfo]) { throw 'The existing invitation must be a regular file.' }
+}
 $session = New-AscendanceClientDirectory $OutputDirectory
 $descriptorFile = Join-Path $session 'release.json'
 Get-AscendanceVerifiedFile $ReleaseDescriptorUrl $ReleaseDescriptorSha256 $descriptorFile
@@ -274,15 +310,7 @@ foreach ($name in @('Ascendance_Data','UnityPlayer.dll','Play-AscendanceMultipla
 Assert-AscendanceClientProvenance (Join-Path $gameDirectory 'Ascendance.provenance.json') $ExpectedSourceRevision
 Install-AscendanceReviewedLauncher $gameDirectory $session
 $privateInvite = Join-Path $gameDirectory 'Ascendance.invite.json'
-New-AscendanceOwnerFile $privateInvite
-Write-Host 'Copying the private connection profile with your existing Windows SSH key. Enter its passphrase only in this terminal.'
-# This is an ordinary interactive SCP invocation. There is no remote command,
-# stdin pipe, deployment action or invitation/key value in an argument.
-& scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -i $identityFile 'root@159.65.100.206:/etc/ascendance-secure/owner-connection.json' $privateInvite
-if ($LASTEXITCODE -ne 0) { throw 'The private profile could not be copied. The server was not changed by this client-only installer.' }
-Protect-AscendanceOwnerPath $privateInvite
-$privateProfile = Read-AscendanceClientProfile $privateInvite ([string]$descriptor.endpoint) $ExpectedRoom $ExpectedCertificateSha256
-$privateProfile = $null
+Install-AscendanceConnectionProfile $privateInvite ([string]$descriptor.endpoint) $ExpectedRoom $ExpectedCertificateSha256 $ExistingInvitePath $identityFile
 [pscustomobject]@{
     LauncherPath = (Join-Path $gameDirectory 'Play-AscendanceMultiplayer.cmd')
     ClientDirectory = $gameDirectory
