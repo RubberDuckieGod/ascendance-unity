@@ -28,12 +28,15 @@ namespace Ascendance.EditorTools
         {
             new Terminal("master", "[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression completed:", 54),
             new Terminal("foundation", "[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation completed:", 24),
-            new Terminal("router", "[ASCENDANCE][0.10.2h ROUTER]", "Client Command Routing completed:", 29),
+            new Terminal("router", "[ASCENDANCE][0.10.2h ROUTER]", "Client Command Routing completed:", 30),
             new Terminal("network", "[ASCENDANCE][0.10.2h NETWORK]", "Real Network Transport completed:", 27),
             new Terminal("reliability", "[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability completed:", 22),
             new Terminal("snapshot", "[ASCENDANCE TEST 0.10.2 SNAPSHOT]", " checks.", 20),
             new Terminal("lobby", "[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby completed:", 32),
-            new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 42)
+            new Terminal("campaign", "[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup completed:", 42),
+            new Terminal("reaction", "[ASCENDANCE][REACTION AUTHORITY]", "Reaction Authority completed:", 30),
+            new Terminal("combatHud", "[ASCENDANCE][COMBAT HUD]", "Combat HUD completed:", 11),
+            new Terminal("villagers", "[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression completed:", 53)
         };
 
         static AscendanceBatchValidation0102()
@@ -158,7 +161,22 @@ namespace Ascendance.EditorTools
                     SessionState.SetInt(Key + "stage", 4);
                     OnlineCampaignSetupRegressionTestTools0102.TestCampaignSetup();
                 }
-                else if (stage == 4 && Passed(7)) Finish(true, "Every required inherited, network, lobby, and campaign setup gate completed.");
+                else if (stage == 4 && Passed(7))
+                {
+                    SessionState.SetInt(Key + "stage", 5);
+                    ReactionAuthorityRegressionTestTools0102.TestReactions();
+                }
+                else if (stage == 5 && Passed(8))
+                {
+                    SessionState.SetInt(Key + "stage", 6);
+                    CombatHudRegressionTestTools0102.TestHud();
+                }
+                else if (stage == 6 && Passed(9))
+                {
+                    SessionState.SetInt(Key + "stage", 7);
+                    QuestVillagerRegressionTestTools0102.TestVillagers();
+                }
+                else if (stage == 7 && Passed(10)) Finish(true, "Every required inherited, network, lobby, campaign, reaction, combat HUD and Villager gate completed.");
             }
             catch (Exception ex) { Finish(false, "Batch bridge failure: " + ex); }
         }

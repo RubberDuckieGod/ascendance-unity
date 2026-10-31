@@ -59,6 +59,8 @@ namespace Ascendance
             ValidateAndRepairCharacterSpawns();
             foreach (var piece in AscendanceGameManager.Instance.HeroCreatedPieces) HeroPieceAvatar.Create(piece);
             foreach (var obj in AscendanceGameManager.Instance.EncounterObjects) EncounterObjectAvatar.Create(obj);
+            foreach (var obj in AscendanceGameManager.Instance.QuestObjects0829)
+                if (!obj.Rescued && !obj.Destroyed) QuestObjectAvatar0829.Create(obj);
         }
 
         private void BuildLightingAndAtmosphere()

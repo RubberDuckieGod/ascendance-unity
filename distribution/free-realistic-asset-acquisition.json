@@ -1,0 +1,151 @@
+{
+  "format": "ascendance-free-realistic-asset-acquisition-1",
+  "verifiedAtUtc": "2026-10-31T19:19:24.926055+00:00",
+  "targetUnityEditor": "6000.6.5f1",
+  "currentRenderPipeline": "Built-in",
+  "budget": "FREE_ONLY",
+  "assets": [
+    {
+      "assetStoreId": "276754",
+      "name": "Modular Fantasy knight character",
+      "publisher": "Anton Puzanov",
+      "url": "https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/modular-fantasy-knight-character-276754",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2021.3.29f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "374316",
+      "name": "Free Medieval Village Pack Vol.1",
+      "publisher": "MyDreamGameStudio",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/free-medieval-village-pack-vol-1-374316",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.4.1f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "142076",
+      "name": "Conifers [BOTD]",
+      "publisher": "forst",
+      "url": "https://assetstore.unity.com/packages/3d/vegetation/trees/conifers-botd-142076",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2019.4.9f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2022.3.0f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2019.4.23f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "247933",
+      "name": "Magic Effects FREE",
+      "publisher": "Hovl Studio",
+      "url": "https://assetstore.unity.com/packages/vfx/particles/spells/magic-effects-free-247933",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2021.3.15f1",
+          "types": [
+            "lightweight",
+            "hd",
+            "standard"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2022.3.12f1",
+          "types": [
+            "hd",
+            "lightweight",
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    }
+  ],
+  "environment": {
+    "localUnityPackagesFound": 0,
+    "unityCliStoreAcquisitionCommandAvailable": false,
+    "unityCliSignedIn": false,
+    "editorLicenseChecked": false
+  },
+  "blockedReason": "No package archives or Asset Store acquisition tool are available in this environment. Unity CLI supports local unitypackage inspection/import, not Store acquisition.",
+  "requiredOwnerAction": "Using your Unity Asset Store account, Add to My Assets for the four free products, then in Unity Package Manager/My Assets download them. Upload the four .unitypackage archives or a zip containing them, without account/session files.",
+  "rawSourcePublicRedistribution": false,
+  "productionChanged": false
+}

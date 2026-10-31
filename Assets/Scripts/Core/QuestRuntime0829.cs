@@ -43,7 +43,7 @@ namespace Ascendance
     {
         public static readonly Dictionary<string,QuestDefinition0829> Definitions = new Dictionary<string,QuestDefinition0829>(StringComparer.OrdinalIgnoreCase)
         {
-            ["Q001"]=new QuestDefinition0829{Id="Q001",Name="Defend Stonebrook",Story="Stonebrook comes under attack. Rescue villagers, contain the fires, and defeat the Goblin Captain.",Victory="Defeat the Goblin Captain, rescue at least 2 Villagers, and keep Fire below 5.",Failure="All participating Heroes are Defeated.",Reward="100 XP; 75 Gold; draw 1 Equipment; +1 General Reputation; +15 Gold if all 4 Villagers survive."},
+            ["Q001"]=new QuestDefinition0829{Id="Q001",Name="Defend Stonebrook",Story="Stonebrook comes under attack. Rescue villagers, contain the fires, and defeat the Goblin Captain.",Victory="Defeat the Goblin Captain, rescue at least 2 Villagers, and keep Fire below 5.",Failure="All participating Heroes are Defeated; 3 Villagers lost; Stonebrook reaches 5 Fire Tokens.",Reward="100 XP; 75 Gold; draw 1 Equipment; +1 General Reputation; +15 Gold if all 4 Villagers are rescued."},
             ["Q002"]=new QuestDefinition0829{Id="Q002",Name="Rescue the Merchant Caravan",Story="Recover the missing merchant caravan before its cargo is lost to the enemy.",Victory="Rescue both Wagons and deliver at least 4 total Supply to Stonebrook.",Failure="Both Wagons destroyed; all participating Heroes Defeated.",Reward="125 XP; 100 Gold; draw 1 Equipment; gain 1 Supply for the next Quest."},
             ["Q003"]=new QuestDefinition0829{Id="Q003",Name="Clear the Abandoned Watchtower",Story="Goblin scouts have occupied an old watchtower overlooking the frontier. Reclaim it and relight its warning beacon.",Victory="Defeat all enemies occupying Fallen Watchtower and light the Beacon.",Failure="All Heroes defeated; after Fallen Watchtower is revealed, 3 consecutive rounds pass with no Hero occupying it.",Reward="75 XP; 50 Gold; +1 General Reputation; during WE002 reduce first Travel Encounter by 1 Goblin Scout."},
             ["Q004"]=new QuestDefinition0829{Id="Q004",Name="Into the Dark Forest",Story="Track the hidden goblin patrols and locate their main war camp.",Victory="Reveal the Goblin War Camp and defeat the Goblin War Chief.",Failure="All Heroes defeated; Location Deck is exhausted before Goblin War Camp is revealed.",Reward="150 XP; 125 Gold; draw 1 Rare Equipment Card."},
@@ -83,13 +83,14 @@ namespace Ascendance
         public bool CaptainRolandAssistsQ0100832 { get; private set; }
         private int questSpawnSerial0829;
         public int QuestSpawnSerialForSave0829 => questSpawnSerial0829;
-        public IReadOnlyList<QuestObjectState0829> QuestObjects0829 => QuestRuntime0829?.Objects != null ? QuestRuntime0829.Objects : Array.Empty<QuestObjectState0829>();
+        public IReadOnlyList<QuestObjectState0829> QuestObjects0829 => QuestObjectView0102();
         public bool IsQ002Active0829 => CurrentQuestId0829=="Q002"&&!QuestComplete&&!QuestFailed;
         public QuestDefinition0829 CurrentQuestDefinition0829 => QuestContent0829.Definitions.TryGetValue(CurrentQuestId0829,out var d)?d:null;
 
         private void InitializeQuestRuntime0829()
         {
             QuestRuntime0829=new QuestRuntimeState0829{QuestId="Q001",QuestName=QuestContent0829.Definitions["Q001"].Name};
+            MaterializeQ001Villagers0102();
             questSpawnSerial0829=0;NextQuestSupply0829=0;ReduceFirstWE002TravelScout0830=false;RemoveEliteFromQ007Setup0830=false;PartyMorale0831=0;RemoveSiegeEngineFromQ008Setup0831=false;CaptainRolandAssistsQ0100832=false;
         }
 
@@ -179,7 +180,7 @@ namespace Ascendance
             ClearQuestResultForNewQuest0835();
             ResetScenarioRuntimeForQuest0829(def.Id);
             QuestRuntime0829=new QuestRuntimeState0829{QuestId=def.Id,QuestName=def.Name};questSpawnSerial0829=0;InitializeQuestStart0831();OnLootOrEquipmentQuestStart0854();
-            if(def.Id=="Q001")BuildEnemies();
+            if(def.Id=="Q001"){MaterializeQ001Villagers0102();BuildEnemies();}
             if(QuestNumber0856(def.Id)>=13)InitializeQuestRuntime0856(def.Id);
             OnWorldEventQuestStarted0857(def.Id);
             InitializeExplorationDeck0828();
@@ -350,6 +351,7 @@ namespace Ascendance
             }
             if(EvaluateQuestOutcome0830())return;
             bool captainDown=QuestRuntime0829?.CaptainDefeated==true;
+            if(VillagersLost>=3){QuestFailed=true;AddLog($"Q001 FAILED — {VillagersLost} Villagers are lost; rescuing 2 is no longer possible.");return;}
             if(FireTokens>=5){QuestFailed=true;AddLog("Q001 FAILED — Stonebrook has reached 5 Fire Tokens.");return;}
             if(captainDown&&VillagersRescued>=2){QuestComplete=true;AddLog("Q001 COMPLETE — Goblin Captain defeated, at least 2 Villagers rescued, and Stonebrook remains below 5 Fire Tokens.");ResolveQuestReward0829();AddLog("POST-QUEST — free exploration continues. Begin Q002 when ready.");}
         }

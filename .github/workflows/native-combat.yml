@@ -1,0 +1,171 @@
+name: Native two-player combat release acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Reviewed release tag containing Linux server and development client
+        type: string
+        required: true
+      source_revision:
+        description: Exact clean runtime source commit used by both Unity builds
+        type: string
+        required: true
+      server_archive_sha256:
+        description: Reviewed ascendance-linux-server-RELEASE_TAG.zip SHA-256
+        type: string
+        required: true
+      server_manifest_sha256:
+        description: Reviewed linux-server-manifest.json SHA-256
+        type: string
+        required: true
+      client_archive_sha256:
+        description: Reviewed ascendance-linux-client-RELEASE_TAG.zip SHA-256
+        type: string
+        required: true
+      client_manifest_sha256:
+        description: Reviewed linux-client-manifest.json SHA-256
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  native-combat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      SOURCE_REVISION: ${{ inputs.source_revision }}
+      SERVER_ARCHIVE_SHA256: ${{ inputs.server_archive_sha256 }}
+      SERVER_MANIFEST_SHA256: ${{ inputs.server_manifest_sha256 }}
+      CLIENT_ARCHIVE_SHA256: ${{ inputs.client_archive_sha256 }}
+      CLIENT_MANIFEST_SHA256: ${{ inputs.client_manifest_sha256 }}
+      LP_NUM_THREADS: '2'
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - name: Validate reviewed identifiers
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, re
+          patterns = {'RELEASE_TAG': r'[A-Za-z0-9][A-Za-z0-9._-]{0,63}', 'SOURCE_REVISION': r'[0-9a-f]{40}'}
+          patterns.update({name: r'[0-9a-f]{64}' for name in ['SERVER_ARCHIVE_SHA256', 'SERVER_MANIFEST_SHA256', 'CLIENT_ARCHIVE_SHA256', 'CLIENT_MANIFEST_SHA256']})
+          for name, pattern in patterns.items():
+              if not re.fullmatch(pattern, os.environ[name]): raise SystemExit('Invalid reviewed identifier: ' + name)
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: RubberDuckieGod/ascendance-unity
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Install native headless display and software rendering libraries
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --yes --no-install-recommends xvfb libgl1-mesa-dri libglx-mesa0 libxrandr2 libxcursor1 libxi6 libxinerama1 libasound2t64
+      - name: Download exact assets from the reviewed repository release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir "$RUNNER_TEMP/ascendance-combat-input"
+          mkdir "$RUNNER_TEMP/ascendance-combat-reports"
+          gh release download "$RELEASE_TAG" --repo RubberDuckieGod/ascendance-unity --dir "$RUNNER_TEMP/ascendance-combat-input" --pattern "ascendance-linux-server-$RELEASE_TAG.zip" --pattern linux-server-manifest.json --pattern "ascendance-linux-client-$RELEASE_TAG.zip" --pattern linux-client-manifest.json
+      - name: Verify hashes, full file manifests, safe archives and clean build provenance
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import hashlib, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          import package_multiplayer_release as packaging
+          from native_combat_acceptance import extract_validated_client
+          root = Path(os.environ['RUNNER_TEMP']) / 'ascendance-combat-input'
+          tag = os.environ['RELEASE_TAG']
+          server = root / ('ascendance-linux-server-' + tag + '.zip')
+          client = root / ('ascendance-linux-client-' + tag + '.zip')
+          for path, variable, limit in [(server, 'SERVER_ARCHIVE_SHA256', 256 * 1024 * 1024), (root / 'linux-server-manifest.json', 'SERVER_MANIFEST_SHA256', 4 * 1024 * 1024), (client, 'CLIENT_ARCHIVE_SHA256', 512 * 1024 * 1024), (root / 'linux-client-manifest.json', 'CLIENT_MANIFEST_SHA256', 4 * 1024 * 1024)]:
+              if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= limit:
+                  raise SystemExit('Unrecognized reviewed build asset: ' + path.name)
+              if hashlib.sha256(path.read_bytes()).hexdigest() != os.environ[variable]:
+                  raise SystemExit('Reviewed build checksum differs: ' + path.name)
+          packaging.extract_validated_server(server, root / 'linux-server-manifest.json', root / 'server', os.environ['SOURCE_REVISION'])
+          extract_validated_client(client, root / 'linux-client-manifest.json', root / 'client', os.environ['SOURCE_REVISION'])
+          PY
+      - name: Test two actual graphical players through complete enemy phases over pinned TLS
+        id: combat
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          python3 -B tools/native_combat_acceptance.py --server-build-dir "$RUNNER_TEMP/ascendance-combat-input/server" --client-executable "$RUNNER_TEMP/ascendance-combat-input/client/AscendanceClient.x86_64" --xvfb /usr/bin/Xvfb --output "$RUNNER_TEMP/ascendance-combat-private" --source-revision "$SOURCE_REVISION" --tls
+      - name: Publish only a checked credential-free semantic report
+        if: always()
+        shell: bash
+        run: |
+          python3 -B - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          import package_multiplayer_release as packaging
+          root = Path(os.environ['RUNNER_TEMP'])
+          private = root / 'ascendance-combat-private'
+          result = private / 'results.json'
+          if not result.is_file(): raise SystemExit('No native combat semantic report was produced')
+          document = json.loads(result.read_text(), object_pairs_hook=packaging.unique_json)
+          if packaging.private_json(document): raise SystemExit('Private fields found in native combat report')
+          text = json.dumps(document)
+          for name in ['rescued-fallback', 'unprotected-loss']:
+              for filename in ['password', 'access-key']:
+                  path = private / name / 'security' / filename
+                  if path.is_file() and path.read_text().strip() in text:
+                      raise SystemExit('Disposable credential value found in native combat report')
+          document['reviewedBuilds'] = {name: os.environ[name] for name in ['RELEASE_TAG', 'SOURCE_REVISION', 'SERVER_ARCHIVE_SHA256', 'SERVER_MANIFEST_SHA256', 'CLIENT_ARCHIVE_SHA256', 'CLIENT_MANIFEST_SHA256']}
+          target = root / 'ascendance-combat-reports'
+          target.mkdir(exist_ok=True)
+          (target / 'results.json').write_text(json.dumps(document, indent=2) + '\n')
+          PY
+      - name: Upload only the public semantic result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-combat-reports
+          path: ${{ runner.temp }}/ascendance-combat-reports/results.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Require complete passing gameplay outcomes
+        if: always()
+        shell: bash
+        env:
+          COMBAT_OUTCOME: ${{ steps.combat.outcome }}
+        run: |
+          python3 -B - <<'PY'
+          import json, os
+          from pathlib import Path
+          if os.environ['COMBAT_OUTCOME'] != 'success': raise SystemExit('Actual native combat step failed or did not execute')
+          path = Path(os.environ['RUNNER_TEMP']) / 'ascendance-combat-reports/results.json'
+          result = json.loads(path.read_text())
+          if result.get('passed') is not True or result.get('failedChecks') != 0 or result.get('sourceRevision') != os.environ['SOURCE_REVISION']:
+              raise SystemExit('Native combat semantic verdict is incomplete or failing')
+          checks = result.get('checks')
+          if not isinstance(checks, list) or len(checks) < 50 or any(c.get('passed') is not True for c in checks) or result.get('passedChecks') != len(checks):
+              raise SystemExit('Native combat checks did not all pass')
+          scenarios = result.get('scenarios', [])
+          if len(scenarios) != 2 or scenarios[0].get('acceptedHudReactionResponses', 0) < 1:
+              raise SystemExit('Missing real other-Hero HUD reaction or second campaign outcome')
+          if scenarios[0]['outcome']['villagers'] != [4, 0, 0] or scenarios[1]['outcome']['villagers'] != [0, 1, 3] or scenarios[1]['outcome']['failed'] is not True:
+              raise SystemExit('Native villager outcomes differ from the reviewed rules')
+          PY
+      - name: Remove only this job's private native fixtures and inputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RUNNER_TEMP"
+          test "$RUNNER_TEMP" != /
+          rm -rf -- "$RUNNER_TEMP/ascendance-combat-private" "$RUNNER_TEMP/ascendance-combat-input"

@@ -104,7 +104,7 @@ namespace Ascendance.EditorTools
                 if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) inheritedErrors++;
                 if (string.IsNullOrEmpty(condition) || !condition.Contains("Client Command Routing completed:")) return;
                 routerFinished = true;
-                routerPassed = condition.Contains("[ASCENDANCE][0.10.2h ROUTER] PASS") && condition.Contains("29 passed, 0 failed");
+                routerPassed = condition.Contains("[ASCENDANCE][0.10.2h ROUTER] PASS") && condition.Contains("30 passed, 0 failed");
             }
             Application.logMessageReceived += OnRouterLog;
             try
@@ -114,7 +114,7 @@ namespace Ascendance.EditorTools
                 while (!routerFinished && frames++ < 120000) yield return null;
             }
             finally { Application.logMessageReceived -= OnRouterLog; }
-            Check(routerFinished && routerPassed, "Locked Client Command Routing suite remains 29 passed / 0 failed under real transport.");
+            Check(routerFinished && routerPassed, "Locked Client Command Routing suite remains 30 passed / 0 failed under real transport.");
             Check(inheritedErrors == 0, "Inherited router/server/core gates emit zero Unity Error/Exception/Assert entries under 0.10.2h.");
 
             var restore = AscendanceSaveSystem.CaptureForAuthority0100(gm);

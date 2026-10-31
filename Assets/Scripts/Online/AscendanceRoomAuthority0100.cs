@@ -259,10 +259,10 @@ namespace Ascendance.Online
                     if (string.IsNullOrWhiteSpace(c.TargetId)) { gm.UseHealingPotion(); return true; }
                     return gm.TryUseHealingPotionOn(c.TargetId);
                 case ServerCommandType0100.UseReaction:
-                    if (!gm.HasPendingReactionWindow || !gm.PendingReactionOptions.Any(o => string.Equals(o.HeroId, actor.Id, StringComparison.OrdinalIgnoreCase) && string.Equals(o.CardId, c.CardId, StringComparison.OrdinalIgnoreCase))) return false;
+                    if (!gm.HasPendingReactionWindow || gm.PendingReactionResolutionQueued || !gm.PendingReactionOptions.Any(o => string.Equals(o.HeroId, actor.Id, StringComparison.OrdinalIgnoreCase) && string.Equals(o.CardId, c.CardId, StringComparison.OrdinalIgnoreCase))) return false;
                     gm.UseReaction(actor.Id, c.CardId); return true;
                 case ServerCommandType0100.ResolveReaction:
-                    if (!gm.HasPendingReactionWindow) return false; gm.ResolveReactionWindow(); return true;
+                    if (!gm.HasPendingReactionWindow || gm.PendingReactionResolutionQueued) return false; gm.ResolveReactionWindow(); return true;
                 case ServerCommandType0100.ChooseRewardChoice:
                     if (!gm.HasPendingRewardChoice) return false;
                     if (!string.IsNullOrWhiteSpace(gm.PendingRewardChoice.HeroId) && !string.Equals(gm.PendingRewardChoice.HeroId, actor.Id, StringComparison.OrdinalIgnoreCase)) return false;
@@ -381,7 +381,11 @@ namespace Ascendance.Online
             transient.RecentLog.Clear();
             // Keep gameplay windows, movement destinations, turn state, and complete campaign
             // data in the comparison; only timestamps and local presentation are excluded.
-            return JsonUtility.ToJson(save) + "|" + JsonUtility.ToJson(transient);
+            // A pre-Attack decline queues the waiting rules coroutine. Its window is
+            // cleared on the next frame, so include the immediate legal mutation here
+            // instead of falsely rejecting the command while still executing it.
+            return JsonUtility.ToJson(save) + "|" + JsonUtility.ToJson(transient)
+                + "|reactionResolutionQueued=" + gm.PendingReactionResolutionQueued;
         }
 
         private ServerTransientState0100 BuildTransient()

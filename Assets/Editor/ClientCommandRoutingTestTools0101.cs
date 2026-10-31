@@ -123,6 +123,12 @@ namespace Ascendance.EditorTools
                 Check(router.CommandsSent == sentBeforeSelection && gm.SelectedHeroId == "Lyra",
                     "Pure local Hero selection remains presentation input and does not masquerade as a gameplay command.");
 
+                bool firstRescue = router.RequestQuestPrimaryAction();
+                bool secondRescue = router.RequestQuestPrimaryAction();
+                Check(firstRescue && secondRescue && gm.VillagersRescued == 2 && gm.VillagersLost == 0
+                    && gm.Heroes["Aldric"].Actions == 1 && gm.SelectedHeroId == "Lyra",
+                    "Two real routed Rescues spend Aldric's Actions while preserving the viewed Hero and keeping Q001 winnable through Enemy Phase.");
+
                 bool endedAldric = router.RequestStartOrEndTurn();
                 Check(endedAldric && gm.TurnHeroId == null, "END TURN uses authoritative TurnHero ownership even while the client is viewing another Hero.");
                 Check(gm.SelectedHeroId == "Lyra",
@@ -155,7 +161,7 @@ namespace Ascendance.EditorTools
                     if (settled) stableHeroPhaseFrames++; else stableHeroPhaseFrames = 0;
                     yield return null;
                 }
-                Check(stableHeroPhaseFrames >= 30,
+                Check(stableHeroPhaseFrames >= 30 && !gm.QuestFailed,
                     "Router validator drains its final-Hero World Phase before restoring production state.");
 
                 long revisionBeforeReject = isolated.Room.Revision;

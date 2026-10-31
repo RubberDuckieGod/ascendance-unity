@@ -291,7 +291,9 @@ namespace Ascendance.Online
         }
 
         public bool RequestUseReaction(string heroId, string cardId) => Accepted(Send(ServerCommandType0100.UseReaction, heroId, cardId: cardId));
-        public bool RequestResolveReaction() => Accepted(Send(ServerCommandType0100.ResolveReaction, gm?.TurnHeroId ?? gm?.SelectedHeroId));
+        // Declining a shared reaction prompt belongs to the authenticated player session.
+        // A different portrait may be selected solely to inspect that Hero's cards/stats.
+        public bool RequestResolveReaction() => Accepted(Send(ServerCommandType0100.ResolveReaction));
         public bool RequestRewardChoice(string key) => Accepted(Send(ServerCommandType0100.ChooseRewardChoice, optionKey: key));
         public bool RequestEncounterDeckControl(string key) => Accepted(Send(ServerCommandType0100.ChooseEncounterDeckControl, optionKey: key));
         public bool RequestBeginCampaignQuest(string questId) => Accepted(Send(ServerCommandType0100.BeginCampaignQuest, stringValue: questId));

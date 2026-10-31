@@ -54,7 +54,7 @@ namespace Ascendance
                 return $"QUEST Q005 — DESTROY THE WAR CAMP\n\n{(QuestRuntime0829?.WarCampRevealed==true?"[OK]":"[ ]")} Goblin War Camp revealed\n{(QuestRuntime0829?.SupplyCratesDestroyed>=4?"[OK]":"[ ]")} Supply Crates destroyed {QuestRuntime0829?.SupplyCratesDestroyed??0}/4\nAlarm Tokens {QuestRuntime0829?.AlarmTokens??0}/2\nCrates remaining {remaining}\n{(QuestRuntime0829?.WarChiefDefeated==true?"[OK]":"[ ]")} Goblin War Chief defeated";
             }
             bool cap=QuestRuntime0829?.CaptainDefeated==true;
-            return $"QUEST Q001 — DEFEND STONEBROOK\n\n{(VillagersRescued>=2?"[OK]":"[ ]")} Rescue 2 Villagers ({VillagersRescued}/4)\n{(FireTokens<5?"[OK]":"[ ]")} Fire below 5 ({FireTokens}/5)\n{(cap?"[OK]":"[ ]")} Defeat Goblin Captain";
+            return $"QUEST Q001 — DEFEND STONEBROOK\n\n{(VillagersRescued>=2?"[OK]":"[ ]")} Rescue 2 Villagers ({VillagersRescued}/4)\nVillagers available {VillagersAvailable} • Lost {VillagersLost}/3 (3 lost fails)\n{(FireTokens<5?"[OK]":"[ ]")} Fire below 5 ({FireTokens}/5)\n{(cap?"[OK]":"[ ]")} Defeat Goblin Captain";
         }
 
         private string QuestPrimaryActionLabel0830()
@@ -82,7 +82,7 @@ namespace Ascendance
             if(CurrentQuestId0829=="Q003"){int cost=hero.HasStatus("Beacon Instructions")?1:2;return GeneralActions(hero)>=cost&&hero.LocationId=="L008"&&QuestRuntime0829.ObjectiveLocationRevealed&&!QuestRuntime0829.BeaconLit;}
             if(CurrentQuestId0829=="Q005")return GeneralActions(hero)>=1&&hero.LocationId=="L014"&&QuestRuntime0829.WarCampRevealed&&QuestRuntime0829.Objects.Any(o=>o.Type=="SupplyCrate"&&!o.Destroyed);
             if(CurrentQuestId0829=="Q004")return false;
-            return GeneralActions(hero)>=1&&hero.LocationId=="L000"&&VillagersRescued<4;
+            return CurrentQuestId0829=="Q001"&&!QuestComplete&&!QuestFailed&&GeneralActions(hero)>=1&&hero.LocationId=="L000"&&VillagersAvailable>0;
         }
         private bool CanQuestSecondaryAction0830(HeroState hero)
         {

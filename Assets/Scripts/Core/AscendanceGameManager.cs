@@ -91,6 +91,7 @@ namespace Ascendance
         public bool QuestFailed { get; private set; }
         public bool IsResolving { get; private set; }
         public bool HasPendingReactionWindow => pendingReactionKind != ReactionWindowKind.None;
+        public bool PendingReactionResolutionQueued => remotePresentation0102 == null && HasPendingReactionWindow && pendingReactionResolved;
         public ReactionWindowKind PendingReactionKind => pendingReactionKind;
         public string PendingReactionText
         {
@@ -2081,10 +2082,11 @@ namespace Ascendance
         private int MoveEnemyTowardNearestHero(EnemyState enemy)
         {
             if(enemy==null||enemy.Defeated)return 0;
+            if(HasQ001VillagerTarget0102(enemy))return 0;
             int rangedReposition=TryRangedReposition0859(enemy);if(rangedReposition>0)return rangedReposition;
             if(ChooseEnemyAttackTarget(enemy)!=null)return 0;
             int budget=EnemyMovementAllowance(enemy),steps=0;
-            while(budget>0&&ChooseEnemyAttackTarget(enemy)==null)
+            while(budget>0&&!HasQ001VillagerTarget0102(enemy)&&ChooseEnemyAttackTarget(enemy)==null)
             {
                 if(!Locations.TryGetValue(enemy.LocationId,out var current))break;
                 bool ignoresTerrain=WorldEventEnemyIgnoresDifficultTerrain0857(enemy)||EnemyIgnoresDifficultTerrain0859(enemy);
@@ -2148,7 +2150,7 @@ namespace Ascendance
 
         private IEnumerator ResolveSingleEnemyActivation(EnemyState enemy,string phaseLabel="WORLD PHASE")
         {
-            if(enemy==null||enemy.Defeated||enemy.ActivatedThisRound)yield break;
+            if(enemy==null||enemy.Defeated||enemy.ActivatedThisRound||QuestFailed)yield break;
             ResolveQuestEnemyStartActivation0829(enemy);
             PrepareEnemyActivation0859(enemy);
             if(ResolveEnemyStartActivationConditions(enemy)){CompleteEnemyActivation(enemy);yield return new WaitForSecondsRealtime(0.06f);yield break;}
@@ -2158,6 +2160,9 @@ namespace Ascendance
                 AddLog($"STATUS — {enemy.DisplayName} cannot act during this activation.");ResolveEnemyEndActivationConditions(enemy,false);CompleteEnemyActivation(enemy);yield return new WaitForSecondsRealtime(0.06f);yield break;
             }
             MoveEnemyTowardNearestHero(enemy);
+            if(enemy.Defeated){CompleteEnemyActivation(enemy);yield break;}
+            if(TryResolveQ001VillagerAttack0102(enemy))
+            {ResolveEnemyEndActivationConditions(enemy,true);CompleteEnemyActivation(enemy);yield return new WaitForSecondsRealtime(0.06f);yield break;}
             if(TryEnemyPlaceStandardHazardInsteadOfAttack0859(enemy)||TryAutoSpellReflection0860(enemy)||TryResolveEnemyReplacementAbility0859(enemy))
             {ResolveEnemyEndActivationConditions(enemy,false);CompleteEnemyActivation(enemy);yield return new WaitForSecondsRealtime(0.06f);yield break;}
             var target=ChooseEnemyAttackTarget(enemy);
@@ -2366,7 +2371,16 @@ namespace Ascendance
             StateChanged?.Invoke();
         }
 
-        public void RescueVillager() { var h=SelectedHero; if(h==null||h.LocationId!="L000"||!CanUseStandardAction(h)||h.IsDefeated||h.Moving||VillagersRescued>=4)return; if(!RequireHeroTurn(h,"Rescue a Villager"))return; h.Actions--;VillagersRescued++;AddLog($"Q001 OBJECTIVE — {h.DisplayName} rescues 1 Villager ({VillagersRescued}/4).");CheckVictory();StateChanged?.Invoke(); }
+        public void RescueVillager()
+        {
+            var h=SelectedHero;
+            if(CurrentQuestId0829!="Q001"||QuestComplete||QuestFailed||h==null||h.LocationId!="L000"||!CanUseStandardAction(h)||h.IsDefeated||h.Moving||VillagersAvailable<=0)return;
+            if(!RequireHeroTurn(h,"Rescue a Villager"))return;
+            MaterializeQ001Villagers0102();
+            var villager=QuestRuntime0829.Objects.First(v=>v.Type=="Villager"&&!v.Rescued&&!v.Destroyed);
+            h.Actions--;villager.Rescued=true;VillagersRescued++;
+            AddLog($"Q001 OBJECTIVE — {h.DisplayName} rescues 1 Villager ({VillagersRescued}/4 rescued; {VillagersAvailable} available; {VillagersLost} lost).");CheckVictory();StateChanged?.Invoke();
+        }
         public void ExtinguishFire() { var h=SelectedHero;if(h==null||h.LocationId!="L000"||!CanUseStandardAction(h)||h.IsDefeated||h.Moving||FireTokens<=0)return;if(!RequireHeroTurn(h,"Extinguish Fire"))return;h.Actions--;FireTokens--;AddLog($"Q001 OBJECTIVE — {h.DisplayName} removes 1 Fire Token ({FireTokens}/5).");StateChanged?.Invoke(); }
 
         public void BasicAttack(string enemyId) => ResolveAttack(enemyId,0,0,1,"Basic Attack",null);
@@ -2999,6 +3013,7 @@ namespace Ascendance
             {
                 if(enemy.ActivatedThisRound){AddLog($"WORLD PHASE — {enemy.DisplayName} already activated earlier this Round; skipping duplicate activation.");continue;}
                 yield return ResolveSingleEnemyActivation(enemy);
+                if(QuestFailed){IsResolving=false;StateChanged?.Invoke();yield break;}
                 yield return WaitForEncounterDeckControlIfNeeded();
             }
             yield return ResolveQuestExtraWorldPhaseActivations0832();
@@ -3739,7 +3754,7 @@ namespace Ascendance
 
         private HeroState ChooseEnemyAttackTarget(EnemyState enemy)
         {
-            if(enemy==null)return null;
+            if(enemy==null||enemy.Defeated)return null;
             int range=EnemyAttackRangeConnections0830(enemy);
             var taunt=enemy.Statuses.FirstOrDefault(s=>string.Equals(s.Name,"Taunted",StringComparison.OrdinalIgnoreCase));
             if(taunt!=null&&!string.IsNullOrEmpty(taunt.SourceHeroId)&&Heroes.TryGetValue(taunt.SourceHeroId,out var taunter)

@@ -11,7 +11,7 @@ namespace Ascendance
     {
         private Canvas canvas; private Font font; private Text questText,targetText,logText,heroDetailText,roundText,actionText,interactionText,cardTooltipText,handHeaderText,reactionTitle;
         private GameObject cardTooltipPanel,reactionPanel,deckControlPanel,rewardChoicePanel; private readonly Dictionary<string,Button> heroButtons=new(); private Transform handRoot,reactionRoot,deckControlRoot,rewardChoiceRoot; private Text deckControlTitle,rewardChoiceTitle;
-        private Button attackButton,exploreButton,rescueButton,fireButton,searchButton,locationButton,encounterObjectButton,potionButton,itemsButton,equipmentButton,endTurnButton,campaignButton,questAdvanceButton,questOptionalButton,worldEventAdvanceButton;
+        private Button attackButton,exploreButton,rescueButton,fireButton,searchButton,locationButton,encounterObjectButton,potionButton,itemsButton,equipmentButton,endTurnButton,campaignButton,questAdvanceButton,questOptionalButton,worldEventAdvanceButton,resolveReactionButton;
         private readonly Color panel=new(0.018f,0.026f,0.034f,0.94f),panel2=new(0.045f,0.045f,0.04f,0.95f),gold=new(0.82f,0.64f,0.32f),parchment=new(0.90f,0.84f,0.70f),selected=new(0.25f,0.19f,0.075f,1f);
 
         private void Start(){font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");Build();var gm=AscendanceGameManager.Instance;gm.StateChanged+=Refresh;gm.LogAdded+=OnLogAdded;Refresh();}
@@ -37,7 +37,7 @@ namespace Ascendance
             endTurnButton=MakeButton(controls.transform,"EndTurn","Start Turn",new Vector2(0.04f,0.06f),new Vector2(0.54f,0.28f),()=>AscendanceClientCommandRouter0101.Instance?.RequestStartOrEndTurn());itemsButton=MakeButton(controls.transform,"Items","ITEMS",new Vector2(0.56f,0.06f),new Vector2(0.74f,0.28f),()=>AscendanceClientCommandRouter0101.Instance?.RequestBeginInventoryManagement());equipmentButton=MakeButton(controls.transform,"Equipment","GEAR",new Vector2(0.76f,0.06f),new Vector2(0.96f,0.28f),()=>AscendanceClientCommandRouter0101.Instance?.RequestBeginEquipmentManagement());SetBestFit(itemsButton.GetComponentInChildren<Text>(),8,12);SetBestFit(equipmentButton.GetComponentInChildren<Text>(),8,12);
             var hand=MakePanel("Hand",new Vector2(0.315f,0.025f),new Vector2(0.76f,0.285f));handHeaderText=MakeText(hand.transform,"HERO CARDS",15,TextAnchor.MiddleLeft,gold,new Vector2(0.025f,0.86f),new Vector2(0.97f,0.985f),true,11);var root=new GameObject("Cards");root.transform.SetParent(hand.transform,false);var rt=root.AddComponent<RectTransform>();rt.anchorMin=new Vector2(0.018f,0.035f);rt.anchorMax=new Vector2(0.982f,0.845f);rt.offsetMin=rt.offsetMax=Vector2.zero;handRoot=root.transform;
             cardTooltipPanel=MakePanel("Card Tooltip",new Vector2(0.315f,0.295f),new Vector2(0.76f,0.42f));cardTooltipText=MakeText(cardTooltipPanel.transform,"",16,TextAnchor.MiddleLeft,parchment,new Vector2(0.035f,0.08f),new Vector2(0.965f,0.92f),true,10);cardTooltipPanel.SetActive(false);
-            reactionPanel=MakePanel("Reaction Window",new Vector2(0.30f,0.45f),new Vector2(0.70f,0.80f));reactionTitle=MakeText(reactionPanel.transform,"REACTION WINDOW",18,TextAnchor.UpperCenter,gold,new Vector2(0.04f,0.78f),new Vector2(0.96f,0.96f),true,12);var rr=new GameObject("ReactionOptions");rr.transform.SetParent(reactionPanel.transform,false);var rrt=rr.AddComponent<RectTransform>();rrt.anchorMin=new Vector2(0.04f,0.16f);rrt.anchorMax=new Vector2(0.96f,0.76f);rrt.offsetMin=rrt.offsetMax=Vector2.zero;reactionRoot=rr.transform;MakeButton(reactionPanel.transform,"ResolveReaction","RESOLVE / DECLINE",new Vector2(0.18f,0.03f),new Vector2(0.82f,0.15f),()=>AscendanceClientCommandRouter0101.Instance?.RequestResolveReaction());reactionPanel.SetActive(false);
+            reactionPanel=MakePanel("Reaction Window",new Vector2(0.30f,0.45f),new Vector2(0.70f,0.80f));reactionTitle=MakeText(reactionPanel.transform,"REACTION WINDOW",18,TextAnchor.UpperCenter,gold,new Vector2(0.04f,0.78f),new Vector2(0.96f,0.96f),true,12);var rr=new GameObject("ReactionOptions");rr.transform.SetParent(reactionPanel.transform,false);var rrt=rr.AddComponent<RectTransform>();rrt.anchorMin=new Vector2(0.04f,0.16f);rrt.anchorMax=new Vector2(0.96f,0.76f);rrt.offsetMin=rrt.offsetMax=Vector2.zero;reactionRoot=rr.transform;resolveReactionButton=MakeButton(reactionPanel.transform,"ResolveReaction","RESOLVE / DECLINE",new Vector2(0.18f,0.03f),new Vector2(0.82f,0.15f),()=>AscendanceClientCommandRouter0101.Instance?.RequestResolveReaction());reactionPanel.SetActive(false);
             deckControlPanel=MakePanel("Encounter Deck Control",new Vector2(0.27f,0.38f),new Vector2(0.73f,0.84f));deckControlTitle=MakeText(deckControlPanel.transform,"ENCOUNTER DECK CONTROL",18,TextAnchor.UpperCenter,gold,new Vector2(0.04f,0.80f),new Vector2(0.96f,0.96f),true,11);var dr=new GameObject("DeckControlOptions");dr.transform.SetParent(deckControlPanel.transform,false);var drt=dr.AddComponent<RectTransform>();drt.anchorMin=new Vector2(0.04f,0.05f);drt.anchorMax=new Vector2(0.96f,0.78f);drt.offsetMin=drt.offsetMax=Vector2.zero;deckControlRoot=dr.transform;deckControlPanel.SetActive(false);
             rewardChoicePanel=MakePanel("Reward Choice",new Vector2(0.30f,0.42f),new Vector2(0.70f,0.78f));rewardChoiceTitle=MakeText(rewardChoicePanel.transform,"REWARD CHOICE",18,TextAnchor.UpperCenter,gold,new Vector2(0.04f,0.76f),new Vector2(0.96f,0.96f),true,11);var rw=new GameObject("RewardChoiceOptions");rw.transform.SetParent(rewardChoicePanel.transform,false);var rwt=rw.AddComponent<RectTransform>();rwt.anchorMin=new Vector2(0.04f,0.08f);rwt.anchorMax=new Vector2(0.96f,0.72f);rwt.offsetMin=rwt.offsetMax=Vector2.zero;rewardChoiceRoot=rw.transform;rewardChoicePanel.SetActive(false);
         }
@@ -52,7 +52,43 @@ namespace Ascendance
 
         private void RefreshReactionWindow()
         {
-            var gm=AscendanceGameManager.Instance;reactionPanel.SetActive(gm.HasPendingReactionWindow);if(!gm.HasPendingReactionWindow)return;reactionTitle.text="REACTION WINDOW\n"+gm.PendingReactionText;foreach(Transform child in reactionRoot)Destroy(child.gameObject);int n=gm.PendingReactionOptions.Count;if(n==0){MakeText(reactionRoot,"No legal reactions remain. Resolve the trigger.",14,TextAnchor.MiddleCenter,parchment,Vector2.zero,Vector2.one,true,10);return;}for(int i=0;i<n;i++){var option=gm.PendingReactionOptions[i];float h=1f/n;string hid=option.HeroId,cid=option.CardId;MakeButton(reactionRoot,"Reaction"+i,option.Label,new Vector2(0.02f,1-(i+1)*h+0.02f),new Vector2(0.98f,1-i*h-0.02f),()=>AscendanceClientCommandRouter0101.Instance?.RequestUseReaction(hid,cid));}
+            var gm=AscendanceGameManager.Instance;
+            reactionPanel.SetActive(gm.HasPendingReactionWindow);
+            if(!gm.HasPendingReactionWindow)return;
+            var tcp=AscendanceClientCommandRouter0101.Instance?.Transport as AscendanceTcpCommandTransport0102;
+            bool remote=tcp!=null,queued=gm.PendingReactionResolutionQueued;
+            bool canRespond=!remote||!string.IsNullOrEmpty(tcp.HeroId);
+            var options=gm.PendingReactionOptions.Where(o=>o!=null&&(!remote||string.Equals(o.HeroId,tcp.HeroId,System.StringComparison.OrdinalIgnoreCase))).ToList();
+            reactionTitle.text="REACTION WINDOW\n"+gm.PendingReactionText;
+            resolveReactionButton.interactable=canRespond&&!queued;
+            resolveReactionButton.GetComponentInChildren<Text>().text=queued?"RESOLVING...":"RESOLVE / DECLINE";
+            foreach(Transform child in reactionRoot){child.gameObject.SetActive(false);Destroy(child.gameObject);}
+            int n=options.Count;
+            if(queued||!canRespond||n==0)
+            {
+                string message=queued?"Reaction response accepted. The enemy attack is resolving.":!canRespond?"Waiting for a player to respond. Choose your Hero in the online lobby to participate.":remote&&gm.PendingReactionOptions.Count>0?"Your Hero has no legal reaction. Other players may react; choose Resolve / Decline when everyone is ready to continue.":"No legal reactions remain. Choose Resolve / Decline to continue the enemy attack.";
+                MakeText(reactionRoot,message,14,TextAnchor.MiddleCenter,parchment,Vector2.zero,Vector2.one,true,10);
+                return;
+            }
+            for(int i=0;i<n;i++)
+            {
+                var option=options[i];float h=1f/n;string hid=option.HeroId,cid=option.CardId;
+                MakeButton(reactionRoot,"Reaction"+i,option.Label,new Vector2(0.02f,1-(i+1)*h+0.02f),new Vector2(0.98f,1-i*h-0.02f),()=>AscendanceClientCommandRouter0101.Instance?.RequestUseReaction(hid,cid));
+            }
+        }
+
+        private string WaitingForHeroTurns(AscendanceGameManager gm)
+        {
+            var router=AscendanceClientCommandRouter0101.Instance;
+            var tcp=router?.Transport as AscendanceTcpCommandTransport0102;
+            if(tcp==null||gm.TurnHero!=null||gm.IsResolving||gm.HasPendingReactionWindow||gm.HasPendingEncounterDeckControl||gm.HasPendingRewardChoice)return null;
+            var remaining=gm.ParticipatingHeroes.Where(h=>!h.IsDefeated&&!h.TurnCompleted).ToList();
+            if(remaining.Count==0)return null;
+            var players=router.LastSnapshot?.Players;
+            var unclaimed=remaining.Where(h=>players==null||!players.Any(p=>p!=null&&string.Equals(p.HeroId,h.Id,System.StringComparison.OrdinalIgnoreCase))).ToList();
+            if(unclaimed.Count>0)return "WAITING FOR HERO TURNS\n"+string.Join(", ",unclaimed.Select(h=>h.DisplayName))+" (unclaimed)";
+            if(remaining.Any(h=>string.Equals(h.Id,tcp.HeroId,System.StringComparison.OrdinalIgnoreCase)))return null;
+            return "WAITING FOR HERO TURNS\n"+string.Join(", ",remaining.Select(h=>h.DisplayName+(players.Any(p=>p!=null&&p.Connected&&string.Equals(p.HeroId,h.Id,System.StringComparison.OrdinalIgnoreCase))?"":" (disconnected)")));
         }
 
         private void RefreshEncounterDeckControl()
@@ -77,6 +113,7 @@ namespace Ascendance
         private void Refresh()
         {
             var gm=AscendanceGameManager.Instance;if(gm==null)return;var hero=gm.SelectedHero;var turnHero=gm.TurnHero;roundText.text=$"ROUND {gm.Round}  •  {gm.PartyGold} GOLD  •  REP {gm.GeneralReputation:+#;-#;0}";actionText.text=gm.HasPendingReactionWindow?"REACTION":gm.HasPendingEncounterDeckControl?"DECK CONTROL":gm.HasPendingRewardChoice?(gm.PendingRewardChoiceMode=="ManageEquipment"?"EQUIPMENT":"REWARD CHOICE"):gm.IsResolving?"WORLD PHASE":hero!=null&&hero.Moving?"MOVING...":hero!=null&&hero.TurnCompleted?"TURN COMPLETE":turnHero!=null&&!gm.IsHeroTakingTurn(hero)?$"VIEWING • {turnHero.DisplayName}'S TURN":turnHero==null?"CHOOSE HERO • START TURN":$"{hero?.Actions??0} ACTIONS • TURN"+(hero!=null&&hero.AttackOnlyActions>0?$" ({hero.AttackOnlyActions} ATTACK CARD)":"");
+            string waiting=WaitingForHeroTurns(gm);if(!string.IsNullOrEmpty(waiting))actionText.text=waiting;SetBestFit(actionText,string.IsNullOrEmpty(waiting)?14:10,23);
             string statuses=hero==null||hero.Statuses.Count==0?"None":string.Join(", ",hero.Statuses.Select(s=>s.Name));string abilities=hero==null?"":string.Join(" • ",hero.Abilities.Select(a=>a.Name));string lootPreview=hero==null||hero.LootInventory.Count==0?"None":string.Join(", ",hero.LootInventory.TakeLast(2).Select(RewardContent0826.LootLabel));string eqPreview=hero==null||hero.AcquiredEquipment.Count==0?"None":string.Join(", ",hero.AcquiredEquipment.TakeLast(2).Select(RewardContent0826.EquipmentLabel));heroDetailText.text=hero==null?"":$"{hero.DisplayName}   Lv {hero.Level}   {hero.ClassName}\nHP {hero.Health}/{hero.MaxHealth}   Armor {hero.Armor}   Attack {hero.Attack}\n{gm.Locations[hero.LocationId].Name}{(hero.Moving&&hero.PendingLocationId!=null?" → "+gm.Locations[hero.PendingLocationId].Name:"")}\nPotion {hero.HealingPotions}   Kills {hero.KillCount}   Loot {hero.LootInventory.Count}   Gear {hero.AcquiredEquipment.Count}\nEquipped: {gm.DebugEquippedLoadout(hero.Id)}\nLoot: {lootPreview}\nInventory Gear: {eqPreview}\nStatus: {statuses}\nAbilities: {abilities}";
             questText.text=gm.QuestObjectiveSummary0829+"\n\n"+(gm.QuestComplete?"QUEST COMPLETE":gm.QuestFailed?"QUEST FAILED":"Quest in progress")+$"\n\n{gm.CampaignSummary0833}"+(gm.ActiveEncounters.Count==0?"":$"\n\nTRAVEL ENCOUNTER: {gm.ActiveEncounterSummary}")+(gm.EncounterObjects.Count==0?"":$"\nHAZARDS: {gm.EncounterObjectSummary}")+$"\nREP {gm.GeneralReputation:+#;-#;0} • EXPLORE {gm.ExplorationDeck0828.Count}"+(gm.HasPendingEncounterDeckControl?$"\nDECK CONTROL: {gm.PendingEncounterDeckControlText}":"")+(gm.HasPendingRewardChoice?$"\nREWARD CHOICE: {gm.PendingRewardChoiceText}":"")+(string.IsNullOrEmpty(gm.PendingContentInstruction)?"":$"\nPENDING: {gm.PendingContentInstruction}");
             var target=gm.SelectedEnemy;targetText.text=target==null||target.Defeated?"No target selected.":$"{target.DisplayName}\nHP {target.Health}/{target.MaxHealth}   Armor {target.Armor}   Attack {target.Attack}\n{gm.Locations[target.LocationId].Name}\n{(target.Statuses.Count>0?string.Join(", ",target.Statuses.Select(s=>s.Name)):"No Conditions")}";
