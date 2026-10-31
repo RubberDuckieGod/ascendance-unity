@@ -465,11 +465,21 @@ namespace Ascendance
         }
         private int TryRangedReposition0859(EnemyState enemy)
         {
-            var t=EnemyTemplate0859(enemy);if(enemy==null||t==null)return 0;string profile=(t.BehaviorProfile??string.Empty)+" "+(t.Role??string.Empty);if(profile.IndexOf("Ranged",StringComparison.OrdinalIgnoreCase)<0&&profile.IndexOf("Artillery",StringComparison.OrdinalIgnoreCase)<0)return 0;
+            var t=EnemyTemplate0859(enemy);if(enemy==null||enemy.Defeated||t==null)return 0;string profile=(t.BehaviorProfile??string.Empty)+" "+(t.Role??string.Empty);if(profile.IndexOf("Ranged",StringComparison.OrdinalIgnoreCase)<0&&profile.IndexOf("Artillery",StringComparison.OrdinalIgnoreCase)<0)return 0;
             if(!ParticipatingHeroes.Any(h=>!h.IsDefeated&&h.LocationId==enemy.LocationId)||!Locations.TryGetValue(enemy.LocationId,out var cur))return 0;int range=AuthoredEnemyRange0859(enemy);if(range<=0)return 0;
+            // A retreat is voluntary movement along the same graph as pursuit.
+            // It must respect movement restrictions and pay the departure terrain
+            // cost before entering another Location or triggering its traps.
+            int budget=EnemyMovementAllowance(enemy);
+            bool ignoresTerrain=WorldEventEnemyIgnoresDifficultTerrain0857(enemy)||EnemyIgnoresDifficultTerrain0859(enemy);
+            int stepCost=IsDifficultTerrain(cur.Id)&&!ignoresTerrain?2:1;
+            if(budget<stepCost)return 0;
             var next=cur.Connections.Where(id=>Locations.TryGetValue(id,out var l)&&l.Revealed&&!ParticipatingHeroes.Any(h=>!h.IsDefeated&&h.LocationId==id)&&ParticipatingHeroes.Any(h=>!h.IsDefeated&&GraphDistance(id,h.LocationId)<=range))
                 .OrderByDescending(id=>ParticipatingHeroes.Where(h=>!h.IsDefeated).Min(h=>GraphDistance(id,h.LocationId))).ThenBy(id=>id,StringComparer.OrdinalIgnoreCase).FirstOrDefault();
-            if(string.IsNullOrEmpty(next))return 0;string from=cur.Name;enemy.LocationId=next;enemy.MovementStepsThisActivation0859++;if(EnemyAvatars.TryGetValue(enemy.Id,out var av))av.transform.position=Locations[next].Position;AddLog($"ENEMY REPOSITION — {enemy.DisplayName} withdraws {from} → {Locations[next].Name} to maintain range.");return 1;
+            if(string.IsNullOrEmpty(next))return 0;string from=cur.Name;enemy.LocationId=next;enemy.MovementStepsThisActivation0859++;if(EnemyAvatars.TryGetValue(enemy.Id,out var av))av.transform.position=Locations[next].Position;AddLog($"ENEMY REPOSITION — {enemy.DisplayName} withdraws {from} → {Locations[next].Name} to maintain range.");
+            OnEnemyEnteredHeroCardLocation0860(enemy);
+            ResolveLootTrapOnEnemyEnter0854(enemy);
+            return 1;
         }
         private bool MoveEnemyAwayFromHeroes0859(EnemyState enemy,string source)
         {

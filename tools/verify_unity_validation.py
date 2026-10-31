@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 
-EXPECTED = {"master": 54, "foundation": 24, "router": 29, "network": 27, "reliability": 22, "snapshot": 20, "lobby": 32, "campaign": 42}
+EXPECTED = {"master": 54, "foundation": 24, "router": 30, "network": 27, "reliability": 22, "snapshot": 20, "lobby": 32, "campaign": 42, "reaction": 30, "combatHud": 11, "villagers": 67}
 TERMINALS = {
     "master": ("[ASCENDANCE][0.10.2h TEST]", "Master Save/Load + Full Regression"),
     "foundation": ("[ASCENDANCE][0.10.2h SERVER]", "Dedicated Server Authority Foundation"),
@@ -13,6 +13,9 @@ TERMINALS = {
     "reliability": ("[ASCENDANCE][0.10.2h RELIABILITY]", "Network Reliability"),
     "lobby": ("[ASCENDANCE][ONLINE LOBBY]", "Online Hero Lobby"),
     "campaign": ("[ASCENDANCE][ONLINE CAMPAIGN]", "Online Campaign Setup"),
+    "reaction": ("[ASCENDANCE][REACTION AUTHORITY]", "Reaction Authority"),
+    "combatHud": ("[ASCENDANCE][COMBAT HUD]", "Combat HUD"),
+    "villagers": ("[ASCENDANCE][Q001 VILLAGERS]", "Villager gameplay regression"),
 }
 
 

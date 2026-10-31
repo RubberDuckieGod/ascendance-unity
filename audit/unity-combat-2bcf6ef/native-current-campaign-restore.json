@@ -1,0 +1,373 @@
+{
+  "kind": "actual-597f442-to-combat-campaign-preservation",
+  "status": "PASS",
+  "sourceBuildVersion": "0.10.2h",
+  "candidateBuildVersion": "0.10.2h",
+  "originalSourceRevision": "597f44215ec2624ff0f215db80c6c487f05a84d7",
+  "candidateSourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "originalManagedAssemblySha256": "ed12446483b665df9b7c81562e7e602f30723ec38bbc4f8c5722f9353836c95b",
+  "candidateManagedAssemblySha256": "46d43f3be3b10663ef66d0778afa28214100ecc57be919b95fca4701aae28773",
+  "originalManifestSha256": "9d3012517ca7fdca999641683c9ec5c8530db58f195205fb15ce0b43a5b8a95f",
+  "candidateManifestSha256": "af6a2b4cfad27ede8ad4d9e990b54a9a8cea464895dd2ec0dd0f9ca01858f76c",
+  "schemaSha256": "204110bafe3216cf87ae830c5a9b37192661512583c7a0e922039f7b2627f93d",
+  "transport": "pinned-TLS-and-room-key",
+  "noProductionConnection": true,
+  "noExistingSaveRead": true,
+  "gameplayCommandsSubmittedToCopiedRoom": 0,
+  "checks": [
+    {
+      "name": "Original 597 authenticated HELLO identifies h",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original 597 listener is loopback only",
+      "expected": [
+        "127.0.0.1"
+      ],
+      "actual": [
+        "127.0.0.1"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original creates an actual owned campaign draft",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original Aldric genuinely claims and readies its own Hero",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original Rowan genuinely claims and readies its own Hero",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original starts the selected two-Hero campaign",
+      "expected": [
+        true,
+        [
+          "Aldric",
+          "Rowan"
+        ]
+      ],
+      "actual": [
+        true,
+        [
+          "Aldric",
+          "Rowan"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original Aldric gameplay StartTurn is accepted",
+      "expected": [
+        true,
+        3
+      ],
+      "actual": [
+        true,
+        3
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original Aldric spends one actual Action to rescue a Villager",
+      "expected": [
+        true,
+        2
+      ],
+      "actual": [
+        true,
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original first Hero really completes its turn",
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original Rowan gameplay StartTurn is accepted",
+      "expected": [
+        true,
+        3
+      ],
+      "actual": [
+        true,
+        3
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original Rowan spends one actual Action to rescue a Villager",
+      "expected": [
+        true,
+        2
+      ],
+      "actual": [
+        true,
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original generated state retains two actual rescues and the active second turn",
+      "expected": [
+        2,
+        "Rowan",
+        2
+      ],
+      "actual": [
+        2,
+        "Rowan",
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "Original 597 reproduces only the reviewed live presentation selection drift",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Actual original 597 read-only preflight accepts its exact durable room",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original saved campaign predates NPC object materialization",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original campaign owner and creation metadata are populated",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original saved-slot archive is present",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Original executed five genuine gameplay commands",
+      "expected": 5,
+      "actual": 5,
+      "passed": true
+    },
+    {
+      "name": "The entire copied room and campaign-slot tree is byte-identical",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate HELLO cycle 1 identifies authenticated h",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate listener cycle 1 is loopback only",
+      "expected": [
+        "127.0.0.1"
+      ],
+      "actual": [
+        "127.0.0.1"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 passes strict private-copy restore comparison",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 preserves every ordered gameplay field",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 does not materialize legacy NPC objects on HELLO",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 preserves archived campaigns byte-for-byte",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 exposes original owned slot metadata",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 1 never exposes private owner or reconnect proofs",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Copied-room read-only cycle 1 issued zero gameplay commands",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "name": "Copied-room read-only cycle 1 issued no reconnect operations",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "name": "Candidate HELLO cycle 2 identifies authenticated h",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate listener cycle 2 is loopback only",
+      "expected": [
+        "127.0.0.1"
+      ],
+      "actual": [
+        "127.0.0.1"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 passes strict private-copy restore comparison",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 preserves every ordered gameplay field",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 does not materialize legacy NPC objects on HELLO",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 preserves archived campaigns byte-for-byte",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 exposes original owned slot metadata",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate cycle 2 never exposes private owner or reconnect proofs",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Copied-room read-only cycle 2 issued zero gameplay commands",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "name": "Copied-room read-only cycle 2 issued no reconnect operations",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "name": "Read-only copied-room shutdown keeps the durable room strict",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate accepts the original Aldric reconnect identity",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate accepts the original Rowan reconnect identity",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Explicit reconnects preserve ordered gameplay and durable private identity",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Explicit reconnects preserve original campaign owner and slot metadata",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Candidate executed no gameplay commands in any phase",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "name": "Candidate used exactly two explicit reconnect operations after read-only proof",
+      "expected": 2,
+      "actual": 2,
+      "passed": true
+    },
+    {
+      "name": "Candidate did not change any file in the original private persistence tree",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Generated isolated native Linux campaign; no production save, service, firewall or Windows player is touched.",
+    "Copied-room proof uses HELLO only before the separately counted reconnect checks; no candidate gameplay commands.",
+    "Only results.json is suitable for publication. Private fixtures may hold disposable campaign and TLS credentials."
+  ],
+  "originalGameplayCommands": 5,
+  "candidateReconnectOperations": 2,
+  "passed": 47,
+  "failed": 0,
+  "durationSeconds": 16.945
+}

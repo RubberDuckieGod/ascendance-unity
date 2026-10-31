@@ -42,10 +42,13 @@ SYSTEMD = Path("/etc/systemd/system")
 TARGET_BUILD = "0.10.2h"
 SOURCE_G_SHA256 = "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd"
 SOURCE_H_SHA256 = "ee6b1db4ed7f78d72dcbccb436d5510d39a18f582b10cb72a059ed3411916ec2"
+SOURCE_H_CAMPAIGN_SHA256 = "ed12446483b665df9b7c81562e7e602f30723ec38bbc4f8c5722f9353836c95b"
 REVIEWED_LEGACY_ASSEMBLIES = {
     SOURCE_G_SHA256: "0.10.2g",
     # The deployed, independently validated 55d25c0 secure h release.
     SOURCE_H_SHA256: "0.10.2h",
+    # Clean 597f442 full-roster/campaign build activated with preserved data.
+    SOURCE_H_CAMPAIGN_SHA256: "0.10.2h",
     # Earlier locally compiled and independently verified source artifacts.
     "f2064d8a89cdb7120d2e013ec70a87e7381792bb36cc0bbc4c7e4e6c1626d997": "0.10.2c",
     "6735c174e64ac3223e24be747aabdb2b823aedf354d77ce4b6155b86ab9a1764": "0.10.2c",
@@ -827,10 +830,15 @@ def reviewed_h_live_source(plan):
     verification = plan.get("upgradeVerification", {})
     identity = verification.get("sourceIdentity", {})
     assembly = verification.get("code", {}).get("files", {}).get("AscendanceServer_Data/Managed/Assembly-CSharp.dll", {})
+    checksum = identity.get("managedAssemblySha256")
     return (plan.get("process", {}).get("wireBuildVersion") == "0.10.2h"
             and identity.get("buildVersion") == "0.10.2h"
-            and identity.get("managedAssemblySha256") == SOURCE_H_SHA256
-            and assembly.get("sha256") == SOURCE_H_SHA256)
+            and checksum in (SOURCE_H_SHA256, SOURCE_H_CAMPAIGN_SHA256)
+            and assembly.get("sha256") == checksum
+            # The reviewed 597f442 deployment uses the existing secure release
+            # installation. Do not extend this preflight exception to a plain or
+            # unidentified copy of that assembly.
+            and (checksum != SOURCE_H_CAMPAIGN_SHA256 or identity.get("transport") == "secure"))
 
 
 def ordered_live_campaign(campaign):
@@ -842,7 +850,7 @@ def ordered_live_campaign(campaign):
 
 
 def live_campaigns_equivalent(plan, expected, actual):
-    """Narrow pre-stop comparison for the exact independently reviewed h binary.
+    """Narrow pre-stop comparison for the two exact reviewed h binaries.
 
     Its command StateChanged can persist the temporary actor/target before the
     finally block restores presentation selection. Actual native StartTurn and
@@ -851,6 +859,8 @@ def live_campaigns_equivalent(plan, expected, actual):
     """
     if not reviewed_h_live_source(plan):
         return campaigns_equivalent(expected, actual)
+    if expected.get("Version") != TARGET_BUILD or actual.get("Version") != TARGET_BUILD:
+        return False
     if not (valid_presentation_references(expected) and valid_presentation_references(actual)):
         return False
     before, after = ordered_live_campaign(expected), ordered_live_campaign(actual)

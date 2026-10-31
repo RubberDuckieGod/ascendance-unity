@@ -1,0 +1,29 @@
+{
+  "kind": "historical-native-combat-harness-timeout",
+  "passed": false,
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "passedChecks": 29,
+  "failedChecks": 0,
+  "reason": "Harness waited for a third reaction after the phase had already completed; preserved as failed attempt, not gameplay certification.",
+  "clientOutcomes": {
+    "Aldric": {
+      "Round": 2,
+      "QuestFailed": false,
+      "IsResolving": false,
+      "PendingReaction": false,
+      "VillagersRescued": 4,
+      "VillagersAvailable": 0,
+      "VillagersLost": 0
+    },
+    "Rowan": {
+      "Round": 2,
+      "QuestFailed": false,
+      "IsResolving": false,
+      "PendingReaction": false,
+      "VillagersRescued": 4,
+      "VillagersAvailable": 0,
+      "VillagersLost": 0
+    }
+  },
+  "fullPrivateReport": "/workspace/scratch/native-combat-2bcf6ef-tls-01/results.json"
+}

@@ -1,0 +1,2238 @@
+{
+  "scope": "Compiled native Linux server plus two independent Python TCP clients; not Unity player/UI acceptance",
+  "buildVersion": "0.10.2h",
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "transport": "Plain TCP with loopback test clients on an isolated high port",
+  "authentication": "Legacy no room key",
+  "checks": [
+    {
+      "name": "Build has exactly the manifest's complete file set",
+      "expected": [
+        "AscendanceServer.provenance.json",
+        "AscendanceServer.x86_64",
+        "AscendanceServer_Data/Managed/Assembly-CSharp.dll",
+        "AscendanceServer_Data/Managed/Mono.Security.dll",
+        "AscendanceServer_Data/Managed/System.Buffers.dll",
+        "AscendanceServer_Data/Managed/System.Collections.Immutable.dll",
+        "AscendanceServer_Data/Managed/System.ComponentModel.Composition.dll",
+        "AscendanceServer_Data/Managed/System.Configuration.dll",
+        "AscendanceServer_Data/Managed/System.Core.dll",
+        "AscendanceServer_Data/Managed/System.Data.DataSetExtensions.dll",
+        "AscendanceServer_Data/Managed/System.Data.dll",
+        "AscendanceServer_Data/Managed/System.Drawing.dll",
+        "AscendanceServer_Data/Managed/System.EnterpriseServices.dll",
+        "AscendanceServer_Data/Managed/System.IO.Compression.FileSystem.dll",
+        "AscendanceServer_Data/Managed/System.IO.Compression.dll",
+        "AscendanceServer_Data/Managed/System.Memory.dll",
+        "AscendanceServer_Data/Managed/System.Net.Http.dll",
+        "AscendanceServer_Data/Managed/System.Numerics.dll",
+        "AscendanceServer_Data/Managed/System.Reflection.Metadata.dll",
+        "AscendanceServer_Data/Managed/System.Runtime.CompilerServices.Unsafe.dll",
+        "AscendanceServer_Data/Managed/System.Runtime.Serialization.dll",
+        "AscendanceServer_Data/Managed/System.Security.dll",
+        "AscendanceServer_Data/Managed/System.ServiceModel.Internals.dll",
+        "AscendanceServer_Data/Managed/System.Transactions.dll",
+        "AscendanceServer_Data/Managed/System.Xml.Linq.dll",
+        "AscendanceServer_Data/Managed/System.Xml.dll",
+        "AscendanceServer_Data/Managed/System.dll",
+        "AscendanceServer_Data/Managed/Unity.InternalAPIEngineBridge.004.dll",
+        "AscendanceServer_Data/Managed/Unity.Scripting.dll",
+        "AscendanceServer_Data/Managed/Unity.TextMeshPro.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AccessibilityModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AdaptivePerformanceModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AndroidJNIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AnimationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AssetBundleModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AudioModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.BurstModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClothModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClusterInputModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClusterRendererModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ContentLoadModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.CoreModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.CrashReportingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.DSPGraphModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.DirectorModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GameCenterModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GraphicsStateCollectionSerializerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GridModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HierarchyCoreModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HierarchyModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HotReloadModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.IMGUIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.IdentifiersModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ImageConversionModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputForUIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputLegacyModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.JSONSerializeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.LocalizationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ManagedKernelModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MarshallingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MathematicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MultiplayerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ParticleSystemModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PerformanceReportingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.Physics2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsBackendPhysXModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsCore2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PropertiesModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.RenderAs2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ScreenCaptureModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ScriptingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ShaderVariantAnalyticsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SpriteMaskModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SpriteShapeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.StreamingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SubstanceModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SubsystemsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TLSModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TerrainModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TerrainPhysicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TetgenModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextCoreFontEngineModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextCoreTextEngineModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextRenderingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TilemapModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TimelineFoundationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.U2DRuntimeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UI.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UIElementsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UmbraModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityAnalyticsCommonModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityAnalyticsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityConnectModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityConsentModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityCurlModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VFXModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VectorGraphicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VehiclesModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VideoModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VirtualTexturingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.WindModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.XRModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.dll",
+        "AscendanceServer_Data/Managed/mscorlib.dll",
+        "AscendanceServer_Data/Managed/netstandard.dll",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/browscap.ini",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/mconfig/config.xml",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libMonoPosixHelper.so",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libmono-native.so",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libmonobdwgc-2.0.so",
+        "AscendanceServer_Data/Resources/UnityPlayer.png",
+        "AscendanceServer_Data/Resources/unity default resources",
+        "AscendanceServer_Data/RuntimeInitializeOnLoads.json",
+        "AscendanceServer_Data/ScriptingAssemblies.json",
+        "AscendanceServer_Data/StreamingAssets/ASCENDANCE_0.7.0_GAME_SHELL.md",
+        "AscendanceServer_Data/StreamingAssets/ASCENDANCE_RULES_BASELINE.md",
+        "AscendanceServer_Data/app.info",
+        "AscendanceServer_Data/boot.config",
+        "AscendanceServer_Data/globalgamemanagers",
+        "AscendanceServer_Data/globalgamemanagers.assets",
+        "AscendanceServer_Data/level0",
+        "AscendanceServer_Data/resources.assets",
+        "AscendanceServer_Data/sharedassets0.assets",
+        "UnityPlayer.so",
+        "libdecor-0.so.0",
+        "libdecor-cairo.so"
+      ],
+      "actual": [
+        "AscendanceServer.provenance.json",
+        "AscendanceServer.x86_64",
+        "AscendanceServer_Data/Managed/Assembly-CSharp.dll",
+        "AscendanceServer_Data/Managed/Mono.Security.dll",
+        "AscendanceServer_Data/Managed/System.Buffers.dll",
+        "AscendanceServer_Data/Managed/System.Collections.Immutable.dll",
+        "AscendanceServer_Data/Managed/System.ComponentModel.Composition.dll",
+        "AscendanceServer_Data/Managed/System.Configuration.dll",
+        "AscendanceServer_Data/Managed/System.Core.dll",
+        "AscendanceServer_Data/Managed/System.Data.DataSetExtensions.dll",
+        "AscendanceServer_Data/Managed/System.Data.dll",
+        "AscendanceServer_Data/Managed/System.Drawing.dll",
+        "AscendanceServer_Data/Managed/System.EnterpriseServices.dll",
+        "AscendanceServer_Data/Managed/System.IO.Compression.FileSystem.dll",
+        "AscendanceServer_Data/Managed/System.IO.Compression.dll",
+        "AscendanceServer_Data/Managed/System.Memory.dll",
+        "AscendanceServer_Data/Managed/System.Net.Http.dll",
+        "AscendanceServer_Data/Managed/System.Numerics.dll",
+        "AscendanceServer_Data/Managed/System.Reflection.Metadata.dll",
+        "AscendanceServer_Data/Managed/System.Runtime.CompilerServices.Unsafe.dll",
+        "AscendanceServer_Data/Managed/System.Runtime.Serialization.dll",
+        "AscendanceServer_Data/Managed/System.Security.dll",
+        "AscendanceServer_Data/Managed/System.ServiceModel.Internals.dll",
+        "AscendanceServer_Data/Managed/System.Transactions.dll",
+        "AscendanceServer_Data/Managed/System.Xml.Linq.dll",
+        "AscendanceServer_Data/Managed/System.Xml.dll",
+        "AscendanceServer_Data/Managed/System.dll",
+        "AscendanceServer_Data/Managed/Unity.InternalAPIEngineBridge.004.dll",
+        "AscendanceServer_Data/Managed/Unity.Scripting.dll",
+        "AscendanceServer_Data/Managed/Unity.TextMeshPro.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AccessibilityModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AdaptivePerformanceModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AndroidJNIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AnimationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AssetBundleModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.AudioModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.BurstModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClothModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClusterInputModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ClusterRendererModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ContentLoadModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.CoreModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.CrashReportingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.DSPGraphModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.DirectorModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GameCenterModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GraphicsStateCollectionSerializerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.GridModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HierarchyCoreModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HierarchyModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.HotReloadModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.IMGUIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.IdentifiersModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ImageConversionModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputForUIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputLegacyModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.InputModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.JSONSerializeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.LocalizationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ManagedKernelModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MarshallingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MathematicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.MultiplayerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ParticleSystemModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PerformanceReportingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.Physics2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsBackendPhysXModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsCore2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PhysicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.PropertiesModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.RenderAs2DModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ScreenCaptureModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ScriptingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.ShaderVariantAnalyticsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SpriteMaskModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SpriteShapeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.StreamingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SubstanceModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.SubsystemsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TLSModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TerrainModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TerrainPhysicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TetgenModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextCoreFontEngineModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextCoreTextEngineModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TextRenderingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TilemapModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.TimelineFoundationModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.U2DRuntimeModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UI.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UIElementsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UIModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UmbraModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityAnalyticsCommonModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityAnalyticsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityConnectModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityConsentModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityCurlModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VFXModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VectorGraphicsModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VehiclesModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VideoModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.VirtualTexturingModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.WindModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.XRModule.dll",
+        "AscendanceServer_Data/Managed/UnityEngine.dll",
+        "AscendanceServer_Data/Managed/mscorlib.dll",
+        "AscendanceServer_Data/Managed/netstandard.dll",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/2.0/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.0/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/Browsers/Compat.browser",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/DefaultWsdlHelpGenerator.aspx",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/machine.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/settings.map",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/4.5/web.config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/browscap.ini",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/config",
+        "AscendanceServer_Data/MonoBleedingEdge/etc/mono/mconfig/config.xml",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libMonoPosixHelper.so",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libmono-native.so",
+        "AscendanceServer_Data/MonoBleedingEdge/x86_64/libmonobdwgc-2.0.so",
+        "AscendanceServer_Data/Resources/UnityPlayer.png",
+        "AscendanceServer_Data/Resources/unity default resources",
+        "AscendanceServer_Data/RuntimeInitializeOnLoads.json",
+        "AscendanceServer_Data/ScriptingAssemblies.json",
+        "AscendanceServer_Data/StreamingAssets/ASCENDANCE_0.7.0_GAME_SHELL.md",
+        "AscendanceServer_Data/StreamingAssets/ASCENDANCE_RULES_BASELINE.md",
+        "AscendanceServer_Data/app.info",
+        "AscendanceServer_Data/boot.config",
+        "AscendanceServer_Data/globalgamemanagers",
+        "AscendanceServer_Data/globalgamemanagers.assets",
+        "AscendanceServer_Data/level0",
+        "AscendanceServer_Data/resources.assets",
+        "AscendanceServer_Data/sharedassets0.assets",
+        "UnityPlayer.so",
+        "libdecor-0.so.0",
+        "libdecor-cairo.so"
+      ],
+      "passed": true
+    },
+    {
+      "name": "All emitted build files match reviewed SHA-256 manifest",
+      "expected": [],
+      "actual": [],
+      "passed": true
+    },
+    {
+      "name": "Compiled server performs protocol HELLO",
+      "expected": [
+        true,
+        "HELLO",
+        "0.10.2h",
+        1
+      ],
+      "actual": [
+        true,
+        "HELLO",
+        "0.10.2h",
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "Default native server party is authored four-Hero party",
+      "expected": [
+        "Garruk",
+        "Rowan",
+        "Aldric",
+        "Elara"
+      ],
+      "actual": [
+        "Garruk",
+        "Rowan",
+        "Aldric",
+        "Elara"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Protocol mismatch is rejected",
+      "expected": "PROTOCOL_MISMATCH",
+      "actual": "PROTOCOL_MISMATCH",
+      "passed": true
+    },
+    {
+      "name": "Wrong room is rejected",
+      "expected": "ROOM_MISMATCH",
+      "actual": "ROOM_MISMATCH",
+      "passed": true
+    },
+    {
+      "name": "Fresh unmodified native party starts Aldric's real turn",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Fresh native StartTurn succeeds before save/restart",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Fresh native StartTurn grants three Actions",
+      "expected": 3,
+      "actual": 3,
+      "passed": true
+    },
+    {
+      "name": "Fresh native EndTurn succeeds before restart",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Native room save is created only in isolated XDG directory",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Unmodified native save restart has no phantom pending choices",
+      "expected": [
+        false,
+        false
+      ],
+      "actual": [
+        false,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan joins the unchanged restarted room",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Next Hero starts after actual untouched native save/restart",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Restored native StartTurn grants correct Actions",
+      "expected": [
+        3,
+        "Rowan"
+      ],
+      "actual": [
+        3,
+        "Rowan"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan ends restored native turn",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only SourceCardId",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only SourceCardName",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only HeroId",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only Mode",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only Prompt",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingRewardChoice with only RevealedCardIds",
+      "expected": [
+        true,
+        [
+          "EN001"
+        ]
+      ],
+      "actual": [
+        true,
+        [
+          "EN001"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingEncounterDeckControl with only SourceCardId",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingEncounterDeckControl with only SourceCardName",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingEncounterDeckControl with only Mode",
+      "expected": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "actual": [
+        true,
+        "ISOLATED-EXTENSION-DATA"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Native restore preserves PendingEncounterDeckControl with only RevealedCardIds",
+      "expected": [
+        true,
+        [
+          "EN001"
+        ]
+      ],
+      "actual": [
+        true,
+        [
+          "EN001"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "Legitimate restored reward/deck choices retain real options",
+      "expected": [
+        true,
+        true,
+        [
+          "GOLD",
+          "LOOT"
+        ],
+        [
+          "KEEP",
+          "BOTTOM0"
+        ]
+      ],
+      "actual": [
+        true,
+        true,
+        [
+          "GOLD",
+          "LOOT"
+        ],
+        [
+          "KEEP",
+          "BOTTOM0"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "Actor joins while legitimate choices are pending",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Actual restored Gold reward resolves",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Restored reward grants exactly 25 Gold and clears its prompt",
+      "expected": [
+        25,
+        false,
+        true
+      ],
+      "actual": [
+        25,
+        false,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Actual restored Encounter KEEP option resolves",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Restored KEEP preserves deck order and clears deck prompt",
+      "expected": [
+        [
+          "EN030",
+          "EN027",
+          "EN002",
+          "EN016",
+          "EN024",
+          "EN004",
+          "EN001",
+          "EN025",
+          "EN022",
+          "EN011",
+          "EN002",
+          "EN003",
+          "EN005",
+          "EN023",
+          "EN026",
+          "EN019",
+          "EN017",
+          "EN001",
+          "EN008",
+          "EN007",
+          "EN015",
+          "EN021",
+          "EN020",
+          "EN028",
+          "EN030",
+          "EN009",
+          "EN018",
+          "EN004",
+          "EN014",
+          "EN013",
+          "EN029",
+          "EN003",
+          "EN006",
+          "EN010",
+          "EN012"
+        ],
+        false
+      ],
+      "actual": [
+        [
+          "EN030",
+          "EN027",
+          "EN002",
+          "EN016",
+          "EN024",
+          "EN004",
+          "EN001",
+          "EN025",
+          "EN022",
+          "EN011",
+          "EN002",
+          "EN003",
+          "EN005",
+          "EN023",
+          "EN026",
+          "EN019",
+          "EN017",
+          "EN001",
+          "EN008",
+          "EN007",
+          "EN015",
+          "EN021",
+          "EN020",
+          "EN028",
+          "EN030",
+          "EN009",
+          "EN018",
+          "EN004",
+          "EN014",
+          "EN013",
+          "EN029",
+          "EN003",
+          "EN006",
+          "EN010",
+          "EN012"
+        ],
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric joins native server",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Rowan joins through independent socket",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Presence-only revision does not reject Aldric's legal StartTurn",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "StartTurn grants exactly three Actions and correct owner",
+      "expected": [
+        3,
+        "Aldric"
+      ],
+      "actual": [
+        3,
+        "Aldric"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Concurrent Rowan turn is rejected by rules",
+      "expected": "RULE_REJECTED",
+      "actual": "RULE_REJECTED",
+      "passed": true
+    },
+    {
+      "name": "Foreign Hero actor is rejected",
+      "expected": "HERO_OWNERSHIP",
+      "actual": "HERO_OWNERSHIP",
+      "passed": true
+    },
+    {
+      "name": "Unjoined socket cannot use a disclosed PlayerId",
+      "expected": "PLAYER_NOT_BOUND",
+      "actual": "PLAYER_NOT_BOUND",
+      "passed": true
+    },
+    {
+      "name": "Claimed Hero cannot be stolen by another credential",
+      "expected": "HERO_CLAIMED",
+      "actual": "HERO_CLAIMED",
+      "passed": true
+    },
+    {
+      "name": "Repeated JOIN retains same session and exactly two players",
+      "expected": [
+        true,
+        "f00734f63f3e45a8bbfd5be126b111cd",
+        2
+      ],
+      "actual": [
+        true,
+        "f00734f63f3e45a8bbfd5be126b111cd",
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "First actual BasicAttack commits",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Iron Longsword 4 Attack against 1 Armor deals exactly three",
+      "expected": [
+        2,
+        3
+      ],
+      "actual": [
+        2,
+        3
+      ],
+      "passed": true
+    },
+    {
+      "name": "Peer observes actual first attack Health/Action totals",
+      "expected": [
+        2,
+        3
+      ],
+      "actual": [
+        2,
+        3
+      ],
+      "passed": true
+    },
+    {
+      "name": "Immediate duplicate attack executes once",
+      "expected": [
+        true,
+        true,
+        2,
+        3
+      ],
+      "actual": [
+        true,
+        true,
+        2,
+        3
+      ],
+      "passed": true
+    },
+    {
+      "name": "Second BasicAttack commits",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Second attack defeats Raider once for one Action",
+      "expected": [
+        1,
+        0,
+        1
+      ],
+      "actual": [
+        1,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "Old duplicate returns fresh current state without another kill",
+      "expected": [
+        true,
+        1,
+        0,
+        1
+      ],
+      "actual": [
+        true,
+        1,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "Actual native movement is accepted",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Connected revealed move spends one Action and completes",
+      "expected": [
+        0,
+        "L001",
+        []
+      ],
+      "actual": [
+        0,
+        "L001",
+        []
+      ],
+      "passed": true
+    },
+    {
+      "name": "Aldric ends his own turn",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "EndTurn marks completed and releases owner",
+      "expected": [
+        true,
+        "",
+        0
+      ],
+      "actual": [
+        true,
+        "",
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "Rowan starts next native Hero turn",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Rowan receives three Actions",
+      "expected": [
+        3,
+        "Rowan"
+      ],
+      "actual": [
+        3,
+        "Rowan"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Actual Healing Potion commits",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Potion recovers printed four Health, consumes one and pays one Action",
+      "expected": [
+        8,
+        0,
+        2
+      ],
+      "actual": [
+        8,
+        0,
+        2
+      ],
+      "passed": true
+    },
+    {
+      "name": "Peer converges to all persistent gameplay values",
+      "expected": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "actual": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "Genuinely stale gameplay command is rejected",
+      "expected": "STALE_REVISION",
+      "actual": "STALE_REVISION",
+      "passed": true
+    },
+    {
+      "name": "Two truly idle native sockets survive more than 35 seconds",
+      "expected": [
+        true,
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "Idle session keeps exact gameplay state",
+      "expected": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "actual": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "Reconnect retains the same Hero session",
+      "expected": [
+        true,
+        "ae18565a3a6b4a97b1ece4903a1f4555",
+        "Rowan"
+      ],
+      "actual": [
+        true,
+        "ae18565a3a6b4a97b1ece4903a1f4555",
+        "Rowan"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Older socket loses command ownership after reconnect",
+      "expected": "PLAYER_NOT_BOUND",
+      "actual": "PLAYER_NOT_BOUND",
+      "passed": true
+    },
+    {
+      "name": "Closing old socket does not disconnect replacement lease",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Completed native gameplay is actually durable on disk",
+      "expected": [
+        8,
+        2,
+        0,
+        "L001"
+      ],
+      "actual": [
+        8,
+        2,
+        0,
+        "L001"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Restart creates a fresh server-process identity",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "name": "Restart restores exact Hero decks/Health/Actions/inventory/movement",
+      "expected": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "actual": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 2,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 0,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "Restart requires fresh reconnect proof for disconnected players",
+      "expected": [
+        false,
+        false
+      ],
+      "actual": [
+        false,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "name": "Both native sessions reconnect across actual process restart",
+      "expected": [
+        true,
+        "f00734f63f3e45a8bbfd5be126b111cd",
+        true,
+        "ae18565a3a6b4a97b1ece4903a1f4555"
+      ],
+      "actual": [
+        true,
+        "f00734f63f3e45a8bbfd5be126b111cd",
+        true,
+        "ae18565a3a6b4a97b1ece4903a1f4555"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Uncertain previous-process command cannot replay",
+      "expected": "SERVER_RESTARTED",
+      "actual": "SERVER_RESTARTED",
+      "passed": true
+    },
+    {
+      "name": "Rejected replay preserves post-restart Actions and objective",
+      "expected": [
+        2,
+        0
+      ],
+      "actual": [
+        2,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "A new post-restart objective command commits",
+      "expected": {
+        "Accepted": true
+      },
+      "actual": {
+        "Accepted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Real rescue after restart spends one Action and rescues one Villager",
+      "expected": [
+        1,
+        1,
+        8
+      ],
+      "actual": [
+        1,
+        1,
+        8
+      ],
+      "passed": true
+    },
+    {
+      "name": "Both independent clients converge after restart gameplay",
+      "expected": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 1,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 1,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "actual": {
+        "heroes": {
+          "Aldric": {
+            "Health": 12,
+            "Actions": 0,
+            "LocationId": "L001",
+            "HealingPotions": 1,
+            "TurnCompleted": true,
+            "DeckIds": [
+              "H001-012",
+              "H001-005",
+              "H001-018",
+              "H001-008",
+              "H001-010",
+              "H001-001",
+              "H001-017",
+              "H001-020",
+              "H001-007",
+              "H001-005",
+              "H001-003",
+              "H001-004",
+              "H001-004",
+              "H001-002",
+              "H001-015",
+              "H001-012",
+              "H001-011",
+              "H001-008",
+              "H001-014",
+              "H001-002",
+              "H001-003",
+              "H001-007",
+              "H001-009",
+              "H001-015",
+              "H001-006"
+            ],
+            "HandIds": [
+              "H001-001",
+              "H001-019",
+              "H001-013",
+              "H001-016",
+              "H001-009"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ003",
+              "EQ078",
+              "EQ086"
+            ],
+            "Statuses": [
+              {
+                "Id": "SE009",
+                "Name": "Guarded",
+                "RemainingTurns": 0,
+                "RemainingRounds": 0,
+                "Source": "Battle Ready",
+                "Beneficial": true,
+                "ExpiryTiming": 0,
+                "RemainingExpiryTriggers": 0,
+                "SourceHeroId": "Aldric",
+                "AppliedRound": 1
+              }
+            ]
+          },
+          "Rowan": {
+            "Health": 8,
+            "Actions": 1,
+            "LocationId": "L000",
+            "HealingPotions": 0,
+            "TurnCompleted": false,
+            "DeckIds": [
+              "H005-001",
+              "H005-011",
+              "H005-003",
+              "H005-009",
+              "H005-002",
+              "H005-018",
+              "H005-008",
+              "H005-016",
+              "H005-005",
+              "H005-002",
+              "H005-006",
+              "H005-020",
+              "H005-015",
+              "H005-018",
+              "H005-012",
+              "H005-004",
+              "H005-013",
+              "H005-009",
+              "H005-005",
+              "H005-015",
+              "H005-010",
+              "H005-003",
+              "H005-019",
+              "H005-017",
+              "H005-010"
+            ],
+            "HandIds": [
+              "H005-014",
+              "H005-007",
+              "H005-012",
+              "H005-001",
+              "H005-004"
+            ],
+            "DiscardIds": [],
+            "Level": 3,
+            "XP": 0,
+            "LootInventoryIds": [],
+            "EquippedEquipmentIds": [
+              "EQ045",
+              "EQ082",
+              "EQ100"
+            ],
+            "Statuses": []
+          }
+        },
+        "turn": "Rowan",
+        "round": 1,
+        "gold": 0,
+        "villagers": 1,
+        "enemies": [
+          {
+            "Id": "QST_Q001_E001_0001",
+            "Health": 0,
+            "LocationId": "L000"
+          }
+        ]
+      },
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Independent Unity player rendering/input was not exercised."
+  ],
+  "idleSeconds": 38.59176236001076,
+  "status": "PASS",
+  "logs": [
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-1.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-2.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-3.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-4.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-5.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-6.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-7.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-8.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-9.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-10.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-11.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-12.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-13.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-14.log",
+    "/workspace/scratch/native-combat-server-2bcf6ef-plain-logs/server-15.log"
+  ],
+  "isolatedDataDirectory": "/tmp/asc-native-acceptance-amkat0xe",
+  "nativeRoomSaveWasUnderIsolatedXdgDirectory": true,
+  "durationSeconds": 65.90067323000403,
+  "passed": 73,
+  "failed": 0
+}

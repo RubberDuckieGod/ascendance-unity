@@ -1,0 +1,34 @@
+{
+  "kind": "historical-native-combat-periodic-observation-race",
+  "passed": false,
+  "sourceRevision": "2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585",
+  "passedChecks": 14,
+  "failedChecks": 1,
+  "reason": "Immediate periodic state was one command behind; actual accepted responses and persisted authority prove both rescues applied correctly. Failed harness attempt remains recorded.",
+  "acceptedCommandEffects": [
+    {
+      "gameplayRevision": 3,
+      "accepted": true,
+      "villagersRescued": 0,
+      "aldricActions": 3
+    },
+    {
+      "gameplayRevision": 4,
+      "accepted": true,
+      "villagersRescued": 1,
+      "aldricActions": 2
+    },
+    {
+      "gameplayRevision": 5,
+      "accepted": true,
+      "villagersRescued": 2,
+      "aldricActions": 1
+    }
+  ],
+  "persistedAuthority": {
+    "villagersRescued": 2,
+    "aldricActions": 1,
+    "rescuedTokenCount": 2
+  },
+  "fullPrivateReport": "/workspace/scratch/native-combat-2bcf6ef-tls-02/results.json"
+}

@@ -46,12 +46,13 @@ def await_value(label, operation, predicate=lambda x: bool(x), timeout=30):
 
 
 class Client:
-    def __init__(self, executable, output, hero_id, port, room, display, authority, *, security=None, reject_probe=False):
+    def __init__(self, executable, output, hero_id, port, room, display, authority, *, security=None, reject_probe=False, expected_avatar_count=2):
         self.executable, self.output, self.hero = executable, output, hero_id
         self.port, self.room, self.display, self.authority = port, room, display, authority
         self.process = None
         self.runs = 0
         self.security, self.reject_probe = security or {}, reject_probe
+        self.expected_avatar_count = expected_avatar_count
         output.mkdir()
         for name in ["config", "cache", "data", "tmp", "requests", "responses"]:
             (output / name).mkdir()
@@ -82,7 +83,8 @@ class Client:
         )
         if self.reject_probe:
             return self.wait("negative native handshake completed", lambda x: bool(x.get("ConnectionError")), 35)
-        return self.wait("native player initialized", lambda x: x.get("Ready") and x.get("HasHud") and x.get("PlayerId") and x.get("AvatarCount") == 2, 50)
+        return self.wait("native player initialized", lambda x: x.get("Ready") and x.get("HasHud") and x.get("PlayerId")
+                         and (self.expected_avatar_count is None or x.get("AvatarCount") == self.expected_avatar_count), 50)
 
     def state(self):
         if self.process and self.process.poll() is not None:
@@ -332,6 +334,9 @@ def main():
         campaign = fixture["DurableCampaign"]
         campaign["PartyHeroIds"] = ["Aldric", "Rowan"]
         campaign["VillagersRescued"] = 4
+        for obj in campaign["QuestRuntime0829"].get("Objects", []):
+            if obj.get("Type") == "Villager":
+                obj.update(Rescued=True, Destroyed=False)
         victim = next(e for e in campaign["Enemies"] if e["TemplateId"] == "E001")
         victim.update({"Health": 6, "MaxHealth": 6, "Armor": 1, "LocationId": "L000", "Statuses": []})
         campaign["Enemies"] = [victim]

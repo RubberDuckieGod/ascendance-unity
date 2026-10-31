@@ -42,17 +42,29 @@ namespace Ascendance.Diagnostics
             public string HeroId;
             public float[] ScreenPosition;
         }
+        [Serializable] public sealed class QuestObjectView
+        {
+            public string Id, Type, LocationId;
+            public bool Rescued, Destroyed;
+        }
+        [Serializable] public sealed class ButtonView
+        {
+            public string Name, Label;
+            public bool Active, Interactable;
+        }
         [Serializable] public sealed class State
         {
             public string HeroId, PlayerId, SelectedHeroId, TurnHeroId, ServerInstanceId, RoomId, Build, PersistentDataPath, ConnectionError;
             public long Revision, GameplayRevision, CommandsSent, CommandsAccepted;
-            public int Frame, Round, Gold, AvatarCount, VisibleWorldRenderers, VisibleHeroRenderers, ScreenWidth, ScreenHeight;
-            public bool Ready, Connected, Dedicated, HasHud, IsResolving, PendingReaction, PendingReward, PendingDeckControl, RejectedConnect, RunInBackground, IsFocused;
+            public int Frame, Round, Gold, AvatarCount, VisibleWorldRenderers, VisibleHeroRenderers, ScreenWidth, ScreenHeight, VillagersRescued, VillagersAvailable, VillagersLost;
+            public bool Ready, Connected, Dedicated, HasHud, IsResolving, PendingReaction, PendingReward, PendingDeckControl, RejectedConnect, RunInBackground, IsFocused, QuestComplete, QuestFailed;
             public float[] CameraPosition, PointerPosition;
             public HeroView[] Heroes;
             public LocationView[] Locations;
             public EnemyView[] Enemies;
             public AvatarScreenView[] AvatarScreens;
+            public QuestObjectView[] QuestObjects;
+            public ButtonView[] Buttons;
             public string[] Errors;
         }
         [Serializable] public sealed class Reply
@@ -172,6 +184,16 @@ namespace Ascendance.Diagnostics
             var router = AscendanceClientCommandRouter0101.Instance;
             if (request.Operation == "quit") { Respond(request, true, "QUIT", "Native player exit requested."); Application.Quit(0); return; }
             if (request.Operation == "state") { Respond(request, true, "STATE", "Observed production replica."); return; }
+            if (request.Operation == "select-view")
+            {
+                var manager=AscendanceGameManager.Instance;
+                if(manager==null||!manager.Heroes.ContainsKey(request.TargetId??string.Empty))
+                {Respond(request,false,"HERO_NOT_FOUND","A known Hero is required.");return;}
+                manager.SelectHero(request.TargetId);
+                Respond(request,manager.SelectedHeroId==request.TargetId,"VIEW_SELECTED","Production Hero inspection selection.");return;
+            }
+            if (request.Operation == "campaign-create" || request.Operation == "campaign-ready" || request.Operation == "campaign-start")
+            { StartCoroutine(CampaignAction(request)); return; }
             if (request.Operation == "reconnect")
             {
                 router.SetTransport(new AscendanceTcpCommandTransport0102(AscendanceRemoteClientBootstrap0102.Host,
@@ -181,8 +203,21 @@ namespace Ascendance.Diagnostics
                 _ = ((AscendanceTcpCommandTransport0102)router.Transport).ConnectAsync();
                 StartCoroutine(ReadyAndJoin(request)); return;
             }
-            if (request.Operation != "send" || !Enum.TryParse(request.Type, out ServerCommandType0100 type))
+            bool hudButton=request.Operation=="hud-button";
+            ServerCommandType0100 type=default;
+            if (!hudButton && (request.Operation != "send" || !Enum.TryParse(request.Type, out type)))
             { Respond(request, false, "BAD_DRIVER_REQUEST", "A known production command is required."); return; }
+            UnityEngine.UI.Button button=null;
+            if(hudButton)
+            {
+                // Click the actual rendered HUD control, including its production
+                // callback and ownership wrapper. Never bypass disabled controls.
+                if(request.TargetId!="EndTurn"&&request.TargetId!="ResolveReaction"&&request.TargetId!="Rescue")
+                {Respond(request,false,"BAD_HUD_BUTTON","Only combat acceptance controls are allowed.");return;}
+                button=FindHudButton(request.TargetId);
+                if(button==null||!button.gameObject.activeInHierarchy||!button.IsInteractable())
+                {Respond(request,false,"HUD_BUTTON_UNAVAILABLE","The real HUD control is absent or disabled.");return;}
+            }
             pending = request; commandDeadline = Time.realtimeSinceStartup + 20f;
             completion = result =>
             {
@@ -190,8 +225,32 @@ namespace Ascendance.Diagnostics
                 Respond(finished, result?.Accepted == true, result?.Code ?? "NO_RESULT", result?.Message);
             };
             router.CommandCompleted += completion;
-            router.Send(type, request.ActorHeroId ?? hero, request.TargetId, request.SecondaryTargetId, request.CardId,
-                request.OptionKey, request.StringValue, request.IntValue, request.BoolValue);
+            if(hudButton)button.onClick.Invoke();
+            else router.Send(type, request.ActorHeroId ?? hero, request.TargetId, request.SecondaryTargetId, request.CardId,
+                    request.OptionKey, request.StringValue, request.IntValue, request.BoolValue);
+        }
+
+        private IEnumerator CampaignAction(Request request)
+        {
+            reconnecting=true;
+            var remote=AscendanceClientCommandRouter0101.Instance?.Transport as AscendanceTcpCommandTransport0102;
+            if(remote==null){reconnecting=false;Respond(request,false,"NO_REMOTE","A real remote transport is required.");yield break;}
+            var task=request.Operation=="campaign-create"?remote.CreateCampaignAsync():request.Operation=="campaign-start"?remote.StartCampaignAsync():remote.SetReadyAsync(true);
+            float deadline=Time.realtimeSinceStartup+20f;
+            while(!task.IsCompleted&&Time.realtimeSinceStartup<deadline)yield return null;
+            if(!task.IsCompleted||task.IsFaulted||task.IsCanceled)
+            {reconnecting=false;Respond(request,false,"CAMPAIGN_ACTION_FAILED","Production campaign action did not complete.");yield break;}
+            var result=task.Result;
+            bool accepted=result.Accepted;
+            if(accepted&&request.Operation=="campaign-create")accepted=remote.TryResolvePlayerForHero(hero,out _);
+            reconnecting=false;
+            Respond(request,accepted,accepted?result.Code:"CAMPAIGN_ACTION_REJECTED",result.Message);
+        }
+
+        private static UnityEngine.UI.Button FindHudButton(string name)
+        {
+            var hud=AscendanceGameManager.Instance?.GetComponent<AscendanceHUD>();
+            return hud==null?null:hud.GetComponentsInChildren<UnityEngine.UI.Button>(true).FirstOrDefault(b=>b.gameObject.name==name);
         }
 
         private void ClearPending()
@@ -216,6 +275,8 @@ namespace Ascendance.Diagnostics
                 Revision = snapshot?.Revision ?? -1, GameplayRevision = snapshot?.GameplayRevision ?? -1,
                 CommandsSent = router?.CommandsSent ?? 0, CommandsAccepted = router?.CommandsAccepted ?? 0,
                 Round = gm?.Round ?? 0, Gold = gm?.PartyGold ?? 0, AvatarCount = gm?.HeroAvatars?.Count ?? 0,
+                VillagersRescued=gm?.VillagersRescued??0,VillagersAvailable=gm?.VillagersAvailable??0,VillagersLost=gm?.VillagersLost??0,
+                QuestComplete=gm?.QuestComplete==true,QuestFailed=gm?.QuestFailed==true,
                 Ready = router?.IsReady == true, Connected = remote?.IsConnected == true,
                 Dedicated = AscendanceDedicatedServerBootstrap0100.IsDedicatedServerProcess,
                 HasHud = gm != null && gm.GetComponent<AscendanceHUD>() != null,
@@ -240,6 +301,9 @@ namespace Ascendance.Diagnostics
                     Hand = h.Hand.Select(c => c.Id).ToArray(), Discard = h.Discard.ToArray() }).ToArray() ?? Array.Empty<HeroView>(),
                 Locations = gm?.Locations.Values.Select(l => new LocationView { Id = l.Id, Revealed = l.Revealed, Connections = l.Connections.ToArray() }).ToArray() ?? Array.Empty<LocationView>(),
                 Enemies = gm?.Enemies.Values.Select(e => new EnemyView { Id = e.Id, Health = e.Health, Armor = e.Armor, LocationId = e.LocationId }).ToArray() ?? Array.Empty<EnemyView>(),
+                QuestObjects=gm?.QuestObjects0829.Select(o=>new QuestObjectView{Id=o.ObjectId,Type=o.Type,LocationId=o.LocationId,Rescued=o.Rescued,Destroyed=o.Destroyed}).ToArray()??Array.Empty<QuestObjectView>(),
+                Buttons=new[]{"EndTurn","ResolveReaction","Rescue"}.Select(name=>
+                {var button=FindHudButton(name);return new ButtonView{Name=name,Active=button!=null&&button.gameObject.activeInHierarchy,Interactable=button!=null&&button.IsInteractable(),Label=button?.GetComponentInChildren<UnityEngine.UI.Text>()?.text};}).ToArray(),
                 Errors = errors.ToArray()
             };
         }
