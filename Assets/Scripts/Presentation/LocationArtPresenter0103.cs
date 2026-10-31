@@ -154,6 +154,7 @@ namespace Ascendance
         {
             string canonicalId = LocationArtCatalog0103.AuthoredIdFor(state);
             var root = new GameObject("LocationArt_" + canonicalId + "_" + state.Id);
+            root.layer = 2; // The container is presentation-only too, not only its imported descendants.
             root.SetActive(false);
             root.transform.SetParent(sceneryParent, false); root.transform.position = state.Position;
             var view = new LocationArtInstanceView0103

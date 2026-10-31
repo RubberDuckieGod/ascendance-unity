@@ -169,9 +169,10 @@ namespace Ascendance.EditorTools
                     "An inactive alternate mesh at the anchor does not falsely reject the safe visible off-center model.");
                 Physics.SyncTransforms();
                 var hits = Physics.RaycastAll(new Ray(new Vector3(3.2f, 5, 0), Vector3.down), 10);
-                Check(root.GetComponentsInChildren<Transform>(true).All(t => t.gameObject.layer == 2)
-                    && !hits.Any(h => h.collider.transform.IsChildOf(root.transform)) && markerCollider.enabled == markerEnabled,
-                    "Actual raycasts ignore scenery while the original gameplay marker collider remains unchanged.");
+                var wrongLayers = root.GetComponentsInChildren<Transform>(true).Where(t => t.gameObject.layer != 2).Select(t => t.name).ToArray();
+                int decorativeHits = hits.Count(h => h.collider.transform.IsChildOf(root.transform));
+                Check(wrongLayers.Length == 0 && decorativeHits == 0 && markerCollider.enabled == markerEnabled,
+                    $"Actual raycasts ignore scenery while the original gameplay marker collider remains unchanged (wrong layers: {string.Join(",", wrongLayers)}; decorative hits: {decorativeHits}; marker {markerEnabled}->{markerCollider.enabled}).");
                 Check(Gameplay(game) == before && JsonUtility.ToJson(UnityEngine.Random.state) == randomBefore && NavMesh.CalculateTriangulation().vertices.Length == navVertices,
                     "Art reconciliation changes no canonical gameplay field, gameplay RNG state or baked navigation geometry.");
                 Check(presenter.ActiveViews[0].EffectiveCoverage == LocationArtCoverage0103.ComponentsOnly && presenter.ActiveViews[0].MissingLandmarks.Length == 4,
