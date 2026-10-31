@@ -16,7 +16,7 @@ spec.loader.exec_module(verdict)
 
 
 def fixture():
-    result = dict(passed=True, reason='Synthetic helper fixture', editorVersion='6000.6.5f1', buildVersion='0.10.2h', errorCount=0, errors=[], gates=[])
+    result = dict(passed=True, reason='Synthetic helper fixture', editorVersion='6000.6.5f1', buildVersion='0.10.2h', errorCount=0, errors=[], gates=[], requireInstalledArt=False, requireAllLocationArt=False, artManifestSha256='')
     for name, count in verdict.EXPECTED.items():
         if name == 'snapshot':
             terminal = f'[ASCENDANCE TEST 0.10.2 SNAPSHOT] PASS — {count} checks.'

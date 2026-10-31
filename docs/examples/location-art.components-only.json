@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "platform": "StandaloneLinux64",
+  "bundles": [
+    {
+      "id": "village",
+      "file": "village-linux.bundle",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "stonebrook-village-starter",
+      "coverage": "components-only",
+      "landmarks": [],
+      "reviewEvidence": [],
+      "parts": [
+        {
+          "bundleId": "village",
+          "assetName": "assets/curatedlocationart/village/tavern.prefab",
+          "position": {"x": -3.8, "y": 0, "z": -3.6},
+          "rotation": {"x": 0, "y": 30, "z": 0},
+          "scale": {"x": 1, "y": 1, "z": 1}
+        }
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "authoredLocationId": "L000",
+      "profileId": "stonebrook-village-starter",
+      "coverage": "components-only",
+      "missingLandmarks": ["Inn", "Blacksmith", "Merchant", "Quest Board"],
+      "reviewEvidence": []
+    }
+  ]
+}

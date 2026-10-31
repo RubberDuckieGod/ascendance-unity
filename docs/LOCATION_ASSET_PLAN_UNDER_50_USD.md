@@ -2,7 +2,11 @@
 
 The current priority is **assets for all locations**, using a realistic fantasy
 3D direction. The owner set a **$50 USD total ceiling**. Environment components
-take priority over paid characters. No purchases or asset imports have occurred.
+take priority over paid characters. No purchases have occurred. The owner has
+since provided the Village, Knight and Magic Effects archives; their filtered
+Built-in evaluation is coordinated separately. Other Store packages below have
+not been transferred. [Direct CC0 prototypes](CC0_ENVIRONMENT_PROTOTYPES.md) are
+also available privately for evaluation without another Store download.
 
 Ascendance has **236 authored locations**, covering nine regional architecture
 styles. A component library can support those locations, but each still needs
@@ -35,8 +39,9 @@ purchase receipt or completed acquisition.
 
 ## Free components that fill other themes
 
-All listings below were verified as free. None has been downloaded into this
-environment or validated in the current Editor.
+All listings below were verified as free. Village and Magic Effects source
+archives are now available privately; current import results belong to the
+isolated evaluation report. Other listed Store archives remain unavailable.
 
 | Theme | Verified free product | What it supplies and what it does not |
 | --- | --- | --- |

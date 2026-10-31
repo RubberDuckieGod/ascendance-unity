@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import secrets
@@ -115,6 +116,26 @@ def combat_view(state):
     }
 
 
+def location_art_observation(state):
+    """Required real-player observations; absent diagnostics cannot become a pass."""
+    art = state["Art"]
+    locations = art["Locations"]
+    stonebrook = [view for view in locations if view["AuthoredLocationId"] == "L000"]
+    return {
+        "presenterInstalled": art["PresenterInstalled"], "bindingFailure": art["BindingFailure"],
+        "activeLocations": art["ActiveLocations"], "suppressedLegacyHouses": art["SuppressedLegacyHouses"],
+        "stonebrookRoots": len(stonebrook),
+        "actualPartsPresent": bool(locations) and all(view["RootActive"] and view["PartsInstantiated"] > 0
+            and view["PartsMissing"] == 0 and view["Failures"] == [] for view in locations),
+        "enabledRenderersPresent": bool(locations) and all(view["EnabledRenderers"] > 0 for view in locations),
+        "stonebrookVisibleRenderers": sum(view["VisibleRenderers"] for view in stonebrook),
+        "centersClear": bool(locations) and all(view["InteractionCenterClear"] for view in locations),
+        "decorativeCollidersDisabled": bool(locations) and all(view["DecorativeCollidersDisabled"] for view in locations),
+        "coverage": [{"authoredLocationId": view["AuthoredLocationId"], "effectiveCoverage": view["EffectiveCoverage"],
+                      "missingLandmarks": view["MissingLandmarks"]} for view in locations],
+    }
+
+
 def rescue_effect(view, hero_id):
     actor = next(hero for hero in view["heroes"] if hero["Id"] == hero_id)
     return [actor["Actions"], *view["villagers"]]
@@ -151,6 +172,12 @@ class Acceptance:
                                       "Temporary fresh campaigns only; existing player saves are not loaded or edited.",
                                       "Dice and dealt starting hands use the production game RNG."]}
         self.clients, self.observer, self.server, self.xvfb = [], None, None, None
+        if args.require_location_art:
+            self.report["boundaries"].extend([
+                "Location art assertions inspect actual loaded bundle instances in both graphical clients.",
+                "Rendered components and clear interaction centers do not certify complete authored landmarks or all 236 Locations.",
+                "Screenshots are captured from the real two-player display; visual quality still requires image review.",
+            ])
 
     def check(self, name, expected, actual):
         passed = expected == actual
@@ -174,6 +201,44 @@ class Acceptance:
             client.wait(label + " authoritative outcome", lambda s: combat_view(s) == actual)
             self.check(label + " " + client.hero + " replica equals native authority", actual, combat_view(client.state()))
         return actual
+
+    def verify_location_art(self, label):
+        if not self.args.require_location_art:
+            return
+        observations = {}
+        for client in self.clients:
+            state = client.wait(label + " actual Stonebrook art becomes active", lambda s: any(
+                view.get("AuthoredLocationId") == "L000" and view.get("RootActive") and view.get("PartsInstantiated", 0) > 0
+                for view in s.get("Art", {}).get("Locations", [])), timeout=50)
+            state = client.wait(label + " actual Stonebrook renderers become visible", lambda s: any(
+                view.get("AuthoredLocationId") == "L000" and view.get("VisibleRenderers", 0) > 0
+                for view in s.get("Art", {}).get("Locations", [])), timeout=15)
+            observed = location_art_observation(state)
+            observations[client.hero] = observed
+            prefix = label + " " + client.hero + " art "
+            self.check(prefix + "presenter installed without binding failure", [True, True],
+                       [observed["presenterInstalled"], not observed["bindingFailure"]])
+            self.check(prefix + "exactly one actual Stonebrook root", 1, observed["stonebrookRoots"])
+            self.check(prefix + "all active bindings contain actual parts without failures", True, observed["actualPartsPresent"])
+            self.check(prefix + "actual enabled renderers remain present", True, observed["enabledRenderersPresent"])
+            self.check(prefix + "Stonebrook art has actual visible renderers", True, observed["stonebrookVisibleRenderers"] > 0)
+            self.check(prefix + "all gameplay interaction centers remain clear", True, observed["centersClear"])
+            self.check(prefix + "all decorative colliders remain disabled", True, observed["decorativeCollidersDisabled"])
+            self.check(prefix + "four explicit house replacements suppress four legacy houses", 4, observed["suppressedLegacyHouses"])
+            self.check(prefix + "components remain explicitly partial", True,
+                       all(view["effectiveCoverage"] == "components-only" for view in observed["coverage"]))
+        self.report.setdefault("locationArtObservations", []).append({"stage": label, "clients": observations})
+        self.capture_location_art(label)
+
+    def capture_location_art(self, label):
+        name = "location-art-" + re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-") + ".png"
+        target = self.output / name
+        subprocess.run(["import", "-display", self.display, "-window", "root", str(target)],
+                       env={**os.environ, "XAUTHORITY": str(self.authority)}, check=True, timeout=20,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        self.check(label + " actual two-client display screenshot captured", True,
+                   target.is_file() and target.stat().st_size > 0)
+        self.report.setdefault("screenshots", []).append(name)
 
     def verify_rescue_commit(self, client, response_state, expected_actions, expected_rescued):
         expected = [expected_actions, expected_rescued, 4-expected_rescued, 0]
@@ -244,6 +309,7 @@ class Acceptance:
                    self.clients[0].state()["PlayerId"] != self.clients[1].state()["PlayerId"])
         unfocus_and_arrange(self.display, self.authority, [c.process.pid for c in self.clients])
         self.synced("fresh campaign")
+        self.verify_location_art(directory.name + " fresh campaign")
 
     def finish_phase(self, before_health, expect_failure=False):
         a, b = self.clients
@@ -328,6 +394,7 @@ class Acceptance:
                            rescue_effect(committed, client.hero))
                 self.click(client, "EndTurn")
             final, reactions = self.finish_phase(before_health)
+            self.verify_location_art("rescued villagers complete enemy phase")
             self.report["scenarios"].append({"name": "all villagers rescued, complete enemy phase and other-Hero reaction decline",
                                              "outcome": final, "acceptedHudReactionResponses": reactions})
             # Restart both the authoritative server and one GUI process. The
@@ -344,6 +411,7 @@ class Acceptance:
             self.check("Server restart uses a new authority identity", True, previous_instance != hello["Snapshot"]["ServerInstanceId"])
             self.check("Restarted graphical client keeps its authenticated Hero", a_id, a.state()["PlayerId"])
             self.check("Persisted combat outcome survives server and player restart", final, self.synced("post-combat restart"))
+            self.verify_location_art("post-combat restart")
             self.close_campaign()
 
             self.start_campaign(self.output / "unprotected-loss")
@@ -352,6 +420,7 @@ class Acceptance:
                 self.click(client, "EndTurn")
                 self.click(client, "EndTurn")
             final, reactions = self.finish_phase(before_health, expect_failure=True)
+            self.verify_location_art("unprotected villagers failed quest")
             self.report["scenarios"].append({"name": "unprotected villagers consume three goblin attacks and fail Q001",
                                              "outcome": final, "acceptedHudReactionResponses": reactions})
             before = self.synced("failed quest quiescent")
@@ -390,6 +459,8 @@ def main(argv=None):
     parser.add_argument("--xvfb", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--tls", action="store_true")
+    parser.add_argument("--require-location-art", action="store_true",
+                        help="Require actual partial art, four Stonebrook house replacements and screenshots in both players.")
     parser.add_argument("--source-revision", required=True)
     args = parser.parse_args(argv)
     if len(args.source_revision) != 40 or any(c not in "0123456789abcdefABCDEF" for c in args.source_revision):
