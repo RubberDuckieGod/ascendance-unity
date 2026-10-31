@@ -13,7 +13,7 @@ Runtime build label remains `0.10.2h`, protocol `1`. This report covers online c
 | Copied original h campaign restoration | Preserve original campaign and reconnect identities in the candidate server | **PASS: 34 checks** |
 | Two graphical native clients and candidate server | Full campaign lifecycle, all 16 choices, strict gameplay-state comparisons | **PASS: 47 checks**, 0 failures, in the isolated [GitHub Actions run](https://github.com/RubberDuckieGod/ascendance-unity/actions/runs/41156884155) |
 | Build provenance | Three builds identify the same clean runtime source | **PASS:** Linux server, Linux development client and Windows client identify the revision above; Windows development drivers absent |
-| Deployment/helper regression tests | All selected tests pass without skips | **PASS: 211 tests**, 0 failures, 0 skips |
+| Deployment/helper regression tests | All selected tests pass without skips | **PASS: 233 tests**, 0 failures, 0 skips, including the revision-two installer safeguards |
 
 The graphical CI result contains 47 expected/actual comparisons; every comparison is equal. Its `results.json` and these three screenshots are retained with that run:
 
@@ -22,6 +22,22 @@ The graphical CI result contains 47 expected/actual comparisons; every compariso
 - `campaign-fresh-two-nondefault-worlds.png`
 
 The separate local graphical attempt, `native-campaign-tls-01`, **failed**: 38 checks passed, then reclaiming the original Aldric exceeded the unchanged 35-second world-entry deadline. The remaining nine checks were not reached. The client began entering Stonebrook during cleanup and recorded no managed errors. Heavy browser testing was running concurrently; resource contention is a possible explanation, not a proven cause. That attempt is retained as a failure and is not counted as 47 passing checks. The later isolated CI run completed all 47 checks with the same 35-second deadline and runtime, without relaxing assertions.
+
+## Revision-two installer correction
+
+The first owner installation **refused before activation** because the live campaign and persisted room differed. No successful production update is inferred from that attempt.
+
+The exact original h binary was then tested without restarting it first. A legal Hero turn can persist its temporary command actor/target before restoring the live UI selection. That reproduced a mismatch in exactly `SelectedHeroId` and `SelectedEnemyId`, with identical gameplay and room revision. The previous copied-save test restarted the source process before comparison and did not expose this live-only case.
+
+The replacement helper accepts those two presentation differences only for the exact reviewed original h assembly, with independently checked code identity and valid party/enemy references on both sides. Every other gameplay field and Enemy order must match. Revision, room creation/path and player ownership checks remain strict. Saved-copy and candidate restoration comparisons are unchanged; the helper does not force a save or reset a campaign.
+
+| Additional check | Expected | Actual |
+| --- | --- | --- |
+| Original h live preflight | Accept only the demonstrated selection drift; reject altered Gold, Health, Level, XP, turn ownership, ordered cards/enemies or invalid references | **PASS: 17 actual native checks**; binds helper SHA `fea95a970ab54ca2f393f2ccdea9918108c89c2011764d22d564647aacc739bb` |
+| Never-restarted source save copied to candidate | Restore that exact durable game and creation identity with no copied-room gameplay command | **PASS: 8 actual native checks** |
+| Refusal diagnostics | Reveal only declared field paths and indexes, never values or credentials; leave the service unchanged | **PASS:** dedicated predicate/privacy fixtures and actual native diagnostic checks |
+
+Revision two uses the same clean `597f442` server and Windows game binaries. Players who already installed that full-roster client do not need another game build. A revised installer still refuses any unexplained gameplay difference and reports safe field paths. These isolated reproductions do not claim the owner's private live data has been inspected or activation has completed.
 
 ## Gameplay and interaction expectations
 
