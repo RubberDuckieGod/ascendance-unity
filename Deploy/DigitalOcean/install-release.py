@@ -18,14 +18,14 @@ import urllib.parse
 import urllib.request
 
 
-RELEASE = "unity-0.10.2h-multiplayer-55d25c0"
+RELEASE = "unity-0.10.2h-online-campaigns-597f442"
 BUILD_VERSION = "0.10.2h"
-SOURCE_REVISION = "55d25c03a3279a8396d5b8954e73180e08f7a0c5"
-DEPLOYMENT_REVISION = "74084eaed79d89dd2c3e955eca2d34c125953262"
+SOURCE_REVISION = "597f44215ec2624ff0f215db80c6c487f05a84d7"
+DEPLOYMENT_REVISION = "fb1a96260437288b85a60fd5249c429a9b1aa7e8"
 RELEASE_BASE = "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/" + RELEASE + "/"
 SOURCE_BASE = "https://raw.githubusercontent.com/RubberDuckieGod/ascendance-unity/" + DEPLOYMENT_REVISION + "/"
 DESCRIPTOR_URL = RELEASE_BASE + "release.json"
-DESCRIPTOR_SHA256 = "5aa0e2869a7a6b808aab3d05811787b17ca43fca35172fb65738f3cca05659e4"
+DESCRIPTOR_SHA256 = "c6ddf1028a738b1648673a38467a12989631c431c58a3a331dba3648a3b5a722"
 HELPER_PATHS = {
     "upgrade-existing.py": "Deploy/DigitalOcean/upgrade-existing.py",
     "inspect-existing.py": "Deploy/DigitalOcean/inspect-existing.py",
