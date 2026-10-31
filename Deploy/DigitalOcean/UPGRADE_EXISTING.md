@@ -101,3 +101,35 @@ After the ordinary synthetic native canary, the helper loads a private copy of t
 After activation the same progress proof and restored-source diagnostics must pass. Recovery verifies the original complete code and current intact state before restarting g. Damaged progress causes an explicit recovery failure with retained backups, rather than silently restoring old campaign data.
 
 The new client-only Windows tool takes the pinned release descriptor URL and checksum, verifies the whole matching h ZIP and clean build provenance, and preprotects the invitation before interactive SCP. Its ACL helpers passed 34 assertions on a real nonadministrator Windows PowerShell 5.1 account without SeSecurityPrivilege. This evidence does not run the game or perform SCP.
+
+## Campaign creation updates from the deployed h server
+
+The upgrader also recognizes the deployed h server from runtime source
+`55d25c03a3279a8396d5b8954e73180e08f7a0c5` by its exact managed-assembly SHA-256
+`ee6b1db4ed7f78d72dcbccb436d5510d39a18f582b10cb72a059ed3411916ec2`.
+An unknown h binary is not accepted merely because it reports the same version.
+The same authenticated HELLO, private copied-room restore, backup, activation and
+recovery checks apply; this path does not require recovering the old g source.
+
+The reviewed schema retains all 24 reachable types and now describes 423 fields.
+The eight new fields are optional campaign-slot metadata and player readiness;
+the durable gameplay data is unchanged. Restoring a legacy h save may introduce
+only their declared empty/null/false defaults. Nonempty campaign IDs, private
+creator credentials, operation identities, draft state and readiness remain part
+of the complete equality check. Unknown fields and incorrect scalar types still
+refuse activation before stopping the service.
+
+Updating the server preserves the active campaign. It does **not** begin a new
+campaign automatically. After the matching server and client update, choose
+**NEW ONLINE CAMPAIGN** to explicitly archive the current campaign and create a
+fresh draft. Players then choose from all 16 Heroes, up to four distinct Heroes,
+mark Ready and let the creator start. The previous campaign remains available
+under **SAVED CAMPAIGNS**, including its original player reconnect credentials.
+Existing private invitations, room spelling, game port and TLS identity remain
+the same.
+
+Final publication must pin the actual new runtime revision, deployment-helper
+revision and descriptor checksum in `install-release.py`. The owner then runs
+that checksum-verified entrypoint with `--apply` from their ordinary interactive
+root SSH session, exactly as for the original h installation. No placeholder
+revision or unverified release descriptor should be used for activation.

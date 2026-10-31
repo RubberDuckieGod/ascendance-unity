@@ -36,6 +36,17 @@ class ExistingDiagnostic(unittest.TestCase):
         self.assertEqual(fallback["selectedExpectedRoom"], "ASC-PRIMARY")
         self.assertEqual(DIAGNOSTIC.routing(["server"], {})["selectedExpectedRoom"], "LOCAL-ROOM")
 
+    def test_deployed_h_compatibility_is_bound_to_exact_assembly_and_wire_build(self):
+        checksum = "ee6b1db4ed7f78d72dcbccb436d5510d39a18f582b10cb72a059ed3411916ec2"
+        service = {"process": {"managedAssembly": {"available": True, "sha256": checksum}}}
+        proof = DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2h"})
+        self.assertTrue(proof["managedAssemblyReviewed"])
+        self.assertTrue(proof["reportedBuildMatchesReviewedSource"])
+        self.assertEqual(proof["expectedSourceBuildVersion"], "0.10.2h")
+        self.assertFalse(DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2g"})["reportedBuildMatchesReviewedSource"])
+        service["process"]["managedAssembly"]["sha256"] = "e" * 64
+        self.assertFalse(DIAGNOSTIC.source_compatibility(service, {"serverBuildVersion": "0.10.2h"})["managedAssemblyReviewed"])
+
     def test_hello_summary_retains_each_identity_predicate_but_redacts_private_state(self):
         request = {"RequestId": "safe-correlation", "RoomId": "ASC-PRIMARY"}
         response = {"Accepted": True, "Code": "HELLO", "ProtocolVersion": 1,

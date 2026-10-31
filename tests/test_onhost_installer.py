@@ -224,6 +224,16 @@ class OnHostInstaller(unittest.TestCase):
         self.assertIn("--apply", child.call_args.args[0])
         self.assertEqual(len(downloads.requests), 10)
 
+    def test_reviewed_deployed_h_source_is_accepted_for_a_new_h_target(self):
+        report = self.diagnosis()
+        report["hello"].update(serverBuildVersion="0.10.2h", buildMatchesExpected=True)
+        report["sourceCompatibility"]["expectedSourceBuildVersion"] = "0.10.2h"
+        code, child, downloads, _, output, _ = self.exercise(True, diagnosis=report)
+        self.assertEqual(code, 0)
+        self.assertEqual(child.call_count, 2)
+        self.assertIn("--apply", child.call_args.args[0])
+        self.assertEqual(len(downloads.requests), 10)
+
     def test_source_profile_flags_and_target_must_be_exactly_reviewed(self):
         for name, value in [("managedAssemblyReviewed", False), ("managedAssemblyReviewed", 1),
                             ("reportedBuildMatchesReviewedSource", False),

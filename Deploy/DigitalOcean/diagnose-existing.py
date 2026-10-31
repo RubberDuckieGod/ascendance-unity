@@ -20,6 +20,7 @@ import uuid
 SERVICE = "ascendance"
 BUILD = "0.10.2h"
 REVIEWED_SOURCE_ASSEMBLIES = {
+    "ee6b1db4ed7f78d72dcbccb436d5510d39a18f582b10cb72a059ed3411916ec2": "0.10.2h",
     "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd": "0.10.2g",
     "f2064d8a89cdb7120d2e013ec70a87e7381792bb36cc0bbc4c7e4e6c1626d997": "0.10.2c",
     "6735c174e64ac3223e24be747aabdb2b823aedf354d77ce4b6155b86ab9a1764": "0.10.2c",

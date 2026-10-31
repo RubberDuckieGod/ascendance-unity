@@ -1,9 +1,35 @@
 {
+  "enums": {
+    "Ascendance.StatusExpiryTiming": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
   "format": "ascendance-reviewed-save-schema-1",
-  "sourceManagedAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
-  "sourceBuildVersion": "0.10.2g",
-  "targetBuildVersion": "0.10.2h",
   "rootType": "Ascendance.Online.PersistedServerRoom0100",
+  "sourceBuildVersion": "0.10.2g",
+  "sourceManagedAssemblySha256": "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd",
+  "targetAdditions": {
+    "Ascendance.Online.PersistedServerRoom0100": {
+      "CampaignCreatorPlayerId0102": "System.String",
+      "CampaignDraft0102": "System.Boolean",
+      "CampaignId0102": "System.String",
+      "CampaignName0102": "System.String",
+      "CampaignOwnerToken0102": "System.String",
+      "GameplayRevision": "System.Int64",
+      "LastCampaignActionCode0102": "System.String",
+      "LastCampaignActionId0102": "System.String"
+    },
+    "Ascendance.Online.ServerPlayerSession0100": {
+      "ReadyForCampaign0102": "System.Boolean"
+    }
+  },
+  "targetBuildVersion": "0.10.2h",
   "types": {
     "Ascendance.AscendanceSaveData": {
       "ActiveEncounters": "System.Collections.Generic.List`1<Ascendance.EncounterRuntimeSaveData>",
@@ -290,13 +316,20 @@
     },
     "Ascendance.Online.PersistedServerRoom0100": {
       "BuildVersion": "System.String",
+      "CampaignCreatorPlayerId0102": "System.String",
+      "CampaignDraft0102": "System.Boolean",
+      "CampaignId0102": "System.String",
+      "CampaignName0102": "System.String",
+      "CampaignOwnerToken0102": "System.String",
       "CreatedAtUtc": "System.String",
       "DurableCampaign": "Ascendance.AscendanceSaveData",
+      "GameplayRevision": "System.Int64",
+      "LastCampaignActionCode0102": "System.String",
+      "LastCampaignActionId0102": "System.String",
       "Players": "System.Collections.Generic.List`1<Ascendance.Online.ServerPlayerSession0100>",
       "Revision": "System.Int64",
       "RoomId": "System.String",
-      "UpdatedAtUtc": "System.String",
-      "GameplayRevision": "System.Int64"
+      "UpdatedAtUtc": "System.String"
     },
     "Ascendance.Online.ServerPlayerSession0100": {
       "Connected": "System.Boolean",
@@ -305,6 +338,7 @@
       "JoinedAtUtc": "System.String",
       "LastSeenUtc": "System.String",
       "PlayerId": "System.String",
+      "ReadyForCampaign0102": "System.Boolean",
       "ReconnectToken": "System.String"
     },
     "Ascendance.QuestGoalState0856": {
@@ -467,22 +501,6 @@
       "RemainingTurns": "System.Int32",
       "Source": "System.String",
       "SourceHeroId": "System.String"
-    }
-  },
-  "enums": {
-    "Ascendance.StatusExpiryTiming": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ]
-  },
-  "targetAdditions": {
-    "Ascendance.Online.PersistedServerRoom0100": {
-      "GameplayRevision": "System.Int64"
     }
   }
 }

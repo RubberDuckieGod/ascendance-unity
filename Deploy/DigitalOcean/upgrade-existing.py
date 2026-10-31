@@ -41,8 +41,11 @@ LEGACY = Path("/opt/ascendance")
 SYSTEMD = Path("/etc/systemd/system")
 TARGET_BUILD = "0.10.2h"
 SOURCE_G_SHA256 = "f25f2849e76eb3335f8c06dd7d5f339f6a9655b3a94ee0f2aabc40262a0baedd"
+SOURCE_H_SHA256 = "ee6b1db4ed7f78d72dcbccb436d5510d39a18f582b10cb72a059ed3411916ec2"
 REVIEWED_LEGACY_ASSEMBLIES = {
     SOURCE_G_SHA256: "0.10.2g",
+    # The deployed, independently validated 55d25c0 secure h release.
+    SOURCE_H_SHA256: "0.10.2h",
     # Earlier locally compiled and independently verified source artifacts.
     "f2064d8a89cdb7120d2e013ec70a87e7381792bb36cc0bbc4c7e4e6c1626d997": "0.10.2c",
     "6735c174e64ac3223e24be747aabdb2b823aedf354d77ce4b6155b86ab9a1764": "0.10.2c",
@@ -739,10 +742,21 @@ def semantic_room(room):
     value.pop("BuildVersion", None)
     value.pop("UpdatedAtUtc", None)
     value.setdefault("GameplayRevision", 0)
+    # A legacy h save predates campaign slots. Loading it introduces only these
+    # declared empty defaults; any chosen slot, owner or action remains exact.
+    for name in ("CampaignId0102", "CampaignName0102", "CampaignOwnerToken0102",
+                 "CampaignCreatorPlayerId0102", "LastCampaignActionId0102",
+                 "LastCampaignActionCode0102"):
+        if value.get(name) in (None, ""):
+            value.pop(name, None)
+    if value.get("CampaignDraft0102", False) is False:
+        value.pop("CampaignDraft0102", None)
     value["DurableCampaign"] = semantic_campaign(value["DurableCampaign"])
     for player in value["Players"]:
         require(isinstance(player, dict), "Room player identity requires review")
         player["Connected"] = False  # The reviewed room constructor requires reconnect after restart.
+        if player.get("ReadyForCampaign0102", False) is False:
+            player.pop("ReadyForCampaign0102", None)
     return value
 
 

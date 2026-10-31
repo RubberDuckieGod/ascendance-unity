@@ -498,6 +498,15 @@ class UpgradeSafety(unittest.TestCase):
         with self.assertRaisesRegex(UPGRADE.Refusal, "not a reviewed legacy source"):
             UPGRADE.reviewed_build_identity(code)
 
+    def test_deployed_h_upgrade_requires_its_exact_reviewed_managed_assembly(self):
+        code = {"files": {"AscendanceServer_Data/Managed/Assembly-CSharp.dll": {"sha256": UPGRADE.SOURCE_H_SHA256}}}
+        identity = UPGRADE.reviewed_build_identity(code, modern=True)
+        self.assertEqual(identity, {"buildVersion": "0.10.2h", "managedAssemblySha256": UPGRADE.SOURCE_H_SHA256,
+                                    "transport": "secure"})
+        code["files"]["AscendanceServer_Data/Managed/Assembly-CSharp.dll"]["sha256"] = "e" * 64
+        with self.assertRaisesRegex(UPGRADE.Refusal, "not a reviewed legacy source"):
+            UPGRADE.reviewed_build_identity(code, modern=True)
+
     def test_modern_source_code_must_match_a_reviewed_or_exact_pinned_target_assembly(self):
         checksum = "d" * 64
         code = {"files": {"AscendanceServer_Data/Managed/Assembly-CSharp.dll": {"sha256": checksum}}}
@@ -613,6 +622,61 @@ class UpgradeSafety(unittest.TestCase):
         after = copy.deepcopy(before)
         after["DurableCampaign"]["Heroes"][0]["HandIds"].reverse()
         self.assertNotEqual(UPGRADE.semantic_room(before), UPGRADE.semantic_room(after))
+
+    def test_campaign_slot_loading_allows_only_declared_empty_defaults(self):
+        room = self.enable_g_migration()
+        room.update(BuildVersion="0.10.2h")
+        room["DurableCampaign"]["Version"] = "0.10.2h"
+        restored = copy.deepcopy(room)
+        string_fields = ("CampaignId0102", "CampaignName0102", "CampaignOwnerToken0102",
+                         "CampaignCreatorPlayerId0102", "LastCampaignActionId0102", "LastCampaignActionCode0102")
+        for value in (None, ""):
+            for field in string_fields:
+                restored[field] = value
+            restored["CampaignDraft0102"] = False
+            restored["Players"][0]["ReadyForCampaign0102"] = False
+            self.assertTrue(UPGRADE.rooms_equivalent(room, restored))
+        for field in string_fields:
+            changed = copy.deepcopy(restored)
+            changed[field] = "NONDEFAULT-PRIVATE-METADATA"
+            with self.subTest(field=field):
+                self.assertFalse(UPGRADE.rooms_equivalent(room, changed))
+        for change in (lambda value: value.update(CampaignDraft0102=True),
+                       lambda value: value["Players"][0].update(ReadyForCampaign0102=True)):
+            changed = copy.deepcopy(restored)
+            change(changed)
+            self.assertFalse(UPGRADE.rooms_equivalent(room, changed))
+
+    def test_current_h_room_proves_private_restoration_without_g_source(self):
+        room = self.enable_g_migration()
+        room["BuildVersion"] = room["DurableCampaign"]["Version"] = "0.10.2h"
+        self.plan["process"]["wireBuildVersion"] = "0.10.2h"
+        self.room_file.write_text(json.dumps(room))
+        schema = self.reviewed_schema()
+        self.assertEqual(UPGRADE.capture_migration_state(self.plan, self.snapshot_for_room(room), schema), room)
+        restored = copy.deepcopy(room)
+        restored.update(CampaignId0102="", CampaignName0102=None, CampaignDraft0102=False,
+                        CampaignOwnerToken0102=None, CampaignCreatorPlayerId0102="",
+                        LastCampaignActionId0102="", LastCampaignActionCode0102="")
+        restored["Players"][0]["ReadyForCampaign0102"] = False
+        self.room_file.write_text(json.dumps(restored))
+        UPGRADE.prove_restored_state(self.plan, self.snapshot_for_room(restored), room, schema, "0.10.2h")
+        restored["CampaignOwnerToken0102"] = "NEW-PRIVATE-OWNER"
+        self.room_file.write_text(json.dumps(restored))
+        with self.assertRaisesRegex(UPGRADE.Refusal, "durable progress differs"):
+            UPGRADE.prove_restored_state(self.plan, self.snapshot_for_room(restored), room, schema, "0.10.2h")
+
+    def test_campaign_slot_schema_refuses_bad_types_and_unknown_fields(self):
+        room = self.enable_g_migration()
+        schema = self.reviewed_schema()
+        for change in (lambda value: value.update(CampaignDraft0102="false"),
+                       lambda value: value.update(CampaignOwnerToken0102=[]),
+                       lambda value: value["Players"][0].update(ReadyForCampaign0102=1),
+                       lambda value: value.update(UnknownCampaignOwner0102="PRIVATE")):
+            changed = copy.deepcopy(room)
+            change(changed)
+            with self.subTest(change=change), self.assertRaises(UPGRADE.Refusal):
+                UPGRADE.validate_serialized_value(changed, schema["rootType"], schema)
 
     def test_fresh_room_or_lost_gold_cannot_pass_post_start_restore_proof(self):
         expected = self.enable_g_migration()

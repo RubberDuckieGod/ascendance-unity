@@ -150,7 +150,7 @@ def identity_blockers(report):
     if not (isinstance(reviewed, dict) and reviewed.get("managedAssemblyReviewed") is True
             and reviewed.get("reportedBuildMatchesReviewedSource") is True
             and reviewed.get("targetBuildVersion") == BUILD_VERSION
-            and reviewed.get("expectedSourceBuildVersion") in ("0.10.2c", "0.10.2g")):
+            and reviewed.get("expectedSourceBuildVersion") in ("0.10.2c", "0.10.2g", "0.10.2h")):
         failed.append("reviewedSourceIdentity")
     elif response.get("serverBuildVersion") != reviewed["expectedSourceBuildVersion"]:
         failed.append("serverBuildVersion")
