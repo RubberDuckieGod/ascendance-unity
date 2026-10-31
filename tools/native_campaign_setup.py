@@ -78,7 +78,10 @@ def main():
                   "Production uGUI button callbacks, actual native server, full-roster claims and same-connection world handoff.",
                   "Linux development players; this is not Windows gameplay or audio-output certification.",
                   "The host may emit FMOD initialization errors before managed diagnostic capture; logs are retained."]}
-    clients = []; observer = None; xvfb = None
+    clients = []; observer = None; xvfb = None; diagnostic_history = {}
+    def remember_diagnostics(client):
+        state = client.state() if client.process else read_json(client.output / "state.json") or {}
+        diagnostic_history.setdefault(client, []).extend(state.get("Errors", []))
     def check(name, expected, actual):
         item = {"name": name, "expected": expected, "actual": actual, "passed": expected == actual}
         report["checks"].append(item)
@@ -187,6 +190,7 @@ def main():
         # Simulate a lost client rather than intentionally leaving the draft:
         # normal Back/Quit releases the player's unstarted choice by design.
         for client in [a, b]:
+            remember_diagnostics(client)
             client.process.kill(); client.process.wait(timeout=10); client.process = None
         await_value("crashed draft clients remain reserved", snapshot, lambda s: len(s["Players"]) == 2 and all(not p["Connected"] for p in s["Players"]))
         observer.close(); observer = None; server.stop()
@@ -243,6 +247,7 @@ def main():
               [restored_owner["PlayerId"], restored_owner["ClaimedHeroId"], restored_owner["Gold"], restored_owner["Round"]])
         check("Original Hero retains Health, Level and XP", [5, 3, 260],
               [next(h for h in snapshot()["Campaign"]["Heroes"] if h["Id"] == "Aldric")[k] for k in ["Health", "Level", "XP"]])
+        remember_diagnostics(a); remember_diagnostics(b)
         a.stop(); b.stop(); observer.close(); observer = None; server.stop()
         observer, _ = server.start()
         check("Actual process restart retains the active original campaign", baseline, saved_game(snapshot()))
@@ -256,7 +261,7 @@ def main():
         for client in clients:
             check(client.hero + " local campaign save remains unchanged", True, client.local_save.read_bytes() == client.local_before)
             state = client.state() if client.process else read_json(client.output / "state.json")
-            check(client.hero + " emits no managed diagnostic errors", [], state.get("Errors", []))
+            check(client.hero + " emits no managed diagnostic errors across all restarted processes", [], diagnostic_history.get(client, []) + state.get("Errors", []))
         report["passed"] = len(report["checks"]); report["failed"] = 0
     except Exception as error:
         report["error"] = type(error).__name__ + ": " + str(error)
@@ -265,7 +270,7 @@ def main():
         print(report["traceback"], flush=True)
     finally:
         for client in clients:
-            try: client.stop()
+            try: remember_diagnostics(client); client.stop()
             except Exception: pass
         if observer:
             try: observer.close()
