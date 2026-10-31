@@ -27,7 +27,6 @@ namespace Ascendance.Online
                     if (AscendanceServerRoomPersistence0100.TryLoad(roomId, out var loaded, out _))
                     {
                         restored = loaded;
-                        gm.ApplySaveData(loaded.DurableCampaign);
                     }
                     else if (existingSave || AscendanceServerRoomPersistence0100.SavePathExists(roomId))
                     {

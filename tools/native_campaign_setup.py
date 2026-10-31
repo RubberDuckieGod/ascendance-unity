@@ -65,6 +65,7 @@ def main():
     output = args.output.resolve(); output.mkdir(mode=0o700)
     room = "NATIVE-LOBBY-CAMPAIGN-" + uuid.uuid4().hex
     roster = {row["id"]: row for row in json.loads((ROOT / "Assets/Resources/Ascendance/Data/hero_roster.json").read_text())["heroes"]}
+    authored_cards = json.loads((ROOT / "Assets/Resources/Ascendance/Data/hero_cards.json").read_text())["cards"]
     server_environment, client_environment, certificate = {}, {}, None
     if args.secure:
         server_environment, client_environment, certificate = tls_fixture(output)
@@ -168,6 +169,25 @@ def main():
         check("Only the creator can start the ready party", [True, False], [ready_a["CanStart"], ready_b["CanStart"]])
         check("Readiness has not submitted gameplay commands", [0, 0], [ready_a["CommandsSent"], ready_b["CommandsSent"]])
         frames([a, b], True); capture("campaign-two-ready-nondefault-heroes.png")
+        # Simulate a lost client rather than intentionally leaving the draft:
+        # normal Back/Quit releases the player's unstarted choice by design.
+        for client in [a, b]:
+            client.process.kill(); client.process.wait(timeout=10); client.process = None
+        await_value("crashed draft clients remain reserved", snapshot, lambda s: len(s["Players"]) == 2 and all(not p["Connected"] for p in s["Players"]))
+        observer.close(); observer = None; server.stop()
+        observer, _ = server.start()
+        resumed_draft = snapshot()
+        check("Actual process restart retains the unstarted campaign and both ready reservations", [True, draft_id, [draft_owner_a, draft_owner_b], [True, True]],
+              [resumed_draft["CampaignLobby"]["IsDraft"], resumed_draft["CampaignLobby"]["CampaignId"],
+               [p["PlayerId"] for p in resumed_draft["Players"]], [p["Ready"] for p in resumed_draft["Players"]]])
+        a.start(); b.start(); recovered_menu_a = a.open(); b.open()
+        check("Creator computer retains campaign management ownership through draft restart", True, recovered_menu_a["CanCreate"])
+        recovered_a = a.claim_draft("Vaelis"); recovered_b = b.claim_draft("Mira")
+        check("Both computers reclaim their original draft identities and Ready state", [draft_owner_a, draft_owner_b, True, True],
+              [recovered_a["PlayerId"], recovered_b["PlayerId"], recovered_a["IsReady"], recovered_b["IsReady"]])
+        ready_a = a.wait("reconnected creator ready START", lambda s: s.get("CanStart") and s.get("IsReady"))
+        check("Draft restart preserves the separate original campaign slot", True,
+              any(s["Id"] == "original" and not s["IsActive"] for s in ready_a["CampaignLobby"]["Slots"]))
         a.click("start")
         started_a = a.wait("creator same-socket fresh world", lambda s: s.get("GameReady") and s.get("HasHud") and s.get("ClaimedHeroId") == "Vaelis", 40)
         started_b = b.wait("friend same-socket fresh world", lambda s: s.get("GameReady") and s.get("HasHud") and s.get("ClaimedHeroId") == "Mira", 40)
@@ -180,6 +200,12 @@ def main():
         check("Selected Heroes start at authored maximum Health", [roster[h]["maxHealth"] for h in ["Vaelis", "Mira"]], [heroes[h]["Health"] for h in ["Vaelis", "Mira"]])
         check("Each selected Hero has five cards, thirty total and no free actions", [[5, 30, 0], [5, 30, 0]],
               [[len(heroes[h]["HandIds"]), sum(len(heroes[h][z]) for z in ["HandIds", "DeckIds", "DiscardIds"]), heroes[h]["Actions"]] for h in ["Vaelis", "Mira"]])
+        check("The active server gives each selected Hero the exact authored personal card multiset",
+              [sorted(c["id"] for c in authored_cards if c["heroId"] == h for _ in range(max(1, c.get("copies", 0)))) for h in ["Vaelis", "Mira"]],
+              [sorted(card for zone in ["HandIds", "DeckIds", "DiscardIds"] for card in heroes[h][zone]) for h in ["Vaelis", "Mira"]])
+        check("The active server equips the exact authored starting gear and copies",
+              [sorted(e["id"] for e in roster[h]["startingEquipment"] for _ in range(max(1, e.get("copies", 0)))) for h in ["Vaelis", "Mira"]],
+              [sorted(heroes[h]["EquippedEquipmentIds"]) for h in ["Vaelis", "Mira"]])
         check("Both selected Heroes enter Stonebrook with starting equipment", True,
               all(heroes[h]["LocationId"] == "L000" and heroes[h]["EquippedEquipmentIds"] for h in ["Vaelis", "Mira"]))
         check("Creation and start require no gameplay action submission", [0, 0], [started_a["CommandsSent"], started_b["CommandsSent"]])

@@ -7,6 +7,43 @@ namespace Ascendance
 {
     public sealed partial class AscendanceGameManager
     {
+        // ApplySaveData is also used as a presentation merge. Slot activation
+        // needs a complete authoritative replacement: Dictionary removal and
+        // free-slot reuse otherwise changes Enemy activation/tie-break order.
+        public void ApplyOnlineCampaignSlot0102(AscendanceSaveData save, IReadOnlyDictionary<string, EnemyState> fallbackEnemies = null)
+        {
+            if (save == null || save.Enemies == null) throw new InvalidOperationException("Saved campaign has no Enemy state.");
+            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var ordered = new List<EnemyState>();
+            foreach (var stored in save.Enemies)
+            {
+                if (stored == null || string.IsNullOrWhiteSpace(stored.Id) || !ids.Add(stored.Id)
+                    || stored.MaxHealth <= 0 || stored.Health < 0 || stored.Health > stored.MaxHealth || stored.Attack < 0 || stored.Armor < 0)
+                    throw new InvalidOperationException("Saved campaign Enemy state is incomplete or invalid.");
+                SearchEncounterContent0820.EnemyTemplates.TryGetValue(stored.TemplateId ?? string.Empty, out var template);
+                EnemyState fallback = null;
+                if (fallbackEnemies != null) fallbackEnemies.TryGetValue(stored.Id, out fallback);
+                if (template == null && fallback == null) Enemies.TryGetValue(stored.Id, out fallback);
+                if (template == null && fallback == null)
+                    throw new InvalidOperationException("Saved campaign has an unavailable Enemy definition.");
+                ordered.Add(new EnemyState
+                {
+                    Id = stored.Id, TemplateId = stored.TemplateId, DisplayName = template?.Name ?? fallback?.DisplayName ?? stored.Id,
+                    EncounterSpawned = stored.EncounterSpawned, QuestSpawned = stored.QuestSpawned,
+                    QuestId = stored.QuestId, EncounterInstanceId = stored.EncounterInstanceId,
+                    MaxHealth = stored.MaxHealth, Health = stored.Health, Attack = stored.Attack, Armor = stored.Armor,
+                    IsBoss = stored.IsBoss, ActivatedThisRound = stored.ActivatedThisRound, LocationId = stored.LocationId,
+                    UsedKeys0859 = stored.UsedKeys0859?.ToList() ?? new List<string>(),
+                    MovementStepsThisActivation0859 = stored.MovementStepsThisActivation0859, FocusHeroId0859 = stored.FocusHeroId0859,
+                    Statuses = stored.Statuses?.Select(status => RestoreStatusFromSave(status, true)).ToList() ?? new List<StatusInstance>()
+                });
+            }
+            ApplySaveData(save);
+            Enemies.Clear();
+            foreach (var enemy in ordered) Enemies.Add(enemy.Id, enemy);
+            SetAuthorityCommandContext0100(save.SelectedHeroId, save.SelectedEnemyId);
+        }
+
         // Construct through the same production initialization used for a local
         // new game, instead of clearing selected fields on a progressed Hero.
         public static AscendanceSaveData CreateFreshOnlineCampaign0102(IEnumerable<string> heroIds)

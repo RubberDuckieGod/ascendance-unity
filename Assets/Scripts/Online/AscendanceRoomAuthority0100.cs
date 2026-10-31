@@ -42,6 +42,9 @@ namespace Ascendance.Online
                 if (restored.DurableCampaign == null)
                     throw new InvalidOperationException("Restored room has no durable campaign.");
                 AscendanceOptionalSaveState0102.Normalize(restored.DurableCampaign);
+                // Persisted authority construction owns the complete restore,
+                // including Enemy activation order and removal of stale state.
+                gm.ApplyOnlineCampaignSlot0102(restored.DurableCampaign);
             }
             else if (persistenceEnabled && AscendanceServerRoomPersistence0100.SavePathExists(requestedRoomId))
             {

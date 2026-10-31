@@ -236,6 +236,8 @@ namespace Ascendance.Online
         {
             var previous = JsonUtility.FromJson<PersistedServerRoom0100>(JsonUtility.ToJson(Room));
             previous.DurableCampaign = SafeCapture();
+            var previousEnemies = gm.Enemies.ToDictionary(entry => entry.Key,
+                entry => JsonUtility.FromJson<EnemyState>(JsonUtility.ToJson(entry.Value)), StringComparer.OrdinalIgnoreCase);
             if (archive)
             {
                 if (string.IsNullOrEmpty(previous.CampaignOwnerToken0102)) previous.CampaignOwnerToken0102 = ownerToken;
@@ -244,7 +246,7 @@ namespace Ascendance.Online
             suppressStateEvents = true;
             try
             {
-                gm.ApplySaveData(candidate.DurableCampaign);
+                gm.ApplyOnlineCampaignSlot0102(candidate.DurableCampaign);
                 candidate.DurableCampaign = SafeCapture();
                 if (persistenceEnabled && !AscendanceServerRoomPersistence0100.Save(candidate, out _))
                     throw new IOException("New active campaign could not be persisted.");
@@ -255,7 +257,7 @@ namespace Ascendance.Online
             }
             catch
             {
-                gm.ApplySaveData(previous.DurableCampaign);
+                gm.ApplyOnlineCampaignSlot0102(previous.DurableCampaign, previousEnemies);
                 return CampaignResult0102(false, "CAMPAIGN_ACTIVATION_FAILED", "Campaign activation failed. The previous campaign remains active and archived.");
             }
             finally { suppressStateEvents = false; }

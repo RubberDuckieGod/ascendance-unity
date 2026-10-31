@@ -41,9 +41,9 @@ namespace Ascendance.EditorTools
 
         private static string GameplayDifferences(string expected, AscendanceSaveData actual)
         {
-            var left = JsonUtility.FromJson<AscendanceSaveData>(expected);
+            var left = AscendanceSaveSystem.CloneForAuthority0100(JsonUtility.FromJson<AscendanceSaveData>(expected));
             var right = AscendanceSaveSystem.CloneForAuthority0100(actual);
-            right.SavedAtUtc = null;
+            left.SavedAtUtc = null; right.SavedAtUtc = null;
             var paths = new List<string>();
             void Compare(object a, object b, string path)
             {
@@ -232,7 +232,6 @@ namespace Ascendance.EditorTools
                 server.StopServer(); authority.Dispose();
                 Check(AscendanceServerRoomPersistence0100.TryLoad(room, out var disk, out _) && disk.CampaignOwnerToken0102 == managementCredential,
                     "A durable reload retains the creator identity and selected saved campaign.");
-                gm.ApplySaveData(disk.DurableCampaign);
                 authority = new AscendanceRoomAuthority0100(gm, room, true, disk);
                 Check(authority.RestoredFromPersistence0102d && Gameplay(authority.Snapshot().Campaign) == before && AscendanceCampaignSlots0102.List(authority.Room).Count >= 2,
                     "Restart restoration retains the original game and both saved campaign slots.");
