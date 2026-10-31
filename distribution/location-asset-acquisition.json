@@ -1,0 +1,545 @@
+{
+  "format": "ascendance-location-asset-acquisition-1",
+  "verifiedAtUtc": "2026-10-31T19:49:11.076156+00:00",
+  "targetUnityEditor": "6000.6.5f1",
+  "currentRenderPipeline": "Built-in",
+  "priority": "ALL_LOCATIONS_ENVIRONMENTS_BEFORE_PAID_CHARACTERS",
+  "budget": {
+    "currency": "USD",
+    "totalMaximumIncludingTax": "50.00",
+    "proposedPaidBasketIds": [
+      "258405",
+      "209749"
+    ],
+    "proposedBasketBeforeTax": "39.99",
+    "taxHeadroom": "10.01",
+    "taxAmountKnown": false,
+    "checkoutRule": "Do not place an order if final total exceeds50USD. Rechecksaleandownership; no purchase is made by this manifest.",
+    "spendingPerformed": "0.00"
+  },
+  "ownershipContext": "Owner reports assets are in website My Assets only. Per-product owned inventory has not been enumerated; do not buy duplicates.",
+  "locationInventory": "distribution/location-asset-coverage.json",
+  "scope": "236 authored locations; reusable biome/architecture components plus bespoke location composition, not236unique purchasedscenes.",
+  "assets": [
+    {
+      "assetStoreId": "374316",
+      "name": "Free Medieval Village Pack Vol.1",
+      "publisher": "MyDreamGameStudio",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/free-medieval-village-pack-vol-1-374316",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "35 village exterior models/prefabs including carts; no interiors, trees or skybox included.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.4.1f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "142076",
+      "name": "Conifers [BOTD]",
+      "publisher": "forst",
+      "url": "https://assetstore.unity.com/packages/3d/vegetation/trees/conifers-botd-142076",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Four conifers with LOD and wind; current Editor shader verification required.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2019.4.9f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2022.3.0f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2019.4.23f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "247933",
+      "name": "Magic Effects FREE",
+      "publisher": "Hovl Studio",
+      "url": "https://assetstore.unity.com/packages/vfx/particles/spells/magic-effects-free-247933",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Magic circles, auras, AoE and particles used as presentation components only.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2021.3.15f1",
+          "types": [
+            "lightweight",
+            "hd",
+            "standard"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2022.3.12f1",
+          "types": [
+            "hd",
+            "lightweight",
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "282498",
+      "name": "Medieval Castle - Modular",
+      "publisher": "Advance Studios",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/medieval-castle-modular-282498",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Castle,towers,walls,bridge segments,houses and doors;12 prefab types,low-poly aerial-view design.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.11f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight",
+            "custom"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "109065",
+      "name": "Altar Ruins Free",
+      "publisher": "Underhill Labz",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/altar-ruins-free-109065",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "37 arches,stone/wall pieces and stump;4K PBR maps,Standard listed2022.3.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.29f1",
+          "types": [
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "145808",
+      "name": "Terrain Asset Pack | Terrain Sample",
+      "publisher": "Unity Technologies",
+      "url": "https://assetstore.unity.com/packages/3d/environments/landscapes/terrain-asset-pack-terrain-sample-145808",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "42 terrain heightmaps,16 terrain layers inclsand/grass/soil/snow,20 vegetation prefabs. Vegetation needs Shader Graph. UnityCompanion and ODbL notices need preservation.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2019.4.40f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2021.2.0f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "6000.3.0f1",
+          "types": [
+            "lightweight",
+            "hd",
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "6947",
+      "name": "Rock and Boulders 2",
+      "publisher": "Manufactura K4",
+      "url": "https://assetstore.unity.com/packages/3d/props/exterior/rock-and-boulders-2-6947",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "24 rock/boulder prefabs,standard/winter variations and material detail maps;older package,no current pipeline table.",
+      "observedPublisherRenderPipelineClaims": [],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "129245",
+      "name": "Winter Mountains and Stamps",
+      "publisher": "NatureManufacture",
+      "url": "https://assetstore.unity.com/packages/3d/environments/landscapes/winter-mountains-and-stamps-129245",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Six background mountain models with LOD and terrain stamps;not a ready playable mountain location.",
+      "observedPublisherRenderPipelineClaims": [],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "92461",
+      "name": "Mine",
+      "publisher": "Gregory Seguru",
+      "url": "https://assetstore.unity.com/packages/3d/environments/dungeons/mine-92461",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Modular mine straight/turn/ramp/cross sections,ore,crate,lantern,pickaxe,supports/planks/ladder. Old2017 package,no current compatibility table;inspect materials.",
+      "observedPublisherRenderPipelineClaims": [],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "17785",
+      "name": "Blacksmith's Forge",
+      "publisher": "3DForge",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/blacksmith-s-forge-17785",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "74 forge meshes/prefabs with Built-in Standard shader;industrial/dwarven forge landmarks stillrequirecomposition.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.60f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "290970",
+      "name": "PBR Crystals Pack",
+      "publisher": "Blue Olive",
+      "url": "https://assetstore.unity.com/packages/3d/props/exterior/pbr-crystals-pack-290970",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "16 crystal meshes,96 color/cluster prefabs;Standard/URP stated. Not a complete underground biome.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2023.2.1f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "36897",
+      "name": "Old Sea Port - Environment",
+      "publisher": "VIVID Arts",
+      "url": "https://assetstore.unity.com/packages/3d/environments/old-sea-port-environment-36897",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "40+oldseaport prefabs;package isold andcontentsneedmedieval/fantasycuration before assigning coastalcoverage.",
+      "observedPublisherRenderPipelineClaims": [],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "149916",
+      "name": "Water Shaders V2.x",
+      "publisher": "Nick Veselov #NVJOB",
+      "url": "https://assetstore.unity.com/packages/vfx/shaders/water-shaders-v2-x-149916",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "Built-in-only water shaders with reflections/shorefoam;not URP/HDRP. Old2021 package,currentEditor shader test required.",
+      "observedPublisherRenderPipelineClaims": [],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "311814",
+      "name": "Egyptian Palace | Ancient Egypt Lite \u2013 Free 3D Assets",
+      "publisher": "Chicago Game Monster",
+      "url": "https://assetstore.unity.com/packages/3d/environments/egyptian-palace-ancient-egypt-lite-free-3d-assets-311814",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "0.00",
+        "isFree": true,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "FREE_COMPONENT_CANDIDATE",
+      "selectionNotes": "55 Egyptian-themed temple,pillar,obelisk,palm,stairs/props meshes;low-poly aesthetic compromise,not faithful Sunscarlandmarkcoverage.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2021.3.16f1",
+          "types": [
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "258405",
+      "name": "Medieval Fantasy Ruins - Dark Forest Environment",
+      "publisher": "ScansFactory",
+      "url": "https://assetstore.unity.com/packages/3d/environments/fantasy/medieval-fantasy-ruins-dark-forest-environment-258405",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "24.99",
+        "isFree": false,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "OPTIONAL_PAID_ENVIRONMENT_BASKET",
+      "selectionNotes": "300+photogrammetry architecture/crypt/chapel/ruins/vegetation prefabs;currentUSD24.99sale,normal49.99. Allpipelinesconfigurationincluded;defaultdemoHDRP.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.54f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "6000.0.50f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    },
+    {
+      "assetStoreId": "209749",
+      "name": "Lost Temple Cave",
+      "publisher": "ScansFactory",
+      "url": "https://assetstore.unity.com/packages/3d/environments/lost-temple-cave-209749",
+      "priceAtVerification": {
+        "currency": "USD",
+        "amount": "15.00",
+        "isFree": false,
+        "taxIncluded": false
+      },
+      "purchaseSelection": "OPTIONAL_PAID_ENVIRONMENT_BASKET",
+      "selectionNotes": "36photogrammetry cave/rock/altar/sculpture prefabs incl8closedcliffmeshes;USD15. Allpipelinesconfigurationincluded;defaultdemoHDRP.",
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.0.50f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        },
+        {
+          "version": "2022.3.54f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "ownerAccountOwnership": "NOT_ENUMERATED",
+      "archiveStatus": "NOT_AVAILABLE_IN_ENVIRONMENT",
+      "archiveSha256": null,
+      "currentEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "locationCoverageStatus": "COMPONENT_CANDIDATE_ONLY"
+    }
+  ],
+  "remainingBespokeGaps": [
+    "Region-specific city and sacred architecture identity across9styles.",
+    "Whalespine/tidekeeper/deep-sea and drowned-world signature landmarks.",
+    "Living roots/heart/grove/core landmarks and blight material/VFX compositions.",
+    "Sunscar colossus/solar machinery/forge and location-specific monuments.",
+    "Exact castle/throne/gate/prison/campaign-object placement and interactive visuals."
+  ],
+  "acquisitionRoute": {
+    "supported": "Unity Editor Package Manager -> My Assets -> Download",
+    "documentation": "https://docs.unity3d.com/6000.0/Documentation/Manual/upm-ui-import.html",
+    "cacheDocumentation": "https://docs.unity3d.com/6000.0/Documentation/Manual/AssetStorePackages.html",
+    "windowsDefaultCache": "%APPDATA%\\Unity\\Asset Store-5.x",
+    "cliOwnedStoreDownloadAvailable": false,
+    "credentialsRequested": false,
+    "requiredOwnerAction": "Download owned/free selectedpacks inUnityEditorPackageManager; upload the resulting .unitypackage files or oneZIPcontaining them. A dedicated empty evaluationproject avoids touching the active game. No freshsigninrequested becauseCLIhasno supported Storedownloadroute."
+  },
+  "rawAssetSourcePublicRedistribution": false,
+  "productionChanged": false
+}

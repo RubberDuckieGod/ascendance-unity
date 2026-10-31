@@ -37,7 +37,15 @@ Unclaimed/disconnected Heroes are named in the HUD. They are not silently passed
 
 ## Verification status
 
-New validation gates cover civilian conservation, legal attacks and incapacitation, rescue bounds, failure/reward timing, save/load and legacy read-only behavior, reaction acknowledgment/idempotency/ownership, complete two-player rounds, and the actual HUD controls. Native graphical acceptance uses two independent isolated clients and checks gameplay state, not just process startup. Results and exact source revision will be recorded after execution; unexecuted cases are not passes.
+The complete Editor run from clean source `2bcf6efe9a20b2692fc9dad10f7b9fb5f6dfa585` passed **359 checks with zero errors**: master 54, authority 24, routing 30, network 27, reliability 22, snapshots 20, lobby 32, campaigns 42, reactions 30, combat HUD 11 and Villagers 67. The 67 Villager checks include nonlethal intermediate-tile Rooted movement, lethal pursuit and ranged-retreat traps, and rewards at 75/90 Gold.
+
+Linux Dedicated Server, Linux development client and Windows shipping client all compiled successfully from that exact clean source. Development acceptance-driver symbols are absent from the Windows shipping assembly. Windows player execution has not been performed in this Linux environment.
+
+The actual current `597f442` to candidate `2bcf6ef` private campaign preservation proof passed **47/47**. Two authenticated read-only restore cycles preserved every ordered gameplay field, archived campaign bytes, owner/slot metadata and room identity/revisions. Both original reconnect identities were then accepted. The candidate received **zero gameplay commands** throughout this preservation proof; no production campaign was read.
+
+The initial actual two-GUI-client combat attempt completed all four rescues, accepted reaction declines while inspecting another Hero, dealt real Hero damage and advanced to Round 2. Its test runner then timed out waiting for an extra reaction button after the phase had already ended. That attempt remains a failed harness run; it is not a complete acceptance pass. The runner now waits for either a genuinely new interactive reaction or the completed phase, with race regressions retaining the required real-decline, damage, peer synchronization and reconnect assertions. The complete rerun is pending.
+
+New validation gates cover civilian conservation, legal attacks and incapacitation, rescue bounds, failure/reward timing, save/load and legacy read-only behavior, reaction acknowledgment/idempotency/ownership, complete two-player rounds, and the actual HUD controls. Native graphical acceptance uses two independent isolated clients and checks gameplay state, not just process startup. Unexecuted cases are not passes.
 
 Known limits: the authored Stonebrook Exalted civilian-loss prevention perk has not been certified by this follow-up; neither have all other factions, all 16 Heroes' complete card interactions, all quests, or every website/Unity difference. Realistic Asset Store pack selection is a separate presentation task. Windows runtime behavior requires its own execution evidence; a successful Linux graphical run alone is not a Windows player test.
 

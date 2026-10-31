@@ -80,6 +80,28 @@ def button_ready(state, name):
                for b in state.get("Buttons", []))
 
 
+def phase_complete(state):
+    return not state["IsResolving"] and not state["PendingReaction"] and (state["QuestFailed"] or state["Round"] >= 2)
+
+
+def phase_action(state, snapshot, last_response_revision):
+    """Distinguish a fresh interactive prompt from a queued/stale old prompt."""
+    if state["ServerInstanceId"] != snapshot["ServerInstanceId"]:
+        return "wait"
+    transient, campaign = snapshot["Transient"], snapshot["Campaign"]
+    authority_complete = (not transient["IsResolving"] and not transient["HasPendingReactionWindow"]
+                          and (campaign["QuestFailed"] or campaign["Round"] >= 2))
+    if authority_complete or phase_complete(state):
+        return "complete"
+    # The command acknowledgement records queued resolution before the coroutine
+    # resumes. Its unchanged-looking reaction must not receive another decline.
+    if (snapshot["GameplayRevision"] > last_response_revision and state["GameplayRevision"] >= snapshot["GameplayRevision"]
+            and transient["HasPendingReactionWindow"] and not transient["IsResolving"]
+            and state["PendingReaction"] and not state["IsResolving"] and button_ready(state, "ResolveReaction")):
+        return "react"
+    return "wait"
+
+
 def combat_view(state):
     """Canonical outcome fields; selections, frames and presence are not gameplay."""
     return {
@@ -202,30 +224,37 @@ class Acceptance:
     def finish_phase(self, before_health, expect_failure=False):
         a, b = self.clients
         responses = 0
+        last_response_revision = -1
         deadline = time.monotonic() + 60
+
+        def wait_for_prompt_or_completion(responder):
+            def observe():
+                snapshot = self.observer.snapshot()
+                state = responder.state()
+                return {"action": phase_action(state, snapshot, last_response_revision),
+                        "clientRound": state["Round"], "clientReaction": state["PendingReaction"],
+                        "clientResolving": state["IsResolving"], "clientGameplayRevision": state["GameplayRevision"],
+                        "authorityRound": snapshot["Campaign"]["Round"], "authorityGameplayRevision": snapshot["GameplayRevision"]}
+            return await_value("fresh real reaction button or completed enemy phase", observe,
+                               lambda observation: observation["action"] != "wait", timeout=max(.1, deadline-time.monotonic()))["action"]
+
         while time.monotonic() < deadline:
-            state = a.state()
-            if state["QuestFailed"] and not state["IsResolving"] and not state["PendingReaction"]:
+            responder = self.clients[responses % 2]
+            if wait_for_prompt_or_completion(responder) == "complete":
                 break
-            if state["Round"] >= 2 and not state["IsResolving"] and not state["PendingReaction"]:
+            # Exercise the exact bug: the responding player inspects their
+            # friend's Hero, then clicks the actual shared decline button.
+            other = b.hero if responder is a else a.hero
+            self.request(responder, "select-view", TargetId=other)
+            self.check(responder.hero + " inspects other Hero during reaction", other, responder.state()["SelectedHeroId"])
+            # Snapshot polling and a queued resolution can finish the entire
+            # phase while the UI request is in flight. Observe completion as a
+            # valid outcome, rather than waiting for a button that has vanished.
+            if wait_for_prompt_or_completion(responder) == "complete":
                 break
-            if state["PendingReaction"]:
-                # Exercise the exact bug: the responding player inspects their
-                # friend's Hero, then clicks the actual shared decline button.
-                responder = self.clients[responses % 2]
-                other = b.hero if responder is a else a.hero
-                responder.wait("receives current reaction window", lambda s: s["PendingReaction"])
-                self.request(responder, "select-view", TargetId=other)
-                self.check(responder.hero + " inspects other Hero during reaction", other, responder.state()["SelectedHeroId"])
-                self.click(responder, "ResolveReaction")
-                responses += 1
-                # One accepted response must let the game advance. Do not submit
-                # repeats against a stale prompt while its coroutine resumes.
-                response_revision = responder.state()["GameplayRevision"]
-                await_value("accepted reaction advances authoritative coroutine", self.observer.snapshot,
-                            lambda s: s["GameplayRevision"] > response_revision or not s["Transient"]["HasPendingReactionWindow"], timeout=15)
-            else:
-                time.sleep(.08)
+            response_state = self.request(responder, "hud-button", TargetId="ResolveReaction")
+            last_response_revision = response_state["GameplayRevision"]
+            responses += 1
         final = self.synced("complete enemy phase")
         self.check("Enemy phase reaches an explicit terminal state", True,
                    not final["pendingReaction"] and not final["isResolving"] and (final["round"] >= 2 or final["failed"]))

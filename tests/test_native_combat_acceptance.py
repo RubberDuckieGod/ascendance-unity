@@ -69,6 +69,40 @@ class NativeCombatObservationTests(unittest.TestCase):
         self.assertTrue(COMBAT.button_ready({"Buttons": [{"Name": "ResolveReaction", "Active": True,
                                                           "Interactable": True}]}, "ResolveReaction"))
 
+    def phase_pair(self):
+        state = {"ServerInstanceId": "isolated", "GameplayRevision": 10, "Round": 1, "QuestFailed": False,
+                 "PendingReaction": True, "IsResolving": False,
+                 "Buttons": [{"Name": "ResolveReaction", "Active": True, "Interactable": True}]}
+        snapshot = {"ServerInstanceId": "isolated", "GameplayRevision": 10,
+                    "Campaign": {"Round": 1, "QuestFailed": False},
+                    "Transient": {"HasPendingReactionWindow": True, "IsResolving": False}}
+        return state, snapshot
+
+    def test_queued_old_reaction_is_not_submitted_again(self):
+        state, snapshot = self.phase_pair()
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 10), "wait")
+        snapshot["GameplayRevision"] = 11
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 10), "wait")  # Replica still behind.
+        state["GameplayRevision"] = 11
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 10), "react")
+
+    def test_completed_phase_wins_over_stale_reaction_or_missing_button(self):
+        state, snapshot = self.phase_pair()
+        state.update(Round=2, PendingReaction=False, Buttons=[])
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 10), "complete")
+        state, snapshot = self.phase_pair()
+        snapshot["Campaign"]["Round"] = 2
+        snapshot["Transient"]["HasPendingReactionWindow"] = False
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 10), "complete")
+
+    def test_new_prompt_requires_matching_instance_interactive_button_and_waiting_authority(self):
+        state, snapshot = self.phase_pair()
+        self.assertEqual(COMBAT.phase_action(state, snapshot, 9), "react")
+        for mutate in [lambda s: s.update(ServerInstanceId="old"), lambda s: s.update(IsResolving=True),
+                       lambda s: s.update(Buttons=[])]:
+            candidate = copy.deepcopy(state); mutate(candidate)
+            self.assertEqual(COMBAT.phase_action(candidate, snapshot, 9), "wait")
+
 
 class ReviewedNativeClientExtractionTests(unittest.TestCase):
     def setUp(self):

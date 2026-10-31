@@ -3,7 +3,7 @@
   "verifiedAtUtc": "2026-10-31T19:19:24.926055+00:00",
   "targetUnityEditor": "6000.6.5f1",
   "currentRenderPipeline": "Built-in",
-  "budget": "FREE_ONLY",
+  "budget": "FREE_COMPONENT_CANDIDATES_WITHIN_OVERALL_50_USD_BUDGET",
   "assets": [
     {
       "assetStoreId": "276754",
@@ -30,7 +30,8 @@
       "archiveSha256": null,
       "packagePath": null,
       "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "candidateGroup": "core_environment_and_first_hero"
     },
     {
       "assetStoreId": "374316",
@@ -56,7 +57,8 @@
       "archiveSha256": null,
       "packagePath": null,
       "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "candidateGroup": "core_environment_and_first_hero"
     },
     {
       "assetStoreId": "142076",
@@ -99,7 +101,8 @@
       "archiveSha256": null,
       "packagePath": null,
       "targetEditorImportStatus": "NOT_RUN",
-      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "candidateGroup": "core_environment_and_first_hero"
     },
     {
       "assetStoreId": "247933",
@@ -135,6 +138,221 @@
       "archiveSha256": null,
       "packagePath": null,
       "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED",
+      "candidateGroup": "core_environment_and_first_hero"
+    },
+    {
+      "assetStoreId": "215058",
+      "name": "FREE - 32 RPG Animations",
+      "publisher": "Blink",
+      "url": "https://assetstore.unity.com/packages/3d/animations/free-32-rpg-animations-215058",
+      "candidateGroup": "compact_animation_starter",
+      "selectionNotes": "32 Humanoid/Generic animations include one-/two-handed attack, bow, casting, hit, block, stun, death and locomotion. Characters are not included. Older2019.4 compatibility table; test current Editor.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2019.4.0f1",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight",
+            "custom"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "154271",
+      "name": "Human Basic Motions FREE",
+      "publisher": "Kevin Iglesias",
+      "url": "https://assetstore.unity.com/packages/3d/animations/human-basic-motions-free-154271",
+      "candidateGroup": "optional_detailed_animation_set",
+      "selectionNotes": "118 locomotion, standing, jump/fall and talk files, masculine/feminine variants. Standard pipeline listed on6000.0; requires rig retargeting.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.0.59f2",
+          "types": [
+            "hd",
+            "standard",
+            "lightweight",
+            "custom"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "165785",
+      "name": "Human Melee Animations FREE",
+      "publisher": "Kevin Iglesias",
+      "url": "https://assetstore.unity.com/packages/3d/animations/human-melee-animations-free-165785",
+      "candidateGroup": "optional_detailed_animation_set",
+      "selectionNotes": "94 files including basic melee styles, hit and death, masculine/feminine variants. Not the full paid collection.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.0.59f2",
+          "types": [
+            "standard",
+            "hd",
+            "custom",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "335880",
+      "name": "Human Archer Animations FREE",
+      "publisher": "Kevin Iglesias",
+      "url": "https://assetstore.unity.com/packages/3d/animations/human-archer-animations-free-335880",
+      "candidateGroup": "optional_detailed_animation_set",
+      "selectionNotes": "136 files including frontal bowshot, bow/arrow sheathe and movement, masculine/feminine variants. Not the full paid collection.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.0.59f2",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight",
+            "custom"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "326043",
+      "name": "Human Spellcasting Animations FREE",
+      "publisher": "Kevin Iglesias",
+      "url": "https://assetstore.unity.com/packages/3d/animations/human-spellcasting-animations-free-326043",
+      "candidateGroup": "optional_detailed_animation_set",
+      "selectionNotes": "90 files including five spell attacks, cast entry/idle/exit and one hit, masculine/feminine variants. Not the full paid collection.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "6000.0.59f2",
+          "types": [
+            "standard",
+            "hd",
+            "lightweight",
+            "custom"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "303401",
+      "name": "Character Constructor(Medieval_Fantasy armor)Modular, Prototype",
+      "publisher": "the disaster artist",
+      "url": "https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/character-constructor-medieval-fantasy-armor-modular-prototype-303401",
+      "candidateGroup": "optional_human_model_evaluation",
+      "selectionNotes": "Realistic-proportioned male/female modular armored/clothed presets,80+parts. Built-in table listed, but prepared setups are URP/HDRP; Standard materials must be assigned manually. No LODs; full16Hero/NPC coverage and Humanoid rig compatibility not established.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.23f1",
+          "types": [
+            "hd",
+            "lightweight",
+            "standard"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
+      "gameIntegrationStatus": "NOT_IMPLEMENTED"
+    },
+    {
+      "assetStoreId": "322117",
+      "name": "Goblin demon creature modular unit Demo",
+      "publisher": "charttyp",
+      "url": "https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/goblin-demon-creature-modular-unit-demo-322117",
+      "candidateGroup": "optional_stylized_goblin_fallback",
+      "selectionNotes": "Hand-painted horned goblin/demon,one base model,eight armor pieces,one weapon,five animations. Standard/URP listed2022.3. This is a stylized fallback, not established realistic green-goblin art or complete enemy roster.",
+      "priceAtVerification": {
+        "currency": "EUR",
+        "amount": "0.00",
+        "isFree": true
+      },
+      "observedPublisherRenderPipelineClaims": [
+        {
+          "version": "2022.3.14f1",
+          "types": [
+            "standard",
+            "lightweight"
+          ],
+          "__typename": "SRP"
+        }
+      ],
+      "standardAssetStoreEula": true,
+      "acquisitionStatus": "NOT_ACQUIRED",
+      "archiveSha256": null,
+      "packagePath": null,
+      "targetEditorImportStatus": "NOT_RUN",
       "gameIntegrationStatus": "NOT_IMPLEMENTED"
     }
   ],
@@ -145,7 +363,34 @@
     "editorLicenseChecked": false
   },
   "blockedReason": "No package archives or Asset Store acquisition tool are available in this environment. Unity CLI supports local unitypackage inspection/import, not Store acquisition.",
-  "requiredOwnerAction": "Using your Unity Asset Store account, Add to My Assets for the four free products, then in Unity Package Manager/My Assets download them. Upload the four .unitypackage archives or a zip containing them, without account/session files.",
+  "requiredOwnerAction": "Follow docs/LOCATION_ASSET_PLAN_UNDER_50_USD.md for the current environment-first acquisition set. This file retains free character and animation alternatives; no packages are available in this environment.",
   "rawSourcePublicRedistribution": false,
-  "productionChanged": false
+  "productionChanged": false,
+  "recommendedAcquisitionSets": {
+    "minimum_starter": [
+      "276754",
+      "374316",
+      "142076",
+      "247933",
+      "215058"
+    ],
+    "optional_detailed_animation_alternative": [
+      "154271",
+      "165785",
+      "335880",
+      "326043"
+    ],
+    "optional_model_evaluations": [
+      "303401",
+      "322117"
+    ]
+  },
+  "remainingCoverageGaps": [
+    "No coherent realistic free Goblin Raider/Archer/Scout/Captain set established.",
+    "No finished realistic free medieval civilian set established; low-poly/stylized alternatives exist.",
+    "No faithful complete16Hero visual roster established.",
+    "All current6000.6.5f1 imports,retargeting,performance and game integration remain unverified."
+  ],
+  "currentPriority": "LOCATION_ENVIRONMENTS_BEFORE_PAID_CHARACTERS",
+  "currentEnvironmentPlan": "distribution/location-asset-acquisition.json"
 }
