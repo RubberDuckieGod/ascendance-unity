@@ -1,0 +1,71 @@
+{
+  "assets": {
+    "CONNECTION_README.txt": {
+      "bytes": 1195,
+      "sha256": "cc33f0a5f2b0846e893761459bbdb15401ff1350acd235622cf2fbb7d89b3aa1"
+    },
+    "RuntimeSourceRevision.json": {
+      "bytes": 562,
+      "sha256": "594f3a7fd1066bf38c58c411aaf976fbf373af69cdb3db8f29c8c4f0d5cf903e"
+    },
+    "SHA256SUMS": {
+      "bytes": 677,
+      "sha256": "33e5b1b1038ebe4063fca475b28b23fbd835c63ac36e62430ba46173cf423e7e"
+    },
+    "ascendance-windows-unity-0.10.2h-online-lobby-8c143b7.zip": {
+      "bytes": 38118897,
+      "sha256": "727e722dc342715244f0bcde82c74c1fedee1ac1c22243d874b526d08cd1bf5e"
+    },
+    "online-lobby-validation-reports.zip": {
+      "bytes": 733645,
+      "sha256": "de04a73df76bf6ffc74152c2f50cc282a6e24f06c9e59377d03975882e53704d"
+    },
+    "release-package-manifest.json": {
+      "bytes": 645,
+      "sha256": "9fe556f6475c298c56dc93f3815931192445b29520b247284a1db67df2f84b45"
+    },
+    "release.json": {
+      "bytes": 738,
+      "sha256": "6c2b850655b3d6b36ca391113e845bfec73ad6b465c3391e4109848c933c2f8f"
+    },
+    "windows-client-manifest.json": {
+      "bytes": 20785,
+      "sha256": "5b442d58329bcc8369f236c3061d6eb8e77872da76e318187614e0ae53901929"
+    }
+  },
+  "clientOnly": true,
+  "format": 1,
+  "release": "unity-0.10.2h-online-lobby-8c143b7",
+  "releaseId": 429610769,
+  "reports": {
+    "acceptance-summary.json": {
+      "bytes": 2573,
+      "sha256": "1352775c080b80c0fb246f933cf1f9579941284219d17daada4cfad0a36f6887"
+    },
+    "editor-gates.json": {
+      "bytes": 2159,
+      "sha256": "2a077b1a4687adeeb1ee6905578c93ae7d3bdbb2077c811302670fc0a1b9fa15"
+    },
+    "linux-development-build-provenance.json": {
+      "bytes": 1507,
+      "sha256": "2c60faf5ed2a8f3b32aa1303e4fe7ae9328fc3c5085b7638c000d6d8720a9640"
+    },
+    "native-two-client-tls.json": {
+      "bytes": 454678,
+      "sha256": "e5fe5837656b0044a0696166a6380aaf15babf6a106742184910380af6c6dff0"
+    },
+    "online-lobby-before-claims.png": {
+      "bytes": 63373,
+      "sha256": "8927c1edfcc1d004998b7b80628024fc6ab7e90078673a7b84eacf6b980fac71"
+    },
+    "online-lobby-world-two-owners.png": {
+      "bytes": 617844,
+      "sha256": "aaa0e4fdc3cfc271d5d0eaa3f5043bb3450b7b2990d3d038a160be51e69068af"
+    },
+    "windows-build-provenance.json": {
+      "bytes": 1498,
+      "sha256": "7d9f1744e9c6ede9b88bd28ef74b41e2f7943ef7c007acb00e673bf125380b28"
+    }
+  },
+  "sourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860"
+}

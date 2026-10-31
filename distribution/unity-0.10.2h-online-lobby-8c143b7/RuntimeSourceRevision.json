@@ -1,0 +1,16 @@
+{
+  "RuntimeSourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860",
+  "builds": {
+    "windows": {
+      "file": "Ascendance.provenance.json",
+      "fileManifestSha256": "5b442d58329bcc8369f236c3061d6eb8e77872da76e318187614e0ae53901929",
+      "sha256": "7d9f1744e9c6ede9b88bd28ef74b41e2f7943ef7c007acb00e673bf125380b28",
+      "sourceDirty": false,
+      "sourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860",
+      "target": "StandaloneWindows64"
+    }
+  },
+  "clientOnly": true,
+  "format": 1,
+  "release": "unity-0.10.2h-online-lobby-8c143b7"
+}

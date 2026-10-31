@@ -1,0 +1,12 @@
+{
+  "clientOnly": true,
+  "files": {
+    "CONNECTION_README.txt": "cc33f0a5f2b0846e893761459bbdb15401ff1350acd235622cf2fbb7d89b3aa1",
+    "RuntimeSourceRevision.json": "594f3a7fd1066bf38c58c411aaf976fbf373af69cdb3db8f29c8c4f0d5cf903e",
+    "ascendance-windows-unity-0.10.2h-online-lobby-8c143b7.zip": "727e722dc342715244f0bcde82c74c1fedee1ac1c22243d874b526d08cd1bf5e",
+    "release.json": "6c2b850655b3d6b36ca391113e845bfec73ad6b465c3391e4109848c933c2f8f",
+    "windows-client-manifest.json": "5b442d58329bcc8369f236c3061d6eb8e77872da76e318187614e0ae53901929"
+  },
+  "format": 1,
+  "sourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860"
+}

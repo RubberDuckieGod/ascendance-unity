@@ -1,0 +1,43 @@
+name: Verify and upload reviewed online Hero lobby client
+
+on:
+  push:
+    branches:
+      - distribution/unity-h-lobby-8c143b7
+
+permissions:
+  contents: read
+
+env:
+  # Replaced only after the parent reviews all eight frozen assets and draft ID.
+  REVIEWED_INVENTORY_SHA256: b81133c4f304ea096562e144c94516f1582aa6ddbd4df6598b0bf22a006803fe
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify frozen client, complete archive manifest and public reports
+        run: python3 -B .github/scripts/publish_lobby_draft.py
+
+  upload:
+    needs: verify
+    if: needs.verify.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: ascendance-h-online-lobby-8c143b7-reviewed-draft-upload
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Upload only to the exact reviewed new draft and verify remote digests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B .github/scripts/publish_lobby_draft.py --upload

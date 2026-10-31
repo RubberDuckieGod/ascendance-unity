@@ -1,0 +1,21 @@
+{
+  "buildVersion": "0.10.2h",
+  "client": {
+    "archive": {
+      "sha256": "727e722dc342715244f0bcde82c74c1fedee1ac1c22243d874b526d08cd1bf5e",
+      "sizeBytes": 38118897,
+      "url": "https://github.com/RubberDuckieGod/ascendance-unity/releases/download/unity-0.10.2h-online-lobby-8c143b7/ascendance-windows-unity-0.10.2h-online-lobby-8c143b7.zip"
+    }
+  },
+  "clientOnly": true,
+  "compatibleServer": {
+    "buildVersion": "0.10.2h",
+    "deploymentRequired": false,
+    "protocolVersion": 1,
+    "sourceRevision": "55d25c03a3279a8396d5b8954e73180e08f7a0c5"
+  },
+  "endpoint": "159.65.100.206:7777",
+  "format": 1,
+  "release": "unity-0.10.2h-online-lobby-8c143b7",
+  "sourceRevision": "8c143b7e6a7b5ec3c151b7692dbc7ed57cf48860"
+}
