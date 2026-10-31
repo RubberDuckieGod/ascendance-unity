@@ -1,6 +1,8 @@
 name: Native two-player combat release acceptance
 
 on:
+  push:
+    branches: [validation/unity-combat]
   workflow_dispatch:
     inputs:
       release_tag:
@@ -42,9 +44,23 @@ jobs:
       SERVER_MANIFEST_SHA256: ${{ inputs.server_manifest_sha256 }}
       CLIENT_ARCHIVE_SHA256: ${{ inputs.client_archive_sha256 }}
       CLIENT_MANIFEST_SHA256: ${{ inputs.client_manifest_sha256 }}
+      # Filled with the exact reviewed distribution/reviewed-combat-native.json
+      # hash once both clean build artifacts have been packaged. Empty refuses.
+      REVIEWED_COMBAT_INPUT_SHA256: ''
       LP_NUM_THREADS: '2'
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: RubberDuckieGod/ascendance-unity
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Load hash-pinned test inputs for the dedicated validation branch
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B tools/load_reviewed_combat_inputs.py --input distribution/reviewed-combat-native.json --sha256 "$REVIEWED_COMBAT_INPUT_SHA256"
       - name: Validate reviewed identifiers
         shell: bash
         run: |
@@ -55,11 +71,6 @@ jobs:
           for name, pattern in patterns.items():
               if not re.fullmatch(pattern, os.environ[name]): raise SystemExit('Invalid reviewed identifier: ' + name)
           PY
-      - uses: actions/checkout@v4
-        with:
-          repository: RubberDuckieGod/ascendance-unity
-          ref: ${{ github.sha }}
-          persist-credentials: false
       - name: Install native headless display and software rendering libraries
         shell: bash
         run: |

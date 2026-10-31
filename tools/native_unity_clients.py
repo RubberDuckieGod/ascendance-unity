@@ -334,6 +334,9 @@ def main():
         campaign = fixture["DurableCampaign"]
         campaign["PartyHeroIds"] = ["Aldric", "Rowan"]
         campaign["VillagersRescued"] = 4
+        for obj in campaign["QuestRuntime0829"].get("Objects", []):
+            if obj.get("Type") == "Villager":
+                obj.update(Rescued=True, Destroyed=False)
         victim = next(e for e in campaign["Enemies"] if e["TemplateId"] == "E001")
         victim.update({"Health": 6, "MaxHealth": 6, "Armor": 1, "LocationId": "L000", "Statuses": []})
         campaign["Enemies"] = [victim]

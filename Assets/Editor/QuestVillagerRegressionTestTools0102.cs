@@ -269,6 +269,12 @@ namespace Ascendance.EditorTools
                 foreach (var hero in gm.ParticipatingHeroes) hero.LocationId = entry.Id;
                 gm.DebugAddLocationTag(entry.Id, "Difficult Terrain", "Aldric", "Villager regression");
                 archer = Spawn("E002", entry.AuthoredLocationId); archer.Attack = 20;
+                // WE001 grants every unactivated Goblin +1 Movement. Apply the
+                // existing authored movement penalty so this fixture genuinely
+                // has one point available rather than assuming template Move.
+                gm.AddStatus(archer, "Fresh Tracks Movement -1", 0, 0, "Villager regression", false, null, "until removed");
+                Check(gm.IsDifficultTerrain(entry.Id) && gm.DebugEnemyMovement0859(archer.Id) == 1,
+                    "The terrain-budget fixture has actual Difficult Terrain and exactly one effective Movement after WE001's bonus.");
                 hp = HeroHealth(); yield return Activate(gm, archer);
                 Check(archer.LocationId == entry.Id && archer.MovementStepsThisActivation0859 == 0
                     && archer.ActivatedThisRound && HeroHealth() < hp && gm.VillagersLost == 0,
